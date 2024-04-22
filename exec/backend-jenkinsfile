@@ -1,0 +1,135 @@
+pipeline {
+  agent any
+  
+  environment {
+    HOME = "${env.WORKSPACE}"
+    GRADLE_USER_HOME = "$WORKSPACE/.gradle"
+    CI = false
+
+    GIT_MESSAGE = """${sh(
+        script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
+        returnStdout: true
+    )}"""
+    CHANNEL = 'D106-Alert'
+  }
+ 
+  stages {
+    stage('Build Backend') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'backend_yml', variable: 'PROD_YML')]) {
+            sh 'cd exec/ && chmod +x backend-project-setup.sh && ./backend-project-setup.sh'
+            sh 'cd exec/ && chmod +x backend-project-build.sh && ./backend-project-build.sh'
+          }
+        }
+      }
+    }
+    
+    stage('Build and Push Images') {
+      steps {
+        script {
+          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh 'cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh'
+          }
+        }
+      }
+    }
+
+    stage('Copy .env to Deploy Directory') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'backend_docker_compose_env', variable: 'DC_ENV')]) {
+            sh 'cd exec/ && chmod +x backend-copy-docker-compose-env.sh && ./backend-copy-docker-compose-env.sh'
+          }
+        }
+      }
+    }
+
+    stage('Deploy Backend') {
+      steps([$class: 'BapSshPromotionPublisherPlugin']) {
+        script {
+          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sshPublisher(
+              continueOnError: false,
+              failOnError: true,
+              publishers: [
+                sshPublisherDesc(
+                  configName: 'application', 
+                  verbose: true,
+                  transfers: [
+                    sshTransfer(
+                      sourceFiles: 'exec/backend-deploy/**',
+                      removePrefix: 'exec/backend-deploy/',
+                      remoteDirectory: '/jenkins/deploy/backend',
+                      execCommand: """
+                                  docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
+                                  cd /home/jenkins/deploy/backend && chmod 755 *.sh; \
+                                  ./backend-stop.sh; \
+                                  ./backend-start.sh
+                                  """
+                    ),
+                    sshTransfer(
+                      execCommand: """
+                                  docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
+                                  cd /home/jenkins/deploy/frontend && chmod 755 *.sh; \
+                                  ./frontend-stop.sh; \
+                                  ./frontend-start.sh
+                                  """
+                    )
+                  ]
+                )
+              ]
+            )
+          }
+        }
+      }
+    }
+
+    stage('Health Check Backend') {
+      steps {
+        sh 'sleep 20'
+        script {
+          withCredentials([string(credentialsId: 'backend_url', variable: 'BACKEND_URL')]) {
+            def HEALTH = sh(
+              returnStdout: true,
+              script: "curl -s -o /dev/null -w '%{http_code}' ${BACKEND_URL}"
+            ).trim()
+
+            if (HEALTH == "200") {
+              echo "backend success"
+            } else {
+              error "backend fail"
+            }
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
+          mattermostSend(
+            color: 'good',
+            message: "[BE] Deploy Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
+            endpoint: "${MM_URL}",
+            channel: "${CHANNEL}",
+          )
+        }
+      }
+    }
+    failure {
+      script {
+        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
+          mattermostSend(
+            color: 'danger',
+            message: "[BE] Deploy Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
+            endpoint: "${MM_URL}",
+            channel: "${CHANNEL}",
+          )
+        }
+      }
+    }
+  }
+}
