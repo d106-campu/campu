@@ -7,7 +7,7 @@ export IMG_NAME=backend
 
 docker login $REGISTRY -u $USERNAME -p $PASSWORD
 
-docker build -t $REGISTRY/$IMG_NAME:$TAG ../backend
+docker buildx build -t $REGISTRY/$IMG_NAME:$TAG ../backend
 
 docker push $REGISTRY/$IMG_NAME:$TAG
 
