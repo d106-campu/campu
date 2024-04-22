@@ -43,11 +43,6 @@ public class SwaggerConfig {
         .info(apiInfo());
   }
 
-  @Bean
-  ForwardedHeaderFilter forwardedHeaderFilter() {
-    return new ForwardedHeaderFilter();
-  }
-
   private Info apiInfo() {
     return new Info()
         .title(title)
