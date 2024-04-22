@@ -42,7 +42,7 @@ services:
     image: ${REGISTRY}/backend:${TAG}
     volumes:
       - ${HOME}/d106/backend/app/logs:/app/logs
-      - ${HOME}/d106/files:/app/files
+      - ${HOME}/d106/backend/app/files:/app/files
     environment:
       SPRING_PROFILES_ACTIVE: prod
       TZ: "Asia/Seoul"
