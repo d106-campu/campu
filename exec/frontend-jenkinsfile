@@ -111,7 +111,6 @@ pipeline {
             message: "[FE] Deploy Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
             endpoint: "${MM_URL}",
             channel: "${CHANNEL}",
-            icon: "${SUCCESS_ICON}"
           )
         }
       }
@@ -124,7 +123,6 @@ pipeline {
             message: "[FE] Deploy Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
             endpoint: "${MM_URL}",
             channel: "${CHANNEL}",
-            icon: "${FAIL_ICON}"
           )
         }
       }
