@@ -68,8 +68,8 @@ pipeline {
                       execCommand: """
                                   docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
                                   cd /home/jenkins/deploy/frontend && chmod 755 *.sh; \
-                                  ./frontend-start.sh; \
-                                  ./frontend-stop.sh
+                                  ./frontend-stop.sh; \
+                                  ./frontend-start.sh
                                   """
                     )
                   ]
