@@ -1,0 +1,131 @@
+pipeline {
+  agent any
+
+  environment {
+    HOME = "${env.WORKSPACE}"
+    NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
+    CI = false
+
+    GIT_MESSAGE = """${sh(
+        script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
+        returnStdout: true
+    )}"""
+    CHANNEL = 'D106-Alert'
+  }
+
+  tools {
+    nodejs 'NodeJS 20.11.0'
+  }
+
+  stages {
+    stage('Build Frontend') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'frontend_env', variable: 'PROD_ENV')]) {
+            sh 'cd exec/ && chmod +x frontend-project-setup.sh && ./frontend-project-setup.sh'
+            sh 'cd exec/ && chmod +x frontend-project-build.sh && ./frontend-project-build.sh'
+          }
+        }
+      }
+    }
+
+    stage('Build and Push Images') {
+      steps {
+        script {
+          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh 'cd exec/ && chmod +x frontend-docker-build-push.sh && ./frontend-docker-build-push.sh'
+          }
+        }
+      }
+    }
+
+    stage('Copy .env to Deploy Directory') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'frontend_docker_compose_env', variable: 'DC_ENV')]) {
+            sh 'cd exec/ && chmod +x frontend-copy-docker-compose-env.sh && ./frontend-copy-docker-compose-env.sh'
+          }
+        }
+      }
+    }
+
+    stage('Deploy Frontend') {
+      steps([$class: 'BapSshPromotionPublisherPlugin']) {
+        script {
+          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sshPublisher(
+              continueOnError: false,
+              failOnError: true,
+              publishers: [
+                sshPublisherDesc(
+                  configName: 'application', 
+                  verbose: true,
+                  transfers: [
+                    sshTransfer(
+                      sourceFiles: 'exec/frontend-deploy/**',
+                      removePrefix: 'exec/frontend-deploy/',
+                      remoteDirectory: '/jenkins/deploy/frontend',
+                      execCommand: """
+                                  docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
+                                  cd /home/jenkins/deploy/frontend && chmod 755 *.sh; \
+                                  ./frontend-stop.sh; \
+                                  ./frontend-start.sh
+                                  """
+                    )
+                  ]
+                )
+              ]
+            )
+          }
+        }
+      }
+    }
+
+    stage('Health Check Frontend') {
+      steps {
+        sh 'sleep 20'
+        script {
+          withCredentials([string(credentialsId: 'frontend_url', variable: 'FRONTEND_URL')]) {
+            def HEALTH = sh(
+              returnStdout: true,
+              script: "curl -s -o /dev/null -w '%{http_code}' ${FRONTEND_URL}"
+            ).trim()
+
+            if (HEALTH == "200") {
+              echo "frontend success"
+            } else {
+              error "frontend fail"
+            }
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
+          mattermostSend(
+            color: 'good',
+            message: "[FE] Deploy Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
+            endpoint: "${MM_URL}",
+            channel: "${CHANNEL}",
+          )
+        }
+      }
+    }
+    failure {
+      script {
+        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
+          mattermostSend(
+            color: 'danger',
+            message: "[FE] Deploy Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
+            endpoint: "${MM_URL}",
+            channel: "${CHANNEL}",
+          )
+        }
+      }
+    }
+  }
+}
