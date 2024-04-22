@@ -7,7 +7,7 @@ export IMG_NAME=frontend
 
 docker login $REGISTRY -u $USERNAME -p $PASSWORD
 
-docker build -t $REGISTRY/$IMG_NAME:$TAG ../frontend
+docker buildx build -t $REGISTRY/$IMG_NAME:$TAG ../frontend
 
 docker push $REGISTRY/$IMG_NAME:$TAG
 
