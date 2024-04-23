@@ -216,7 +216,7 @@ CREATE TABLE `campsite_induty` (
 -- d106.campsite_location definition
 
 CREATE TABLE `campsite_location` (
-  `campsite_id` bigint(20) NOT NULL,
+  `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
   `map_x` double DEFAULT NULL COMMENT '경도',
   `map_y` double DEFAULT NULL COMMENT '위도',
   PRIMARY KEY (`campsite_id`),
