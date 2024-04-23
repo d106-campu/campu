@@ -7,6 +7,10 @@ application-prod.yml
 ### application-local ###
 application-local.yml
 
+### campsite original data ###
+campsite_original_data.sql
+campsite_original_data.xml
+
 ### Gradle ###
 .gradle
 **/build/
