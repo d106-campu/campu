@@ -1,8 +1,5 @@
 package com.d106.campu.common.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -13,10 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
-@OpenAPIDefinition(servers = {
-    @Server(url = "http://localhost:8080/api", description = "Local"),
-    @Server(url = "https://k10d106.p.ssafy.io/api", description = "Production")
-})
 @Configuration
 public class SwaggerConfig {
 
@@ -41,6 +34,11 @@ public class SwaggerConfig {
                     .bearerFormat("JWT")
             ))
         .info(apiInfo());
+  }
+
+  @Bean
+  ForwardedHeaderFilter forwardedHeaderFilter() {
+    return new ForwardedHeaderFilter();
   }
 
   private Info apiInfo() {
