@@ -11,7 +11,7 @@ const HeaderLink = ({ label, link, isClicked }: IHeaderLinkProps) => {
 
   return (
     <div
-      className={`mx-1 p-2 text-sm cusor-pointer rounded-md hover:bg-SUB_GREEN_01 ${
+      className={`flex justify-center flex-grow mx-1 p-2 text-sm cusor-pointer rounded-md hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN ${
         isClicked ? "text-MAIN_GREEN" : ""
       }`}
       onClick={() => navigate(link)}
