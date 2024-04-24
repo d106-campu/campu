@@ -1,5 +1,5 @@
 const HomePage = () => {
-  return <div>메인페이지</div>;
+  return <div className="w-screen h-auto relative"></div>;
 };
 
 export default HomePage;
