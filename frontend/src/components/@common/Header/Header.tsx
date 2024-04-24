@@ -2,10 +2,9 @@ import logo from "@/assets/images/temp_log2.png";
 import profileImage from "@/assets/images/profile.png";
 import { useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
-import NotificationIcon from "./NotificationIcon ";
+import NotificationIcon from "../../Alert/AlertLink ";
 
 // @TODO: 로그인 여부 구분
-
 // @TODO: 알림 열기
 const Header = ({ page }: { page?: string }) => {
   const location = useLocation();
@@ -48,7 +47,7 @@ const Header = ({ page }: { page?: string }) => {
 
         {/* 알림 */}
         {/* @TODO: SSE 알림 여부 구분*/}
-        <NotificationIcon hasNotification={true} />
+        <NotificationIcon hasAlert={true} />
       </div>
       <div className="p-1 pl-2 flex items-center cursor-pointer">
         <span className=" text-sm p-2 mr-2 cusor-pointer rounded-md hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN">
