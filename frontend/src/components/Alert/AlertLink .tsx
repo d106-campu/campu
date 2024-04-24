@@ -21,7 +21,7 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
 
       {/* 알림 목록 부분 */}
       {openAlert && (
-        <div className="absolute top-full right-72 mt-2 w-60 border-2 bg-white shadow-lg rounded-md z-10 p-3">
+        <div className="absolute top-full right-72 mt-2 w-80 border-2 bg-white shadow-lg rounded-md z-10 p-3">
           <div className="absolute bg-inherit h-5 w-5 rotate-45 transform origin-bottom-right -translate-y-1/2 left-5 top-1 rounded border-t-2 border-l-2"></div>
           <AlertMessage
             nickname={"캐치캠핑핑핑"}
