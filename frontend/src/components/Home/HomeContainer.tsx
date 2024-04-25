@@ -1,6 +1,7 @@
 import MainImage from "@/assets/images/MainImage.jpg";
 import SearchBar from "./SearchBar";
-import MyWish from "./MyWish";
+import MyCamping from "./MyCamping";
+import Recommend from "./Recommend";
 
 const HomeContainer = () => {
   return (
@@ -8,7 +9,8 @@ const HomeContainer = () => {
       <div className="relative flex flex-col items-center">
         <img src={MainImage} />
         <SearchBar />
-        <MyWish />
+        <MyCamping />
+        <Recommend />
       </div>
     </>
   );
