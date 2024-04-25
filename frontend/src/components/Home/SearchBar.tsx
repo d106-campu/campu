@@ -27,7 +27,7 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className="bg-white/50 h-auto w-[60%] absolute top-[20%] rounded-lg p-4">
+      <div className="bg-white/50 h-auto w-[60%] absolute top-28 rounded-lg p-4">
         <p className="font-bold text-2xl text-center py-2">
           어디로 떠나볼까요?
         </p>
@@ -37,7 +37,7 @@ const SearchBar = () => {
             {/* 지역 선택 */}
             <div className="flex items-center flex-grow bg-white rounded-md p-3">
               <RiMapPinLine />
-              <select className="rounded-md ml-2 outline-none">
+              <select className="rounded-md ml-2 outline-none text-sm">
                 <option>지역 선택하기</option>
                 {provinceList.map((province, index) => (
                   <option key={index} value={province.name}>
@@ -50,7 +50,7 @@ const SearchBar = () => {
             {/* 날짜 선택 */}
             <div className="flex items-center flex-grow bg-white rounded-md p-3">
               <FaRegCalendarAlt />
-              <select className="rounded-md ml-2 outline-none">
+              <select className="rounded-md ml-2 outline-none text-sm">
                 <option>날짜 선택하기</option>
               </select>
             </div>
@@ -58,20 +58,22 @@ const SearchBar = () => {
             {/* 인원 선택 */}
             <div className="flex items-center flex-grow bg-white rounded-md p-3">
               <MdOutlinePersonOutline />
-              <select className="rounded-md ml-2 outline-none">
+              <select className="rounded-md ml-2 outline-none text-sm">
                 <option>인원 선택하기</option>
               </select>
             </div>
           </div>
 
+          {/* 검색어 입력 */}
           <div className="flex mt-2 items-center">
             <div className="flex w-full items-center bg-white rounded-md p-3">
               <LuSearch />
               <input
-                className="ml-2 outline-none placeholder-black"
+                className="ml-2 outline-none placeholder-black text-sm"
                 placeholder="키워드로 캠핑장을 검색해보세요"
               ></input>
             </div>
+            {/* 검색버튼 */}
             <button className="ml-2 px-4 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap">
               검색하기
             </button>
