@@ -234,8 +234,8 @@ CREATE TABLE `campsite_theme` (
 CREATE TABLE `room` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
   `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
+  `induty_id` bigint(20) NOT NULL COMMENT '유형 식별번호',
   `name` varchar(50) NOT NULL COMMENT '방 이름',
-  `induty` varchar(8) NOT NULL COMMENT '방 유형',
   `base_no` int(11) NOT NULL COMMENT '기본 인원',
   `max_no` int(11) NOT NULL COMMENT '최대 인원',
   `price` int(11) NOT NULL COMMENT '가격',
@@ -247,7 +247,9 @@ CREATE TABLE `room` (
   `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
   PRIMARY KEY (`id`),
   KEY `room_campsite_FK` (`campsite_id`),
-  CONSTRAINT `room_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`)
+  KEY `room_induty_FK` (`induty_id`),
+  CONSTRAINT `room_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
+  CONSTRAINT `room_induty_FK` FOREIGN KEY (`induty_id`) REFERENCES `induty` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방';
 
 
@@ -261,20 +263,6 @@ CREATE TABLE `room_image` (
   KEY `room_image_room_FK` (`room_id`),
   CONSTRAINT `room_image_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방 이미지';
-
-
--- d106.room_induty definition
-
-CREATE TABLE `room_induty` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `room_id` bigint(20) NOT NULL,
-  `induty_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `room_induty_induty_FK` (`induty_id`),
-  KEY `room_induty_room_FK` (`room_id`),
-  CONSTRAINT `room_induty_induty_FK` FOREIGN KEY (`induty_id`) REFERENCES `induty` (`id`),
-  CONSTRAINT `room_induty_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='방 유형';
 
 
 -- d106.user_authority definition

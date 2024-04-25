@@ -13,8 +13,8 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 @SpringBootApplication
 public class CampuApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(CampuApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(CampuApplication.class, args);
+    }
 
 }
