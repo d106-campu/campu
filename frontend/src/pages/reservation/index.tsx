@@ -11,17 +11,16 @@ import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 
 const ReservationPage = () => {
   const main = mainPhoto;
-  const photos = [photo1, photo2, photo3, photo4, photo5];
+  // const photos = [photo1, photo2, photo3, photo4, photo5];
   // const photos = [photo1, photo2, photo3, photo4];
-  // const photos = [photo1, photo2, photo3];
   // const photos = [photo1, photo2];
   // const photos = [photo1];
-  // const photos = [];
+  const photos: string[] = [];
 
   return (
     <>
       <Header />
-      <div className="max-w-[80%] mx-auto">
+      <div className="max-w-[75%] mx-auto">
         <div className="py-5">
           <CampingPhotos main={main} photos={photos} />
         </div>
