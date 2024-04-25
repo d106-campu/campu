@@ -17,11 +17,20 @@ export default {
         SUB_YELLOW: "#FFF8D4",
         SUB_PINK: "#FFC9CC",
         SUB_RED: "#FDA3A3",
-        BLACK: "#404040",
+        BLACK: "#393939",
         SUB_BLACK: "#595959",
         GRAY: "#FAFAFA",
         UNIMPORTANT_TEXT_01: "#595959",
         UNIMPORTANT_TEXT_02: "#C8C8C8",
+      },
+      keyframes: {
+        ShowUp: {
+          from: { opacity: 0, transform: "translate(0px, 5px)" },
+          to: { opacity: 1, transform: "translate(0px, 0px)" },
+        },
+      },
+      animation: {
+        ShowUp: "ShowUp 0.7s ease-in-out",
       },
     },
   },
