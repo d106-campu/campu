@@ -1,6 +1,7 @@
 import Header from "@/components/@common/Header/Header";
 import Footer from "@/components/@common/Footer/Footer";
 import CampingPhotos from "@/components/reservation/CampingPhotos";
+
 // 더미 이미지
 import mainPhoto from "@/assets/images/dummy/camping_spot_6.png";
 import photo1 from "@/assets/images/dummy/camping_spot_2.png";
@@ -11,11 +12,11 @@ import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 
 const ReservationPage = () => {
   const main = mainPhoto;
-  // const photos = [photo1, photo2, photo3, photo4, photo5];
-  // const photos = [photo1, photo2, photo3, photo4];
-  // const photos = [photo1, photo2];
-  // const photos = [photo1];
-  const photos: string[] = [];
+  // const photos: string[] = [photo1, photo2, photo3, photo4, photo5];
+  const photos: string[] = [photo1, photo2, photo3];
+  // const photos: string[] = [photo1, photo2];
+  // const photos: string[] = [photo1];
+  // const photos: string[] = [];
 
   return (
     <>
