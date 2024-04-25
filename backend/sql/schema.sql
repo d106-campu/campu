@@ -304,7 +304,7 @@ CREATE TABLE `review` (
   `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
   `reservation_id` bigint(20) NOT NULL COMMENT '예약 식별번호',
   `score` int(11) NOT NULL COMMENT '리뷰 점수',
-  `content` varchar(500) NOT NULL COMMENT '리뷰 내용',
+  `content` varchar(200) NOT NULL COMMENT '리뷰 내용',
   PRIMARY KEY (`id`),
   KEY `review_campsite_FK` (`campsite_id`),
   KEY `review_reservation_FK` (`reservation_id`),
