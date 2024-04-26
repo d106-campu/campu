@@ -67,7 +67,7 @@ pipeline {
                                   docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
                                   cd /home/jenkins/deploy/backend && chmod 755 *.sh; \
                                   ./backend-stop.sh; \
-                                  ./backend-start.sh
+                                  ./backend-start.sh ${env.GIT_COMMIT}
                                   """
                     ),
                     sshTransfer(

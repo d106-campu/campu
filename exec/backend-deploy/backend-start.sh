@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export TAG=$1
+
 sed -i "/^TAG=/c\TAG=${TAG}" .env
 
 docker compose pull
