@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
-import { IconType } from "react-icons";
+import { IconType } from 'react-icons';
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -13,6 +13,9 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   hoverTextColor?: string;
   borderColor?: string;
   borderRadius?: string;
+  padding?: string;
+  cursorPointer?: string;
+  outline?: string;
   icon?: IconType;
   iconColor?: string;
   iconSize?: number;
@@ -31,6 +34,9 @@ const Button = ({
   hoverBackgroundColor = "hover:bg-[#145031]",
   borderColor,
   borderRadius = "rounded-lg",
+  padding,
+  cursorPointer = 'cursor-pointer',
+  outline = 'outline-none',
   icon: Icon,
   iconColor = "white",
   iconSize = 25,
@@ -40,7 +46,11 @@ const Button = ({
 }: PropsWithChildren<IButtonProps>) => {
   return (
     <button
-      className={`text-center ${fontWeight} ${width} ${height} ${backgroundColor} ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor} ${textColor} ${textSize}`}
+      className={`
+        text-center ${fontWeight} ${width} ${height} ${backgroundColor}
+        ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor}
+        ${textColor} ${textSize} ${cursorPointer} ${outline}
+      `}
       {...props}
     >
       {Icon && (
