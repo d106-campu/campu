@@ -10,6 +10,7 @@ pipeline {
         script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
         returnStdout: true
     )}"""
+    GIT_COMMIT_HASH = "${env.GIT_COMMIT}"
     CHANNEL = 'D106-Alert'
   }
  

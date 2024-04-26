@@ -4,7 +4,7 @@ export REGISTRY=k10d106.p.ssafy.io
 
 export IMG_NAME=backend
 
-export TAG="${env.GIT_COMMIT}"
+export TAG="${GIT_COMMIT_HASH}"
 
 docker login ${REGISTRY} -u ${USERNAME} -p ${PASSWORD}
 
