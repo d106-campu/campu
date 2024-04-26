@@ -10,7 +10,6 @@ pipeline {
         script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
         returnStdout: true
     )}"""
-    GIT_COMMIT_HASH = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     CHANNEL = 'D106-Alert'
   }
  
@@ -30,7 +29,10 @@ pipeline {
       steps {
         script {
           withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sh 'cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh'
+            sh """
+            export TAG=${env.GIT_COMMIT}
+            cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh
+            """
           }
         }
       }
