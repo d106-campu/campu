@@ -7,14 +7,20 @@ interface ICampingItem {
   rating: number;
   price: string;
   description: string;
+  type: string;
   location: string;
+  thema: string[];
 }
 
-const RecommendTypeItem = ({ item }: { item: ICampingItem }) => {
+const RecommendItem = ({ item }: { item: ICampingItem }) => {
   return (
     <>
-      <div key={item.id} className="px-2 py-4 w-[30%]">
-        <img src={item.image} alt={item.name} className="w-full rounded-md" />
+      <div key={item.id} className="px-2 py-4 w-[33%]">
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-full rounded-md h-40 object-cover object-center"
+        />
         <div className="p-2">
           <div className="flex justify-between">
             <h1 className="font-bold">{item.name}</h1>
@@ -36,4 +42,4 @@ const RecommendTypeItem = ({ item }: { item: ICampingItem }) => {
   );
 };
 
-export default RecommendTypeItem;
+export default RecommendItem;

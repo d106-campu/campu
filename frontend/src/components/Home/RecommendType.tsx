@@ -8,13 +8,13 @@ import CampingSelect from "@/assets/images/CampingSelect.png";
 import AutoCampingSelect from "@/assets/images/AutoCampingSelect.png";
 import GlampingSelect from "@/assets/images/GlampingSelect.png";
 import CaravaneSelect from "@/assets/images/CaravaneSelect.png";
-import RecommendTypeItem from "./RecommendTypeItem";
+import RecommendItem from "./RecommendItem";
 
 const RecommendType = () => {
   type TabType = "캠핑" | "오토캠핑" | "글램핑" | "카라반";
 
   const [selectedTab, setSelectedTab] = useState<TabType>("캠핑");
-  const [showList, setShowList] = useState<boolean>(true); // 선택된 탭에 따라 목록을 보여줄지 숨길지 결정
+  const [showList, setShowList] = useState<boolean>(true);
   const handleTabClick = (tab: TabType) => {
     if (selectedTab !== tab) {
       setSelectedTab(tab);
@@ -24,13 +24,13 @@ const RecommendType = () => {
   const getSelectedImage = (tab: TabType) => {
     switch (tab) {
       case "캠핑":
-        return selectedTab === "캠핑" ? CampingSelect : Camping;
+        return selectedTab === "캠핑" ? Camping : CampingSelect;
       case "오토캠핑":
-        return selectedTab === "오토캠핑" ? AutoCampingSelect : AutoCamping;
+        return selectedTab === "오토캠핑" ? AutoCamping : AutoCampingSelect;
       case "글램핑":
-        return selectedTab === "글램핑" ? GlampingSelect : Glamping;
+        return selectedTab === "글램핑" ? Glamping : GlampingSelect;
       case "카라반":
-        return selectedTab === "카라반" ? CaravaneSelect : Caravane;
+        return selectedTab === "카라반" ? Caravane : CaravaneSelect;
       default:
         return;
     }
@@ -38,13 +38,13 @@ const RecommendType = () => {
 
   return (
     <>
-      <div className="bg-[#64CF5B]/20 text-center flex flex-col items-center">
+      <div className="bg-[#64CF5B]/20 text-center flex flex-col items-center py-4">
         <div className="font-bold text-2xl pt-6">
           <p>어떤 캠핑 스타일을 찾으시나요?</p>
         </div>
 
         {/* 캠핑 타입 */}
-        <div className="flex justify-around w-[60%] p-3">
+        <div className="flex justify-evenly w-[70%] p-3">
           {["캠핑", "오토캠핑", "글램핑", "카라반"].map((tab) => (
             <div
               key={tab}
@@ -58,14 +58,13 @@ const RecommendType = () => {
         </div>
       </div>
 
-      {/* 선택된 탭에 따라 목록을 보여줄지 결정 */}
       {showList && (
-        <div className="flex justify-center">
-          <div className="flex flex-wrap justify-center w-[60%]">
+        <div className="flex justify-center py-8">
+          <div className="flex flex-wrap justify-center w-[70%]">
             {dummyData
               .filter((item) => item.type === selectedTab)
               .map((item) => (
-                <RecommendTypeItem key={item.id} item={item} />
+                <RecommendItem key={item.id} item={item} />
               ))}
           </div>
         </div>
@@ -76,6 +75,7 @@ const RecommendType = () => {
 
 export default RecommendType;
 
+// 더미데이터
 const dummyData = [
   {
     id: 1,
@@ -86,6 +86,7 @@ const dummyData = [
     description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
     location: "경상북도 구미시",
     type: "캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 2,
@@ -96,6 +97,7 @@ const dummyData = [
     description: "편안한 캠핑을 즐길 수 있는 곳",
     location: "강원도 춘천시",
     type: "오토캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 3,
@@ -106,6 +108,7 @@ const dummyData = [
     description: "고급스러운 편안한 숙박이 가능한 글램핑장",
     location: "경기도 양평군",
     type: "글램핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 4,
@@ -116,6 +119,7 @@ const dummyData = [
     description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
     location: "서울특별시 강남구",
     type: "카라반",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 5,
@@ -126,6 +130,7 @@ const dummyData = [
     description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
     location: "경상북도 구미시",
     type: "캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 6,
@@ -136,6 +141,7 @@ const dummyData = [
     description: "편안한 캠핑을 즐길 수 있는 곳",
     location: "강원도 춘천시",
     type: "오토캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 7,
@@ -146,6 +152,7 @@ const dummyData = [
     description: "고급스러운 편안한 숙박이 가능한 글램핑장",
     location: "경기도 양평군",
     type: "글램핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 8,
@@ -156,6 +163,7 @@ const dummyData = [
     description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
     location: "서울특별시 강남구",
     type: "카라반",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 9,
@@ -166,6 +174,7 @@ const dummyData = [
     description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
     location: "경상북도 구미시",
     type: "캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 10,
@@ -176,6 +185,7 @@ const dummyData = [
     description: "편안한 캠핑을 즐길 수 있는 곳",
     location: "강원도 춘천시",
     type: "오토캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 11,
@@ -186,6 +196,7 @@ const dummyData = [
     description: "고급스러운 편안한 숙박이 가능한 글램핑장",
     location: "경기도 양평군",
     type: "글램핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 12,
@@ -196,6 +207,7 @@ const dummyData = [
     description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
     location: "서울특별시 강남구",
     type: "카라반",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 13,
@@ -206,6 +218,7 @@ const dummyData = [
     description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
     location: "경상북도 구미시",
     type: "캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 14,
@@ -216,6 +229,7 @@ const dummyData = [
     description: "편안한 캠핑을 즐길 수 있는 곳",
     location: "강원도 춘천시",
     type: "오토캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 15,
@@ -226,6 +240,7 @@ const dummyData = [
     description: "고급스러운 편안한 숙박이 가능한 글램핑장",
     location: "경기도 양평군",
     type: "글램핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 16,
@@ -236,6 +251,7 @@ const dummyData = [
     description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
     location: "서울특별시 강남구",
     type: "카라반",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 17,
@@ -246,6 +262,7 @@ const dummyData = [
     description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
     location: "경상북도 구미시",
     type: "캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 18,
@@ -256,6 +273,7 @@ const dummyData = [
     description: "편안한 캠핑을 즐길 수 있는 곳",
     location: "강원도 춘천시",
     type: "오토캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 19,
@@ -266,6 +284,7 @@ const dummyData = [
     description: "고급스러운 편안한 숙박이 가능한 글램핑장",
     location: "경기도 양평군",
     type: "글램핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 20,
@@ -276,6 +295,7 @@ const dummyData = [
     description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
     location: "서울특별시 강남구",
     type: "카라반",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 21,
@@ -286,6 +306,7 @@ const dummyData = [
     description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
     location: "경상북도 구미시",
     type: "캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 22,
@@ -296,6 +317,7 @@ const dummyData = [
     description: "편안한 캠핑을 즐길 수 있는 곳",
     location: "강원도 춘천시",
     type: "오토캠핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 23,
@@ -306,6 +328,7 @@ const dummyData = [
     description: "고급스러운 편안한 숙박이 가능한 글램핑장",
     location: "경기도 양평군",
     type: "글램핑",
+    thema: ["물놀이", "애견동반"],
   },
   {
     id: 24,
@@ -316,5 +339,6 @@ const dummyData = [
     description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
     location: "서울특별시 강남구",
     type: "카라반",
+    thema: ["물놀이", "애견동반"],
   },
 ];

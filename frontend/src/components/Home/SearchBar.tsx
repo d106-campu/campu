@@ -27,12 +27,12 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className="bg-white/50 h-auto w-[60%] absolute top-28 rounded-lg p-4">
-        <p className="font-bold text-2xl text-center py-2">
+      <div className="bg-white/50 h-auto w-[70%] absolute top-28 rounded-lg p-4">
+        <p className="font-bold text-2xl text-center py-4">
           어디로 떠나볼까요?
         </p>
 
-        <div className="p-6">
+        <div className=" px-12 py-6">
           <div className="flex gap-2 items-center">
             {/* 지역 선택 */}
             <div className="flex items-center flex-grow bg-white rounded-md p-3">
@@ -74,7 +74,7 @@ const SearchBar = () => {
               ></input>
             </div>
             {/* 검색버튼 */}
-            <button className="ml-2 px-4 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap">
+            <button className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap">
               검색하기
             </button>
           </div>

@@ -1,3 +1,4 @@
+import RecommendThema from "./RecommendThema";
 import RecommendType from "./RecommendType";
 
 const Recommend = () => {
@@ -5,6 +6,7 @@ const Recommend = () => {
     <>
       <div className="w-full">
         <RecommendType />
+        <RecommendThema />
       </div>
     </>
   );

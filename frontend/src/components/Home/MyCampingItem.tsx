@@ -12,11 +12,11 @@ interface IMyCamping {
 
 const MyCampingItem = ({ camping }: { camping: IMyCamping }) => {
   return (
-    <div key={camping.id} className="px-2 py-5 w-[45%]">
+    <div key={camping.id} className="px-2 py-5 w-[25%]">
       <img
         src={camping.image}
         alt={camping.name}
-        className="w-full rounded-md"
+        className="w-full rounded-md h-32 object-cover object-center"
       />
       <div className="p-2">
         <div className="flex justify-between">

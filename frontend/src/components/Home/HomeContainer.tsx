@@ -2,6 +2,8 @@ import MainImage from "@/assets/images/MainImage.jpg";
 import SearchBar from "./SearchBar";
 import MyCamping from "./MyCamping";
 import Recommend from "./Recommend";
+import GoOwner from "./GoOwner";
+import NoticeSection from "./NoticeSection";
 
 const HomeContainer = () => {
   return (
@@ -11,6 +13,8 @@ const HomeContainer = () => {
         <SearchBar />
         <MyCamping />
         <Recommend />
+        <GoOwner />
+        <NoticeSection />
       </div>
     </>
   );
