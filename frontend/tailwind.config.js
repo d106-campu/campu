@@ -28,9 +28,19 @@ export default {
           from: { opacity: 0, transform: "translate(0px, 5px)" },
           to: { opacity: 1, transform: "translate(0px, 0px)" },
         },
+        FadeIn: {
+          from: { opacity: 0, transform: "translate(-50%, -40%)" },
+          to: { opacity: 1, transform: "translate(-50%, -50%)" },
+        },
+        FadeOut: {
+          from: { opacity: 0, transform: "translate(-50%, -50%)" },
+          to: { opacity: 1, transform: "translate(-50%, -40%)" },
+        },
       },
       animation: {
-        ShowUp: "ShowUp 0.7s ease-in-out",
+        showUp: "ShowUp 0.7s ease-in-out",
+        modalOpen: "FadeIn 0.5s ease-in-out",
+        modalClose: "FadeOut 0.5s ease-in-out",
       },
     },
   },
