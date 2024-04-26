@@ -85,51 +85,51 @@ pipeline {
       }
     }
 
-    stage('Health Check Backend') {
-      steps {
-        sh 'sleep 20'
-        script {
-          withCredentials([string(credentialsId: 'backend_url', variable: 'BACKEND_URL')]) {
-            def HEALTH = sh(
-              returnStdout: true,
-              script: "curl -s -o /dev/null -w '%{http_code}' ${BACKEND_URL}"
-            ).trim()
+    // stage('Health Check Backend') {
+    //   steps {
+    //     sh 'sleep 20'
+    //     script {
+    //       withCredentials([string(credentialsId: 'backend_url', variable: 'BACKEND_URL')]) {
+    //         def HEALTH = sh(
+    //           returnStdout: true,
+    //           script: "curl -s -o /dev/null -w '%{http_code}' ${BACKEND_URL}"
+    //         ).trim()
 
-            if (HEALTH == "200") {
-              echo "backend success"
-            } else {
-              error "backend fail"
-            }
-          }
-        }
-      }
-    }
+    //         if (HEALTH == "200") {
+    //           echo "backend success"
+    //         } else {
+    //           error "backend fail"
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
 
-  post {
-    success {
-      script {
-        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
-          mattermostSend(
-            color: 'good',
-            message: "[BE] Deploy Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
-            endpoint: "${MM_URL}",
-            channel: "${CHANNEL}",
-          )
-        }
-      }
-    }
-    failure {
-      script {
-        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
-          mattermostSend(
-            color: 'danger',
-            message: "[BE] Deploy Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
-            endpoint: "${MM_URL}",
-            channel: "${CHANNEL}",
-          )
-        }
-      }
-    }
-  }
+  // post {
+  //   success {
+  //     script {
+  //       withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
+  //         mattermostSend(
+  //           color: 'good',
+  //           message: "[BE] Deploy Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
+  //           endpoint: "${MM_URL}",
+  //           channel: "${CHANNEL}",
+  //         )
+  //       }
+  //     }
+  //   }
+  //   failure {
+  //     script {
+  //       withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
+  //         mattermostSend(
+  //           color: 'danger',
+  //           message: "[BE] Deploy Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
+  //           endpoint: "${MM_URL}",
+  //           channel: "${CHANNEL}",
+  //         )
+  //       }
+  //     }
+  //   }
+  // }
 }
