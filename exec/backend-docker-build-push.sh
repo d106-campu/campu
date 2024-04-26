@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+export TAG=$1
+
 export REGISTRY=k10d106.p.ssafy.io
 
 export IMG_NAME=backend
