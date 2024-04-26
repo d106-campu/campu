@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ILoginFormValues } from '@/types/auth';
 
 interface LoginFormProps {
   isSmallScreen: boolean;
@@ -6,8 +7,15 @@ interface LoginFormProps {
 }
 
 const LoginForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element => {
-  const [credentials, setCredentials] = useState({ id: '', password: '' });
-  const [errors, setErrors] = useState({ id: '', password: '' });
+  const [credentials, setCredentials] = useState<ILoginFormValues>({
+    id: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState<ILoginFormValues>({
+    id: '',
+    password: '',
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IFormValues } from '@/types/auth';
+import { ISignUpFormValues } from '@/types/auth';
 
 interface LoginFormProps {
   isSmallScreen: boolean;
@@ -9,7 +9,7 @@ interface LoginFormProps {
 const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element => {
 
   // 폼 입력 값 상태 관리
-  const [values, setValues] = useState<IFormValues>({
+  const [values, setValues] = useState<ISignUpFormValues>({
     id: '',
     nickName: '',
     password: '',
@@ -18,7 +18,7 @@ const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element 
   });
 
   // 유효성 통과 실패하면 오류 메세지 관리
-  const [errors, setErrors] = useState<IFormValues>({
+  const [errors, setErrors] = useState<ISignUpFormValues>({
     id: '',
     nickName: '',
     password: '',
@@ -29,7 +29,7 @@ const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element 
   // 유효성 검사 함수
   const validateForm = () => {
     let isValid = true;
-    const newErrors: IFormValues = { id: '', nickName: '', password: '', confirmPassword: '', phone: '' };
+    const newErrors: ISignUpFormValues = { id: '', nickName: '', password: '', confirmPassword: '', phone: '' };
 
     const idRegex = /^[a-zA-Z0-9]+$/;
     if (!values.id) {
@@ -91,7 +91,7 @@ const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element 
   };
 
   // 사용자가 input에 입력하는 값 추적
-  const handleChange = (field: keyof IFormValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof ISignUpFormValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues(prev => ({ ...prev, [field]: event.target.value }));
   };
 
