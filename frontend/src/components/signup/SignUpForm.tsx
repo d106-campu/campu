@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { ISignUpFormValues } from '@/types/auth';
+import Button from '@/components/@common/Button/Button';
+import InputField from '@/components/@common/Input/InputField';
 
-interface LoginFormProps {
+interface ILoginFormProps {
   isSmallScreen: boolean;
   toggleForm: () => void;
 }
 
-const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element => {
+const SignUpForm = ({ isSmallScreen, toggleForm }: ILoginFormProps): JSX.Element => {
 
   // 폼 입력 값 상태 관리
   const [values, setValues] = useState<ISignUpFormValues>({
@@ -80,9 +82,9 @@ const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element 
     return isValid;
   };
 
-  // 회원가입 제출 버튼 상태 관리
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  // 회원가입 클릭 시 유효성 검사 함수에 대해 분기 처리
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (validateForm()) {
       console.log('회원가입 성공함');
     } else {
@@ -95,13 +97,23 @@ const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element 
     setValues(prev => ({ ...prev, [field]: event.target.value }));
   };
 
+
+  // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
+  const fields: Array<{ label: string; name: keyof ISignUpFormValues; placeholder: string; maxLength: number; type?: string }> = [
+    { label: '아이디', name: 'id', placeholder: '아이디는 6~16자 이내로 해주세요.', maxLength: 16 },
+    { label: '닉네임', name: 'nickName', placeholder: '닉네임은 8자 이내로 해주세요.', maxLength: 8 },
+    { label: '휴대폰 번호', name: 'phone', placeholder: '본인의 전화번호를 입력해주세요.', maxLength: 11 },
+    { label: '비밀번호', name: 'password', placeholder: '비밀번호는 영문자, 숫자, 특수문자를 포함한 8자 이상입니다.', maxLength: 20, type: 'password' },
+    { label: '비밀번호 확인', name: 'confirmPassword', placeholder: '비밀번호를 한번 더 입력해주세요.', maxLength: 20, type: 'password' }
+  ];
+
   return (
     <>
       <div className="h-screen flex items-center justify-center">
-        <div className="w-[100%] h-[75vh] flex items-center justify-center rounded-lg shadow-2xl bg-white relative">
+        <div className="w-[100%] h-[75vh] flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
           <div className="w-[80%]">
             {/* 헤더 */}
-            <div className="pt-5 flex items-center justify-center">
+            <div className="h-[30px] pt-8 flex items-center justify-center">
               <p className="text-center font-bold text-xl">
                 회원가입
               </p>
@@ -113,77 +125,28 @@ const SignUpForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element 
               로그인 &gt;
             </p>
             <form onSubmit={handleSubmit} className='space-y-1'>
-              {/* 아이디 입력 및 검사 */}
-              <div className='flex justify-between'>
-                <h1 className="text-sm pt-3 pl-1">아이디</h1>
-                {errors.id && <p className="text-xs pl-1 pt-4 text-red-400">{errors.id}</p>}
-              </div>
-              <input
-                type="id"
-                value={values.id}
-                onChange={handleChange('id')}
-                placeholder="아이디는 6~16자 이내로 해주세요."
-                className="w-full h-10 pl-2 border-2 border-gray-100 rounded-lg outline-none text-sm"
-                maxLength={16}
-              />
-              {/* 닉네임 입력 및 검사 */}
-              <div className='flex justify-between'>
-                <h1 className="text-sm pt-3 pl-1">닉네임</h1>
-                {errors.nickName && <p className="text-xs pl-1 pt-4 text-red-400">{errors.nickName}</p>}
-              </div>
-              <input
-                type="nickName"
-                value={values.nickName}
-                onChange={handleChange('nickName')}
-                placeholder="닉네임은 8자 이내로 해주세요."
-                className="w-full h-10 pl-2 border-2 border-gray-100 rounded-lg outline-none text-sm"
-                maxLength={8}
-              />
-              {/* 비밀번호 입력 및 검사 */}
-              <div className='flex justify-between'>
-                <h1 className="text-sm pt-3 pl-1">비밀번호</h1>
-                {errors.password && <p className="text-xs pl-1 pt-4 text-red-400">{errors.password}</p>}
-              </div>
-              <input
-                type="password"
-                value={values.password}
-                onChange={handleChange('password')}
-                placeholder="비밀번호는 영문자, 숫자, 특수문자를 포함한 8자 이상입니다."
-                className="w-full h-10 pl-2 border-2 border-gray-100 rounded-lg outline-none text-sm"
-                maxLength={20}
-              />
-              {/* 비밀번호 확인 입력 및 검사 */}
-              <div className='flex justify-between'>
-                <h1 className="text-sm pt-3 pl-1">비밀번호 확인</h1>
-                {errors.confirmPassword && <p className="text-xs pl-1 pt-4 text-red-400">{errors.confirmPassword}</p>}
-              </div>
-              <input
-                type="password"
-                value={values.confirmPassword}
-                onChange={handleChange('confirmPassword')}
-                placeholder="비밀번호를 한번 더 입력해주세요."
-                className="w-full h-10 pl-2 border-2 border-gray-100 rounded-lg outline-none text-sm"
-                maxLength={20}
-              />
-              {/* 전화번호 입력 및 인증 */}
-              <div className='flex justify-between'>
-                <h1 className="text-sm pt-3 pl-1">휴대폰 번호</h1>
-                {errors.phone && <p className="text-xs pl-1 pt-4 text-red-400">{errors.phone}</p>}
-              </div>
-              <input
-                type="id"
-                value={values.phone}
-                onChange={handleChange('phone')}
-                placeholder="본인의 전화번호를 입력해주세요."
-                className="w-full h-10 pl-2 border-2 border-gray-100 rounded-lg outline-none text-sm"
-                maxLength={11}
-              />
+              {fields.map(field => (
+                <InputField
+                  key={field.name}
+                  label={field.label}
+                  type={field.type || 'text'}
+                  name={field.name}
+                  value={values[field.name]}
+                  onChange={handleChange(field.name as keyof ISignUpFormValues)}
+                  placeholder={field.placeholder}
+                  error={errors[field.name]}
+                  maxLength={field.maxLength}
+                  />
+              ))}
               {/* 회원가입 시도 */}
               <div className="flex flex-col justify-center items-center py-5">
-                <input
+                <Button
                   type="submit"
-                  value="회원가입"
-                  className="w-full bg-green-700 text-white rounded-md px-auto py-2 hover:bg-green-800 cursor-pointer"
+                  text="회원가입"
+                  textSize='text-md'
+                  width='w-full'
+                  borderRadius='rounded-md'
+                  padding='px-auto'
                 />
               </div>
             </form>
