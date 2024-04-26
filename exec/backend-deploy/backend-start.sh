@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TAG=${env.GIT_COMMIT}
+export TAG="${env.GIT_COMMIT}"
 
 sed -i "/^TAG=/c\TAG=${TAG}" docker-compose.yml
 

@@ -3,7 +3,7 @@ pipeline {
   
   environment {
     HOME = "${env.WORKSPACE}"
-    GRADLE_USER_HOME = "$WORKSPACE/.gradle"
+    GRADLE_USER_HOME = "${env.WORKSPACE}/.gradle"
     CI = false
 
     GIT_MESSAGE = """${sh(
