@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TAG="${GIT_COMMIT_HASH}"
+export TAG=${GIT_COMMIT_HASH}
 
 sed -i "/^TAG=/c\TAG=${TAG}" .env
 
