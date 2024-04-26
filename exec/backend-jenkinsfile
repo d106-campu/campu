@@ -30,7 +30,7 @@ pipeline {
         script {
           withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh """
-            export TAG=${env.GIT_COMMIT}
+            TAG=${env.GIT_COMMIT}
             cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh
             """
           }
