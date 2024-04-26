@@ -2,7 +2,7 @@ import logo from "@/assets/images/temp_log2.png";
 import profileImage from "@/assets/images/profile.png";
 import { useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
-import AlertLink from "@/components/Alert/AlertLink ";
+import AlertLink from "@/components/alert/AlertLink ";
 
 // @TODO: 로그인 여부 구분
 // @TODO: 알림 열기
