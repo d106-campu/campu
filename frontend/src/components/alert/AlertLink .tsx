@@ -21,8 +21,8 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
 
       {/* 알림 목록 부분 */}
       {openAlert && (
-        <div className="absolute top-full left-0 mt-4 w-72 border-2 bg-white shadow-lg rounded-xl z-10 animate-ShowUp">
-          <div className="relative rounded-xl pt-4">
+        <div className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp">
+          <div className="relative rounded-2xl pt-4">
             {/* 삼각형 모양 */}
             <div className="bg-white absolute h-6 w-6 rotate-45 transform origin-bottom-right -translate-y-1/2 left-10 top-1 rounded border-t-2 border-l-2" />
             {/* 스크롤 컨테이너 */}
