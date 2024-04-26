@@ -57,7 +57,9 @@ const CampingPhotos = ({ main, photos }: ICampingPhotosProps) => {
       </div>
       <div className="absolute bottom-2 right-2">
         <Button
+          width="w-32"
           text="사진 모두 보기"
+          textSize="text-xs"
           icon={PiImage}
           backgroundColor="bg-[#030303cc]"
           hoverBackgroundColor="hover:bg-[#030303]"
