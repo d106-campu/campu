@@ -30,7 +30,7 @@ const LoginForm = ({ isSmallScreen, toggleForm }: LoginFormProps): JSX.Element =
     }
 
     if (!isValid) {
-      // 여기서 api 통신 연결 -> 아이디, 비번 틀렸을 때의 유효성 처리 필요
+      // @TODO : 여기서 api 통신 연결 -> 아이디, 비번 틀렸을 때의 유효성 처리 필요
       console.log('백엔드측으로 로그인 요청함');
     }
 
