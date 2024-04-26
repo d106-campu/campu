@@ -10,7 +10,7 @@ export default {
       colors: {
         MAIN_GREEN: "#186D41",
         MAIN_YELLOW: "#FEE970",
-        MAIB_PINK: "#FF777E",
+        MAIN_PINK: "#FF777E",
         MAIN_RED: "#E64B4B",
         SUB_GREEN_01: "#F4FBF5",
         SUB_GREEN_02: "#E3F0E5",
@@ -33,14 +33,14 @@ export default {
           to: { opacity: 1, transform: "translate(-50%, -50%)" },
         },
         FadeOut: {
-          from: { opacity: 0, transform: "translate(-50%, -50%)" },
-          to: { opacity: 1, transform: "translate(-50%, -40%)" },
+          from: { opacity: 1, transform: "translate(-50%, -50%)" },
+          to: { opacity: 0, transform: "translate(-50%, -40%)" },
         },
       },
       animation: {
         showUp: "ShowUp 0.7s ease-in-out",
-        modalOpen: "FadeIn 0.5s ease-in-out",
-        modalClose: "FadeOut 0.5s ease-in-out",
+        modalOpen: "FadeIn 0.3s ease-in-out",
+        modalClose: "FadeOut 0.3s ease-in-out",
       },
     },
   },
