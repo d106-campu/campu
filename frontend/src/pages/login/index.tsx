@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import Button from '@/components/@common/Button/Button';
 import LoginForm from '@/components/login/LoginForm';
 import SignUpForm from '@/components/signup/SignUpForm';
-import BG_Login from '@/assets/images/bg_loginF.jpg';
+import BG_Login from '@/assets/images/bg_loginG.jpg';
 import Header from "@/components/@common/Header/Header";
 
 const LoginPage = (): JSX.Element => {
@@ -15,7 +16,7 @@ const LoginPage = (): JSX.Element => {
     setZIndexChangeDelay(true); 
     setTimeout(() => {
       setZIndexChangeDelay(false);
-    }, 250);
+    }, 300);
   };
 
   // 로그인 페이지만 따로 다른 배경 설정
@@ -45,10 +46,10 @@ const LoginPage = (): JSX.Element => {
       <div style={backgroundImageStyle} className='w-screen h-[calc(100vh-3rem)] flex items-center justify-center'>       
         {/* 밑판 */}
         <div
-          className='w-[75%] min-w-[600px] sm:min-w-[640px] md:min-w-[700px] lg:min-w-[800px]
-          absolute flex items-center justify-ceter bg-white rounded-lg shadow-2xl bg-opacity-60'
+          className='w-[70%] min-w-[600px] sm:min-w-[640px] md:min-w-[700px] lg:min-w-[800px]
+          absolute flex items-center justify-ceter bg-white rounded-3xl shadow-2xl bg-opacity-40'
         >
-          <div className='min-w-[300px] h-[55vh] flex-1 flex justify-around px-16 items-center'>
+          <div className='min-w-[300px] h-[50vh] flex-1 flex justify-around px-16 items-center'>
             {/* 왼쪽 */}
             <div
               className={`flex flex-col items-center justify-center text-lg transition-transform duration-100 ${
@@ -57,12 +58,13 @@ const LoginPage = (): JSX.Element => {
                 `z-10 translate-x-28 sm:-translate-x-20 md:-translate-x-12 lg:translate-x-0 ${isSmallScreen ? 'opacity-0' : 'opacity-100'}`
               }`}>
               <h1 className="py-5 text-lg">아직 계정이 없으신가요?</h1>
-              <button
-                onClick={toggleForms}
-                className="relative w-full text-white bg-green-700 hover:bg-green-800 px-6 py-2 rounded-md"
-              >
-                회원가입
-              </button>
+              <Button
+                text='회원가입'
+                textSize='text-[15px]'
+                borderRadius='rounded-md'
+                padding="px-6 py-2"
+                onClick={toggleForms}       
+              />
             </div>
             {/* 오른쪽 */}
             <div
@@ -72,12 +74,13 @@ const LoginPage = (): JSX.Element => {
                 `z-10 sm:translate-x-20 md:translate-x-16 lg:translate-x-0 ${isSmallScreen ? 'opacity-0' : 'opacity-100'}`
               }`}>
               <h1 className='py-5 text-lg'>이미 계정이 있으신가요?</h1>
-              <button
-                onClick={toggleForms}
-                className='w-full text-white bg-green-700 hover:bg-green-800 px-6 py-2 rounded-md'
-              >
-                로그인
-              </button>
+              <Button
+                text='로그인'
+                textSize='text-[15px]'
+                borderRadius='rounded-md'
+                padding="px-6 py-2"
+                onClick={toggleForms}       
+              />
             </div>
           </div>
         </div>
