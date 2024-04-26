@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import { IconType } from "react-icons";
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -12,6 +13,9 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   hoverTextColor?: string;
   borderColor?: string;
   borderRadius?: string;
+  icon?: IconType;
+  iconColor?: string;
+  iconSize?: number;
 }
 
 const Button = ({
@@ -26,6 +30,9 @@ const Button = ({
   hoverBackgroundColor = "hover:bg-[#145031]",
   borderColor,
   borderRadius = "rounded-lg",
+  icon: Icon,
+  iconColor = "white",
+  iconSize = 25,
   children,
   ...props
 }: PropsWithChildren<IButtonProps>) => {
@@ -34,6 +41,13 @@ const Button = ({
       className={`text-center ${fontWeight} ${width} ${height} ${backgroundColor} ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor} ${textColor} ${textSize}`}
       {...props}
     >
+      {Icon && (
+        <Icon
+          className="inline flex-shrink-0 mr-2"
+          size={iconSize}
+          color={iconColor}
+        />
+      )}
       {text}
       {children}
     </button>

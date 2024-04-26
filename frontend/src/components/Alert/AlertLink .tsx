@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AlertMessage from "./AlertMessage";
+import AlertMessage from "@/components/alert/AlertMessage";
 
 const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
