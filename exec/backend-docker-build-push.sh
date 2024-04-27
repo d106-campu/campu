@@ -2,6 +2,10 @@
 
 export TAG=$1
 
+export USERNAME=$2
+
+export PASSWORD=$3
+
 export REGISTRY=k10d106.p.ssafy.io
 
 export IMG_NAME=backend

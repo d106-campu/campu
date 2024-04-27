@@ -6,6 +6,8 @@ pipeline {
     GRADLE_USER_HOME = "${env.WORKSPACE}/.gradle"
     CI = false
 
+    REGISTRY_AUTH = credentials('docker_registry_id_pw')
+
     GIT_MESSAGE = """${sh(
         script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
         returnStdout: true
@@ -28,11 +30,11 @@ pipeline {
     stage('Build and Push Images') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          // withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh """
-            cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh ${env.GIT_COMMIT}
+            cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh ${env.GIT_COMMIT} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW}
             """
-          }
+          // }
         }
       }
     }
