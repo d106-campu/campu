@@ -18,6 +18,7 @@ const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
   return (
     <>
       <div className="relative group w-[50%]">
+        <h3 className="text-xl font-bold pb-2">캠핑존 배치도</h3>
         <img
           src={layout}
           alt={`${campsite_name} 배치도`}

@@ -22,7 +22,7 @@ const data = {
   campsite_tel: "010-1234-5678",
   campsite_addr1: "경상북도 칠곡군 가산면 금화리 산 49-1",
   campsite_addr2: "캠프유캠푸 캠핑장",
-  type: "오토캠핑 · 글램핑",
+  types: ["오토캠핑", "글램핑", "카라반"],
   isLiked: true,
   totalReview: 10,
   main: mainPhoto,
@@ -41,10 +41,21 @@ const CampSiteIntro = () => {
     <>
       <CampingPhotos main={data.main} photos={data.other} />
       <div className="pt-7">
-        <p className="text-UNIMPORTANT_TEXT_01">{data.type}</p>
+        {data.types.map((type, index) => (
+          <span key={index} className="text-UNIMPORTANT_TEXT_01">
+            {type}
+            {index < data.types.length - 1 && (
+              <span className="text-UNIMPORTANT_TEXT_01 p-1">·</span>
+            )}
+          </span>
+        ))}
         <div className="flex justify-between items-end">
           <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
-          <button onClick={() => {setIsLiked(!isLiked)}}>
+          <button
+            onClick={() => {
+              setIsLiked(!isLiked);
+            }}
+          >
             {isLiked ? (
               <VscHeartFilled size={38} color="#FF777E" />
             ) : (
@@ -54,6 +65,7 @@ const CampSiteIntro = () => {
         </div>
 
         {/* 캠핑장 필수 정보 */}
+        {/* @TODO: 클릭 시 이동 */}
         <div className="p-2 text-sm">
           <div className="flex pt-1">
             <img src={mapIcon} className="w-5" />
@@ -95,9 +107,8 @@ const CampSiteIntro = () => {
           </div>
         </div>
 
-        {/* 캠핑존 배치도 */}
-        <div className="pt-10">
-          <h3 className="text-xl font-bold pb-2">캠핑존 배치도</h3>
+        <div className="pt-10 flex">
+          {/* 캠핑존 배치도 */}
           <CampSiteLayout
             layout={data.layout}
             campsite_name={data.campsite_faclt_nm}
