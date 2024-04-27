@@ -67,7 +67,7 @@ pipeline {
                                 cd /home/jenkins/deploy/backend && chmod 755 *.sh; \
                                 ./backend-stop.sh; \
                                 ./backend-start.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
-                                """
+                                """,
                     execCommand: 'cd /home/jenkins/deploy/frontend && chmod 755 *.sh && ./frontend-reload.sh'
                   )
                   // sshTransfer(
