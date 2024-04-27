@@ -68,10 +68,11 @@ pipeline {
                                 ./backend-stop.sh; \
                                 ./backend-start.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
                                 """
-                  ),
-                  sshTransfer(
                     execCommand: 'cd /home/jenkins/deploy/frontend && chmod 755 *.sh && ./frontend-reload.sh'
                   )
+                  // sshTransfer(
+                  //   execCommand: 'cd /home/jenkins/deploy/frontend && chmod 755 *.sh && ./frontend-reload.sh'
+                  // )
                 ]
               )
             ]
@@ -80,43 +81,43 @@ pipeline {
       }
     }
 
-    stage('Health Check Backend') {
-      steps {
-        sh 'sleep 20'
-        script {
-          def HEALTH = sh(returnStdout: true, script: "curl -s -o /dev/null -w '%{http_code}' ${env.BACKEND_URL}").trim()
+    // stage('Health Check Backend') {
+    //   steps {
+    //     sh 'sleep 20'
+    //     script {
+    //       def HEALTH = sh(returnStdout: true, script: "curl -s -o /dev/null -w '%{http_code}' ${env.BACKEND_URL}").trim()
 
-          if (HEALTH == "200") {
-            echo "backend success"
-          } else {
-            error "backend fail"
-          }
-        }
-      }
-    }
+    //       if (HEALTH == "200") {
+    //         echo "backend success"
+    //       } else {
+    //         error "backend fail"
+    //       }
+    //     }
+    //   }
+    // }
   }
 
-  post {
-    success {
-      script {
-        mattermostSend(
-          color: 'good',
-          message: "[BE] Deploy Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
-          endpoint: "${env.MM_URL}",
-          channel: "${env.MM_CHANNEL}",
-        )
-      }
-    }
-    failure {
-      script {
-        mattermostSend(
-          color: 'danger',
-          message: "[BE] Deploy Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
-          endpoint: "${env.MM_URL}",
-          channel: "${env.MM_CHANNEL}",
-        )
-      }
-    }
-  }
+  // post {
+  //   success {
+  //     script {
+  //       mattermostSend(
+  //         color: 'good',
+  //         message: "[BE] Deploy Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+  //         endpoint: "${env.MM_URL}",
+  //         channel: "${env.MM_CHANNEL}",
+  //       )
+  //     }
+  //   }
+  //   failure {
+  //     script {
+  //       mattermostSend(
+  //         color: 'danger',
+  //         message: "[BE] Deploy Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+  //         endpoint: "${env.MM_URL}",
+  //         channel: "${env.MM_CHANNEL}",
+  //       )
+  //     }
+  //   }
+  // }
 
 }
