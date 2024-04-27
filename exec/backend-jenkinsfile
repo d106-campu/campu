@@ -30,11 +30,9 @@ pipeline {
     stage('Build and Push Images') {
       steps {
         script {
-          // withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sh """
-            cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh ${env.GIT_COMMIT} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW}
-            """
-          // }
+          sh """
+          cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh ${env.GIT_COMMIT} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW}
+          """
         }
       }
     }
@@ -52,7 +50,7 @@ pipeline {
     stage('Deploy Backend') {
       steps([$class: 'BapSshPromotionPublisherPlugin']) {
         script {
-          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          // withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sshPublisher(
               continueOnError: false,
               failOnError: true,
@@ -66,7 +64,7 @@ pipeline {
                       removePrefix: 'exec/backend-deploy/',
                       remoteDirectory: '/jenkins/deploy/backend',
                       execCommand: """
-                                  docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
+                                  docker login k10d106.p.ssafy.io -u ${env.REGISTRY_AUTH_USR} -p ${env.REGISTRY_AUTH_PSW}; \
                                   cd /home/jenkins/deploy/backend && chmod 755 *.sh; \
                                   ./backend-stop.sh; \
                                   ./backend-start.sh ${env.GIT_COMMIT}
@@ -74,7 +72,7 @@ pipeline {
                     ),
                     sshTransfer(
                       execCommand: """
-                                  docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
+                                  docker login k10d106.p.ssafy.io -u ${env.REGISTRY_AUTH_USR} -p ${env.REGISTRY_AUTH_PSW}; \
                                   cd /home/jenkins/deploy/frontend && chmod 755 *.sh; \
                                   ./frontend-stop.sh; \
                                   ./frontend-start.sh
@@ -84,7 +82,7 @@ pipeline {
                 )
               ]
             )
-          }
+          // }
         }
       }
     }
