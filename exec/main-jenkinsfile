@@ -1,15 +1,15 @@
 pipeline {
-agent any
+
+  agent any
 
   environment {
-    NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
     CI = false
 
-    GIT_MESSAGE = """${sh(
-        script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
-        returnStdout: true
-    )}"""
-    CHANNEL = 'D106-Alert'
+    GIT_MESSAGE = "${sh(returnStdout: true, script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"').trim()}"
+    GIT_URL = credentials('gitlab_repo_url')
+
+    MM_CHANNEL = credentials('mattermost_channel')
+    MM_URL = credentials('mattermost_url')
   }
 
   stages {
@@ -22,6 +22,7 @@ agent any
         }
       }
     }
+
     stage('Checkout and Pull Origin Main') {
       steps {
         script {
@@ -31,6 +32,7 @@ agent any
         }
       }
     }
+
     stage('Pull Frontend') {
       steps {
         script {
@@ -40,6 +42,7 @@ agent any
         }
       }
     }
+
     stage('Pull Backend') {
       steps {
         script {
@@ -49,6 +52,7 @@ agent any
         }
       }
     }
+
     stage('Push Origin Main') {
       steps {
         script {
@@ -58,17 +62,16 @@ agent any
         }
       }
     }
+
     stage('Push Upstream Main') {
       steps {
         script {
           withCredentials([gitUsernamePassword(credentialsId: 'upstream_merge_id_token', gitToolName: 'git-tool')]) {
-            withCredentials([string(credentialsId: 'gitlab_repo_url', variable: 'GIT_URL')]) {
-              def isUpstreamSet = sh(script: "git remote -v | grep -q upstream", returnStatus: true)
-              if (isUpstreamSet != 0) {
-                sh "git remote add upstream ${GIT_URL}"
-              }
-              sh 'git push upstream main'
+            def isUpstreamSet = sh(script: "git remote -v | grep -q upstream", returnStatus: true)
+            if (isUpstreamSet != 0) {
+              sh "git remote add upstream ${env.GIT_URL}"
             }
+            sh 'git push upstream main'
           }
         }
       }
@@ -78,27 +81,25 @@ agent any
   post {
     success {
       script {
-        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
-          mattermostSend(
-            color: 'good',
-            message: "[MAIN] Merge Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
-            endpoint: "${MM_URL}",
-            channel: "${CHANNEL}",
-          )
-        }
+        mattermostSend(
+          color: 'good',
+          message: "[MAIN] Merge Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
       }
     }
+    
     failure {
       script {
-        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
-          mattermostSend(
-            color: 'danger',
-            message: "[MAIN] Merge Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
-            endpoint: "${MM_URL}",
-            channel: "${CHANNEL}",
-          )
-        }
+        mattermostSend(
+          color: 'danger',
+          message: "[MAIN] Merge Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
       }
     }
   }
+
 }
