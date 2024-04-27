@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UnauthorizedException extends RuntimeException {
 
-  private final ExceptionCode exceptionCode;
-
-  @Override
-  public String getMessage() {
-    return exceptionCode.getMessage();
-  }
+    private final ExceptionCode exceptionCode;
+    
+    @Override
+    public String getMessage() {
+        return exceptionCode.getMessage();
+    }
 
 }

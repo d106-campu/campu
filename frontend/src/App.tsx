@@ -1,12 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import "./App.css";
-import HomePage from "./pages/home";
-import LoginPage from "./pages/login";
-import MyPage from "./pages/mypage";
-import OwnerPage from "./pages/ownerpage";
-import SearchPage from "./pages/search";
+import HomePage from "@/pages/home";
+import LoginPage from "@/pages/login";
+import MyPage from "@/pages/mypage";
+import OwnerPage from "@/pages/ownerpage";
+import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
-import PaymentPage from "./pages/payment";
+import PhotosPage from "@/pages/reservation/photos";
+import PaymentPage from "@/pages/payment";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/reservation",
     element: <ReservationPage />,
+  },
+  {
+    path: "/reservation-photos",
+    element: <PhotosPage />,
   },
   {
     path: "/payment",

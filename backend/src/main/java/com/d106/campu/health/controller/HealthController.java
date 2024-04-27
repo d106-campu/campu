@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthController implements HealthControllerDoc {
 
-  @GetMapping
-  public Response checkHealth() {
-    return new Response();
-  }
+    @GetMapping
+    public Response checkHealth() {
+        return new Response();
+    }
 
 }

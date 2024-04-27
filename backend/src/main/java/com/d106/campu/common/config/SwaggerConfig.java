@@ -13,39 +13,39 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 @Configuration
 public class SwaggerConfig {
 
-  @Value("${springdoc.swagger-ui.info.title}")
-  private String title;
-  @Value("${springdoc.swagger-ui.info.description}")
-  private String description;
-  @Value("${springdoc.swagger-ui.info.version}")
-  private String version;
+    @Value("${springdoc.swagger-ui.info.title}")
+    private String title;
+    @Value("${springdoc.swagger-ui.info.description}")
+    private String description;
+    @Value("${springdoc.swagger-ui.info.version}")
+    private String version;
 
-  @Bean
-  public OpenAPI openAPI() {
-    final String securitySchemeName = "bearerAuth";
-    return new OpenAPI()
-        .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-        .components(new Components()
-            .addSecuritySchemes(securitySchemeName,
-                new SecurityScheme()
-                    .name(securitySchemeName)
-                    .type(SecurityScheme.Type.HTTP)
-                    .scheme("bearer")
-                    .bearerFormat("JWT")
-            ))
-        .info(apiInfo());
-  }
+    @Bean
+    public OpenAPI openAPI() {
+        final String securitySchemeName = "bearerAuth";
+        return new OpenAPI()
+            .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+            .components(new Components()
+                .addSecuritySchemes(securitySchemeName,
+                    new SecurityScheme()
+                        .name(securitySchemeName)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
+                ))
+            .info(apiInfo());
+    }
 
-  @Bean
-  ForwardedHeaderFilter forwardedHeaderFilter() {
-    return new ForwardedHeaderFilter();
-  }
+    @Bean
+    ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
 
-  private Info apiInfo() {
-    return new Info()
-        .title(title)
-        .description(description)
-        .version(version);
-  }
+    private Info apiInfo() {
+        return new Info()
+            .title(title)
+            .description(description)
+            .version(version);
+    }
 
 }
