@@ -23,8 +23,16 @@ pipeline {
       steps {
         script {
           withCredentials([file(credentialsId: 'backend_yml', variable: 'PROD_YML')]) {
-            sh 'cd exec/ && chmod +x backend-project-setup.sh && ./backend-project-setup.sh'
-            sh 'cd exec/ && chmod +x backend-project-build.sh && ./backend-project-build.sh'
+            sh """
+              cd exec/; \
+              chmod +x backend-project-setup.sh; \
+              ./backend-project-setup.sh
+              """ 
+            sh """
+              cd exec/; \
+              chmod +x backend-project-build.sh; \
+              ./backend-project-build.sh
+              """
           }
         }
       }
@@ -33,7 +41,11 @@ pipeline {
     stage('Build and Push Images') {
       steps {
         script {
-          sh "cd exec/ && chmod +x backend-docker-build-push.sh && ./backend-docker-build-push.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}"
+          sh """
+            cd exec/; \
+            chmod +x backend-docker-build-push.sh; \
+            ./backend-docker-build-push.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
+            """
         }
       }
     }
@@ -42,7 +54,11 @@ pipeline {
       steps {
         script {
           withCredentials([file(credentialsId: 'backend_docker_compose_env', variable: 'DC_ENV')]) {
-            sh 'cd exec/ && chmod +x backend-copy-docker-compose-env.sh && ./backend-copy-docker-compose-env.sh'
+            sh """
+              cd exec/; \
+              chmod +x backend-copy-docker-compose-env.sh; \
+              ./backend-copy-docker-compose-env.sh
+              """
           }
         }
       }
@@ -64,15 +80,19 @@ pipeline {
                     removePrefix: 'exec/backend-deploy/',
                     remoteDirectory: '/jenkins/deploy/backend',
                     execCommand: """
-                                cd /home/jenkins/deploy/backend && chmod 755 *.sh; \
-                                ./backend-stop.sh; \
-                                ./backend-start.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
-                                """,
-                    execCommand: 'cd /home/jenkins/deploy/frontend && chmod 755 *.sh && ./frontend-reload.sh'
+                      cd /home/jenkins/deploy/backend; \
+                      chmod 755 *.sh; \
+                      ./backend-stop.sh; \
+                      ./backend-start.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
+                      """
+                  ),
+                  sshTransfer(
+                    execCommand: """
+                      cd /home/jenkins/deploy/frontend; \
+                      chmod 755 *.sh; \
+                      ./frontend-reload.sh
+                      """
                   )
-                  // sshTransfer(
-                  //   execCommand: 'cd /home/jenkins/deploy/frontend && chmod 755 *.sh && ./frontend-reload.sh'
-                  // )
                 ]
               )
             ]
