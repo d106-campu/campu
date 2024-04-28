@@ -23,7 +23,7 @@
     <property name="logPattern" value="%d{HH:mm:ss.SSS} [%20thread] %-5level %-53logger{36} - %msg%n"/>
 
     <appender name="info-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <file>${infoLogPath}/info.%d{yyyy-MM-dd}.%i.log</file>
+      <file>${infoLogPath}/info.log</file>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
         <maxHistory>30</maxHistory>
         <maxFileSize>1GB</maxFileSize>
@@ -41,7 +41,7 @@
     </appender>
 
     <appender name="warn-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <file>${warnLogPath}/warn.%d{yyyy-MM-dd}.%i.log</file>
+      <file>${warnLogPath}/warn.log</file>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
         <maxHistory>30</maxHistory>
         <maxFileSize>1GB</maxFileSize>
@@ -59,7 +59,7 @@
     </appender>
 
     <appender name="error-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <file>${errorLogPath}/error.%d{yyyy-MM-dd}.%i.log</file>
+      <file>${errorLogPath}/error.log</file>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
         <maxHistory>30</maxHistory>
         <maxFileSize>1GB</maxFileSize>
