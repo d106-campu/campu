@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <configuration>
   <springProfile name="local">
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
@@ -15,9 +16,9 @@
   </springProfile>
 
   <springProfile name="prod">
-    <property name="infoLogPath" value="./logs/info"/>
-    <property name="warnLogPath" value="./logs/warn"/>
-    <property name="errorLogPath" value="./logs/error"/>
+    <property name="infoLogPath" value="/app/logs/info"/>
+    <property name="warnLogPath" value="/app/logs/warn"/>
+    <property name="errorLogPath" value="/app/logs/error"/>
     <property name="fileNamePattern" value="%d{yyyy-MM-dd}_%i.log"/>
     <property name="logPattern" value="%d{HH:mm:ss.SSS} [%20thread] %-5level %-53logger{36} - %msg%n"/>
 
