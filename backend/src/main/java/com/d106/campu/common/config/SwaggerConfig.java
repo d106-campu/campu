@@ -15,8 +15,10 @@ public class SwaggerConfig {
 
     @Value("${springdoc.swagger-ui.info.title}")
     private String title;
+
     @Value("${springdoc.swagger-ui.info.description}")
     private String description;
+
     @Value("${springdoc.swagger-ui.info.version}")
     private String version;
 
