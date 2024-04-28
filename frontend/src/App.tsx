@@ -7,6 +7,8 @@ import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
 import PhotosPage from "@/pages/reservation/photos";
 import PaymentPage from "@/pages/payment";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +48,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </>
   );
 }

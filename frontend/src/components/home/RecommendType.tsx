@@ -11,17 +11,19 @@ import CaravaneSelect from "@/assets/images/CaravaneSelect.png";
 import RecommendItem from "./RecommendItem";
 
 const RecommendType = () => {
-  type TabType = "캠핑" | "오토캠핑" | "글램핑" | "카라반";
+  // type TabType = "캠핑" | "오토캠핑" | "글램핑" | "카라반";
 
-  const [selectedTab, setSelectedTab] = useState<TabType>("캠핑");
+  const [selectedTab, setSelectedTab] = useState<string>("캠핑");
   const [showList, setShowList] = useState<boolean>(true);
-  const handleTabClick = (tab: TabType) => {
-    if (selectedTab !== tab) {
+
+  const handleTabClick = (tab: string) => {
+    if (["캠핑", "오토캠핑", "글램핑", "카라반"].includes(tab)) {
       setSelectedTab(tab);
+      setShowList(true);
     }
-    setShowList(true);
   };
-  const getSelectedImage = (tab: TabType) => {
+
+  const getSelectedImage = (tab: string): string => {
     switch (tab) {
       case "캠핑":
         return selectedTab === "캠핑" ? Camping : CampingSelect;
@@ -32,7 +34,7 @@ const RecommendType = () => {
       case "카라반":
         return selectedTab === "카라반" ? Caravane : CaravaneSelect;
       default:
-        return;
+        throw new Error("Invalid tab type");
     }
   };
 
@@ -49,9 +51,9 @@ const RecommendType = () => {
             <div
               key={tab}
               className="cursor-pointer p-3"
-              onClick={() => handleTabClick(tab as TabType)}
+              onClick={() => handleTabClick(tab)}
             >
-              <img src={getSelectedImage(tab as TabType)} className="w-28" />
+              <img src={getSelectedImage(tab)} className="w-28" />
               <p className="pt-2">{tab}</p>
             </div>
           ))}
