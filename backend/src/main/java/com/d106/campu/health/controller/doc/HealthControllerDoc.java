@@ -22,4 +22,34 @@ public interface HealthControllerDoc {
     })
     Response checkHealth();
 
+    @Operation(summary = "로그 info 확인", description = "로그 info 상태를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그 info 상태 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        )
+    })
+    Response checkLogInfo();
+
+    @Operation(summary = "로그 warn 확인", description = "로그 warn 상태를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그 warn 상태 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        )
+    })
+    Response checkLogWarn();
+
+    @Operation(summary = "로그 error 확인", description = "로그 error 상태를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그 error 상태 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        )
+    })
+    Response checkLogError();
+
 }
