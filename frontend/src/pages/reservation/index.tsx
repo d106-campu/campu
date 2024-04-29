@@ -20,6 +20,7 @@ const ReservationPage = () => {
 
 export default ReservationPage;
 
+
 // @TODO: API 명세서 나오면 수정 필요
 // 더미 이미지
 import mainPhoto from "@/assets/images/dummy/camping_spot_6.png";

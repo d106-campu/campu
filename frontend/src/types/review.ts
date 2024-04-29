@@ -17,6 +17,7 @@ export interface IReview {
   content: string;
   date: string;
   rating: number;
+  images: string[];
 }
 
 export interface IReviewList {
