@@ -17,7 +17,7 @@ const PhotosPage = () => {
   const photos: string[] = [photo1, photo2, photo3, photo4, photo5];
 
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false); // 좋아요 상태관리
 
   return (
     <>

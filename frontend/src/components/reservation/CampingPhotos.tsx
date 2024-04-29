@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../@common/Button/Button";
+import Button from "@/components/@common/Button/Button";
 import { PiImage } from "react-icons/pi";
 
 interface ICampingPhotosProps {

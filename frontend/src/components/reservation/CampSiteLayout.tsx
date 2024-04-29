@@ -9,8 +9,7 @@ interface ICampSiteLayoutProps {
 }
 
 const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
-  // 모달 상태 관리
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);    // 모달 상태관리
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);

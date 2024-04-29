@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
+import ReviewItem from "@/components/reservation/ReviewItem";
+import facility from "@/assets/images/dummy/dummy_Facility.png";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
-import ReviewItem from "./ReviewItem";
 
 // 더미데이터
 const data = {
@@ -80,10 +81,8 @@ const data = {
 };
 
 const InfoDetail = () => {
-  // @TODO: 추후 보여줄 개수 수정해야함
-  const reviews = data.reviews.slice(0, 3);
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const reviews = data.reviews.slice(0, 3); // 보여줄 리뷰 개수
+  const [isOpen, setIsOpen] = useState<boolean>(false); // 아코디언 상태관리
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -114,6 +113,11 @@ const InfoDetail = () => {
       </div>
 
       {/* 시설 및 레저 */}
+      <div className="pt-10">
+        <h3 className="text-xl font-bold">시설 및 레저</h3>
+        {/* @TODO: 어떤 시설이 있는지 논의 후 구현 예정 */}
+        <img src={facility} className="w-[50%]" />
+      </div>
 
       {/* 방문자 리뷰 */}
       <div className="pt-10">
