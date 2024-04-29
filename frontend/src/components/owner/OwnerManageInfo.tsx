@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TagList from "../home/TagList";
+import TagList from "@/components/home/TagList";
 import DummyInfo from "@/assets/images/CampingInfo.png";
 
 const OwnerManageInfo = () => {

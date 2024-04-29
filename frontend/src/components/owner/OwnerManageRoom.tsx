@@ -1,8 +1,8 @@
 import { GoPlus } from "react-icons/go";
 import dummy from "@/assets/images/dummyCamping3.png";
-import RoomItem from "./RoomItem";
+import RoomItem from "@/components/owner/RoomItem"
 import { useRef, useState } from "react";
-import Modal from "../@common/Modal/Modal";
+import Modal from "@/components/@common/Modal/Modal"
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 

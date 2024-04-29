@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import Modal from "../@common/Modal/Modal";
+import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 

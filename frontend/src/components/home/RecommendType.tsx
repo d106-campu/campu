@@ -8,7 +8,7 @@ import CampingSelect from "@/assets/images/CampingSelect.png";
 import AutoCampingSelect from "@/assets/images/AutoCampingSelect.png";
 import GlampingSelect from "@/assets/images/GlampingSelect.png";
 import CaravaneSelect from "@/assets/images/CaravaneSelect.png";
-import RecommendItem from "./RecommendItem";
+import RecommendItem from "@/components/home/RecommendItem";
 
 const RecommendType = () => {
   // type TabType = "캠핑" | "오토캠핑" | "글램핑" | "카라반";
