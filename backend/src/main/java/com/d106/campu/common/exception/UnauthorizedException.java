@@ -1,6 +1,6 @@
-package com.d106.campu.common.exception.custom;
+package com.d106.campu.common.exception;
 
-import com.d106.campu.common.exception.ExceptionCode;
+import com.d106.campu.common.exception.code.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

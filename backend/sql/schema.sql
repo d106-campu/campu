@@ -6,9 +6,8 @@ USE d106;
 -- d106.authority definition
 
 CREATE TABLE `authority` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `role` varchar(16) NOT NULL COMMENT '권한',
-  PRIMARY KEY (`id`)
+  `authority_name` varchar(16) NOT NULL UNIQUE COMMENT '권한',
+  PRIMARY KEY (`authority_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='권한';
 
 
@@ -132,13 +131,13 @@ CREATE TABLE `theme` (
 
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `account` varchar(16) NOT NULL COMMENT '아이디',
+  `account` varchar(16) NOT NULL UNIQUE COMMENT '아이디',
   `password` varchar(72) NOT NULL COMMENT '비밀번호',
-  `nickname` varchar(8) NOT NULL COMMENT '닉네임',
+  `nickname` varchar(8) NOT NULL UNIQUE COMMENT '닉네임',
   `gender` char(1) DEFAULT NULL COMMENT '성별',
-  `birthyear` char(4) DEFAULT NULL COMMENT '출생년도',
+  `birth_year` char(4) DEFAULT NULL COMMENT '출생년도',
   `profile_image_url` varchar(1024) DEFAULT NULL COMMENT '프로필 이미지 주소',
-  `tel` varchar(16) DEFAULT NULL COMMENT '전화번호',
+  `tel` varchar(16) NOT NULL UNIQUE COMMENT '전화번호',
   `delete_time` datetime DEFAULT NULL COMMENT '회원탈퇴 시간',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '회원가입 시간',
   `update_time` datetime DEFAULT NULL COMMENT '정보수정 시간',
@@ -269,11 +268,10 @@ CREATE TABLE `room_image` (
 
 CREATE TABLE `user_authority` (
   `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
-  `authority_id` bigint(20) NOT NULL COMMENT '권한 식별번호',
-  PRIMARY KEY (`user_id`,`authority_id`),
-  KEY `user_authority_authority_FK` (`authority_id`),
-  CONSTRAINT `user_authority_authority_FK` FOREIGN KEY (`authority_id`) REFERENCES `authority` (`id`),
-  CONSTRAINT `user_authority_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  `authority_name` varchar(16) NOT NULL COMMENT '권한 이름',
+  PRIMARY KEY (`user_id`,`authority_name`),
+  CONSTRAINT `user_authority_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `user_authority_authority_FK` FOREIGN KEY (`authority_name`) REFERENCES `authority` (`authority_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원 권한';
 
 

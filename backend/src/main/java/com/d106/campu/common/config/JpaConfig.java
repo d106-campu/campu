@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaAuditing
-@EntityScan("com.d106.campu")
-@EnableJpaRepositories(basePackages = {"com.d106.campu.*.repository.jpa"})
+@EntityScan("com.d106.campu.*.domain.jpa")
+@EnableJpaRepositories("com.d106.campu.*.repository")
 public class JpaConfig {
 
     @PersistenceContext
