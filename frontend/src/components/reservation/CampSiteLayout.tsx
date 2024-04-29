@@ -25,19 +25,21 @@ const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
           className="rounded-xl cursor-pointer"
           onClick={() => openModal()}
         />
-        <div className="absolute bottom-2 right-2">
-          <Button
-            width="w-9"
-            height="h-9"
-            text=""
-            icon={SlSizeFullscreen}
-            iconSize={15}
-            iconMargin=""
-            backgroundColor="bg-[#030303ae]"
-            hoverBackgroundColor="hover:bg-[#030303cc]"
-            onClick={() => openModal()}
-          />
-        </div>
+        {layout && (
+          <div className="absolute bottom-2 right-2">
+            <Button
+              width="w-9"
+              height="h-9"
+              text=""
+              icon={SlSizeFullscreen}
+              iconSize={15}
+              iconMargin=""
+              backgroundColor="bg-[#030303ae]"
+              hoverBackgroundColor="hover:bg-[#030303cc]"
+              onClick={() => openModal()}
+            />
+          </div>
+        )}
       </div>
 
       {/* 모달 - 캠핑존 배치도 확대해서 보기 */}
