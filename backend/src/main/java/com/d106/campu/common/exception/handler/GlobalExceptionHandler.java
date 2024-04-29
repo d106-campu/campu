@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {MethodArgumentNotValidException.class,
-        ConstraintViolationException.class})
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public Response handleParamsException(Exception e) {
         return new ResponseFail(CommonExceptionCode.INVALID_PARAM.getCode(), e.getMessage());
     }
