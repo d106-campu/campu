@@ -1,6 +1,6 @@
-package com.d106.campu.user.entity;
+package com.d106.campu.user.domain.jpa;
 
-import com.d106.campu.common.entity.BaseTime;
+import com.d106.campu.common.jpa.BaseTime;
 import com.d106.campu.user.constant.GenderType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

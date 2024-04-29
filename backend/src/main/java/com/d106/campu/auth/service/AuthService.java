@@ -1,6 +1,6 @@
 package com.d106.campu.auth.service;
 
-import com.d106.campu.user.repository.UserRepository;
+import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

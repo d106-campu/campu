@@ -1,6 +1,6 @@
-package com.d106.campu.user.repository;
+package com.d106.campu.user.repository.jpa;
 
-import com.d106.campu.user.entity.User;
+import com.d106.campu.user.domain.jpa.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

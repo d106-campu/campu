@@ -1,4 +1,4 @@
-package com.d106.campu.common.entity;
+package com.d106.campu.common.jpa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
