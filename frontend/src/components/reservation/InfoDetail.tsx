@@ -8,9 +8,42 @@ const data = {
   mannerTime: "23:00 - 07:00",
   rating: 4.5,
   totalReview: 10,
+  reviews: [
+    {
+      id: 1,
+      nickname: "캠핑러버",
+      content:
+        "캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판 빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요",
+      date: "2024.04.22",
+    },
+    {
+      id: 2,
+      nickname: "캐치캐치캠핑핑",
+      content:
+        "지인 소개로 가게 된 캠핑장. 반려동물 동반에 평일 솔캠인데 조용하게 힐링하다 왔습니다. 전세캠으로 사이트도 원하는 곳 쓰게 해주셔서 너무 좋은 시간을 보냈습니다. 반려동물 동반할 수 있는 캠핑장 중 가장 좋았던 것 같아요! 캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요 ",
+      date: "2024.04.22",
+    },
+    {
+      id: 3,
+      nickname: "캠프유캠푸",
+      content:
+        "캠핑뷰도 너무 좋았고 시설도 신설에다가 너무 깔끔해요!! 특히 사장님이 너무 친절하십니다!!",
+      date: "2024.04.22",
+    },
+    {
+      id: 4,
+      nickname: "캠핑러버",
+      content:
+        "반려동물 동반할 수 있는 캠핑장 중 가장 좋았던 것 같아요! 캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요",
+      date: "2024.04.22",
+    },
+  ],
 };
 
 const InfoDetail = () => {
+  // @TODO: 추후 보여줄 개수 수정해야함
+  const reviews = data.reviews.slice(0, 3);
+
   return (
     <>
       {/* 기본 정보 */}
@@ -37,9 +70,15 @@ const InfoDetail = () => {
               {data.totalReview}명의 평가
             </p>
           </div>
+          {/* @TODO: 클릭 시 리뷰 페이지로 이동하기 */}
           <p className="text-MAIN_GREEN font-bold">리뷰 보기</p>
         </div>
-        <ReviewItem />
+
+        <div className="flex gap-5 py-2">
+          {reviews.map((review, index) => (
+            <ReviewItem key={index} review={review} />
+          ))}
+        </div>
       </div>
     </>
   );
