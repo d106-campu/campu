@@ -9,8 +9,11 @@ interface IModalProps {
   isBackgroundColorDark?: boolean;
   contentBackgroundColor?: string;
   textColor?: string;
+  hasIcon?: boolean;
   iconColor?: string;
   onClose: () => void;
+  title?: string;
+  titleStyle?: string;
   children: React.ReactNode;
 }
 
@@ -22,8 +25,11 @@ const Modal = ({
   isBackgroundColorDark = true,
   contentBackgroundColor,
   textColor,
+  hasIcon = true,
   iconColor,
   onClose,
+  title,
+  titleStyle = "text-lg font-bold",
   children,
 }: PropsWithChildren<IModalProps>) => {
   const [isRendering, setIsRendering] = useState<boolean>(true);
@@ -63,9 +69,19 @@ const Modal = ({
         `}
       >
         {/* 닫기 버튼 */}
-        <div className=" flex justify-end cursor-pointer" onClick={handleClose}>
-          <IoCloseOutline color={actualIconColor} size={25} />
-        </div>
+        {hasIcon ? (
+          <div className="flex justify-between items-center cursor-pointer">
+            <div />
+            <div className={`pl-7 ${titleStyle}`}>{title}</div>
+            <IoCloseOutline
+              color={actualIconColor}
+              size={25}
+              onClick={handleClose}
+            />
+          </div>
+        ) : (
+          <div className={`text-center ${titleStyle}`}>{title}</div>
+        )}
 
         {/*모달 내용 */}
         {children}
