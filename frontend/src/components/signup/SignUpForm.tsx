@@ -111,16 +111,13 @@ const SignUpForm = ({
     }
 
     // 휴대폰 번호 적는 곳에는 숫자만 입력하도록 함
-    if (field === 'phone' && (value === '' || /^\d+$/.test(value))) {
+    if (field === 'phone' && value === '' || /^\d+$/.test(value)) {
       setValues(prev => ({ ...prev, [field]: value }));
       validateField(field, value);
     } else if (field !== 'phone') {
       setValues(prev => ({ ...prev, [field]: value }));
       validateField(field, value); 
     }
-
-    setValues(prev => ({ ...prev, [field]: value }));
-    validateField(field, value); // 변경된 필드에 대해 유효성 검사 실행
   };
 
 

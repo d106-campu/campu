@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Button from '@/components/@common/Button/Button';
+import Modal from '../@common/Modal/Modal';
 
 interface CertificationProps {
   isOpen: boolean;
@@ -7,13 +8,13 @@ interface CertificationProps {
   onVerify: (code: boolean) => void;
 }
 
-const Certification = ({ isOpen, onVerify, }: CertificationProps) => {
+const Certification = ({ isOpen, onClose, onVerify }: CertificationProps) => {
   const [isCode, setIsCode] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleVerifyClick = () => {
     if (isCode.length === 6) {
-      onVerify(isCode === '123456');
+      onVerify(isCode === '123456'); // @TODO : 백엔드와 연결하여 전송받은 isCode와 맞추기
       setIsCode('');
       setErrorMessage('');
     } else {
@@ -33,37 +34,26 @@ const Certification = ({ isOpen, onVerify, }: CertificationProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="p-4">
-      <div className='flex flex-col items-center justify-center'>
-        <h1 className="text-xl font-bold pb-2">휴대폰 인증</h1>
-        <h1 className='text-gray-400 py-2'>본인 인증을 위해 휴대폰으로 전송된 인증번호를 입력해주세요</h1>
-      </div>
-      <input
-        type="text"
-        className="w-full p-2 border border-gray-300 rounded text-center outline-none"
-        placeholder="인증번호 입력"
-        value={isCode}
-        onChange={handleCodeChange}
-        maxLength={6}
-      />
-      {errorMessage && (
-        <div className="text-red-400 text-center py-2">{errorMessage}</div>
-      )}
-      <div className='flex justify-evenly pt-5'>
-        <Button
-          text='재전송'
-          backgroundColor='bg-gray-400'
-          width='w-28'
-          padding='py-2 px-4'
+    <Modal width="w-1/3" onClose={onClose} title='휴대폰 인증' hasIcon={false}>
+      <div className="p-4 flex flex-col items-center">
+        <p className="text-sm text-gray-500 mb-4">본인 확인을 위해 휴대폰으로 전송된 인증번호를 입력해주세요.</p>
+        <input
+          type="text"
+          className="w-[90%] p-2 border-2 border-gray-100 rounded text-center outline-none"
+          placeholder="인증번호 입력"
+          value={isCode}
+          onChange={handleCodeChange}
+          maxLength={6}
         />
-        <Button
-          text="인증 확인"
-          width='w-28'
-          padding='py-2 px-4'
-          onClick={handleVerifyClick}
-        />
+        {errorMessage && (
+          <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+        )}
+        <div className="w-full pt-10 flex space-x-4 justify-center">
+          <Button text="재전송" width='w-[40%]' backgroundColor='bg-gray-400' onClick={() => { /* @TODO : 재전송 로직 추가 */ }} />
+          <Button text="인증 확인" width='w-[40%]' onClick={handleVerifyClick} />
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

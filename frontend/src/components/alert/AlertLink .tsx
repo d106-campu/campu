@@ -7,7 +7,7 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
 
   return (
     <div className="relative">
-      <div className=" flex justify-center flex-grow relative cusor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md">
+      <div className=" flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md">
         <div
           className="flex items-center justify-center text-sm  hover:text-MAIN_GREEN"
           onClick={toggleOpen}
