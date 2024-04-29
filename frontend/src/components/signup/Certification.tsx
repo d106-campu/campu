@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Button from '@/components/@common/Button/Button';
-import Modal from '../@common/Modal/Modal';
+import Modal from '@/components/@common/Modal/Modal';
 
 interface CertificationProps {
   isOpen: boolean;
@@ -46,11 +46,18 @@ const Certification = ({ isOpen, onClose, onVerify }: CertificationProps) => {
           maxLength={6}
         />
         {errorMessage && (
-          <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+          <p className="text-red-400 text-center mt-2">{errorMessage}</p>
         )}
         <div className="w-full pt-10 flex space-x-4 justify-center">
-          <Button text="재전송" width='w-[40%]' backgroundColor='bg-gray-400' onClick={() => { /* @TODO : 재전송 로직 추가 */ }} />
-          <Button text="인증 확인" width='w-[40%]' onClick={handleVerifyClick} />
+          <Button
+            text="재전송"
+            width='w-[40%]'
+            backgroundColor='bg-gray-400'
+            onClick={() => { /* @TODO : 재전송 로직 추가 */ }} />
+          <Button
+            text="인증 확인"
+            width='w-[40%]'
+            onClick={handleVerifyClick} />
         </div>
       </div>
     </Modal>
