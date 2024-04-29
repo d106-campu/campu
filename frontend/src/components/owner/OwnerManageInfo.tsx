@@ -14,7 +14,10 @@ const OwnerManageInfo = () => {
     "장박가능",
   ];
 
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // 테마 선택
+  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
+    null
+  ); // 캠핑장 유형 선택
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -27,10 +30,6 @@ const OwnerManageInfo = () => {
   };
 
   const campingTypes = ["캠핑", "글램핑", "오토캠핑", "카라반"];
-
-  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
-    null
-  );
 
   const toggleCampingType = (campingType: string) => {
     setSelectedCampingType(

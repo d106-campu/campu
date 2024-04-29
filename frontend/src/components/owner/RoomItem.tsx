@@ -17,13 +17,17 @@ interface IRoomItem {
 
 const RoomItem = ({ room }: { room: IRoomItem }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
   const [photo, setPhoto] = useState<string>(`${room.image}`);
   const imgRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File>();
+  // 기준인원 및 최대 인원 수정
+  const [standardeople, setStandardPeople] = useState<number>(room.minPeople);
+  const [maxPeople, setMaxPeople] = useState<number>(room.maxPeople);
+  // 화장실 유무 수정
+  const [isToilet, setIsToilet] = useState<boolean>(room.toilet);
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
 
   console.log(image?.type);
 
@@ -53,10 +57,6 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
     );
   };
 
-  // 기준인원 및 최대 인원 계산
-  const [standardeople, setStandardPeople] = useState<number>(room.minPeople);
-  const [maxPeople, setMaxPeople] = useState<number>(room.maxPeople);
-
   const increaseStandard = () => {
     if (standardeople < maxPeople) {
       setStandardPeople(standardeople + 1);
@@ -75,9 +75,6 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
       setMaxPeople(maxPeople - 1);
     }
   };
-
-  // 화장실 유무
-  const [isToilet, setIsToilet] = useState<boolean>(room.toilet);
 
   return (
     <>

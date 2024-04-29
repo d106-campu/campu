@@ -11,8 +11,6 @@ import CaravaneSelect from "@/assets/images/CaravaneSelect.png";
 import RecommendItem from "@/components/home/RecommendItem";
 
 const RecommendType = () => {
-  // type TabType = "캠핑" | "오토캠핑" | "글램핑" | "카라반";
-
   const [selectedTab, setSelectedTab] = useState<string>("캠핑");
   const [showList, setShowList] = useState<boolean>(true);
 
