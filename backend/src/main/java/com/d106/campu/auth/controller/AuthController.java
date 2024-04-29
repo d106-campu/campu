@@ -16,12 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController implements AuthControllerDoc {
 
     private final AuthService authService;
-    
+
     @Override
-    @GetMapping
+    @GetMapping("/account")
     public Response checkAvailableAccount(@RequestParam String account) {
-        return new Response(AuthConstant.AVAILABLE,
-            authService.checkAvailableAccount(account));
+        return new Response(AuthConstant.AVAILABLE, authService.checkAvailableAccount(account));
+    }
+
+    @Override
+    @GetMapping("/nickname")
+    public Response checkAvailableNickname(@RequestParam String nickname) {
+        return new Response(AuthConstant.AVAILABLE, authService.checkAvailableNickname(nickname));
     }
 
 }

@@ -38,6 +38,26 @@ public interface AuthControllerDoc {
         @Pattern(regexp = RegExpressions.account, message = "account format not valid") String account
     );
 
+    @Operation(summary = "닉네임 중복확인", description = "회원가입에 사용 가능한 닉네임인지 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "닉네임 사용 가능 여부를 반환",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = AvailableResponse.class)),
+            })),
+        @ApiResponse(responseCode = "400", description = "닉네임 유효성 검사 오류",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
+                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
+                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
+            }))
+    })
+    Response checkAvailableNickname(
+        @NotBlank(message = "not blank")
+        @Size(min = 2, max = 8, message = "nickname length not valid")
+        @Pattern(regexp = RegExpressions.nickname, message = "nickname format not valid") String account
+    );
+
     class AvailableResponse {
 
         public Boolean available;

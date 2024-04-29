@@ -8,4 +8,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByAccount(String account);
 
+    Optional<User> findByNicknameAndDeleteTimeIsNull(String nickname);
+
 }

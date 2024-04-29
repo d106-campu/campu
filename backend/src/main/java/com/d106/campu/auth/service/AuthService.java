@@ -16,4 +16,9 @@ public class AuthService {
         return userRepository.findByAccount(account).isEmpty();
     }
 
+    @Transactional(readOnly = true)
+    public boolean checkAvailableNickname(String nickname) {
+        return userRepository.findByNicknameAndDeleteTimeIsNull(nickname).isEmpty();
+    }
+
 }
