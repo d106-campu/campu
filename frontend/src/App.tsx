@@ -7,6 +7,7 @@ import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
 import PhotosPage from "@/pages/reservation/photos";
 import PaymentPage from "@/pages/payment";
+import ReviewPage from "./pages/review";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/payment",
     element: <PaymentPage />,
+  },
+  {
+    path: "/review",
+    element: <ReviewPage />,
   },
 ]);
 
