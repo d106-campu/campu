@@ -1,20 +1,23 @@
 import { GoPlus } from "react-icons/go";
 import dummy from "@/assets/images/dummyCamping3.png";
-import RoomItem from "./RoomItem";
+import RoomItem from "@/components/owner/RoomItem";
 import { useRef, useState } from "react";
-import Modal from "../@common/Modal/Modal";
+import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 
 const OwnerManageRoom = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
   const [photo, setPhoto] = useState<string>("");
   const imgRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File>();
+  const [standardeople, setStandardPeople] = useState<number>(2); // 기준인원 계산
+  const [maxPeople, setMaxPeople] = useState<number>(4); // 최대 인원 계산
+  const [isToilet, setIsToilet] = useState<boolean>(true); // 화장실 유무
+
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
 
   console.log(image?.type);
 
@@ -44,10 +47,6 @@ const OwnerManageRoom = () => {
     );
   };
 
-  // 기준인원 및 최대 인원 계산
-  const [standardeople, setStandardPeople] = useState<number>(2);
-  const [maxPeople, setMaxPeople] = useState<number>(4);
-
   const increaseStandard = () => {
     if (standardeople < maxPeople) {
       setStandardPeople(standardeople + 1);
@@ -66,9 +65,6 @@ const OwnerManageRoom = () => {
       setMaxPeople(maxPeople - 1);
     }
   };
-
-  // 화장실 유무
-  const [isToilet, setIsToilet] = useState<boolean>(true);
 
   return (
     <>
