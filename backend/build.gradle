@@ -38,6 +38,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.5'
 	// lang3
 	implementation 'org.apache.commons:commons-lang3:3.14.0'
+	// collections
+	implementation 'org.apache.commons:commons-collections4:4.4'
 	// tika
 	implementation 'org.apache.tika:tika-core:2.9.2'
 	// swagger
@@ -50,6 +52,10 @@ dependencies {
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	// actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.5'
+	// prometheus
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.12.5'
 }
 
 tasks.named('test') {

@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaAuditing
 @EntityScan("com.d106.campu.*.domain.jpa")
-@EnableJpaRepositories("com.d106.campu.*.repository")
+@EnableJpaRepositories("com.d106.campu.*.repository.jpa")
 public class JpaConfig {
 
     @PersistenceContext
