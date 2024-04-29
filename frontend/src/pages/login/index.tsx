@@ -4,11 +4,15 @@ import LoginForm from '@/components/login/LoginForm';
 import SignUpForm from '@/components/signup/SignUpForm';
 import BG_Login from '@/assets/images/bg_loginG.jpg';
 import Header from "@/components/@common/Header/Header";
+import Modal from "@/components/@common/Modal/Modal";
+import Certification from "@/components/signup/Certification";
 
 const LoginPage = (): JSX.Element => {
-  const [isSignUpActive, setIsSignUpActive] = useState<boolean>(false);
-  const [zIndexChangeDelay, setZIndexChangeDelay] = useState<boolean>(false);
-  const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false); 
+  const [isSignUpActive, setIsSignUpActive] = useState<boolean>(false); // 회원가입 폼인지 로그인 폼인지에 대한 상태 관리
+  const [zIndexChangeDelay, setZIndexChangeDelay] = useState<boolean>(false); // z-index 값에 대한 상태 관리
+  const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false); // 화면 크기에 대한 상태 관리
+  const [certificationModal, setCertificationModal] = useState<boolean>(false); // 인증 모달 상태 관리
+  const [phoneVerified, setPhoneVerified] = useState<boolean>(false); // 인증 성공 상태 관리 
 
   // 토글을 통해서 회원가입 & 로그인 좌우 이동, 활성화 여부 체크
   const toggleForms = (): void => {
@@ -16,6 +20,7 @@ const LoginPage = (): JSX.Element => {
     setZIndexChangeDelay(true); 
     setTimeout(() => {
       setZIndexChangeDelay(false);
+      resetPhoneVerification(); // 폼 전환 시 인증 상태 초기화
     }, 300);
   };
 
@@ -28,6 +33,27 @@ const LoginPage = (): JSX.Element => {
     position: 'fixed',
   };
 
+  // 인증번호 검증 함수
+  const handleVerify = (verified: boolean) => {
+    // @TODO : 백엔드 API 통신 로직 필요 -> 인증 성공, 실패 판별 후 SignUpForm으로 전달해야함
+    setPhoneVerified(verified)
+    console.log("인증번호 검증 확인 :", verified ? "인증 성공!" : "인증 실패!");
+    setCertificationModal(false); // 모달 닫기
+  };
+
+  // 인증 초기화 함수
+  const resetPhoneVerification = () => {
+    setPhoneVerified(false);
+  };
+
+  const openCertificationModal = () => {
+    setCertificationModal(true); // 모달 열기
+  };
+
+  const closeCertificationModal = () => {
+    setCertificationModal(false); // 모달 닫기
+  };
+
   // 창 크기에 따른 Form 반응시키기
   useEffect(() => {
     const checkScreenSize = () => {
@@ -37,7 +63,10 @@ const LoginPage = (): JSX.Element => {
     window.addEventListener('resize', checkScreenSize);
     checkScreenSize();
 
-    return () => window.removeEventListener('resize', checkScreenSize);
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+      resetPhoneVerification(); // 컴포넌트 언마운트 시 인증 상태 초기화
+    };
   }, []);
 
   return (
@@ -49,7 +78,7 @@ const LoginPage = (): JSX.Element => {
           className='w-[70%] min-w-[600px] sm:min-w-[640px] md:min-w-[700px] lg:min-w-[800px]
           absolute flex items-center justify-ceter bg-white rounded-3xl shadow-2xl bg-opacity-40'
         >
-          <div className='min-w-[300px] h-[50vh] flex-1 flex justify-around px-16 items-center'>
+          <div className='min-w-[300px] h-[50vh] flex-grow flex justify-around px-16 items-center'>
             {/* 왼쪽 */}
             <div
               className={`flex flex-col items-center justify-center text-lg transition-transform duration-100 ${
@@ -96,12 +125,32 @@ const LoginPage = (): JSX.Element => {
             className='min-w-[460px] flex items-center justify-center'>
             <div className='w-full'>
               {isSignUpActive ?
-              <SignUpForm isSmallScreen={isSmallScreen} toggleForm={toggleForms}/> :
+              <SignUpForm
+                isSmallScreen={isSmallScreen}
+                toggleForm={toggleForms}
+                openCertificationModal={openCertificationModal}
+                closeCertificationModal={closeCertificationModal}
+                phoneVerified={phoneVerified}
+                resetPhoneVerification={resetPhoneVerification}
+              /> :
               <LoginForm isSmallScreen={isSmallScreen} toggleForm={toggleForms}/>}
             </div>
           </div>
         </div>
       </div>
+      {/* 휴대전화 인증 관련 모달 열기 */}
+      {certificationModal && (
+        <Modal
+          width='96'
+          onClose={closeCertificationModal}
+        >
+          <Certification 
+            isOpen={certificationModal}
+            onClose={closeCertificationModal}
+            onVerify={handleVerify}
+          />
+        </Modal>
+      )}
     </>
   );
 };
