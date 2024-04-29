@@ -1,6 +1,7 @@
 package com.d106.campu.health.controller.doc;
 
 import com.d106.campu.common.response.Response;
+import com.d106.campu.health.dto.HealthDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,5 +52,20 @@ public interface HealthControllerDoc {
         )
     })
     Response checkLogError();
+
+    @Operation(summary = "캠핑장 원본 데이터 확인", description = "캠핑장 원본 데이터를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 원본 데이터 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteOriginalResponse.class)),
+            })
+        )
+    })
+    Response checkCampsiteOriginal(Long id);
+
+    class CampsiteOriginalResponse {
+        public HealthDto.CampsiteOriginalResponse campsiteOriginal;
+    }
 
 }
