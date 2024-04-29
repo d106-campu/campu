@@ -21,4 +21,9 @@ public class AuthService {
         return userRepository.findByNicknameAndDeleteTimeIsNull(nickname).isEmpty();
     }
 
+    @Transactional(readOnly = true)
+    public boolean checkAvailableTel(String tel) {
+        return userRepository.findByTelAndDeleteTimeIsNull(tel).isEmpty();
+    }
+
 }

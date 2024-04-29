@@ -29,4 +29,10 @@ public class AuthController implements AuthControllerDoc {
         return new Response(AuthConstant.AVAILABLE, authService.checkAvailableNickname(nickname));
     }
 
+    @Override
+    @GetMapping("/tel")
+    public Response checkAvailableTel(@RequestParam String tel) {
+        return new Response(AuthConstant.AVAILABLE, authService.checkAvailableTel(tel));
+    }
+
 }
