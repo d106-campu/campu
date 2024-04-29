@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Modal from "../@common/Modal/Modal";
+
 interface IRoomItem {
   id: number;
   name: string;
@@ -11,6 +14,11 @@ interface IRoomItem {
 }
 
 const RoomItem = ({ room }: { room: IRoomItem }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
       <div className="w-full flex items-center px-8 border-b py-2">
@@ -38,13 +46,26 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
               <p>개별 화장실 유무 : {room.toilet ? "유" : "무"}</p>
             </div>
             <div>
-              <button className="bg-MAIN_GREEN px-4 py-2 text-sm rounded-md text-white">
+              <button
+                className="bg-MAIN_GREEN px-4 py-2 text-sm rounded-md text-white"
+                onClick={toggleModal}
+              >
                 수정하기
               </button>
             </div>
           </div>
         </div>
       </div>
+      {isOpen && (
+        <Modal width="w-96" onClose={toggleModal}>
+          <div className="text-center">
+            <p>모달 테스트</p>
+            <p>모달 테스트</p>
+            <p>모달 테스트</p>
+            <p>모달 테스트</p>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
