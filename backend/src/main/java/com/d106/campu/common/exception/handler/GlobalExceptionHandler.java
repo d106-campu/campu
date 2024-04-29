@@ -1,0 +1,23 @@
+package com.d106.campu.common.exception.handler;
+
+import com.d106.campu.common.exception.code.CommonExceptionCode;
+import com.d106.campu.common.response.Response;
+import com.d106.campu.common.response.ResponseFail;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class,
+        ConstraintViolationException.class})
+    public Response handleParamsException(Exception e) {
+        return new ResponseFail(CommonExceptionCode.INVALID_PARAM.getCode(), e.getMessage());
+    }
+
+}
