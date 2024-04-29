@@ -1,4 +1,4 @@
-package com.d106.campu.health.entity;
+package com.d106.campu.health.domain.jpa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

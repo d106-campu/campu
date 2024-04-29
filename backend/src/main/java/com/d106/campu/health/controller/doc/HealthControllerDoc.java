@@ -62,7 +62,7 @@ public interface HealthControllerDoc {
             })
         )
     })
-    Response checkCampsiteOriginal(Long id);
+    Response checkCampsiteOriginal(Long campsiteOriginalId);
 
     class CampsiteOriginalResponse {
         public HealthDto.CampsiteOriginalResponse campsiteOriginal;

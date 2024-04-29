@@ -16,6 +16,7 @@ public class LoggingConfig {
         filter.setIncludePayload(true);
         filter.setIncludeQueryString(true);
         filter.setMaxPayloadLength(LoggingConstant.MAX_PAYLOAD_LENGTH);
+
         return filter;
     }
 

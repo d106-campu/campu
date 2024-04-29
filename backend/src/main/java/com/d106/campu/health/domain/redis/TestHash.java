@@ -1,4 +1,4 @@
-package com.d106.campu.health.hash;
+package com.d106.campu.health.domain.redis;
 
 import jakarta.persistence.Id;
 import org.springframework.data.redis.core.RedisHash;

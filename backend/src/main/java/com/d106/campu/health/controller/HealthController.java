@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequestMapping("/health")
 @RequiredArgsConstructor
-@Slf4j
 @RestController
 public class HealthController implements HealthControllerDoc {
 
@@ -47,9 +47,9 @@ public class HealthController implements HealthControllerDoc {
     }
 
     @Override
-    @GetMapping("/campsite/original/{campsiteId}")
-    public Response checkCampsiteOriginal(@PathVariable Long campsiteId) {
-        return new Response(HealthConstant.CAMPSITE_ORIGINAL, healthService.getCampsiteOriginal(campsiteId));
+    @GetMapping("/campsite/original/{campsiteOriginalId}")
+    public Response checkCampsiteOriginal(@PathVariable("campsiteOriginalId") Long campsiteOriginalId) {
+        return new Response(HealthConstant.CAMPSITE_ORIGINAL, healthService.getCampsiteOriginal(campsiteOriginalId));
     }
 
 }
