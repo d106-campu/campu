@@ -38,6 +38,14 @@ const data = {
       date: "2024.04.22",
     },
   ],
+  owner: {
+    name: "김싸피",
+    campSite: "캠프유캠푸 캠핑장",
+    adress: "경상북도 칠곡군 가산면 금화리 산49-1 캠프유캠푸 캠핑장",
+    email: "ssafy@d106.com",
+    businessNumber: "425-45-00307",
+    industryNumber: "대구시 2024-11호",
+  },
 };
 
 const InfoDetail = () => {
@@ -78,6 +86,34 @@ const InfoDetail = () => {
           {reviews.map((review, index) => (
             <ReviewItem key={index} review={review} />
           ))}
+        </div>
+      </div>
+
+      {/* 캠핑장 운영정책 */}
+
+      {/* 사업자 정보 */}
+      <div className="pt-10">
+        <h3 className="text-xl font-bold">사업자 정보</h3>
+        <div className="px-2 pt-1 text-sm text-UNIMPORTANT_TEXT_01">
+          <p className="pb-1">
+            대표자명 : <span className="text-[#393939]">{data.owner.name}</span>
+          </p>
+          <p className="pb-1">
+            상호명 :{" "}
+            <span className="text-[#393939]">{data.owner.campSite}</span>
+          </p>
+          <p className="pb-1">
+            사업자 주소 :{" "}
+            <span className="text-[#393939]">{data.owner.adress}</span>
+          </p>
+          <p className="pb-1">
+            사업장 등록 번호 :{" "}
+            <span className="text-[#393939]">{data.owner.businessNumber}</span>
+          </p>
+          <p className="pb-1">
+            관광사업(야영장) 등록 번호 :{" "}
+            <span className="text-[#393939]">{data.owner.industryNumber}</span>
+          </p>
         </div>
       </div>
     </>
