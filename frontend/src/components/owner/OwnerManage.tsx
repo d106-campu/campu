@@ -1,3 +1,4 @@
+import OwnerManageInfo from "./OwnerManageInfo";
 import OwnerManagePhoto from "./OwnerManagePhoto";
 import OwnerManageRoom from "./OwnerManageRoom";
 
@@ -6,6 +7,7 @@ const OwnerManage = () => {
     <>
       <div>
         <OwnerManagePhoto />
+        <OwnerManageInfo />
         <OwnerManageRoom />
       </div>
     </>

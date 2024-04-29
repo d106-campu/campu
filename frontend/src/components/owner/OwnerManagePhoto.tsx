@@ -206,7 +206,7 @@ const OwnerManagePhoto = () => {
 
         {/* post 버튼 */}
         <div className="flex justify-end p-4 text-sm">
-          <button className="bg-gray-300 px-4 py-2 rounded-md">저징하기</button>
+          <button className="bg-gray-300 px-4 py-2 rounded-md">저장하기</button>
         </div>
       </div>
     </>
