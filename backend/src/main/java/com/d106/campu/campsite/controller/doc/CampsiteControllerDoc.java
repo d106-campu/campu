@@ -1,5 +1,6 @@
 package com.d106.campu.campsite.controller.doc;
 
+import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @Tag(name = "04. 캠핑장 관련 API", description = "캠핑장 조회/등록/관리 관련된 요청을 처리하는 API")
 public interface CampsiteControllerDoc {
@@ -17,9 +20,15 @@ public interface CampsiteControllerDoc {
         @ApiResponse(responseCode = "200", description = "캠핑장 목록 조회 성공",
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteListResponse.class)),
             })
         )
     })
-    Response getCampsiteList();
+    Response getCampsiteList(Pageable pageable);
+
+    class CampsiteListResponse {
+        public List<CampsiteDto.Response> campsiteList;
+        public Pageable pageable;
+    }
 
 }
