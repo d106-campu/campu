@@ -1,6 +1,6 @@
 package com.d106.campu.auth.controller.doc;
 
-import com.d106.campu.auth.constant.RegExpressions;
+import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.common.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +35,7 @@ public interface AuthControllerDoc {
     Response checkAvailableAccount(
         @NotBlank(message = "not blank")
         @Size(min = 6, max = 12, message = "account length not valid")
-        @Pattern(regexp = RegExpressions.account, message = "account format not valid") String account
+        @Pattern(regexp = RegExpression.account, message = "account format not valid") String account
     );
 
     @Operation(summary = "닉네임 중복확인", description = "회원가입에 사용 가능한 닉네임인지 확인한다.")
@@ -55,7 +55,7 @@ public interface AuthControllerDoc {
     Response checkAvailableNickname(
         @NotBlank(message = "not blank")
         @Size(min = 2, max = 8, message = "nickname length not valid")
-        @Pattern(regexp = RegExpressions.nickname, message = "nickname format not valid") String account
+        @Pattern(regexp = RegExpression.nickname, message = "nickname format not valid") String account
     );
 
     @Operation(summary = "휴대폰 번호 중복확인", description = "회원가입에 사용 가능한 휴대폰 번호인지 확인한다.")
@@ -74,7 +74,7 @@ public interface AuthControllerDoc {
     })
     Response checkAvailableTel(
         @NotBlank(message = "not blank")
-        @Pattern(regexp = RegExpressions.tel, message = "tel format not valid") String account
+        @Pattern(regexp = RegExpression.tel, message = "tel format not valid") String account
     );
 
     class AvailableResponse {

@@ -1,6 +1,7 @@
 package com.d106.campu.health.controller.doc;
 
 import com.d106.campu.common.response.Response;
+import com.d106.campu.health.dto.HealthDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,5 +22,50 @@ public interface HealthControllerDoc {
         )
     })
     Response checkHealth();
+
+    @Operation(summary = "로그 info 확인", description = "로그 info 상태를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그 info 상태 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        )
+    })
+    Response checkLogInfo();
+
+    @Operation(summary = "로그 warn 확인", description = "로그 warn 상태를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그 warn 상태 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        )
+    })
+    Response checkLogWarn();
+
+    @Operation(summary = "로그 error 확인", description = "로그 error 상태를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그 error 상태 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        )
+    })
+    Response checkLogError();
+
+    @Operation(summary = "캠핑장 원본 데이터 확인", description = "캠핑장 원본 데이터를 확인한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 원본 데이터 확인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteOriginalResponse.class)),
+            })
+        )
+    })
+    Response checkCampsiteOriginal(Long campsiteOriginalId);
+
+    class CampsiteOriginalResponse {
+        public HealthDto.CampsiteOriginalResponse campsiteOriginal;
+    }
 
 }
