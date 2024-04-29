@@ -6,7 +6,6 @@ interface TagListProps {
 }
 
 const TagList: React.FC<TagListProps> = ({ tags, onTagToggle }) => {
-  // 기본값 지정
   const [selectedTags, setSelectedTags] = useState<string[]>(["애견동반"]);
 
   const toggleTag = (tag: string) => {

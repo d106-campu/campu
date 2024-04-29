@@ -1,8 +1,8 @@
 const NoticeSection = () => {
   return (
     <>
-      <div className="text-center flex flex-col items-start p-10 w-[60%]">
-        <div className="font-semibold text-md py-2">공지사항</div>
+      <div className="text-center flex flex-col items-start py-10 w-[70%]">
+        <div className="font-semibold text-md pb-2">공지사항</div>
         <div>삼성전자, 캠핑 페스티벌에 '더 프리스타일' 체험존 오픈</div>
         <div>안전 캠핑을 위해 지켜야 할 안전수칙 소개</div>
         <div>대상 청정원·미트프로젝트, 캠핑 페스티벌 ‘고아웃캠프’ 참여</div>

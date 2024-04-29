@@ -19,10 +19,13 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconType;
   iconColor?: string;
   iconSize?: number;
+  iconMargin?: string;
+  visible?: boolean;
 }
 
 const Button = ({
   text,
+  visible = true,
   width = "w-44",
   height = "h-10",
   backgroundColor = "bg-MAIN_GREEN",
@@ -39,12 +42,14 @@ const Button = ({
   icon: Icon,
   iconColor = "white",
   iconSize = 25,
+  iconMargin = "mr-2",
   children,
   ...props
 }: PropsWithChildren<IButtonProps>) => {
   return (
     <button
       className={`
+        ${visible ? 'block' : 'hidden'}
         text-center ${fontWeight} ${width} ${height} ${backgroundColor}
         ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor}
         ${textColor} ${textSize} ${cursorPointer} ${outline}
@@ -53,7 +58,7 @@ const Button = ({
     >
       {Icon && (
         <Icon
-          className="inline flex-shrink-0 mr-2"
+          className={`inline flex-shrink-0 ${iconMargin}`}
           size={iconSize}
           color={iconColor}
         />
