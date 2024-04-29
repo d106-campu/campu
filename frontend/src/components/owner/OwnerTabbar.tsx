@@ -61,7 +61,7 @@ const OwnerTabbar: React.FC<ITabBarProps> = ({
                 : tab === "예약 관리"
                 ? "left-1/3"
                 : "left-2/3"
-            } duration-500 ease-in-out relative bottom-[2px] z-10 w-1/3 h-[3px] bg-MAIN_GREEN`}
+            } duration-500 ease-in-out relative bottom-[2px] z-5 w-1/3 h-[3px] bg-MAIN_GREEN`}
           ></div>
         </button>
       </div>

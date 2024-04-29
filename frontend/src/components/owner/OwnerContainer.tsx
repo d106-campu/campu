@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import OwnerManage from "./OwnerManage";
-import OwnerReservation from "./OwnerReservation";
-import OwnerReview from "./OwnerReview";
-import OwnerTabbar from "./OwnerTabbar";
+import OwnerManage from "@/components/owner/OwnerManage";
+import OwnerReservation from "@/components/owner/OwnerReservation";
+import OwnerReview from "@/components/owner/OwnerReview";
+import OwnerTabbar from "@/components/owner/OwnerTabbar";
 import { RootState } from "@/app/store";
 
 const OwnerContainer = () => {
