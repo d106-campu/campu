@@ -70,13 +70,14 @@ const Modal = ({
       >
         {/* 닫기 버튼 */}
         {hasIcon ? (
-          <div className="flex justify-between items-center cursor-pointer">
+          <div className="flex justify-between items-center">
             <div />
             <div className={`pl-7 ${titleStyle}`}>{title}</div>
             <IoCloseOutline
               color={actualIconColor}
               size={25}
               onClick={handleClose}
+              className="cursor-pointer"
             />
           </div>
         ) : (

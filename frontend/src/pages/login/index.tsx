@@ -4,8 +4,8 @@ import LoginForm from '@/components/login/LoginForm';
 import SignUpForm from '@/components/signup/SignUpForm';
 import BG_Login from '@/assets/images/bg_loginG.jpg';
 import Header from "@/components/@common/Header/Header";
-import Modal from "@/components/@common/Modal/Modal";
 import Certification from "@/components/signup/Certification";
+import PasswordRecoveryModal from "@/components/login/FindPWD";
 
 const LoginPage = (): JSX.Element => {
   const [isSignUpActive, setIsSignUpActive] = useState<boolean>(false); // 회원가입 폼인지 로그인 폼인지에 대한 상태 관리
@@ -13,6 +13,7 @@ const LoginPage = (): JSX.Element => {
   const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false); // 화면 크기에 대한 상태 관리
   const [certificationModal, setCertificationModal] = useState<boolean>(false); // 인증 모달 상태 관리
   const [phoneVerified, setPhoneVerified] = useState<boolean>(false); // 인증 성공 상태 관리 
+  const [isFindpwdModal, setIsFindpwdModalOpen] = useState<boolean>(false); // 비밀번호 찾기 모달 상태 관리
 
   // 토글을 통해서 회원가입 & 로그인 좌우 이동, 활성화 여부 체크
   const toggleForms = (): void => {
@@ -46,13 +47,10 @@ const LoginPage = (): JSX.Element => {
     setPhoneVerified(false);
   };
 
-  const openCertificationModal = () => {
-    setCertificationModal(true); // 모달 열기
-  };
-
-  const closeCertificationModal = () => {
-    setCertificationModal(false); // 모달 닫기
-  };
+  const openFindpwdModal = () => setIsFindpwdModalOpen(true); // 비밀번호 찾기 모달 열기
+  const closeFindpwdModal = () => setIsFindpwdModalOpen(false); // 비밀번호 찾기 모달 닫기
+  const openCertificationModal = () => {setCertificationModal(true);}; // 휴대전화 인증 모달 열기
+  const closeCertificationModal = () => {setCertificationModal(false);}; // 휴대전화 인증 모달 닫기
 
   // 창 크기에 따른 Form 반응시키기
   useEffect(() => {
@@ -133,23 +131,29 @@ const LoginPage = (): JSX.Element => {
                 phoneVerified={phoneVerified}
                 resetPhoneVerification={resetPhoneVerification}
               /> :
-              <LoginForm isSmallScreen={isSmallScreen} toggleForm={toggleForms}/>}
+              <LoginForm
+                isSmallScreen={isSmallScreen}
+                toggleForm={toggleForms}
+                openFindpwdModal={openFindpwdModal}
+              />}
             </div>
           </div>
         </div>
       </div>
-      {/* 휴대전화 인증 관련 모달 열기 */}
+      {/* 휴대전화 인증 관련 모달 렌더링 */}
       {certificationModal && (
-        <Modal
-          width='96'
+        <Certification 
+          isOpen={certificationModal}
           onClose={closeCertificationModal}
-        >
-          <Certification 
-            isOpen={certificationModal}
-            onClose={closeCertificationModal}
-            onVerify={handleVerify}
-          />
-        </Modal>
+          onVerify={handleVerify}
+        />
+      )}
+      {/* 비밀번호 찾기 모달 렌더링 */}
+      {isFindpwdModal && (
+        <PasswordRecoveryModal
+          isOpen={isFindpwdModal}
+          onClose={closeFindpwdModal}
+        />
       )}
     </>
   );
