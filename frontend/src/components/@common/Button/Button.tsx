@@ -19,10 +19,12 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconType;
   iconColor?: string;
   iconSize?: number;
+  visible?: boolean;
 }
 
 const Button = ({
   text,
+  visible = true,
   width = "w-44",
   height = "h-10",
   backgroundColor = "bg-MAIN_GREEN",
@@ -45,6 +47,7 @@ const Button = ({
   return (
     <button
       className={`
+        ${visible ? 'block' : 'hidden'}
         text-center ${fontWeight} ${width} ${height} ${backgroundColor}
         ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor}
         ${textColor} ${textSize} ${cursorPointer} ${outline}
