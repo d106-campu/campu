@@ -1,4 +1,4 @@
-package com.d106.campu.common.exception;
+package com.d106.campu.common.exception.code;
 
 public interface ExceptionCode {
 
