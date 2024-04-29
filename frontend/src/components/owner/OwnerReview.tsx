@@ -1,7 +1,11 @@
-const OwnerReview = () => {
+const OwnerReview = ({
+  selectCampground,
+}: {
+  selectCampground: string | null;
+}) => {
   return (
     <>
-      <div>리뷰 관리</div>
+      <div>{selectCampground}리뷰 관리</div>
     </>
   );
 };

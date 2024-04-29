@@ -1,10 +1,15 @@
 import Calendar from "@/assets/images/CalendarDummy.png";
-import ReservationItem from "./ReservationItem";
+import ReservationItem from "@/components/owner/ReservationItem";
 
-const OwnerReservation = () => {
+const OwnerReservation = ({
+  selectCampground,
+}: {
+  selectCampground: string | null;
+}) => {
   return (
     <>
       <div>
+        <p>{selectCampground}의 앰핑 예약 내역</p>
         {/* @TODO: 달력 컴포넌트 추가해야함 */}
         <div className="py-10">
           {/* 달력 */}
