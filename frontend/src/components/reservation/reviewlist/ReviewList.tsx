@@ -1,12 +1,15 @@
 import ReviewItem from "@/components/review/ReviewItem";
 import { IReview } from "@/types/review";
+import { useNavigate } from "react-router-dom";
 
 interface IReviewListProps {
+  campsiteId: number;
   totalReview: number;
   reviews: IReview[];
 }
 
-const ReviewList = ({ totalReview, reviews }: IReviewListProps) => {
+const ReviewList = ({ campsiteId, totalReview, reviews }: IReviewListProps) => {
+  const navigate = useNavigate();
   return (
     <>
       {/* 리뷰 */}
@@ -17,7 +20,14 @@ const ReviewList = ({ totalReview, reviews }: IReviewListProps) => {
       <div className="flex flex-wrap justify-start gap-5 ml-[20px] my-2 pb-10">
         {reviews &&
           reviews.map((review) => (
-            <ReviewItem key={review.id} review={review} />
+            <div
+              key={review.id}
+              onClick={() =>
+                navigate(`/camps/${campsiteId}/reviews/${review.id}`)
+              }
+            >
+              <ReviewItem review={review} />
+            </div>
           ))}
       </div>
     </>

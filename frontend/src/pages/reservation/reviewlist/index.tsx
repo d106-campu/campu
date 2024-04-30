@@ -14,7 +14,11 @@ const ReviewListPage = () => {
           campsiteName={data.campsite_faclt_nm}
         />
         <CampSiteRating rating={data.rating} />
-        <ReviewList totalReview={data.totalReview} reviews={data.reviews} />
+        <ReviewList
+          campsiteId={data.id}
+          totalReview={data.totalReview}
+          reviews={data.reviews}
+        />
       </div>
       <Footer />
     </>
