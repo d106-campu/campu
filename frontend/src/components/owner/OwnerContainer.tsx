@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import OwnerManage from "@/components/owner/OwnerManage";
-import OwnerReservation from "@/components/owner/OwnerReservation";
-import OwnerReview from "@/components/owner/OwnerReview";
+import OwnerManage from "@/components/owner/ownerManage/OwnerManage";
+import OwnerReservation from "@/components/owner/ownerReservation/OwnerReservation";
+import OwnerReview from "@/components/owner/ownerReview/OwnerReview";
 import OwnerTabbar from "@/components/owner/OwnerTabbar";
 import { RootState } from "@/app/store";
 

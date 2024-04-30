@@ -1,9 +1,9 @@
 import MainImage from "@/assets/images/MainImage.jpg";
 import SearchBar from "@/components/home/SearchBar";
-import MyCamping from "@/components/home/MyCamping";
-import Recommend from "@/components/home/Recommend";
-import GoOwner from "@/components/home/GoOwner";
-import NoticeSection from "@/components/home/NoticeSection";
+import MyCamping from "@/components/home/myCamping/MyCamping";
+import Recommend from "@/components/home/recommend/Recommend";
+import GoOwner from "@/components/home/goOwner/GoOwner";
+import NoticeSection from "@/components/home/noticeSection/NoticeSection";
 
 const HomeContainer = () => {
   return (

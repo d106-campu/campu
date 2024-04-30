@@ -1,5 +1,5 @@
 import KakaoMap from "@/components/@common/Map/KakaoMap";
-import SearchSection from "./SearchSection";
+import SearchSection from "@/components/search/searchSection/SearchSection";
 
 const SearchContainer = () => {
   const lat = 36.10712766037178;
@@ -9,7 +9,7 @@ const SearchContainer = () => {
     <>
       <div className="flex">
         <div className="w-[40%]">
-            {/* @TODO: CSS처리를 위한 BACKGROUND 추가 (추후 제거 예정) */}
+          {/* @TODO: CSS처리를 위한 BACKGROUND 추가 (추후 제거 예정) */}
           <div className="px-4 py-2 bg-gray-200">
             <SearchSection />
           </div>
