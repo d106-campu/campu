@@ -5,9 +5,10 @@ import MyPage from "@/pages/mypage";
 import OwnerPage from "@/pages/ownerpage";
 import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
-import PhotosPage from "@/pages/reservation/potos";
+import PhotosPage from "@/pages/reservation/photos";
 import PaymentPage from "@/pages/payment";
-import ReviewPage from "./pages/review";
+import ReviewListPage from "./pages/reservation/reviewlist";
+import ReviewPage from "./pages/reservation/reviewlist/review";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
@@ -33,20 +34,24 @@ const router = createBrowserRouter([
     element: <SearchPage />,
   },
   {
-    path: "/reservation/:campsiteId",
+    path: "/camps/:campId",
     element: <ReservationPage />,
   },
   {
-    path: "/reservation/:campsiteId/photos",
+    path: "/camps/:campId/photos",
     element: <PhotosPage />,
   },
   {
-    path: "/payment",
-    element: <PaymentPage />,
+    path: "/camps/:campId/reviews",
+    element: <ReviewListPage />,
   },
   {
-    path: "/review",
+    path: "/camps/:campId/reviews/:reviewId",
     element: <ReviewPage />,
+  },
+  {
+    path: "/camps/:campId/payment",
+    element: <PaymentPage />,
   },
 ]);
 

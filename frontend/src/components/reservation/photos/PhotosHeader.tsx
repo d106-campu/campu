@@ -8,7 +8,7 @@ interface IHeaderProps {
   liked: boolean;
 }
 
-const Header = ({ campsiteId, liked }: IHeaderProps) => {
+const PhotosHeader = ({ campsiteId, liked }: IHeaderProps) => {
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState<boolean>(liked); // 좋아요 상태관리
 
@@ -16,7 +16,7 @@ const Header = ({ campsiteId, liked }: IHeaderProps) => {
     <header className="fixed flex justify-between items-center w-full h-14 p-5 px-10 bg-white/80 top-0 left-0 z-10">
       {/* 뒤로가기 */}
       <button
-        onClick={() => navigate(`/reservation/${campsiteId}`)}
+        onClick={() => navigate(`/camps/${campsiteId}`)}
         className="p-3 rounded-full hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
       >
         <SlArrowLeft />
@@ -33,4 +33,4 @@ const Header = ({ campsiteId, liked }: IHeaderProps) => {
     </header>
   );
 };
-export default Header;
+export default PhotosHeader;

@@ -3,7 +3,7 @@ interface IPhotoContainerProps {
   photos: string[];
 }
 
-const PhotoContainer = ({ main, photos }: IPhotoContainerProps) => {
+const PhotosContainer = ({ main, photos }: IPhotoContainerProps) => {
   return (
     <main className="max-w-[50%] mx-auto flex flex-col gap-6 py-20">
       {/* 캠핑장 대표 사진 */}
@@ -26,4 +26,4 @@ const PhotoContainer = ({ main, photos }: IPhotoContainerProps) => {
     </main>
   );
 };
-export default PhotoContainer;
+export default PhotosContainer;

@@ -3,7 +3,7 @@ import Footer from "@/components/@common/Footer/Footer";
 import ReviewItem from "@/components/review/ReviewItem";
 import Rating from "@/components/review/Rating";
 
-const ReviewPage = () => {
+const ReviewListPage = () => {
   const displayRating = data.rating.toFixed(1); // 소수점 한 자리로 표시
   return (
     <>
@@ -50,7 +50,7 @@ const ReviewPage = () => {
     </>
   );
 };
-export default ReviewPage;
+export default ReviewListPage;
 
 // 더미 이미지
 import dummy_profile_1 from "@/assets/images/bg_loginD.jpg";

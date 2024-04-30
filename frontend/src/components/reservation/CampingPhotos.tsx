@@ -64,7 +64,7 @@ const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
           icon={PiImage}
           backgroundColor="bg-[#030303cc]"
           hoverBackgroundColor="hover:bg-[#030303]"
-          onClick={() => navigate(`/reservation/${id}/photos`)}
+          onClick={() => navigate(`/camps/${id}/photos`)}
         />
       </div>
     </div>
