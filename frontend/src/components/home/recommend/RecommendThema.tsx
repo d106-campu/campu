@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TagList from "@/components/home/TagList";
-import RecommendItem from "@/components/home/RecommendItem";
+import RecommendItem from "@/components/home/recommend/RecommendItem";
 import dummy from "@/assets/images/dummyCamping3.png";
 
 const RecommendThema = () => {

@@ -1,5 +1,15 @@
+import Footer from "@/components/@common/Footer/Footer";
+import Header from "@/components/@common/Header/Header";
+import SearchContainer from "@/components/search/SearchContainer";
+
 const SearchPage = () => {
-  return <div>조회페이지입니다</div>;
+  return (
+    <>
+      <Header page={"search"} />
+      <SearchContainer />
+      <Footer />
+    </>
+  );
 };
 
 export default SearchPage;
