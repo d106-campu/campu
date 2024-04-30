@@ -1,4 +1,4 @@
-import MyCampingItem from "@/components/home/MyCampingItem";
+import MyCampingItem from "@/components/home/myCamping/MyCampingItem";
 import dummyImage from "@/assets/images/dummyCamping.png";
 
 const MyCamping = () => {
