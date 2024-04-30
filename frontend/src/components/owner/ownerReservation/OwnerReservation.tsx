@@ -1,5 +1,5 @@
 import Calendar from "@/assets/images/CalendarDummy.png";
-import ReservationItem from "@/components/owner/ReservationItem";
+import ReservationItem from "@/components/owner/ownerReservation/ReservationItem";
 
 const OwnerReservation = ({
   selectCampground,

@@ -19,7 +19,7 @@ const OwnerPage = () => {
 
   return (
     <div>
-      <Header page={"main"} />
+      <Header page={"owner"} />
 
       {campgrounds.length > 0 ? (
         <>

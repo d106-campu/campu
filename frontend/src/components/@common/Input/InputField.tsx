@@ -10,7 +10,7 @@ interface IInputFieldProps {
   error: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   certificationButton?: JSX.Element; // 휴대폰 인증 버튼을 위해서만 사용
-  flex?: string,
+  flex?: string;
   justifyContent?: string;
   width?: string;
   height?: string;
@@ -45,32 +45,37 @@ const InputField = ({
   onChange,
   certificationButton,
   // 아래서부터 TailWind CSS
-  flex = 'flex',
-  justifyContent = 'justify-between',
-  width = 'w-full',
-  height = 'h-10',
-  inputPadding = 'pl-2',
-  labelPadding = 'pl-1 pt-3',
-  errorPadding = 'pl-1 pt-3.5',
-  border = 'border-2',
-  borderColor = 'border-gray-100',
-  rounded = 'rounded-lg',
-  outline = 'outline-none',
-  inputTextSize = 'text-sm',
-  labelTextSize = 'text-sm',
-  errorTextSize = 'text-xs',
-  errorTextColor = 'text-red-400',
-  children,
+  flex = "flex",
+  justifyContent = "justify-between",
+  width = "w-full",
+  height = "h-10",
+  inputPadding = "pl-2",
+  labelPadding = "pl-1 pt-3",
+  errorPadding = "pl-1 pt-3.5",
+  border = "border-2",
+  borderColor = "border-gray-100",
+  rounded = "rounded-lg",
+  outline = "outline-none",
+  inputTextSize = "text-sm",
+  labelTextSize = "text-sm",
+  errorTextSize = "text-xs",
+  errorTextColor = "text-red-400",
   ...props
 }: PropsWithChildren<IInputFieldProps>): JSX.Element => {
   const isErrorPositiveFeedback = positiveFeedbackMessages.includes(error);
-  const customErrorColor = isErrorPositiveFeedback ? 'text-MAIN_GREEN' : errorTextColor;
+  const customErrorColor = isErrorPositiveFeedback
+    ? "text-MAIN_GREEN"
+    : errorTextColor;
 
   return (
     <div>
       <div className={`${flex} ${justifyContent}`}>
         <label className={`${labelTextSize} ${labelPadding}`}>{label}</label>
-        {error && <p className={`${errorTextSize} ${customErrorColor} ${errorPadding}`}>{error}</p>}
+        {error && (
+          <p className={`${errorTextSize} ${customErrorColor} ${errorPadding}`}>
+            {error}
+          </p>
+        )}
       </div>
       <div className="relative flex">
         <input
@@ -91,7 +96,7 @@ const InputField = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default InputField
+export default InputField;
