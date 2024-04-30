@@ -13,28 +13,31 @@ const ReviewItem = ({ review }: { review: IReview }) => {
   };
 
   return (
-    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white">
+    <div className="w-[20rem] rounded-lg overflow-hidden shadow-lg bg-white">
+      {/* 리뷰 사진 최대 5개 */}
       {review.images && review.images.length > 0 ? (
         <div className="relative">
           <img
-            className="w-full h-64 object-cover object-center"
+            className="w-full h-60 object-cover object-center"
             src={review.images[activeImage]}
             alt="리뷰 사진"
           />
-          {/* 하단의 점 슬라이더 */}
-          <div className="absolute bottom-4 left-0 w-full  flex justify-center">
-            <div className=" bg-black/30 rounded-3xl w-[60px] px-1">
-              {review.images.map((_, index) => (
-                <span
-                  key={index}
-                  className={`inline-block h-2 w-2 rounded-full mx-1 cursor-pointer ${
-                    index === activeImage ? "bg-MAIN_GREEN" : "bg-[#C8C8C8]"
-                  }`}
-                  onClick={() => handleDotClick(index)}
-                />
-              ))}
+          {/* 하단의 점 슬라이더 - 이미지가 2개 이상때만 렌더링 */}
+          {review.images.length > 1 && (
+            <div className="absolute bottom-4 left-0 w-full flex justify-center">
+              <div className=" bg-black/30 rounded-3xl px-1">
+                {review.images.map((_, index) => (
+                  <span
+                    key={index}
+                    className={`inline-block h-2 w-2 rounded-full mx-1 cursor-pointer ${
+                      index === activeImage ? "bg-MAIN_GREEN" : "bg-[#C8C8C8]"
+                    }`}
+                    onClick={() => handleDotClick(index)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         <div className="flex flex-col justify-center h-64">

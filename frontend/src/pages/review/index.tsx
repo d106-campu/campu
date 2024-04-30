@@ -45,11 +45,11 @@ const ReviewPage = () => {
           </div>
 
           {/* 리뷰 */}
-          <h3 className="font-bold text-xl py-4">
+          <h3 className="font-bold text-xl py-2">
             방문자 리뷰
             <span className="text-MAIN_GREEN pl-2">{data.totalReview}</span>
           </h3>
-          <div className="flex flex-wrap gap-5 pb-10">
+          <div className="flex flex-wrap justify-start gap-5 ml-[20px] my-2 pb-10">
             {data.reviews &&
               data.reviews.map((review) => (
                 <ReviewItem key={review.id} review={review} />
@@ -68,7 +68,7 @@ const data = {
   campsite_faclt_nm: "캠프유캠푸 캠핑장",
   rating: 3.5,
   types: ["오토캠핑", "글램핑", "카라반"],
-  totalReview: 7,
+  totalReview: 9,
   reviews: [
     {
       id: 1,
@@ -91,6 +91,16 @@ const data = {
       images: [photo2, photo3, photo1],
     },
     {
+      id: 3,
+      nickname: "캠프유캠푸",
+      profile: dummy_profile_3,
+      content:
+        "캠핑뷰도 너무 좋았고 시설도 신설에다가 너무 깔끔해요!! 특히 사장님이 너무 친절하십니다!!",
+      rating: 4.0,
+      date: "2024.04.15",
+      images: [photo4],
+    },
+    {
       id: 4,
       nickname: "캠프유캠푸",
       profile: dummy_profile_3,
@@ -101,27 +111,27 @@ const data = {
       images: [photo3],
     },
     {
-      id: 3,
+      id: 5,
       nickname: "캠프유캠푸",
       profile: dummy_profile_3,
       content:
         "캠핑뷰도 너무 좋았고 시설도 신설에다가 너무 깔끔해요!! 특히 사장님이 너무 친절하십니다!!",
       rating: 4.0,
       date: "2024.04.15",
-      images: [photo4],
+      images: [photo4, photo3],
     },
     {
-      id: 5,
+      id: 6,
       nickname: "캠핑러버123",
       profile: "",
       content:
         "반려동물 동반할 수 있는 캠핑장 중 가장 좋았던 것 같아요! 캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요",
       rating: 3,
       date: "2024.04.15",
-      images: [photo1, photo5],
+      images: [photo1, photo5, photo5, photo1, photo5],
     },
     {
-      id: 6,
+      id: 7,
       nickname: "아아아아",
       profile: dummy_profile_2,
       content:
@@ -131,7 +141,7 @@ const data = {
       images: [photo6, photo1, photo3],
     },
     {
-      id: 3,
+      id: 8,
       nickname: "캠프유캠푸",
       profile: dummy_profile_3,
       content:
@@ -141,7 +151,7 @@ const data = {
       images: [photo4],
     },
     {
-      id: 7,
+      id: 9,
       nickname: "캠핑러버",
       profile: dummy_profile_1,
       content:
@@ -151,14 +161,14 @@ const data = {
       images: [],
     },
     {
-      id: 3,
-      nickname: "캠프유캠푸",
-      profile: dummy_profile_3,
+      id: 10,
+      nickname: "캠핑러버",
+      profile: dummy_profile_1,
       content:
-        "캠핑뷰도 너무 좋았고 시설도 신설에다가 너무 깔끔해요!! 특히 사장님이 너무 친절하십니다!!",
-      rating: 4.0,
-      date: "2024.04.15",
-      images: [photo4],
+        "반려동물 동반할 수 있는 캠핑장 중 가장 좋았던 것 같아요! 캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요",
+      rating: 3,
+      date: "2024.04.10",
+      images: [],
     },
   ],
 };
