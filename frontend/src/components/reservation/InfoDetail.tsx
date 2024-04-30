@@ -137,7 +137,7 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
             ref={wrapperRef}
             className="mx-3 h-0 overflow-hidden text-BLACK transition-all ease-in duration-500"
           >
-            <div ref={contentRef} className="p-4 whitespace-pre-wrap">
+            <div ref={contentRef} className="p-4 whitespace-pre-line">
               {data.policy}
             </div>
           </div>

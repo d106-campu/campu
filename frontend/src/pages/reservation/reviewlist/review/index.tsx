@@ -1,9 +1,13 @@
-// import CampSiteTitle from "@/components/reservation/reviewlist/CampSiteTitle";
+import Header from "@/components/@common/Header/Header";
+import Footer from "@/components/@common/Footer/Footer";
+import ReviewContainer from "@/components/reservation/reviewList/review/ReviewContainer";
 
 const Review = () => {
   return (
     <>
-      {/* <CampSiteTitle types={data.types} campsiteName={data.campsite_faclt_nm} /> */}
+      <Header />
+      <ReviewContainer />
+      <Footer />
     </>
   );
 };

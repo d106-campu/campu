@@ -1,8 +1,8 @@
 import Header from "@/components/@common/Header/Header";
 import Footer from "@/components/@common/Footer/Footer";
-import CampSiteTitle from "@/components/reservation/reviewlist/CampSiteTitle";
-import CampSiteRating from "@/components/reservation/reviewlist/CampSiteRating";
-import ReviewList from "@/components/reservation/reviewlist/ReviewList";
+import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
+import CampSiteRating from "@/components/reservation/reviewList/CampSiteRating";
+import ReviewList from "@/components/reservation/reviewList/ReviewList";
 
 const ReviewListPage = () => {
   return (
@@ -53,7 +53,7 @@ const data = {
         "캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판 빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요",
       rating: 4.8,
       date: "2024.04.22",
-      images: [photo5, photo1, photo3],
+      images: [photo1, photo2, photo3, photo4, photo5],
     },
     {
       id: 2,
