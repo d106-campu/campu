@@ -23,4 +23,10 @@ public class CampsiteController implements CampsiteControllerDoc {
         return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable));
     }
 
+    @Override
+    @GetMapping("/owner/campsite")
+    public Response createCampsite() {
+        return new Response();
+    }
+
 }
