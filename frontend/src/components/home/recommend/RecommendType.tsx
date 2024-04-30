@@ -8,7 +8,7 @@ import CampingSelect from "@/assets/images/CampingSelect.png";
 import AutoCampingSelect from "@/assets/images/AutoCampingSelect.png";
 import GlampingSelect from "@/assets/images/GlampingSelect.png";
 import CaravaneSelect from "@/assets/images/CaravaneSelect.png";
-import RecommendItem from "@/components/home/RecommendItem";
+import RecommendItem from "@/components/home/recommend/RecommendItem";
 
 const RecommendType = () => {
   const [selectedTab, setSelectedTab] = useState<string>("캠핑");

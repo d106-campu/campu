@@ -1,6 +1,6 @@
-import OwnerManageInfo from "@/components/owner/OwnerManageInfo";
-import OwnerManagePhoto from "@/components/owner/OwnerManagePhoto";
-import OwnerManageRoom from "@/components/owner/OwnerManageRoom";
+import OwnerManageInfo from "@/components/owner/ownerManage/ownerManageInfo/OwnerManageInfo";
+import OwnerManagePhoto from "@/components/owner/ownerManage/ownerManagePhoto/OwnerManagePhoto";
+import OwnerManageRoom from "@/components/owner/ownerManage/ownerManageroom/OwnerManageRoom";
 
 const OwnerManage = ({
   selectCampground,

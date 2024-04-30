@@ -1,5 +1,5 @@
-import RecommendThema from "@/components/home/RecommendThema";
-import RecommendType from "@/components/home/RecommendType";
+import RecommendThema from "@/components/home/recommend/RecommendThema";
+import RecommendType from "@/components/home/recommend/RecommendType";
 
 const Recommend = () => {
   return (
