@@ -3,16 +3,19 @@ import { ownerTabReducer } from "@/features/owner/OwnerTabSlice";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { authReducer } from "@/features/login/authSlice";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["ownerTab", "ownerSide"],
+  whitelist: ["ownerTab", "ownerSide", 'auth'],
+
 };
 
 const rootReducer = combineReducers({
   ownerTab: ownerTabReducer,
   ownerSide: ownerSideReducer,
+  auth: authReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

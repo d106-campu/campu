@@ -1,6 +1,9 @@
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/app/store';
+import { setIsLogin } from '@/features/login/authSlice';
 import logo from "@/assets/images/temp_log2.png";
 import profileImage from "@/assets/images/profile.png";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
 import AlertLink from "@/components/alert/AlertLink ";
 
@@ -8,6 +11,18 @@ import AlertLink from "@/components/alert/AlertLink ";
 // @TODO: 알림 열기
 const Header = ({ page }: { page?: string }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+
+  const handleLogout = () => {
+    dispatch(setIsLogin(false));
+    navigate('/');
+  };
+
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
 
   const isCurrentPage = (location: string, target: string) => {
     if (location.includes(target)) {
@@ -50,9 +65,15 @@ const Header = ({ page }: { page?: string }) => {
         <AlertLink hasAlert={true} />
       </div>
       <div className="p-1 pl-2 flex items-center cursor-pointer">
-        <span className=" text-sm p-2 mr-2 cusor-pointer rounded-md hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN">
-          로그아웃
-        </span>
+        {isLogin ? (
+            <span className="text-sm p-2 cursor-pointer rounded-md mr-5 hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN" onClick={handleLogout}>
+              로그아웃
+            </span>
+          ) : (
+            <span className="text-sm p-2 cursor-pointer rounded-md mr-5 hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN" onClick={handleLoginRedirect}>
+              로그인
+            </span>
+          )}
         <img
           src={profileImage}
           alt="default profile"
