@@ -1,0 +1,108 @@
+pipeline {
+
+  agent any
+
+  environment {
+    CI = false
+
+    GIT_MESSAGE = "${sh(returnStdout: true, script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"').trim()}"
+    GIT_URL = credentials('gitlab_repo_url')
+
+    MM_CHANNEL = credentials('mattermost_channel')
+    MM_URL = credentials('mattermost_url')
+  }
+
+  stages {
+    stage('Configure Merge Option') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'origin_merge_id_token', gitToolName: 'git-tool')]) {
+            sh 'git config pull.rebase false'
+          }
+        }
+      }
+    }
+
+    stage('Checkout and Pull Origin Main') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'origin_merge_id_token', gitToolName: 'git-tool')]) {
+            sh """
+              git checkout main; \
+              git pull origin main
+              """
+          }
+        }
+      }
+    }
+
+    stage('Pull Frontend') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'origin_merge_id_token', gitToolName: 'git-tool')]) {
+            sh 'git pull origin frontend'
+          }
+        }
+      }
+    }
+
+    stage('Pull Backend') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'origin_merge_id_token', gitToolName: 'git-tool')]) {
+            sh 'git pull origin backend'
+          }
+        }
+      }
+    }
+
+    stage('Push Origin Main') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'origin_merge_id_token', gitToolName: 'git-tool')]) {
+            sh 'git push origin main'
+          }
+        }
+      }
+    }
+
+    stage('Push Upstream Main') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'upstream_merge_id_token', gitToolName: 'git-tool')]) {
+            def isUpstreamSet = sh(script: "git remote -v | grep -q upstream", returnStatus: true)
+            if (isUpstreamSet != 0) {
+              sh "git remote add upstream ${env.GIT_URL}"
+            }
+            sh 'git push upstream main'
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        mattermostSend(
+          color: 'good',
+          message: "[MAIN] Merge Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
+      }
+    }
+    
+    failure {
+      script {
+        mattermostSend(
+          color: 'danger',
+          message: "[MAIN] Merge Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
+      }
+    }
+  }
+
+}

@@ -1,0 +1,137 @@
+pipeline {
+
+  agent any
+  
+  environment {
+    HOME = "${env.WORKSPACE}"
+    GRADLE_USER_HOME = "${env.WORKSPACE}/.gradle"
+    CI = false
+
+    REGISTRY_URL = credentials('docker_registry_url')
+    REGISTRY_AUTH = credentials('docker_registry_id_pw')
+
+    BACKEND_URL = credentials('backend_url')
+
+    GIT_MESSAGE = "${sh(returnStdout: true, script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"').trim()}"
+
+    MM_CHANNEL = credentials('mattermost_channel')
+    MM_URL = credentials('mattermost_url')
+  }
+ 
+  stages {
+    stage('Build Backend') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'backend_yml', variable: 'PROD_YML')]) {
+            sh """
+              cd exec/; \
+              chmod +x backend-project-setup.sh; \
+              ./backend-project-setup.sh
+              """ 
+            sh """
+              cd exec/; \
+              chmod +x backend-project-build.sh; \
+              ./backend-project-build.sh
+              """
+          }
+        }
+      }
+    }
+    
+    stage('Build and Push Images') {
+      steps {
+        script {
+          sh """
+            cd exec/; \
+            chmod +x backend-docker-build-push.sh; \
+            ./backend-docker-build-push.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
+            """
+        }
+      }
+    }
+
+    stage('Copy .env to Deploy Directory') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'backend_docker_compose_env', variable: 'DC_ENV')]) {
+            sh """
+              cd exec/; \
+              chmod +x backend-copy-docker-compose-env.sh; \
+              ./backend-copy-docker-compose-env.sh
+              """
+          }
+        }
+      }
+    }
+
+    stage('Deploy Backend') {
+      steps([$class: 'BapSshPromotionPublisherPlugin']) {
+        script {
+          sshPublisher(
+            continueOnError: false,
+            failOnError: true,
+            publishers: [
+              sshPublisherDesc(
+                configName: 'application', 
+                verbose: true,
+                transfers: [
+                  sshTransfer(
+                    sourceFiles: 'exec/backend-deploy/**',
+                    removePrefix: 'exec/backend-deploy/',
+                    remoteDirectory: '/jenkins/deploy/backend',
+                    execCommand: """
+                      cd /home/jenkins/deploy/backend; \
+                      chmod 755 *.sh; \
+                      ./backend-stop.sh; \
+                      ./backend-start.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
+                      """
+                  )
+                ]
+              )
+            ]
+          )
+        }
+      }
+    }
+
+    // stage('Health Check Backend') {
+    //   steps {
+    //     sh 'sleep 20'
+    //     script {
+    //       def HEALTH = sh(returnStdout: true, script: "curl -s -o /dev/null -w '%{http_code}' ${env.BACKEND_URL}").trim()
+
+    //       if (HEALTH == "200") {
+    //         echo "backend success"
+    //       } else {
+    //         error "backend fail"
+    //       }
+    //     }
+    //   }
+    // }
+  }
+
+  // post {
+  //   success {
+  //     script {
+  //       mattermostSend(
+  //         color: 'good',
+  //         message: "[BE] Deploy Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+  //         endpoint: "${env.MM_URL}",
+  //         channel: "${env.MM_CHANNEL}",
+  //       )
+  //     }
+  //   }
+  
+  //   failure {
+  //     script {
+  //       mattermostSend(
+  //         color: 'danger',
+  //         message: "[BE] Deploy Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+  //         endpoint: "${env.MM_URL}",
+  //         channel: "${env.MM_CHANNEL}",
+  //       )
+  //     }
+  //   }
+  // }
+
+}

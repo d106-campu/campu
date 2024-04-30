@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local: local, common
+      prod: prod, common
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: common
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+springdoc:
+  packages-to-scan: com.d106.campu
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    info:
+      title: D106 API Server
+      description:
+      version: 0.0.1
+  override-with-generic-response: false
+  use-fqn: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
+  server:
+    port: 28080
+    base-path: /monitor
