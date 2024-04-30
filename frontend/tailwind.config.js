@@ -19,7 +19,7 @@ export default {
         SUB_RED: "#FDA3A3",
         BLACK: "#393939",
         SUB_BLACK: "#595959",
-        GRAY: "#FAFAFA",
+        GRAY: "#C7C8CC",
         UNIMPORTANT_TEXT_01: "#595959",
         UNIMPORTANT_TEXT_02: "#C8C8C8",
       },
