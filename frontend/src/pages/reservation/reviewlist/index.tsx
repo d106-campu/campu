@@ -1,50 +1,20 @@
 import Header from "@/components/@common/Header/Header";
 import Footer from "@/components/@common/Footer/Footer";
-import ReviewItem from "@/components/review/ReviewItem";
-import Rating from "@/components/review/Rating";
+import CampSiteTitle from "@/components/reservation/reviewlist/CampSiteTitle";
+import CampSiteRating from "@/components/reservation/reviewlist/CampSiteRating";
+import ReviewList from "@/components/reservation/reviewlist/ReviewList";
 
 const ReviewListPage = () => {
-  const displayRating = data.rating.toFixed(1); // 소수점 한 자리로 표시
   return (
     <>
       <Header />
       <div className="max-w-[70%] mx-auto py-2">
-        {/* 캠핑장 이름 */}
-        <div className="pt-7">
-          {data.types.map((type, index) => (
-            <span key={index} className="text-UNIMPORTANT_TEXT_01">
-              {type}
-              {index < data.types.length - 1 && (
-                <span className="text-UNIMPORTANT_TEXT_01 p-1">·</span>
-              )}
-            </span>
-          ))}
-          <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
-
-          {/* 별점 */}
-          <div className="flex flex-col">
-            <div className="flex justify-center text-lg">
-              <p className="text-UNIMPORTANT_TEXT_02 font-semibold">
-                <span className="text-MAIN_GREEN">{displayRating}</span> / 5.0
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <Rating rating={data.rating} size={35} />
-            </div>
-          </div>
-
-          {/* 리뷰 */}
-          <h3 className="font-bold text-xl py-2">
-            방문자 리뷰
-            <span className="text-MAIN_GREEN pl-2">{data.totalReview}</span>
-          </h3>
-          <div className="flex flex-wrap justify-start gap-5 ml-[20px] my-2 pb-10">
-            {data.reviews &&
-              data.reviews.map((review) => (
-                <ReviewItem key={review.id} review={review} />
-              ))}
-          </div>
-        </div>
+        <CampSiteTitle
+          types={data.types}
+          campsiteName={data.campsite_faclt_nm}
+        />
+        <CampSiteRating rating={data.rating} />
+        <ReviewList totalReview={data.totalReview} reviews={data.reviews} />
       </div>
       <Footer />
     </>
