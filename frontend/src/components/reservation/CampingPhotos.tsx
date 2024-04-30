@@ -3,11 +3,12 @@ import Button from "@/components/@common/Button/Button";
 import { PiImage } from "react-icons/pi";
 
 interface ICampingPhotosProps {
+  id: number;
   main: string;
   photos: string[];
 }
 
-const CampingPhotos = ({ main, photos }: ICampingPhotosProps) => {
+const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
   const navigate = useNavigate();
 
   const displayedPhotos = photos.slice(0, 4); // 최대 4개의 사진만 가져옴
@@ -63,7 +64,7 @@ const CampingPhotos = ({ main, photos }: ICampingPhotosProps) => {
           icon={PiImage}
           backgroundColor="bg-[#030303cc]"
           hoverBackgroundColor="hover:bg-[#030303]"
-          onClick={() => navigate("/reservation-photos")}
+          onClick={() => navigate(`/reservation/${id}/photos`)}
         />
       </div>
     </div>

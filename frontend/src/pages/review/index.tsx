@@ -3,17 +3,6 @@ import Footer from "@/components/@common/Footer/Footer";
 import ReviewItem from "@/components/review/ReviewItem";
 import Rating from "@/components/review/Rating";
 
-// 더미 이미지
-import dummy_profile_1 from "@/assets/images/bg_loginD.jpg";
-import dummy_profile_2 from "@/assets/images/AutoCamping.png";
-import dummy_profile_3 from "@/assets/images/dummyCamping.png";
-import photo6 from "@/assets/images/dummy/camping_spot_6.png";
-import photo1 from "@/assets/images/dummy/camping_spot_2.png";
-import photo2 from "@/assets/images/dummy/camping_spot_3.png";
-import photo3 from "@/assets/images/dummy/camping_spot_4.jpg";
-import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
-import photo5 from "@/assets/images/dummy/camping_spot_1.png";
-
 const ReviewPage = () => {
   const displayRating = data.rating.toFixed(1); // 소수점 한 자리로 표시
   return (
@@ -63,6 +52,18 @@ const ReviewPage = () => {
 };
 export default ReviewPage;
 
+// 더미 이미지
+import dummy_profile_1 from "@/assets/images/bg_loginD.jpg";
+import dummy_profile_2 from "@/assets/images/AutoCamping.png";
+import dummy_profile_3 from "@/assets/images/dummyCamping.png";
+import photo6 from "@/assets/images/dummy/camping_spot_6.png";
+import photo1 from "@/assets/images/dummy/camping_spot_2.png";
+import photo2 from "@/assets/images/dummy/camping_spot_3.png";
+import photo3 from "@/assets/images/dummy/camping_spot_4.jpg";
+import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
+import photo5 from "@/assets/images/dummy/camping_spot_1.png";
+
+// 더미 데이터
 const data = {
   id: 1,
   campsite_faclt_nm: "캠프유캠푸 캠핑장",

@@ -29,7 +29,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   const [isLiked, setIsLiked] = useState<boolean>(data.isLiked);
   return (
     <>
-      <CampingPhotos main={data.main} photos={data.other} />
+      <CampingPhotos main={data.main} photos={data.other} id={data.id} />
       <div className="pt-7">
         {data.types.map((type, index) => (
           <span key={index} className="text-UNIMPORTANT_TEXT_01">

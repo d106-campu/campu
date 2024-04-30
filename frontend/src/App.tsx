@@ -5,7 +5,7 @@ import MyPage from "@/pages/mypage";
 import OwnerPage from "@/pages/ownerpage";
 import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
-import PhotosPage from "@/pages/reservation/photos";
+import PhotosPage from "@/pages/reservation/potos";
 import PaymentPage from "@/pages/payment";
 import ReviewPage from "./pages/review";
 import { Provider } from "react-redux";
@@ -33,11 +33,11 @@ const router = createBrowserRouter([
     element: <SearchPage />,
   },
   {
-    path: "/reservation",
+    path: "/reservation/:campsiteId",
     element: <ReservationPage />,
   },
   {
-    path: "/reservation-photos",
+    path: "/reservation/:campsiteId/photos",
     element: <PhotosPage />,
   },
   {
