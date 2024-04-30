@@ -1,0 +1,7 @@
+package com.d106.campu.campsite.constant;
+
+public class CampsiteConstant {
+
+    public static final String CAMPSITE_LIST = "campsiteList";
+
+}
