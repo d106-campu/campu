@@ -20,8 +20,7 @@ public class CampsiteController implements CampsiteControllerDoc {
     @Override
     @GetMapping
     public Response getCampsiteList(Pageable pageable) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST,
-            campsiteService.getCampsiteList(pageable));
+        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable));
     }
 
 }
