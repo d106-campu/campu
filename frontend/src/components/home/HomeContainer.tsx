@@ -10,7 +10,14 @@ const HomeContainer = () => {
     <>
       <div className="relative flex flex-col items-center">
         <img src={MainImage} />
-        <SearchBar />
+        <div className="bg-white/50 h-auto w-[70%] absolute top-28 rounded-lg p-4">
+          <p className="font-bold text-2xl text-center py-4">
+            어디로 떠나볼까요?
+          </p>
+          <div className="px-12 py-6">
+            <SearchBar />
+          </div>
+        </div>
         <MyCamping />
         <Recommend />
         <GoOwner />
