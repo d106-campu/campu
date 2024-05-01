@@ -38,8 +38,7 @@ class CampsiteRepositoryTest {
             .sigunguNm("춘천시")
             .addr1("강원도 춘천시 남면 가옹개길 52-9")
             .indutyList("카라반")
-            .thumbnailImageUrl(
-                "https://gocamping.or.kr/upload/camp/10/thumb/thumb_720_1869epdMHtUyrinZWKFHDWty.jpg")
+            .thumbnailImageUrl("https://gocamping.or.kr/upload/camp/10/thumb/thumb_720_1869epdMHtUyrinZWKFHDWty.jpg")
             .sitedStnc(10)
             .animalCmgCl("불가능")
             .hit(10)
