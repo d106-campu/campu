@@ -29,7 +29,7 @@ public class CampsiteController implements CampsiteControllerDoc {
     @Override
     @PostMapping("/register")
     public Response createCampsite(@RequestBody CampsiteDto.CreateRequest createRequest) {
-        return new Response(CampsiteConstant.CAMPSITE_ID, campsiteService.createCampsite(createRequest));
+        return new Response(CampsiteConstant.CAMPSITE, campsiteService.createCampsite(createRequest));
     }
 
 }

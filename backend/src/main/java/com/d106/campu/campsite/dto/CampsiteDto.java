@@ -100,4 +100,10 @@ public class CampsiteDto {
 
     }
 
+    @Data
+    public static class CreateResponse {
+
+        private Long id;
+
+    }
 }

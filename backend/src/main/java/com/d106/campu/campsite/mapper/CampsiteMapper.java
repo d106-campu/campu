@@ -10,6 +10,8 @@ public interface CampsiteMapper {
 
     CampsiteDto.Response toCampsiteListResponseDto(Campsite campsite);
 
+    CampsiteDto.CreateResponse toCreateResponseDto(Campsite campsite);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hit", ignore = true)
     Campsite toCampsite(CampsiteDto.CreateRequest createRequest);

@@ -49,7 +49,7 @@ public interface CampsiteControllerDoc {
     }
 
     class createCampsiteResponse {
-        public Long campsiteId;
+        public CampsiteDto.CreateResponse campsite;
     }
 
 }
