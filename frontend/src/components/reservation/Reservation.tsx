@@ -3,6 +3,15 @@ import RoomItem from "@/components/reservation/RoomItem";
 const Reservation = () => {
   return (
     <>
+      {/* 캠핑장 소개 */}
+      <div className="pt-10">
+        <h3 className="text-xl font-bold">
+          캠핑존 둘러보기{" "}
+          <span className="text-xl font-bold text-[#46A14F]">
+            {data.content.length}
+          </span>
+        </h3>
+      </div>
       <div>
         {/* 각 방에 대한 RoomItem 렌더링 */}
         {data.content.map((room) => (
