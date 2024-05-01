@@ -1,12 +1,13 @@
 services:
   frontend:
     container_name: frontend
-    networks:
-      - d106-network
     image: ${REGISTRY}/frontend:${TAG}
     restart: always
+    networks:
+      - d106-network
     volumes:
-      - /home/jenkins/deploy/frontend/conf.d:/etc/nginx/conf.d
+      - ${HOME}/d106/frontend/app/logs:/var/log/nginx
+      - ${HOME}/deploy/frontend/conf.d:/etc/nginx/conf.d
     environment:
       TZ: "Asia/Seoul"
 
