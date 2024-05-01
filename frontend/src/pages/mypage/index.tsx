@@ -15,18 +15,20 @@ const MyPage = (): JSX.Element => {
   return (
     <>
       <Header />
-      <div className="w-screen h-[calc(100vh-3rem)] flex items-center justify-center">
-        <div className="w-[75%] h-auto flex">
+      <div className="w-screen flex items-center justify-center pt-10">
+        <div className="w-[75%] flex">
           <MySideBar
             onComponentChange={handleComponentChange}
             selectedComponent={selectedComponent}
           />
           {/* 구분선 */}
-          <div className="w-[2%] border-r-[1px] mr-10" />
+          <div className="flex-grow-0 flex-shrink-0 w-[2%] border-r-[1px] mr-10 mb-10" />
           <ConsumerContainer selectedComponent={selectedComponent}/>
         </div>
       </div>
-      <Footer />
+      <div className="w-full mt-10">
+        <Footer />
+      </div>
     </>
   )
 };
