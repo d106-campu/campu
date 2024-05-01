@@ -24,13 +24,13 @@ export default {
         UNIMPORTANT_TEXT_02: "#C8C8C8",
       },
       borderWidth: {
-        '2': '2px'  // 2px 두께 추가
+        '2': '2px'
       },
       borderColor: {
-        'custom-gray': '#ccc'  // 커스텀 그레이 색상 추가
+        'custom-gray': '#ccc'
       },
       borderStyle: {
-        dashed: 'dashed'  // dashed 스타일 추가
+        dashed: 'dashed'
       },
       keyframes: {
         ShowUp: {
