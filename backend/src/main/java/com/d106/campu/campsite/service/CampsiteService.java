@@ -1,5 +1,6 @@
 package com.d106.campu.campsite.service;
 
+import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.dto.CampsiteDto.Response;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
@@ -37,9 +38,10 @@ public class CampsiteService {
 
         /* TODO: Block if the login user does not have owner authority */
 
-        createRequest.setUser(user);
+        Campsite campsite = campsiteMapper.toCampsite(createRequest);
+        campsite.setUser(user);
 
-        return campsiteRepository.save(campsiteMapper.toCampsite(createRequest)).getId();
+        return campsiteRepository.save(campsite).getId();
     }
 
 }
