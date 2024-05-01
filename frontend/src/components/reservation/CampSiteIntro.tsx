@@ -30,6 +30,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   return (
     <>
       <CampingPhotos main={data.main} photos={data.other} id={data.id} />
+      {/* 캠핑장 유형 */}
       <div className="pt-7">
         {data.types.map((type, index) => (
           <span key={index} className="text-UNIMPORTANT_TEXT_01">
@@ -39,8 +40,10 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
             )}
           </span>
         ))}
+        {/* 캠핑장 이름 */}
         <div className="flex justify-between items-end">
           <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
+          {/* 좋아요 */}
           <button
             onClick={() => {
               setIsLiked(!isLiked);
