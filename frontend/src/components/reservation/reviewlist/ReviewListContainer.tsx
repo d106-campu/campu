@@ -1,7 +1,21 @@
-import Header from "@/components/@common/Header/Header";
-import Footer from "@/components/@common/Footer/Footer";
-import ReviewItem from "@/components/review/ReviewItem";
-import Rating from "@/components/review/Rating";
+import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
+import CampSiteRating from "@/components/reservation/reviewList/CampSiteRating";
+import ReviewList from "@/components/reservation/reviewList/ReviewList";
+
+const ReviewListContainer = () => {
+  return (
+    <div className="max-w-[70%] mx-auto py-2">
+      <CampSiteTitle types={data.types} campsiteName={data.campsite_faclt_nm} />
+      <CampSiteRating rating={data.rating} />
+      <ReviewList
+        campsiteId={data.id}
+        totalReview={data.totalReview}
+        reviews={data.reviews}
+      />
+    </div>
+  );
+};
+export default ReviewListContainer;
 
 // 더미 이미지
 import dummy_profile_1 from "@/assets/images/bg_loginD.jpg";
@@ -14,55 +28,7 @@ import photo3 from "@/assets/images/dummy/camping_spot_4.jpg";
 import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
 import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 
-const ReviewPage = () => {
-  const displayRating = data.rating.toFixed(1); // 소수점 한 자리로 표시
-  return (
-    <>
-      <Header />
-      <div className="max-w-[70%] mx-auto py-2">
-        {/* 캠핑장 이름 */}
-        <div className="pt-7">
-          {data.types.map((type, index) => (
-            <span key={index} className="text-UNIMPORTANT_TEXT_01">
-              {type}
-              {index < data.types.length - 1 && (
-                <span className="text-UNIMPORTANT_TEXT_01 p-1">·</span>
-              )}
-            </span>
-          ))}
-          <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
-
-          {/* 별점 */}
-          <div className="flex flex-col">
-            <div className="flex justify-center text-lg">
-              <p className="text-UNIMPORTANT_TEXT_02 font-semibold">
-                <span className="text-MAIN_GREEN">{displayRating}</span> / 5.0
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <Rating rating={data.rating} size={35} />
-            </div>
-          </div>
-
-          {/* 리뷰 */}
-          <h3 className="font-bold text-xl py-2">
-            방문자 리뷰
-            <span className="text-MAIN_GREEN pl-2">{data.totalReview}</span>
-          </h3>
-          <div className="flex flex-wrap justify-start gap-5 ml-[20px] my-2 pb-10">
-            {data.reviews &&
-              data.reviews.map((review) => (
-                <ReviewItem key={review.id} review={review} />
-              ))}
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </>
-  );
-};
-export default ReviewPage;
-
+// 더미 데이터
 const data = {
   id: 1,
   campsite_faclt_nm: "캠프유캠푸 캠핑장",
@@ -78,7 +44,7 @@ const data = {
         "캠핑뷰도 좋았고 시설도 깔끔하고 좋았어요!! 특히 전기장판 빌려주셨던 사장님덕분에 추위에떨지않고 잘잘수있었습니다!! 사장님 너무 친절하세요",
       rating: 4.8,
       date: "2024.04.22",
-      images: [photo5, photo1, photo3],
+      images: [photo1, photo2, photo3, photo4, photo5],
     },
     {
       id: 2,
