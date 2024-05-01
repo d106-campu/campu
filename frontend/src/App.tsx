@@ -7,8 +7,8 @@ import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
 import PhotosPage from "@/pages/reservation/photos";
 import PaymentPage from "@/pages/payment";
-import ReviewListPage from "./pages/reservation/reviewList";
-import ReviewPage from "./pages/reservation/reviewList/review";
+import ReviewListPage from "@/pages/reservation/reviewList";
+import ReviewPage from "@/pages/reservation/reviewList/review";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
