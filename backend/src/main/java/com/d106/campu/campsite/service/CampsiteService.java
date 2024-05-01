@@ -34,6 +34,9 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException());*/
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(CommonExceptionCode.USER_NOT_FOUND));
+
+        /* TODO: Block if the login user does not have owner authority */
+
         createRequest.setUser(user);
 
         return campsiteRepository.save(campsiteMapper.toCampsite(createRequest)).getId();

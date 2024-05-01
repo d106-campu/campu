@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
@@ -32,9 +33,15 @@ public interface CampsiteControllerDoc {
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
                 @SchemaProperty(name = "data", schema = @Schema(implementation = createCampsiteResponse.class)),
+            })),
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
+                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
+                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
             }))
     })
-    Response createCampsite(CampsiteDto.CreateRequest createRequest);
+    Response createCampsite(@Valid CampsiteDto.CreateRequest createRequest);
 
     class CampsiteListResponse {
         public List<CampsiteDto.Response> campsiteList;
