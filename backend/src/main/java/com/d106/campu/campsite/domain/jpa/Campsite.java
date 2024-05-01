@@ -39,7 +39,7 @@ public class Campsite extends BaseTime {
     @Column(name = "faclt_div_nm", length = 16)
     private String facltDivNm;
 
-    @Column(name = "tel", length = 16, unique = true, nullable = false)
+    @Column(name = "tel", length = 11, unique = true, nullable = false)
     private String tel;
 
     @Column(name = "line_intro", length = 512)
