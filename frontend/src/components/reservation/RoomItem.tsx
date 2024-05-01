@@ -1,4 +1,4 @@
-import Button from "../@common/Button/Button";
+import Button from "@/components/@common/Button/Button";
 
 interface IRoomItemProps {
   campsiteId: number;

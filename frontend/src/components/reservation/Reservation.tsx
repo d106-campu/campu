@@ -1,22 +1,28 @@
 import RoomItem from "@/components/reservation/RoomItem";
+import MyController from "@/components/reservation/MyController";
 
 const Reservation = () => {
   return (
     <>
-      {/* 캠핑장 소개 */}
+      {/* 캠핑존 둘러보기 */}
       <div className="pt-10">
-        <h3 className="text-xl font-bold">
+        <h3 className="text-xl font-bold pb-5">
           캠핑존 둘러보기{" "}
           <span className="text-xl font-bold text-[#46A14F]">
             {data.content.length}
           </span>
         </h3>
-      </div>
-      <div>
-        {/* 각 방에 대한 RoomItem 렌더링 */}
-        {data.content.map((room) => (
-          <RoomItem key={room.roomId} room={room} />
-        ))}
+        <MyController
+          headCount={headConunt}
+          startDate={startDate}
+          endDate={endDate}
+        />
+        <div>
+          {/* 각 방에 대한 RoomItem 렌더링 */}
+          {data.content.map((room) => (
+            <RoomItem key={room.roomId} room={room} />
+          ))}
+        </div>
       </div>
     </>
   );
@@ -27,6 +33,11 @@ import dummy2 from "@/assets/images/dummy/camping_spot_1.png";
 import dummy3 from "@/assets/images/dummy/camping_spot_2.png";
 import dummy4 from "@/assets/images/dummy/camping_spot_3.png";
 import dummy5 from "@/assets/images/dummy/camping_spot_4.jpg";
+
+// 더미 데이터
+const headConunt = 2;
+const startDate = "2024-05-10";
+const endDate = "2024-05-14";
 
 // 더미 데이터
 const data = {
