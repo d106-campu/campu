@@ -33,7 +33,7 @@ const MyController = ({
   const endDay = new Date(endDate);
 
   // 시작일과 종료일 사이의 일수 계산
-  const diffTime = Math.abs(endDay - startDay);
+  const diffTime = Math.abs(endDay.getTime() - startDay.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   // 날짜 포맷 변경
@@ -88,7 +88,8 @@ const MyController = ({
               width="w-full"
               height="h-12"
               text="변경된 날짜"
-              textSize="text-base"
+              textSize="text-lg"
+              onClick={toggleScheduleModal}
             />
           </div>
         </Modal>
@@ -103,7 +104,7 @@ const MyController = ({
         >
           <div>
             <div className="flex flex-col items-center text-BLACK pt-3">
-              <div className="flex gap-3 p-3 bg-[#f1f1f1] rounded-xl text-xs w-[60%] m-2">
+              <div className="flex gap-3 p-3 bg-[#f1f1f1] rounded-xl text-xs w-[65%] m-2 text-SUB_BLACK">
                 <PiInfo size={25} />
                 <p>
                   기준 인원 초과 시 추가요금이 발생할 수 있습니다. <br />만 5세
@@ -114,7 +115,7 @@ const MyController = ({
                 </p>
               </div>
 
-              <div className="flex justify-between w-[60%] pt-3">
+              <div className="flex justify-between w-[65%] pt-3">
                 <p className="p-3 text-xl">인원</p>
                 <div className="flex items-center">
                   <AiOutlineMinusCircle
@@ -144,7 +145,8 @@ const MyController = ({
               width="w-full"
               height="h-12"
               text={`인원 ${peopleCount}명`}
-              textSize="text-base"
+              textSize="text-lg"
+              onClick={toggleScheduleModal}
             />
           </div>
         </Modal>

@@ -96,6 +96,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
               textSize="text-base"
               textColor="text-MAIN_GREEN"
               backgroundColor="bg-SUB_GREEN_02"
+              hoverBackgroundColor="hover:bg-[#d0e2d3]"
             />
           )}
         </div>
