@@ -4,6 +4,7 @@ import CampsiteIntro from "@/components/reservation/CampSiteIntro";
 import Reservation from "@/components/reservation/Reservation";
 import InfoDetail from "@/components/reservation/InfoDetail";
 
+// @TODO: API 명세서 나오면 Props 수정 필요
 const ReservationPage = () => {
   return (
     <>
@@ -19,7 +20,6 @@ const ReservationPage = () => {
 };
 
 export default ReservationPage;
-
 
 // @TODO: API 명세서 나오면 수정 필요
 // 더미 이미지

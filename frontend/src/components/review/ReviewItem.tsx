@@ -40,10 +40,10 @@ const ReviewItem = ({ review }: { review: IReview }) => {
           )}
         </div>
       ) : (
-        <div className="flex flex-col justify-center h-64">
+        <div className="flex flex-col justify-center h-60">
           <Lottie
             options={noImageOptions}
-            height={130}
+            height={120}
             width={200}
             speed={0.5}
           />

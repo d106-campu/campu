@@ -23,6 +23,15 @@ export default {
         UNIMPORTANT_TEXT_01: "#595959",
         UNIMPORTANT_TEXT_02: "#C8C8C8",
       },
+      borderWidth: {
+        '2': '2px'
+      },
+      borderColor: {
+        'custom-gray': '#ccc'
+      },
+      borderStyle: {
+        dashed: 'dashed'
+      },
       keyframes: {
         ShowUp: {
           from: { opacity: 0, transform: "translate(0px, 5px)" },
