@@ -98,44 +98,44 @@ pipeline {
       }
     }
 
-    // stage('Health Check Frontend') {
-    //   steps {
-    //     sh 'sleep 20'
-    //     script {
-    //       def HEALTH = sh(returnStdout: true, script: "curl -s -o /dev/null -w '%{http_code}' ${env.FRONTEND_URL}").trim()
+    stage('Health Check Frontend') {
+      steps {
+        sh 'sleep 20'
+        script {
+          def HEALTH = sh(returnStdout: true, script: "curl -s -o /dev/null -w '%{http_code}' ${env.FRONTEND_URL}").trim()
 
-    //       if (HEALTH == "200") {
-    //         echo "frontend success"
-    //       } else {
-    //         error "frontend fail"
-    //       }
-    //     }
-    //   }
-    // }
+          if (HEALTH == "200") {
+            echo "frontend success"
+          } else {
+            error "frontend fail"
+          }
+        }
+      }
+    }
   }
 
-  // post {
-  //   success {
-  //     script {
-  //       mattermostSend(
-  //         color: 'good',
-  //         message: "[FE] Deploy Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
-  //         endpoint: "${env.MM_URL}",
-  //         channel: "${env.MM_CHANNEL}",
-  //       )
-  //     }
-  //   }
-  
-  //   failure {
-  //     script {
-  //       mattermostSend(
-  //         color: 'danger',
-  //         message: "[FE] Deploy Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
-  //         endpoint: "${env.MM_URL}",
-  //         channel: "${env.MM_CHANNEL}",
-  //       )
-  //     }
-  //   }
-  // }
+  post {
+    success {
+      script {
+        mattermostSend(
+          color: 'good',
+          message: "[FE] Deploy Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
+      }
+    }
+
+    failure {
+      script {
+        mattermostSend(
+          color: 'danger',
+          message: "[FE] Deploy Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
+      }
+    }
+  }
 
 }
