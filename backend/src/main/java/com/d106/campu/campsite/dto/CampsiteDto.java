@@ -1,6 +1,7 @@
 package com.d106.campu.campsite.dto;
 
 import com.d106.campu.user.domain.jpa.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
@@ -30,7 +31,10 @@ public class CampsiteDto {
     @Builder
     public static class CreateRequest {
 
+        @JsonIgnore
         private User user;
+
+        // TODO: validation
         private String facltNm;
         private String facltDivNm;
         private String tel;

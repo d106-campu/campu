@@ -34,7 +34,7 @@ public interface CampsiteControllerDoc {
                 @SchemaProperty(name = "data", schema = @Schema(implementation = createCampsiteResponse.class)),
             }))
     })
-    Response createCampsite();
+    Response createCampsite(CampsiteDto.CreateRequest createRequest);
 
     class CampsiteListResponse {
         public List<CampsiteDto.Response> campsiteList;
@@ -42,7 +42,7 @@ public interface CampsiteControllerDoc {
     }
 
     class createCampsiteResponse {
-        public Object campsite;
+        public Long campsiteId;
     }
 
 }
