@@ -1,8 +1,21 @@
 import SearchBar from "@/components/home/SearchBar";
 import { ICampingGround } from "@/types/search";
 import SearchCampingItem from "./SearchCampingItem";
+import { useDispatch } from "react-redux";
+import { addCampingData } from "@/features/search/campingMapSlice";
+import { useEffect } from "react";
 
 const SearchSection = () => {
+  const dispatch = useDispatch();
+
+  const addDummyDataToStore = () => {
+    dispatch(addCampingData(dummy));
+  };
+
+  useEffect(() => {
+    addDummyDataToStore();
+  }, []);
+
   return (
     <>
       <div className="w-full">
@@ -22,16 +35,16 @@ export default SearchSection;
 const dummy: ICampingGround[] = [
   {
     id: 1,
-    facltNm: "캠프유캠푸 캠핑장",
-    lineIntro: "이국적인 캐러밴과 알찬 부대시설",
-    doNm: "강원도",
-    sigunguNm: "춘천시",
-    addr1: "강원도 춘천시 남면 가옹개길 52-9",
+    facltNm: "구미 캠핑장",
+    lineIntro: "구미시 낙동강에 위치한 인기 캠핑장",
+    doNm: "경상북도",
+    sigunguNm: "구미시",
+    addr1: "경북 구미시 양호동 614-1",
     addr2: null,
     price: 150000,
     rate: 4.8,
-    mapX: 37.1,
-    mapY: 127.5,
+    mapX: 36.1334375,
+    mapY: 128.3710625,
     like: 12,
     available: true,
     thumbnailImageUrl:
@@ -39,16 +52,16 @@ const dummy: ICampingGround[] = [
   },
   {
     id: 2,
-    facltNm: "최먼지의 캠핑장",
-    lineIntro: "마당에 종류별로 귀여운 고양이가 많이 사는 인기 글램핑",
-    doNm: "강원도",
-    sigunguNm: "춘천시",
-    addr1: "강원도 춘천시 남면 가옹개길 53-1",
+    facltNm: "칠곡보 캠핑장",
+    lineIntro: "대구 구미 근교의 한적하고 조용한 인기 오토캠핑",
+    doNm: "경상북도",
+    sigunguNm: "구미시",
+    addr1: "경북 칠곡군 약목면 강변서로 110-43",
     addr2: null,
     price: 120000,
-    rate: 5.0,
-    mapX: 37.8,
-    mapY: 127.6,
+    rate: 4.9,
+    mapX: 36.0212083,
+    mapY: 128.3952645,
     like: 12,
     available: false,
     thumbnailImageUrl:

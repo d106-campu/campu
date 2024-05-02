@@ -1,12 +1,14 @@
+import { RootState } from "@/app/store";
 import KakaoMap from "@/components/@common/Map/KakaoMap";
 import SearchSection from "@/components/search/searchSection/SearchSection";
+import { useSelector } from "react-redux";
 
 const SearchContainer = () => {
-  const locations = [
-    { mapX: 37.8, mapY: 127.5, facltNm: "캠프유캠푸 캠핑장", rate: 4.8 },
-    { mapX: 37.8, mapY: 127.6, facltNm: "최먼지의 캠핑장", rate: 4.5 },
-  ];
-
+  // 스토어에 저장된 캠핑장 목록 불러옴
+  const locations = useSelector(
+    (state: RootState) => state.campingMap.campingData
+  );
+  // 지도에 띄울 필요한 정보만 추출
   const formattedLocations = locations.map((location) => ({
     lat: location.mapX,
     lng: location.mapY,
@@ -14,11 +16,12 @@ const SearchContainer = () => {
     rate: location.rate,
   }));
 
+  console.log(formattedLocations);
+
   return (
     <>
       <div className="flex">
         <div className="w-[40%]">
-          {/* @TODO: CSS처리를 위한 BACKGROUND 추가 (추후 제거 예정) */}
           <div className="px-4 py-2">
             <SearchSection />
           </div>
