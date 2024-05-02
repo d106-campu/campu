@@ -45,7 +45,7 @@ public interface AuthControllerDoc {
     Response checkAvailableNickname(
         @NotBlank(message = "not blank")
         @Size(min = 2, max = 8, message = "nickname length not valid")
-        @Pattern(regexp = RegExpression.nickname, message = "nickname format not valid") String account
+        @Pattern(regexp = RegExpression.nickname, message = "nickname format not valid") String nickname
     );
 
     @Operation(summary = "휴대폰 번호 중복확인", description = "회원가입에 사용 가능한 휴대폰 번호인지 확인한다.")
@@ -59,11 +59,25 @@ public interface AuthControllerDoc {
     })
     Response checkAvailableTel(
         @NotBlank(message = "not blank")
-        @Pattern(regexp = RegExpression.tel, message = "tel format not valid") String account
+        @Pattern(regexp = RegExpression.tel, message = "tel format not valid") String tel
+    );
+
+    @Operation(summary = "휴대폰 인증 번호 전송", description = "회원가입에 필요한 휴대폰 인증 번호를 전송한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "휴대폰 인증 번호 전송 여부를 반환",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공"))
+            })),
+        @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "휴대폰 인증 번호 일치 X", content = @Content),
+        @ApiResponse(responseCode = "409", description = "이미 가입된 휴대폰 번호", content = @Content)
+    })
+    Response sendAuthorizationCode(
+        @NotBlank(message = "not blank")
+        @Pattern(regexp = RegExpression.tel, message = "tel format not valid") String tel
     );
 
     class AvailableResponse {
-
         public Boolean available;
     }
 

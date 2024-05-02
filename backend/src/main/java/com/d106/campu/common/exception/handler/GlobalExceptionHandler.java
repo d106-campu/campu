@@ -1,5 +1,7 @@
 package com.d106.campu.common.exception.handler;
 
+import com.d106.campu.common.exception.ConflictException;
+import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.response.ResponseFail;
@@ -17,6 +19,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public Response handleParamsException(Exception e) {
         return new ResponseFail(CommonExceptionCode.INVALID_PARAM.getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    @ExceptionHandler(value = ConflictException.class)
+    public Response handleConflictException(ConflictException e) {
+        return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
+    @ExceptionHandler(value = TooManyException.class)
+    public Response handleTooManyException(TooManyException e) {
+        return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
     }
 
 }
