@@ -1,18 +1,12 @@
 import { PropsWithChildren } from "react";
-
-interface DetailSectionProps {
-  titleLeft?: string;
-  contentLeft?: string;
-  titleRight?: string;
-  contentRight?: string;
-}
+import { IDetailProps } from "@/types/myReservation";
   
 const ReservationSection = ({
   titleLeft,
   contentLeft,
   titleRight,
   contentRight,
-}: PropsWithChildren<DetailSectionProps>): JSX.Element => {
+}: PropsWithChildren<IDetailProps>): JSX.Element => {
   return (
     <>
       <div className='w-full '>

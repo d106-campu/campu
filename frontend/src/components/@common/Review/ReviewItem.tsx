@@ -1,7 +1,7 @@
 import profile from "@/assets/images/profile.png"; // 기본 프로필
 import Lottie from "react-lottie";
 import { noImageOptions } from "@/assets/lotties/lottieOptions";
-import Rating from "@/components/review/Rating";
+import Rating from "@/components/@common/Review/Rating";
 import { IReview } from "@/types/review";
 import { useState } from "react";
 
