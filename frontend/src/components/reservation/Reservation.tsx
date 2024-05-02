@@ -17,7 +17,7 @@ const Reservation = () => {
           startDate={startDate}
           endDate={endDate}
         />
-        <div>
+        <div className="w-[93%] mx-auto">
           {/* 각 방에 대한 RoomItem 렌더링 */}
           {data.content.map((room) => (
             <RoomItem key={room.roomId} room={room} />
