@@ -1,4 +1,4 @@
-import Rating from "@/components/review/Rating";
+import Rating from "@/components/@common/Review/Rating";
 
 interface ICampSiteRatingProps {
   rating: number;

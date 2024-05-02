@@ -1,4 +1,4 @@
-import ReviewItem from "@/components/review/ReviewItem";
+import ReviewItem from "@/components/@common/Review/ReviewItem";
 import { IReview } from "@/types/review";
 import { useNavigate } from "react-router-dom";
 

@@ -28,6 +28,8 @@ const Reservation = () => {
   );
 };
 export default Reservation;
+
+// 더미 이미지
 import dummy1 from "@/assets/images/dummy/camping_spot_6.png";
 import dummy2 from "@/assets/images/dummy/camping_spot_1.png";
 import dummy3 from "@/assets/images/dummy/camping_spot_2.png";
