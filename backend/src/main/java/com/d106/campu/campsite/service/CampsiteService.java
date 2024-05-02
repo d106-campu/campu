@@ -7,8 +7,8 @@ import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
-import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,7 +45,7 @@ public class CampsiteService {
         User user = userRepository.findByAccount(securityHelper.getLoginUserAccount())
             .orElseThrow(() -> new NotFoundException());*/
         User user = userRepository.findById(2L)
-            .orElseThrow(() -> new NotFoundException(CommonExceptionCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         /* TODO: Block if the login user does not have owner authority */
 
