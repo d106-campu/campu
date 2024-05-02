@@ -1,16 +1,12 @@
-import { useState } from "react";
 import Header from "@/components/@common/Header/Header";
 import Footer from "@/components/@common/Footer/Footer";
 import MySideBar from "@/components/my/MySideBar";
 import ConsumerContainer from "@/components/my/ConsumerContainer";
-
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
 
 const MyPage = (): JSX.Element => {
-  const [selectedComponent, setSelectedComponent] = useState<string>('MyReservation'); // 컴포넌트 호출 관리
-
-  const handleComponentChange = (componentName: string) => {
-    setSelectedComponent(componentName);
-  }
+  const selectedComponent = useSelector((state: RootState) => state.selectedComp.value);
 
   return (
     <>
@@ -18,7 +14,6 @@ const MyPage = (): JSX.Element => {
       <div className="w-screen flex items-center justify-center pt-10">
         <div className="w-[75%] flex">
           <MySideBar
-            onComponentChange={handleComponentChange}
             selectedComponent={selectedComponent}
           />
           {/* 구분선 */}

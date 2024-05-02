@@ -3,7 +3,8 @@ import MyReview from '@/components/my/consumer/MyReview';
 import MyFavoriteCamp from '@/components/my/consumer/MyFavoriteCamp';
 import FreeAlert from '@/components/my/consumer/FreeAlert';
 import MyProfile from '@/components/my/consumer/MyProfile';
-import GetReservations from '@/components/my/consumer/MyReservationItem'; 
+import GetReservations from '@/components/my/consumer/MyReservationItem'; // 더미데이터
+import GetMyReviews from '@/components/my/consumer/MyReviewItem'; // 더미데이터
 
 interface IConsumerContainerProps {
   selectedComponent: string;
@@ -21,7 +22,7 @@ const ConsumerContainer = ({
       case 'MyReservation':
         return <MyReservation {...firstReservation}/>;
       case 'MyReview':
-        return <MyReview />;
+        return <MyReview reviews={GetMyReviews.reviews} totalMyReview={GetMyReviews.totalMyReview} />;
       case 'MyFavoriteCamp':
         return <MyFavoriteCamp />;
       case 'FreeAlert':
