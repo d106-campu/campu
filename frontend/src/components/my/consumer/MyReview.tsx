@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { IMyReview, IMyReviewList } from '@/types/review';
+import { IMyReview } from '@/types/review';
 import { FaArrowRightToBracket } from "react-icons/fa6";
-import Rating from "@/components/review/Rating";
+import Rating from "@/components/@common/Review/Rating";
 
 interface MyReviewProps {
   reviews: IMyReview[];

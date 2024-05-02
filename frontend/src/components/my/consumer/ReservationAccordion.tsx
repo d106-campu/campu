@@ -1,7 +1,7 @@
 // import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import DummyImage from '@/assets/images/dummyCamping2.png';
-import ReservationSection from '@/components/@common/Reservation/reservationSection';
+import ReservationSection from '@/components/@common/Reservation/ReservationSection';
 import Button from '@/components/@common/Button/Button'
 import { IReservationProps } from '@/types/myReservation';
 
