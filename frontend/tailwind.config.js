@@ -17,20 +17,23 @@ export default {
         SUB_YELLOW: "#FFF8D4",
         SUB_PINK: "#FFC9CC",
         SUB_RED: "#FDA3A3",
+        HOVER_PINK: "#edbabd",
+        HOVER_YELLOW: "#f9efbd",
+        HOVER_LIGHT_GREEN: "#d0e2d3",
         BLACK: "#393939",
         SUB_BLACK: "#595959",
-        GRAY: "#C7C8CC",
+        GRAY: "#C9C9C9",
         UNIMPORTANT_TEXT_01: "#595959",
         UNIMPORTANT_TEXT_02: "#C8C8C8",
       },
       borderWidth: {
-        '2': '2px'
+        2: "2px",
       },
       borderColor: {
-        'custom-gray': '#ccc'
+        "custom-gray": "#ccc",
       },
       borderStyle: {
-        dashed: 'dashed'
+        dashed: "dashed",
       },
       keyframes: {
         ShowUp: {

@@ -1,15 +1,22 @@
 import profileImage from "@/assets/images/profile.png";
 import Button from "../@common/Button/Button";
+import { useDispatch } from 'react-redux';
+import { setSelectedComp } from '@/features/mypage/componentSlice';
 
 interface IMySideBarProps {
-  onComponentChange: (componentName: string) => void;
+  // onComponentChange: (componentName: string) => void;
   selectedComponent: string;
 }
 
 const MySideBar = ({
-  onComponentChange,
+  // onComponentChange,
   selectedComponent
 }:IMySideBarProps): JSX.Element => {
+  const dispatch = useDispatch();
+
+  const handleComponentChange = (componentName: string) => {
+    dispatch(setSelectedComp(componentName));
+  };
 
   const sideItem: Array<{ name: string, component: string }> = [
     { name: '예약 내역', component: 'MyReservation'},
@@ -29,25 +36,23 @@ const MySideBar = ({
         />
         <h1 className="text-lg pt-2">유저 닉네임</h1>
       </div>
-      <div className="h-[90%]">
-        <div className="sticky top-1/3 flex flex-col py-5 text-GRAY ">
-          {sideItem.map(item => (
-            <div className="py-2">
-              <Button
-                type='button'
-                text={item.name}
-                textSize='text-md'
-                hoverTextColor="hover:text-MAIN_GREEN"
-                backgroundColor={selectedComponent === item.component ? "bg-SUB_GREEN_01" : "bg-white"}
-                textColor={selectedComponent === item.component ? "text-MAIN_GREEN" : "text-GRAY"}
-                hoverBackgroundColor="hover:bg-SUB_GREEN_01"
-                padding="py-4"
-                fontWeight="none"
-                onClick={() => onComponentChange(item.component)}
-              />
-            </div>
-          ))}
-        </div>
+      <div className="flex flex-col py-5 text-GRAY ">
+        {sideItem.map(item => (
+          <div key={item.component} className="py-2">
+            <Button
+              type='button'
+              text={item.name}
+              textSize='text-md'
+              hoverTextColor="hover:text-MAIN_GREEN"
+              backgroundColor={selectedComponent === item.component ? "bg-SUB_GREEN_01" : "bg-white"}
+              textColor={selectedComponent === item.component ? "text-MAIN_GREEN" : "text-GRAY"}
+              hoverBackgroundColor="hover:bg-SUB_GREEN_01"
+              padding="py-4"
+              fontWeight="none"
+              onClick={() => handleComponentChange(item.component)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

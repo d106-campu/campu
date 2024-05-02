@@ -1,7 +1,7 @@
 import Header from "@/components/@common/Header/Header";
 import Footer from "@/components/@common/Footer/Footer";
 import CampsiteIntro from "@/components/reservation/CampSiteIntro";
-import Reservation from "@/components/reservation/Reservation";
+import ReservationContainer from "@/components/reservation/ReservationContainer";
 import InfoDetail from "@/components/reservation/InfoDetail";
 
 // @TODO: API 명세서 나오면 Props 수정 필요
@@ -11,7 +11,7 @@ const ReservationPage = () => {
       <Header />
       <div className="max-w-[70%] mx-auto py-2">
         <CampsiteIntro data={data} />
-        <Reservation />
+        <ReservationContainer />
         <InfoDetail data={data} reviewsData={reviews} />
       </div>
       <Footer />
