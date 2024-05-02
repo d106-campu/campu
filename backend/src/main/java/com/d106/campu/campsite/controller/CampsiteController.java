@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/campsite")
@@ -22,14 +23,18 @@ public class CampsiteController implements CampsiteControllerDoc {
 
     @Override
     @GetMapping
-    public Response getCampsiteList(Pageable pageable) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable));
+    public Response getCampsiteList(
+        Pageable pageable,
+        @RequestParam(required = false) String induty,
+        @RequestParam(required = false) String theme
+    ) {
+        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable, induty, theme));
     }
 
     @Override
     @PostMapping("/register")
-    public Response createCampsite(@RequestBody CampsiteDto.CreateRequest createRequest) {
-        return new Response(CampsiteConstant.CAMPSITE, campsiteService.createCampsite(createRequest));
+    public Response createCampsite(@RequestBody CampsiteDto.CreateRequest createRequestDto) {
+        return new Response(CampsiteConstant.CAMPSITE, campsiteService.createCampsite(createRequestDto));
     }
 
 }

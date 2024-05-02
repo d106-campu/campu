@@ -1,5 +1,7 @@
 package com.d106.campu.campsite.service;
 
+import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
+import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
@@ -23,8 +25,18 @@ public class CampsiteService {
     private final CampsiteMapper campsiteMapper;
 
     @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable) {
-        return campsiteRepository.findAll(pageable).map(campsiteMapper::toCampsiteListResponseDto);
+    public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme) {
+        /* TODO: refactor: querydsl의 BooleanBuilder 활용 */
+        if (induty == null && theme == null) {
+            return campsiteRepository.findAll(pageable).map(campsiteMapper::toCampsiteListResponseDto);
+        } else if (induty != null && !induty.isBlank()) {
+            return campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue())
+                .map(campsiteMapper::toCampsiteListResponseDto);
+        } else if (theme != null && !theme.isBlank()) {
+            return campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue())
+                .map(campsiteMapper::toCampsiteListResponseDto);
+        }
+        return null;
     }
 
     @Transactional
