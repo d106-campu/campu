@@ -1,6 +1,9 @@
+import { useState } from "react";
 import Button from "@/components/@common/Button/Button";
 import Kakao_logo from "@/assets/images/kakao_logo.png";
+import stamp from "@/assets/images/stamp.png";
 import { FiMapPin } from "react-icons/fi";
+import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
 
 interface IReservationItemProps {
   id: number;
@@ -18,11 +21,37 @@ interface IReservationItemProps {
   endDate: string;
   checkIn: string;
   checkOut: string;
+  status: reservationStatusType;
 }
 
+type reservationStatusType = "proceeding" | "complete";
+
 const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
+  // @TODO: 스토어에서 닉네임 가져오기
+  const nickname = "캐치캠핑핑핑";
+
+  const [status, setStatus] = useState<reservationStatusType>("proceeding"); // 예약 진행 상태
+
+  const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
+  const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
+
   return (
-    <div>
+    <div className="relative">
+      <div className="pl-3 pb-2">
+        <h1 className="text-2xl font-bold">
+          {status === "proceeding" ? "예약 진행 중" : "예약 완료"}
+        </h1>
+        <p className="flex items-center gap-1 text-MAIN_GREEN text-sm">
+          {status === "proceeding" ? proceedingMessage : completeMessage}
+          <span>
+            {status === "proceeding" ? (
+              <FaRegFaceSmile />
+            ) : (
+              <FaRegFaceSmileWink />
+            )}
+          </span>
+        </p>
+      </div>
       {/* 헤더 */}
       <div className="h-14 bg-MAIN_GREEN text-white rounded-tl-2xl rounded-tr-2xl">
         <div className="flex justify-between items-center px-5 pt-1">
@@ -47,7 +76,7 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
           </p>
           <img
             src={data.image}
-            alt="캠핑장 사진"
+            alt={`${data.campsite_faclt_nm} ${data.roomName}`}
             className="w-full h-52 object-cover object-center rounded-xl"
           />
         </div>
@@ -107,23 +136,43 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
           textColor="text-[#3A2929]"
           fontWeight="none"
           backgroundColor="bg-[#E3F0E5]"
-          hoverBackgroundColor="none"
+          hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
         />
-        <Button
-          width="w-[40%]"
-          text=""
-          textColor="text-[#3A2929]"
-          fontWeight="none"
-          backgroundColor="bg-[#FFF8D4]"
-          hoverBackgroundColor="none"
-          children={
-            <div className="flex justify-center items-center gap-1">
-              <img src={Kakao_logo} className="h-6" />
-              <p>결제하기</p>
-            </div>
-          }
-        />
+        {status === "proceeding" ? (
+          <Button
+            width="w-[40%]"
+            text=""
+            textColor="text-[#3A2929]"
+            fontWeight="none"
+            backgroundColor="bg-SUB_YELLOW"
+            hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+            children={
+              <div className="flex justify-center items-center gap-1">
+                <img src={Kakao_logo} className="h-6" alt="카카오페이" />
+                <p>결제하기</p>
+              </div>
+            }
+            onClick={() => setStatus("complete")}
+          />
+        ) : (
+          <Button
+            width="w-[40%]"
+            text="결제 취소하기"
+            textColor="text-[#3A2929]"
+            fontWeight="none"
+            backgroundColor="bg-SUB_PINK"
+            hoverBackgroundColor="hover:bg-HOVER_PINK"
+            onClick={() => setStatus("complete")}
+          />
+        )}
       </div>
+      {status === "complete" && (
+        <img
+          src={stamp}
+          alt="예약 완료 도장"
+          className="w-80 absolute bottom-[-5%] left-[78%]"
+        />
+      )}
     </div>
   );
 };
