@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -41,9 +42,29 @@ public interface CampsiteControllerDoc {
         @Pattern(regexp = RegExpression.theme, message = "Use among these: summer, trails, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme
     );
 
+    @Operation(summary = "캠핑장 등록", description = "사장님이 캠핑장 관리 페이지에서 캠핑장을 등록하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 등록 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = createCampsiteResponse.class)),
+            })),
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
+                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
+                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
+            }))
+    })
+    Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
+
     class CampsiteListResponse {
         public List<CampsiteDto.Response> campsiteList;
         public Pageable pageable;
+    }
+
+    class createCampsiteResponse {
+        public CampsiteDto.CreateResponse campsite;
     }
 
 }
