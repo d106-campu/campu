@@ -28,13 +28,7 @@ public interface CampsiteControllerDoc {
                 @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteListResponse.class)),
             })
         ),
-        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
-                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
-                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
-            })
-        )
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
     })
     Response getCampsiteList(
         Pageable pageable,
@@ -49,12 +43,7 @@ public interface CampsiteControllerDoc {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
                 @SchemaProperty(name = "data", schema = @Schema(implementation = createCampsiteResponse.class)),
             })),
-        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
-                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
-                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
-            }))
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
     })
     Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
 
