@@ -28,3 +28,17 @@ export interface IReviewList {
   totalReview: number;
   reviews: IReview[];
 }
+
+export interface IMyReview {
+  campsiteName: string;
+  content: string;
+  area: string;
+  date: string;
+  rating: number;
+  images: string[];
+}
+
+export interface IMyReviewList {
+  totalMyReview: number;
+  reviews: IMyReview[];
+}

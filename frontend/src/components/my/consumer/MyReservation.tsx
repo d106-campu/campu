@@ -1,28 +1,8 @@
 import { useState, useEffect } from 'react';
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Button from '@/components/@common/Button/Button';
-import DummyImage from '@/assets/images/dummyCamping2.png';
-import ReservationSection from '@/components/@common/Reservation/reservationSection';
 import GetReservations from '@/components/my/consumer/MyReservationItem';
-
-interface IDetailProps {
-  titleLeft: string;
-  contentLeft: string;
-  titleRight: string;
-  contentRight: string;
-}
-
-interface IReservationProps {
-  campName: string;
-  area: string;
-  date: string;
-  nights: number;
-  details: IDetailProps[];
-  people: number;
-  environment: string;
-  price: string;
-  address: string;
-}
+import ReservationAccordion from '@/components/my/consumer/ReservationAccordion';
+import { IReservationProps } from '@/types/myReservation';
 
 const MyReservation = ({
   campName,
@@ -100,7 +80,7 @@ const MyReservation = ({
           <button
             key={filter}
             onClick={() => handleFilterChange(filter)}
-            className={`w-[10%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${filter === selectedFilter ? 'bg-MAIN_GREEN text-white' : 'bg-gray-100 text-black'}`}
+            className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${filter === selectedFilter ? 'bg-MAIN_GREEN text-white' : 'bg-gray-100 text-black'}`}
           >
             {filter}
           </button>
@@ -108,83 +88,19 @@ const MyReservation = ({
       </div>
       
       {/* 아코디언 */}
-      {reservations.slice(0, viewCount).map((reservation, index) => (
-        <div key={index} className="bg-MAIN_GREEN text-white mb-10 rounded-tl-3xl rounded-tr-3xl rounded-br-3xl rounded-bl-3xl shadow-2xl">
-          {/* 헤더 */}
-          <div className="flex justify-between items-center px-5 pt-1">
-            <div className='flex justify-center items-center py-2'>
-              {/* 캠핑장 이름, 구역 */}
-              <h1 className='text-xl font-bold'>{reservation.campName}</h1>
-              {!expanded[index] && <span className='pl-2 text-sm'>&nbsp;{reservation.area}</span>}
-            </div>
-            <div className='flex py-2 items-center'>
-              {/* 날짜 + 더보기 버튼 */}
-              {!expanded[index] && <span className='text-sm'>{reservation.date} · {reservation.nights}박</span>}
-              <button className="flex pl-5" onClick={() => toggleDetails(index)}>
-                {expanded[index] ? <IoIosArrowUp size="20" /> : <IoIosArrowDown size="20" />}
-                {expanded[index] ? <span></span> : <span className="pl-1 text-sm outline-none">더보기</span>}
-              </button>
-            </div>
-          </div>
-            
-          {/* 내용 */}
-          <div className='text-sm bg-white text-black pt-2 pb-3 rounded-br-3xl rounded-bl-3xl shadow-2xl'>
-            {expanded[index] && (
-              <div className="w-full flex justify-center">
-                {/* 좌측 사진 + 주소 */}
-                <div className='w-[45%] '>
-                  <h1 className='text-gray-400'>캠핑장 위치</h1>
-                  <p>{reservation.address}</p>
-                  <img 
-                    src={DummyImage}
-                    alt="캠핑장 사진"
-                    className='w-[450px] h-[250px] object-cover object-center rounded-xl'
-                  />
-                </div>
-
-                {/* 구분선 */}
-                <div className="w-[2.5%] border-r-[1px] mr-6" />
-
-                {/* 우측 예약 세부 사항 */}
-                <div className='w-[45%] h-auto pt-1'>
-                  {reservation.details.map((detail, idx) => (
-                    <ReservationSection
-                      key={idx}
-                      titleLeft={detail.titleLeft}
-                      contentLeft={detail.contentLeft}
-                      titleRight={detail.titleRight}
-                      contentRight={detail.contentRight}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            {/* 지도 보기 + 리뷰 작성하기 */}
-            {expanded[index] && (
-              <div className='w-full flex justify-around items-center mt-3 pt-3 rounded-br-3xl rounded-bl-3xl border-t-2 border-custom-gray border-dashed'>
-                <Button
-                  width='w-[300px]'
-                  text='지도 보기'
-                  textColor='text-black'
-                  fontWeight='none'
-                  backgroundColor='bg-[#E8EFCF]'
-                  hoverTextColor='text-MAIN_GREEN'
-                  hoverBackgroundColor='none'
-                />
-                <Button
-                  width='w-[300px]'
-                  text='리뷰 작성하기'
-                  textColor='text-black'
-                  fontWeight='none'
-                  backgroundColor='bg-yellow-100'
-                  hoverTextColor='text-MAIN_GREEN'
-                  hoverBackgroundColor='none'
-                />
-              </div>
-            )}
-          </div>
+      <div className='max-h-[500px] overflow-y-auto'>
+        <div className='w-[90%] mx-auto'>
+          {reservations.slice(0, viewCount).map((reservation, index) => (
+            <ReservationAccordion
+              key={index}
+              index={index}
+              reservation={reservation}
+              expanded={expanded[index]}
+              toggleDetails={() => toggleDetails(index)}
+            />
+          ))}
         </div>
-      ))}
+      </div>
 
       {/* 내역 더보기 토글 버튼 */}
       <div className='flex justify-center my-4'>
