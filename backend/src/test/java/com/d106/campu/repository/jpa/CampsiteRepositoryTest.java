@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -66,6 +67,35 @@ class CampsiteRepositoryTest {
     public void findAll() {
         List<Campsite> result = campsiteRepository.findAll();
         assertThat(result.size()).isGreaterThanOrEqualTo(1);
+    }
+
+    @DisplayName("캠핑장 유형별 목록 조회")
+    @Test
+    public void findByInduty() {
+        Campsite campsite1 = Campsite.builder()
+            .user(userRepository.findByAccount("testuser1").get())
+            .facltNm("캠프유캠푸 캠핑장")
+            .tel("01012312313")
+            .indutyList("일반야영장,카라반")
+            .build();
+        Campsite campsite2 = Campsite.builder()
+            .user(userRepository.findByAccount("testuser1").get())
+            .facltNm("캠프유캠푸 캠핑장")
+            .tel("01012312314")
+            .indutyList("카라반")
+            .build();
+        List<Campsite> savedCampsite = campsiteRepository.saveAll(List.of(campsite1, campsite2));
+        assertThat(savedCampsite.size()).isEqualTo(2);
+        assertThat(campsiteRepository.findAll().size()).isGreaterThan(2);
+
+        Page<Campsite> result = campsiteRepository.findByIndutyListContaining(null, "일반야영장");
+        assertThat(result.getTotalElements()).isEqualTo(1);
+
+        result = campsiteRepository.findByIndutyListContaining(null, "카라반");
+        assertThat(result.getTotalElements()).isEqualTo(2);
+
+        result = campsiteRepository.findByIndutyListContaining(null, "존재하지않는유형");
+        assertThat(result.getTotalElements()).isEqualTo(0);
     }
 
     @DisplayName("캠핑장 등록 - 정상")
