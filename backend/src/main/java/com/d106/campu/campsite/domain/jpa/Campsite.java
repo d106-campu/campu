@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -93,6 +94,9 @@ public class Campsite extends BaseTime {
     private long hit;
 
     @OneToMany(mappedBy = "campsite")
-    private Set<CampsiteTheme> campsiteThemeList;
+    private Set<CampsiteTheme> campsiteThemeSet;
+
+    @OneToOne(mappedBy = "campsite")
+    private CampsiteLocation campsiteLocation;
 
 }

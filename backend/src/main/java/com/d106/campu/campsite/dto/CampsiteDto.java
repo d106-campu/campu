@@ -1,6 +1,7 @@
 package com.d106.campu.campsite.dto;
 
 import com.d106.campu.auth.constant.RegExpression;
+import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.user.domain.jpa.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Digits;
@@ -24,12 +25,11 @@ public class CampsiteDto {
         private String addr1;
         private String addr2;
         private String thumbnailImageUrl;
+        private CampsiteLocation campsiteLocation;
         /* TODO: 추가할 정보
          *  private int price;          // 가장 저렴한 방 가격
          *  private float rate;         // 별점
-         *  private float mapX;         // 경도
-         *  private float mapY;         // 위도
-         *  private int like;           // 좋아요 개수
+         *  private boolean like;       // 내가 좋아요 눌렀는지
          *  private boolean available;  // 예약 가능 여부
          */
 
