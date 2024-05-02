@@ -7,6 +7,7 @@ import com.d106.campu.auth.repository.redis.TelHashRepository;
 import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.util.RandomGenerator;
+import com.d106.campu.common.util.SmsUtil;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final TelHashRepository telHashRepository;
+    private final SmsUtil smsUtil;
 
     @Transactional(readOnly = true)
     public boolean checkAvailableAccount(String account) {
@@ -42,8 +44,7 @@ public class AuthService {
         TelHash telHash = telHashRepository.findById(tel).orElse(getInitialEmailHash(tel));
 
         int authorizationCode = RandomGenerator.createAuthorizationCode();
-
-        // TODO : send authorization code to tel
+        smsUtil.sendOne(tel, authorizationCode);
 
         telHash.increaseCountAndSetAuthorizationCode(authorizationCode);
 
