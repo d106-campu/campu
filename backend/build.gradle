@@ -1,0 +1,71 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.d106'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '21'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// web
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.2.5'
+	// lombok
+	compileOnly 'org.projectlombok:lombok:1.18.32'
+	annotationProcessor 'org.projectlombok:lombok:1.18.32'
+	// jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.5'
+	// querydsl
+	implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+	// security
+	implementation 'org.springframework.security:spring-security-core:6.2.4'
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.5'
+	// lang3
+	implementation 'org.apache.commons:commons-lang3:3.14.0'
+	// collections
+	implementation 'org.apache.commons:commons-collections4:4.4'
+	// tika
+	implementation 'org.apache.tika:tika-core:2.9.2'
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+	// mariadb
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.5'
+	// mapstruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	// actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.5'
+	// prometheus
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.12.5'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+bootJar {
+	enabled = true
+}
+
+jar {
+	enabled = false
+}

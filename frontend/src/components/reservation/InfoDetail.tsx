@@ -8,6 +8,7 @@ import { ISimpleReviewList } from "@/types/review";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface IData {
+  id: number;
   checkIn: string;
   checkOut: string;
   mannerTime: string;
@@ -84,7 +85,7 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
           {/* @TODO: 클릭 시 리뷰 페이지로 이동하기 */}
           <button
             className="text-MAIN_GREEN font-bold"
-            onClick={() => navigate("/review")}
+            onClick={() => navigate(`/camps/${data.id}/reviews`)}
           >
             리뷰 보기
           </button>
@@ -136,7 +137,7 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
             ref={wrapperRef}
             className="mx-3 h-0 overflow-hidden text-BLACK transition-all ease-in duration-500"
           >
-            <div ref={contentRef} className="p-4 whitespace-pre-wrap">
+            <div ref={contentRef} className="p-4 whitespace-pre-line">
               {data.policy}
             </div>
           </div>

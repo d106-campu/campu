@@ -1,4 +1,5 @@
 pipeline {
+
   agent any
 
   environment {
@@ -6,11 +7,15 @@ pipeline {
     NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
     CI = false
 
-    GIT_MESSAGE = """${sh(
-        script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"',
-        returnStdout: true
-    )}"""
-    CHANNEL = 'D106-Alert'
+    REGISTRY_URL = credentials('docker_registry_url')
+    REGISTRY_AUTH = credentials('docker_registry_id_pw')
+
+    FRONTEND_URL = credentials('frontend_url')
+
+    GIT_MESSAGE = "${sh(returnStdout: true, script: 'git show -s --pretty="* Commit %h by %cn <%ce>%n* Title: %s%n* Date: %cI"')}"
+
+    MM_CHANNEL = credentials('mattermost_channel')
+    MM_URL = credentials('mattermost_url')
   }
 
   tools {
@@ -22,8 +27,16 @@ pipeline {
       steps {
         script {
           withCredentials([file(credentialsId: 'frontend_env', variable: 'PROD_ENV')]) {
-            sh 'cd exec/ && chmod +x frontend-project-setup.sh && ./frontend-project-setup.sh'
-            sh 'cd exec/ && chmod +x frontend-project-build.sh && ./frontend-project-build.sh'
+            sh """
+              cd exec/; \
+              chmod +x frontend-project-setup.sh; \
+              ./frontend-project-setup.sh
+              """
+            sh """
+              cd exec/; \
+              chmod +x frontend-project-build.sh; \
+              ./frontend-project-build.sh
+              """
           }
         }
       }
@@ -32,9 +45,11 @@ pipeline {
     stage('Build and Push Images') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sh 'cd exec/ && chmod +x frontend-docker-build-push.sh && ./frontend-docker-build-push.sh'
-          }
+          sh """
+            cd exec/; \
+            chmod +x frontend-docker-build-push.sh; \
+            ./frontend-docker-build-push.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
+            """
         }
       }
     }
@@ -43,7 +58,11 @@ pipeline {
       steps {
         script {
           withCredentials([file(credentialsId: 'frontend_docker_compose_env', variable: 'DC_ENV')]) {
-            sh 'cd exec/ && chmod +x frontend-copy-docker-compose-env.sh && ./frontend-copy-docker-compose-env.sh'
+            sh """
+              cd exec/; \
+              chmod +x frontend-copy-docker-compose-env.sh; \
+              ./frontend-copy-docker-compose-env.sh
+              """
           }
         }
       }
@@ -52,31 +71,29 @@ pipeline {
     stage('Deploy Frontend') {
       steps([$class: 'BapSshPromotionPublisherPlugin']) {
         script {
-          withCredentials([usernamePassword(credentialsId: 'docker_registry_id_pw', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sshPublisher(
-              continueOnError: false,
-              failOnError: true,
-              publishers: [
-                sshPublisherDesc(
-                  configName: 'application', 
-                  verbose: true,
-                  transfers: [
-                    sshTransfer(
-                      sourceFiles: 'exec/frontend-deploy/**',
-                      removePrefix: 'exec/frontend-deploy/',
-                      remoteDirectory: '/jenkins/deploy/frontend',
-                      execCommand: """
-                                  docker login k10d106.p.ssafy.io -u ${USERNAME} -p ${PASSWORD}; \
-                                  cd /home/jenkins/deploy/frontend && chmod 755 *.sh; \
-                                  ./frontend-stop.sh; \
-                                  ./frontend-start.sh
-                                  """
-                    )
-                  ]
-                )
-              ]
-            )
-          }
+          sshPublisher(
+            continueOnError: false,
+            failOnError: true,
+            publishers: [
+              sshPublisherDesc(
+                configName: 'application', 
+                verbose: true,
+                transfers: [
+                  sshTransfer(
+                    sourceFiles: 'exec/frontend-deploy/**',
+                    removePrefix: 'exec/frontend-deploy/',
+                    remoteDirectory: '/jenkins/deploy/frontend',
+                    execCommand: """
+                      cd /home/jenkins/deploy/frontend; \
+                      chmod 755 *.sh; \
+                      ./frontend-stop.sh; \
+                      ./frontend-start.sh ${env.REGISTRY_URL} ${env.REGISTRY_AUTH_USR} ${env.REGISTRY_AUTH_PSW} ${env.GIT_COMMIT}
+                      """
+                  )
+                ]
+              )
+            ]
+          )
         }
       }
     }
@@ -85,17 +102,12 @@ pipeline {
       steps {
         sh 'sleep 20'
         script {
-          withCredentials([string(credentialsId: 'frontend_url', variable: 'FRONTEND_URL')]) {
-            def HEALTH = sh(
-              returnStdout: true,
-              script: "curl -s -o /dev/null -w '%{http_code}' ${FRONTEND_URL}"
-            ).trim()
+          def HEALTH = sh(returnStdout: true, script: "curl -s -o /dev/null -w '%{http_code}' ${env.FRONTEND_URL}").trim()
 
-            if (HEALTH == "200") {
-              echo "frontend success"
-            } else {
-              error "frontend fail"
-            }
+          if (HEALTH == "200") {
+            echo "frontend success"
+          } else {
+            error "frontend fail"
           }
         }
       }
@@ -105,27 +117,25 @@ pipeline {
   post {
     success {
       script {
-        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
-          mattermostSend(
-            color: 'good',
-            message: "[FE] Deploy Success: ${env.BUILD_URL}\n${GIT_MESSAGE}",
-            endpoint: "${MM_URL}",
-            channel: "${CHANNEL}",
-          )
-        }
+        mattermostSend(
+          color: 'good',
+          message: "[FE] Deploy Success: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
       }
     }
+
     failure {
       script {
-        withCredentials([string(credentialsId: 'mattermost_url', variable: 'MM_URL')]) {
-          mattermostSend(
-            color: 'danger',
-            message: "[FE] Deploy Fail: ${env.BUILD_URL}\n${GIT_MESSAGE}",
-            endpoint: "${MM_URL}",
-            channel: "${CHANNEL}",
-          )
-        }
+        mattermostSend(
+          color: 'danger',
+          message: "[FE] Deploy Fail: ${env.BUILD_URL}\n${env.GIT_MESSAGE}",
+          endpoint: "${env.MM_URL}",
+          channel: "${env.MM_CHANNEL}",
+        )
       }
     }
   }
+
 }

@@ -7,7 +7,8 @@ import SearchPage from "@/pages/search";
 import ReservationPage from "./pages/reservation";
 import PhotosPage from "@/pages/reservation/photos";
 import PaymentPage from "@/pages/payment";
-import ReviewPage from "./pages/review";
+import ReviewListPage from "@/pages/reservation/reviewList";
+import ReviewPage from "@/pages/reservation/reviewList/review";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
@@ -33,20 +34,24 @@ const router = createBrowserRouter([
     element: <SearchPage />,
   },
   {
-    path: "/reservation",
+    path: "/camps/:campId",
     element: <ReservationPage />,
   },
   {
-    path: "/reservation-photos",
+    path: "/camps/:campId/photos",
     element: <PhotosPage />,
   },
   {
-    path: "/payment",
-    element: <PaymentPage />,
+    path: "/camps/:campId/reviews",
+    element: <ReviewListPage />,
   },
   {
-    path: "/review",
+    path: "/camps/:campId/reviews/:reviewId",
     element: <ReviewPage />,
+  },
+  {
+    path: "/camps/:campId/payment",
+    element: <PaymentPage />,
   },
 ]);
 
