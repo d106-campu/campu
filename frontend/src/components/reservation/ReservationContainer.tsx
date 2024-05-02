@@ -1,13 +1,13 @@
 import RoomItem from "@/components/reservation/RoomItem";
 import MyController from "@/components/reservation/MyController";
 
-const Reservation = () => {
+const ReservationContainer = () => {
   return (
     <>
       {/* 캠핑존 둘러보기 */}
       <div className="pt-10">
         <h3 className="text-xl font-bold pb-5">
-          캠핑존 둘러보기{" "}
+          캠핑존 둘러보기&nbsp;
           <span className="text-xl font-bold text-[#46A14F]">
             {data.content.length}
           </span>
@@ -27,7 +27,7 @@ const Reservation = () => {
     </>
   );
 };
-export default Reservation;
+export default ReservationContainer;
 
 // 더미 이미지
 import dummy1 from "@/assets/images/dummy/camping_spot_6.png";
