@@ -10,7 +10,7 @@ const SearchContainer = () => {
       <div className="flex">
         <div className="w-[40%]">
           {/* @TODO: CSS처리를 위한 BACKGROUND 추가 (추후 제거 예정) */}
-          <div className="px-4 py-2 bg-gray-200">
+          <div className="px-4 py-2">
             <SearchSection />
           </div>
         </div>
