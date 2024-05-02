@@ -11,7 +11,7 @@ public enum UserExceptionCode implements ExceptionCode {
     INVALID_LOGIN("USER001", "Invalid account or password"),
 
     /* Not found exception */
-    USER_NOT_FOUND("COMMON011", "Invalid user");
+    USER_NOT_FOUND("USER011", "Invalid user");
 
     private final String code;
     private final String message;
