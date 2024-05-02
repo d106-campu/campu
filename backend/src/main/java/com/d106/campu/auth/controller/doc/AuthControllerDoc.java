@@ -25,12 +25,7 @@ public interface AuthControllerDoc {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
                 @SchemaProperty(name = "data", schema = @Schema(implementation = AvailableResponse.class)),
             })),
-        @ApiResponse(responseCode = "400", description = "아이디 유효성 검사 오류",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
-                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
-                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
-            }))
+        @ApiResponse(responseCode = "400", description = "아이디 유효성 검사 오류", content = @Content)
     })
     Response checkAvailableAccount(
         @NotBlank(message = "not blank")
@@ -45,12 +40,7 @@ public interface AuthControllerDoc {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
                 @SchemaProperty(name = "data", schema = @Schema(implementation = AvailableResponse.class)),
             })),
-        @ApiResponse(responseCode = "400", description = "닉네임 유효성 검사 오류",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
-                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
-                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
-            }))
+        @ApiResponse(responseCode = "400", content = @Content)
     })
     Response checkAvailableNickname(
         @NotBlank(message = "not blank")
@@ -65,12 +55,7 @@ public interface AuthControllerDoc {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
                 @SchemaProperty(name = "data", schema = @Schema(implementation = AvailableResponse.class)),
             })),
-        @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "fail", description = "요청 실패")),
-                @SchemaProperty(name = "code", schema = @Schema(description = "요청 실패 코드")),
-                @SchemaProperty(name = "message", schema = @Schema(description = "실패한 메시지")),
-            }))
+        @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류", content = @Content)
     })
     Response checkAvailableTel(
         @NotBlank(message = "not blank")
