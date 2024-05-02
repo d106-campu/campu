@@ -57,7 +57,7 @@ const MyController = ({
 
   return (
     <>
-      <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-center text-lg font-bold">
+      <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-center text-lg font-bold w-[95%] mx-auto">
         <div
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
@@ -146,7 +146,7 @@ const MyController = ({
               height="h-12"
               text={`인원 ${peopleCount}명`}
               textSize="text-lg"
-              onClick={toggleScheduleModal}
+              onClick={toggleHeadCountModal}
             />
           </div>
         </Modal>

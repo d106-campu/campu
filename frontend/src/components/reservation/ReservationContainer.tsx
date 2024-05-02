@@ -1,13 +1,13 @@
 import RoomItem from "@/components/reservation/RoomItem";
 import MyController from "@/components/reservation/MyController";
 
-const Reservation = () => {
+const ReservationContainer = () => {
   return (
     <>
       {/* 캠핑존 둘러보기 */}
       <div className="pt-10">
         <h3 className="text-xl font-bold pb-5">
-          캠핑존 둘러보기{" "}
+          캠핑존 둘러보기&nbsp;
           <span className="text-xl font-bold text-[#46A14F]">
             {data.content.length}
           </span>
@@ -17,7 +17,7 @@ const Reservation = () => {
           startDate={startDate}
           endDate={endDate}
         />
-        <div>
+        <div className="w-[93%] mx-auto">
           {/* 각 방에 대한 RoomItem 렌더링 */}
           {data.content.map((room) => (
             <RoomItem key={room.roomId} room={room} />
@@ -27,7 +27,9 @@ const Reservation = () => {
     </>
   );
 };
-export default Reservation;
+export default ReservationContainer;
+
+// 더미 이미지
 import dummy1 from "@/assets/images/dummy/camping_spot_6.png";
 import dummy2 from "@/assets/images/dummy/camping_spot_1.png";
 import dummy3 from "@/assets/images/dummy/camping_spot_2.png";
