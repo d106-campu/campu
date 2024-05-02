@@ -47,7 +47,7 @@ const SearchCampingItem = ({ camping }: { camping: ICampingGround }) => {
               !isAvailable ? "text-gray-300" : "text-MAIN_RED"
             } font-bold text-2xl`}
           >
-            {camping.price} ~
+            {camping.price.toLocaleString("ko-KR")} ~
           </p>
           <button className="border border-MAIN_GREEN px-4 rounded-md text-MAIN_GREEN text-xs">
             상세보기
