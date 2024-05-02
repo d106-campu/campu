@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,14 +21,14 @@ import lombok.Setter;
 
 @Getter
 @Builder
-@Entity
+@Entity(name = "campsite")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Campsite extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -89,5 +91,8 @@ public class Campsite extends BaseTime {
 
     @Column(name = "hit")
     private long hit;
+
+    @OneToMany(mappedBy = "campsite")
+    private Set<CampsiteTheme> campsiteThemeList;
 
 }
