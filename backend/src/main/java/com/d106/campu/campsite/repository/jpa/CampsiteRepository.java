@@ -14,4 +14,6 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
     @Query("SELECT c FROM campsite c WHERE (c.indutyList IS NOT NULL) AND (c.indutyList LIKE %?1%)")
     Page<Campsite> findByIndutyListContaining(Pageable pageable, String induty);
 
+    Page<Campsite> findByCampsiteThemeList_Theme_Theme(Pageable pageable, String theme);
+
 }

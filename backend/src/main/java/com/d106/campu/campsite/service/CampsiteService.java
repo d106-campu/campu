@@ -1,6 +1,7 @@
 package com.d106.campu.campsite.service;
 
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
+import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
@@ -31,13 +32,10 @@ public class CampsiteService {
         } else if (induty != null && !induty.isBlank()) {
             return campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue())
                 .map(campsiteMapper::toCampsiteListResponseDto);
-        }
-        /* TODO: 캠핑장 테마별 조회 지원하려면 `campsite_theme` 테이블 join 필요
-        else if (theme != null && !theme.isBlank()) {
-            return campsiteRepository.findByThemeListContaining(pageable, Theme.of(theme).getValue())
+        } else if (theme != null && !theme.isBlank()) {
+            return campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue())
                 .map(campsiteMapper::toCampsiteListResponseDto);
-        }*/
-
+        }
         return null;
     }
 

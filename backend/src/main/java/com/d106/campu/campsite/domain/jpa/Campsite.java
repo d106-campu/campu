@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -89,5 +91,8 @@ public class Campsite extends BaseTime {
 
     @Column(name = "hit")
     private long hit;
+
+    @OneToMany(mappedBy = "campsite")
+    private Set<CampsiteTheme> campsiteThemeList;
 
 }
