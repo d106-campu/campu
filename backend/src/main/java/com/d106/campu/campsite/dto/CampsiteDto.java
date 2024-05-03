@@ -108,4 +108,13 @@ public class CampsiteDto {
         private Long id;
 
     }
+
+    @Data
+    @Builder
+    public static class LikeResponse {
+
+        private boolean like;
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.d106.campu.user.domain.jpa;
 
+import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.common.jpa.BaseTime;
 import com.d106.campu.user.constant.GenderType;
 import jakarta.persistence.Column;
@@ -9,7 +10,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,5 +56,8 @@ public class User extends BaseTime {
 
     @Column(name = "delete_time")
     private LocalDateTime deleteTime;
+
+    @OneToMany(mappedBy = "user")
+    private Set<CampsiteLike> campsiteLikeSet;
 
 }

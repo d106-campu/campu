@@ -3,8 +3,11 @@ package com.d106.campu.campsite.service;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
+import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.dto.CampsiteDto;
+import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
+import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.user.domain.jpa.User;
@@ -22,6 +25,7 @@ public class CampsiteService {
 
     private final UserRepository userRepository;
     private final CampsiteRepository campsiteRepository;
+    private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
 
     @Transactional(readOnly = true)
@@ -53,6 +57,24 @@ public class CampsiteService {
         campsite.setUser(user);
 
         return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
+    }
+
+    public CampsiteDto.LikeResponse likeCampsite(Long campsiteId) {
+        /* TODO: Replace this with login user (using securityHelper) */
+        User user = userRepository.findById(1L)
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+
+        CampsiteLike campsiteLike = campsiteLikeRepository.findByCampsiteAndUser(campsite, user);
+        if (campsiteLike != null) {
+            campsiteLikeRepository.deleteById(campsiteLike.getId());
+            return CampsiteDto.LikeResponse.builder().like(false).build();
+        } else {
+            campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build());
+            return CampsiteDto.LikeResponse.builder().like(true).build();
+        }
     }
 
 }

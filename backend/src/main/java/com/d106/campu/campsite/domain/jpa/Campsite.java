@@ -99,4 +99,7 @@ public class Campsite extends BaseTime {
     @OneToOne(mappedBy = "campsite")
     private CampsiteLocation campsiteLocation;
 
+    @OneToMany(mappedBy = "campsite")
+    private Set<CampsiteLike> campsiteLikeSet;
+
 }

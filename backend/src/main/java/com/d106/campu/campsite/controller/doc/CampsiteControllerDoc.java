@@ -41,19 +41,34 @@ public interface CampsiteControllerDoc {
         @ApiResponse(responseCode = "200", description = "캠핑장 등록 성공",
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
-                @SchemaProperty(name = "data", schema = @Schema(implementation = createCampsiteResponse.class)),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CreateCampsiteResponse.class)),
             })),
         @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
     })
     Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
+
+    @Operation(summary = "캠핑장 좋아요", description = "특정 캠핑장에 대해 좋아요 여부를 설정/제거하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 좋아요 업데이트 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteLikeResponse.class)),
+            })),
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
+    })
+    Response likeCampsite(Long campsiteId);
 
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
         public Pageable pageable;
     }
 
-    class createCampsiteResponse {
+    class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;
+    }
+
+    class CampsiteLikeResponse {
+        public CampsiteDto.LikeResponse likeResponse;
     }
 
 }
