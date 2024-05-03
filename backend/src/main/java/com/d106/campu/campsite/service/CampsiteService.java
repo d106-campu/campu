@@ -30,17 +30,23 @@ public class CampsiteService {
 
     @Transactional(readOnly = true)
     public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme) {
-        /* TODO: refactor: querydsl의 BooleanBuilder 활용 */
+        Page<Campsite> responsePage = null;
         if (induty == null && theme == null) {
-            return campsiteRepository.findAll(pageable).map(campsiteMapper::toCampsiteListResponseDto);
+            responsePage = campsiteRepository.findAll(pageable);
         } else if (induty != null && !induty.isBlank()) {
-            return campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue())
-                .map(campsiteMapper::toCampsiteListResponseDto);
+            responsePage = campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue());
         } else if (theme != null && !theme.isBlank()) {
-            return campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue())
-                .map(campsiteMapper::toCampsiteListResponseDto);
+            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue());
         }
-        return null;
+
+        /* TODO: Replace this with login user (using securityHelper) */
+        User user = userRepository.findById(1L)
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        return responsePage == null ? null : responsePage.map((e) -> {
+            e.setLike(e.getCampsiteLikeSet().stream().anyMatch(cl -> cl.getUser().equals(user)));
+            return campsiteMapper.toCampsiteListResponseDto(e);
+        });
     }
 
     @Transactional
