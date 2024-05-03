@@ -13,6 +13,7 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +45,7 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         return responsePage == null ? null : responsePage.map((e) -> {
-            e.setLike(campsiteLikeRepository.findByCampsiteAndUser(e, user) != null);
+            e.setLike(campsiteLikeRepository.findByCampsiteAndUser(e, user).isPresent());
             return campsiteMapper.toCampsiteListResponseDto(e);
         });
     }
@@ -73,14 +74,12 @@ public class CampsiteService {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
-        CampsiteLike campsiteLike = campsiteLikeRepository.findByCampsiteAndUser(campsite, user);
-        if (campsiteLike != null) {
-            campsiteLikeRepository.deleteById(campsiteLike.getId());
-            return CampsiteDto.LikeResponse.builder().like(false).build();
-        } else {
-            campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build());
-            return CampsiteDto.LikeResponse.builder().like(true).build();
-        }
+        Optional<CampsiteLike> campsiteLike = campsiteLikeRepository.findByCampsiteAndUser(campsite, user);
+        campsiteLike.ifPresentOrElse(
+            cl -> campsiteLikeRepository.deleteById(cl.getId()),
+            () -> campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build())
+        );
+        return CampsiteDto.LikeResponse.builder().like(campsiteLike.isEmpty()).build();
     }
 
 }

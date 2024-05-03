@@ -48,7 +48,9 @@ VALUES (@campsite_1, 128.417657, 36.107901),
        (@campsite_3, 128.2316879, 38.00156);
 
 INSERT INTO `campsite_like` (`user_id`, `campsite_id`)
-VALUES (@campsite_1, @user_cheesecat47);
+VALUES (@campsite_1, @user_cheesecat47),
+       (@campsite_3, @user_cheesecat47),
+       (@campsite_3, @user_manager);
 
 -- ----------------------------------------
 --
