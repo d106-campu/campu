@@ -23,10 +23,17 @@ const MyReview = ({
     // @TODO : 여기서 필터에 따른 데이터 로드 로직을 추가 예정
   };
 
-  // 과거 리뷰 더보기
+  // 과거 리뷰 더보기 버튼
   const showMoreReviews = () => {
     setViewCount(prev => Math.min(prev + 2, reviews.length));
     setIsReviews(reviews.slice(0, viewCount + 2));
+  };
+
+  // 이전으로 버튼
+  const showLessReviews = () => {
+    const newCount = Math.max(viewCount - 2, 2);
+    setViewCount(newCount);
+    setIsReviews(reviews.slice(0, newCount));
   };
 
   return (
@@ -88,11 +95,15 @@ const MyReview = ({
           </div>
         </div>
         ))}
-      <div className='flex justify-center pt-5'>
-        {viewCount < totalMyReview && (
-          <button onClick={showMoreReviews}>더보기</button>
-        )}
-      </div>
+        {/* 더보기, 줄이기 토글 버튼 */}
+        <div className='flex justify-center pt-5'>
+          {viewCount < totalMyReview && (
+            <button onClick={showMoreReviews} className="mx-2 px-4 py-2">더보기</button>
+          )}
+          {viewCount > 2 && (
+            <button onClick={showLessReviews} className="mx-2 px-4 py-2">줄이기</button>
+          )}
+        </div>
       </div>
     </div>
   );

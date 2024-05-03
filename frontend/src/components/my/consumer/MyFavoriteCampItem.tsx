@@ -21,7 +21,7 @@ const MyFavoriteCampItem = ({
 
   // 좋아요 상태 관리, 처음에는 항상 좋아요 상태(true)
   const [isLiked, setIsLiked] = useState<boolean>(true);
-  const [showConfirmModal, setShowConfirmModal] = useState(false); // 좋아요 취소 확인 모달 상태 관리
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false); // 좋아요 취소 확인 모달 상태 관리
 
   const handleToggleLike = () => {
     if (isLiked) {
@@ -65,16 +65,16 @@ const MyFavoriteCampItem = ({
               <p>이 캠핑장에 대한 관심을 <span className='text-red-400'>취소</span>하시겠어요?</p>
               <div className="mt-4 flex justify-around">
                 <button
-                  className="hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
+                  className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
                   onClick={confirmUnLike}
                 >
                   <span>취소합니다</span>
                 </button>
                 <button
-                  className=" hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
+                  className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
                   onClick={() => setShowConfirmModal(false)}
                 >
-                  <span>아니오</span>
+                  <span>아니요</span>
                 </button>
               </div>
             </div>
@@ -84,7 +84,7 @@ const MyFavoriteCampItem = ({
         <div className="w-full pt-2 px-1">
           {/* 캠핑장 이름 + 별점 */}
           <div className="w-full flex justify-between">
-            <h1 className="font-bold">{camp.name}</h1>
+            <h1 className="font-bold">{camp.name} 캠핑장</h1>
             <div className="flex items-center">
               <FaStar className="text-yellow-500 mx-1" />
               <p>{camp.rating}</p>

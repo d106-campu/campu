@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import MyFavoriteCampItem from '@/components/my/consumer/MyFavoriteCampItem';
 import { myCampingDummyList } from '@/components/my/consumer/MyFavoriteDummy';
+import { IMyFavoritCampProps } from '@/types/myFavorite';
 
 const MyFavoriteCamp = (): JSX.Element => {
   const initialCampsToShow = 4; // 초기에 보여줄 관심 캠핑장 카드 수
-  const [visibleCamps, setVisibleCamps] = useState(myCampingDummyList.slice(0, initialCampsToShow)); // 현재 화면에 보여줄 캠핑장 개수 상태 관리
-  const [allCamps, setAllCamps] = useState(myCampingDummyList); // 캠핑장 데이터 상태 관리
+  const [visibleCamps, setVisibleCamps] = useState<IMyFavoritCampProps[]>(myCampingDummyList.slice(0, initialCampsToShow)); // 현재 화면에 보여줄 캠핑장 개수 상태 관리
+  const [allCamps, setAllCamps] = useState<IMyFavoritCampProps[]>(myCampingDummyList); // 캠핑장 데이터 상태 관리
 
   // "더보기" 버튼 클릭 핸들러
   const handleShowMoreCamps = () => {
@@ -28,7 +29,7 @@ const MyFavoriteCamp = (): JSX.Element => {
     <div>
       {/* 관심 캠핑장 헤더 */}
       <div className='flex flex-col pb-4'>
-        <h1 className='text-lg font-bold'>내가 찜한 캠핑장</h1>
+        <h1 className='text-lg font-bold'>내가 찜한 캠핑장 <span className='text-MAIN_GREEN font-thin pl-1'>{allCamps.length}</span></h1>
         <h1 className="text-sm text-gray-400">"유저 닉네임"님이 좋아요한 캠핑장입니다.</h1>
       </div>
 
