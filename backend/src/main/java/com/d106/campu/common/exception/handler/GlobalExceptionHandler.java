@@ -29,13 +29,13 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ExceptionHandler(value = ConflictException.class)
+    @ExceptionHandler(value = {ConflictException.class})
     public Response handleConflictException(ConflictException e) {
         return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
     }
 
     @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
-    @ExceptionHandler(value = TooManyException.class)
+    @ExceptionHandler(value = {TooManyException.class})
     public Response handleTooManyException(TooManyException e) {
         return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
     }
