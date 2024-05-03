@@ -8,8 +8,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AuthExceptionCode implements ExceptionCode {
 
-    CONFLICT_TEL("TEL009", "Tel already exists"),
-    TOO_MANY_REQUEST_TEL_SEND("TEL029", "Limits for tel authorization sending");
+    /* Conflict Exception */
+    CONFLICT_TEL("AUTH401", "Tel already exists"),
+
+    /* Too Many Request Exception */
+    TOO_MANY_REQUEST_TEL_SEND("AUTH501", "Limits for tel authorization sending");
 
     private final String code;
     private final String message;
