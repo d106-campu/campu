@@ -1,6 +1,17 @@
 import { TiArrowRightThick } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 
 const GoOwner = () => {
+  const navigate = useNavigate();
+
+  // 페이지 이동시 스크롤 상단으로 고정
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
+  const goToOwnerPage = () => {
+    navigate("/owner");
+  };
   return (
     <>
       <div className="w-full bg-[#BDDDC2] py-10">
@@ -11,7 +22,13 @@ const GoOwner = () => {
           </div>
           {/* @TODO: 추후 navigate 추가해야함 */}
           <div className="flex justify-center">
-            <p className="border bg-white font-semibold px-4 py-2 rounded-2xl flex items-center">
+            <p
+              className="cursor-pointer border bg-white font-semibold px-4 py-2 rounded-2xl flex items-center"
+              onClick={() => {
+                goToOwnerPage();
+                scrollToTop(); // 페이지 이동 및 상단으로 스크롤
+              }}
+            >
               캠핑장 바로 등록하기
               <TiArrowRightThick className="ml-2 text-orange-500" />
             </p>

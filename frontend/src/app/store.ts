@@ -4,20 +4,30 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "@/features/login/authSlice";
+import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
+import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["ownerTab", "ownerSide", "auth", "selectedComp"],
-
+  whitelist: [
+    "ownerTab",
+    "ownerSide",
+    "auth",
+    "campingMap",
+    "selectedComp",
+    "favoriteCamps"
+  ],
 };
 
 const rootReducer = combineReducers({
   ownerTab: ownerTabReducer,
   ownerSide: ownerSideReducer,
   auth: authReducer,
+  campingMap: campingMapReducer,
   selectedComp: selectedCompReducer,
+  favoriteCamps: favoriteCampsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

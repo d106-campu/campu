@@ -1,3 +1,5 @@
+import dummyImage from "@/assets/images/dummyCamping.png";
+
 interface IReservation {
   name: string;
   guest: string;
@@ -10,9 +12,14 @@ const ReservationItem = ({ reservation }: { reservation: IReservation }) => {
   return (
     <>
       <div className=" flex flex-col border-b border-gray-300 p-4">
-        <h2 className="text-lg font-semibold text-start">{reservation.name}</h2>
+        <h2 className="pb-2 text-lg font-semibold text-start">
+          {reservation.name}
+        </h2>
 
-        <div className="flex justify-around">
+        <div className="flex justify-evenly items-center">
+          <div>
+            <img src={dummyImage} className="flex rounded-md h-28" />
+          </div>
           <div>
             <div className="flex py-2">
               <p className="text-gray-500 mr-4">예약자 </p>

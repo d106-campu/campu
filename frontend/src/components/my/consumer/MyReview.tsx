@@ -74,7 +74,7 @@ const MyReview = ({
             <div className='w-[50%] pr-3'>
               <div className='flex flex-col items-end justify-center'>             
               <button className='flex justify-end'>
-                <p className='text-xs'>삭 제</p>
+                <p className='text-xs pr-1'>삭 제</p>
               </button>
                 {review.images.map((image, idx) => (
                   <img

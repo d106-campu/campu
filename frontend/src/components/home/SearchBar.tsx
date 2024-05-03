@@ -29,7 +29,7 @@ const SearchBar = () => {
     <>
       <div className="flex gap-2 items-center">
         {/* 지역 선택 */}
-        <div className="flex items-center flex-grow bg-white rounded-md p-3">
+        <div className="flex items-center flex-grow border bg-white rounded-md p-3">
           <RiMapPinLine />
           <select className="rounded-md ml-2 outline-none text-sm">
             <option>지역 선택하기</option>
@@ -42,7 +42,7 @@ const SearchBar = () => {
         </div>
 
         {/* 날짜 선택 */}
-        <div className="flex items-center flex-grow bg-white rounded-md p-3">
+        <div className="flex items-center flex-grow border bg-white rounded-md p-3">
           <FaRegCalendarAlt />
           <select className="rounded-md ml-2 outline-none text-sm">
             <option>날짜 선택하기</option>
@@ -50,7 +50,7 @@ const SearchBar = () => {
         </div>
 
         {/* 인원 선택 */}
-        <div className="flex items-center flex-grow bg-white rounded-md p-3">
+        <div className="flex items-center flex-grow border bg-white rounded-md p-3">
           <MdOutlinePersonOutline />
           <select className="rounded-md ml-2 outline-none text-sm">
             <option>인원 선택하기</option>
@@ -60,7 +60,7 @@ const SearchBar = () => {
 
       {/* 검색어 입력 */}
       <div className="flex mt-2 items-center">
-        <div className="flex w-full items-center bg-white rounded-md p-3">
+        <div className="flex w-full items-center border bg-white rounded-md p-3">
           <LuSearch />
           <input
             className="ml-2 outline-none placeholder-black text-sm"
