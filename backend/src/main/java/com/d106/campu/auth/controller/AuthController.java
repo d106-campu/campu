@@ -2,11 +2,13 @@ package com.d106.campu.auth.controller;
 
 import com.d106.campu.auth.constant.AuthConstant;
 import com.d106.campu.auth.controller.doc.AuthControllerDoc;
+import com.d106.campu.auth.dto.AuthDto.TelVerifyRequest;
 import com.d106.campu.auth.service.AuthService;
 import com.d106.campu.common.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +43,12 @@ public class AuthController implements AuthControllerDoc {
     public Response sendAuthorizationCode(@RequestParam String tel) {
         authService.sendAuthorizationCode(tel);
         return new Response();
+    }
+
+    @Override
+    @PostMapping("/tel/verify")
+    public Response verifyAuthorizationCode(@RequestBody TelVerifyRequest telVerifyRequestDto) {
+        return new Response(AuthConstant.VERIFY, authService.verifyAuthorizationCode(telVerifyRequestDto));
     }
 
 }

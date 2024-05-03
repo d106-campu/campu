@@ -8,6 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AuthExceptionCode implements ExceptionCode {
 
+    /* UnAuthorized Exception */
+    UNAUTHORIZED_TEL_AUTHORIZATION_CODE("AUTH101", "Not match authorization code"),
+
+    /* NotFound Exception */
+    NOT_FOUND_TEL("AUTH301", "Tel not found"),
+
     /* Conflict Exception */
     CONFLICT_TEL("AUTH401", "Tel already exists"),
 

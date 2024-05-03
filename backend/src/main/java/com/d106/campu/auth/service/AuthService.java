@@ -2,9 +2,13 @@ package com.d106.campu.auth.service;
 
 import com.d106.campu.auth.constant.AuthConstant;
 import com.d106.campu.auth.domain.redis.TelHash;
+import com.d106.campu.auth.domain.redis.TelVerifyHash;
+import com.d106.campu.auth.dto.AuthDto.TelVerifyRequest;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.auth.repository.redis.TelHashRepository;
+import com.d106.campu.auth.repository.redis.TelVerifyHashRepository;
 import com.d106.campu.common.exception.ConflictException;
+import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.util.RandomGenerator;
 import com.d106.campu.common.util.SmsUtil;
@@ -19,6 +23,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final TelHashRepository telHashRepository;
+    private final TelVerifyHashRepository telVerifyHashRepository;
     private final SmsUtil smsUtil;
 
     @Transactional(readOnly = true)
@@ -41,7 +46,7 @@ public class AuthService {
         checkExistedTel(tel);
         checkTelSendLimit(tel);
 
-        TelHash telHash = telHashRepository.findById(tel).orElse(getInitialEmailHash(tel));
+        TelHash telHash = telHashRepository.findById(tel).orElse(getInitialTelHash(tel));
 
         int authorizationCode = RandomGenerator.createAuthorizationCode();
         smsUtil.sendOne(tel, authorizationCode);
@@ -51,7 +56,31 @@ public class AuthService {
         telHashRepository.save(telHash);
     }
 
-    private TelHash getInitialEmailHash(String tel) {
+    @Transactional
+    public boolean verifyAuthorizationCode(TelVerifyRequest telVerifyRequestDto) {
+        checkExistedTel(telVerifyRequestDto.getTel());
+
+        TelHash telHash = telHashRepository.findById(telVerifyRequestDto.getTel())
+            .orElseThrow(() -> new NotFoundException(AuthExceptionCode.NOT_FOUND_TEL));
+
+        TelVerifyHash telVerifyHash = telVerifyHashRepository.findById(telHash.getTel())
+            .orElse(getInitialTelVerifyHash(telVerifyRequestDto.getTel()));
+
+        boolean authCheck = telHash.getAuthorizationCode() == telVerifyRequestDto.getAuthorizationCode();
+
+        telVerifyHash.setAuthCheck(authCheck);
+        telVerifyHashRepository.save(telVerifyHash);
+
+        return authCheck;
+    }
+
+    private TelVerifyHash getInitialTelVerifyHash(String tel) {
+        return TelVerifyHash.builder()
+            .tel(tel)
+            .build();
+    }
+
+    private TelHash getInitialTelHash(String tel) {
         return TelHash.builder()
             .tel(tel)
             .build();
