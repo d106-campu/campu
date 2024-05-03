@@ -4,6 +4,7 @@ import Kakao_logo from "@/assets/images/kakao_logo.png";
 import stamp from "@/assets/images/stamp.png";
 import { FiMapPin } from "react-icons/fi";
 import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
+import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
 
 interface IReservationItemProps {
   id: number;
@@ -88,7 +89,9 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
         <div className="w-[50%] p-4 h-auto text-gray-400">
           <h3>날짜</h3>
           <p className="pb-[15px] font-bold text-BLACK">
-            {data.campsite_addr1} {data.campsite_addr2}
+            {`${formatDate(data.startDate)} ~ ${formatSimpleDate(
+              data.startDate
+            )}`}
           </p>
           <div className="flex gap-24">
             <div>

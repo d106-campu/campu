@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
+import { formatSimpleDate } from "@/utils/formatDateTime";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { diffDays } from "@/utils/diffDays";
 
 interface IMyControllerProps {
   headCount: number;
@@ -28,24 +30,6 @@ const MyController = ({
     setHeadCountModal(!headCountModal);
   };
 
-  // Date 객체로 변환
-  const startDay = new Date(startDate);
-  const endDay = new Date(endDate);
-
-  // 시작일과 종료일 사이의 일수 계산
-  const diffTime = Math.abs(endDay.getTime() - startDay.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  // 날짜 포맷 변경
-  const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      month: "2-digit",
-      day: "2-digit",
-      weekday: "short",
-    };
-    return new Intl.DateTimeFormat("ko-KR", options).format(date);
-  };
-
   const increasePepole = () => {
     setPeopleCount(peopleCount + 1);
   };
@@ -62,7 +46,8 @@ const MyController = ({
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
         >
-          {formatDate(startDay)} ~ {formatDate(endDay)} · {diffDays}박
+          {formatSimpleDate(startDate)} ~ {formatSimpleDate(endDate)} ·{" "}
+          {diffDays(startDate, endDate)}박
         </div>
         <div className="border-l-2 border-[#C9C9C9] mx-2" />
         <div
