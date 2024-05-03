@@ -7,12 +7,10 @@ import { authReducer } from "@/features/login/authSlice";
 import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
 
-
 const persistConfig = {
   key: "root",
   storage,
   whitelist: ["ownerTab", "ownerSide", "auth", "campingMap", "selectedComp"],
-
 };
 
 const rootReducer = combineReducers({
@@ -21,8 +19,6 @@ const rootReducer = combineReducers({
   auth: authReducer,
   campingMap: campingMapReducer,
   selectedComp: selectedCompReducer,
-  selectedComp: selectedCompReducer,
-
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
