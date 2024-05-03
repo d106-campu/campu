@@ -6,6 +6,7 @@ import com.d106.campu.auth.service.AuthService;
 import com.d106.campu.common.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,13 @@ public class AuthController implements AuthControllerDoc {
     @GetMapping("/tel")
     public Response checkAvailableTel(@RequestParam String tel) {
         return new Response(AuthConstant.AVAILABLE, authService.checkAvailableTel(tel));
+    }
+
+    @Override
+    @PostMapping("/tel")
+    public Response sendAuthorizationCode(@RequestParam String tel) {
+        authService.sendAuthorizationCode(tel);
+        return new Response();
     }
 
 }
