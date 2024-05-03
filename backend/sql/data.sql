@@ -39,6 +39,9 @@ VALUES (@user_manager, '캠프유캠푸 캠핑장', '민간', '01012312312', '�
 
 SET @campsite_1 = (SELECT id FROM `campsite` WHERE faclt_nm = '캠프유캠푸 캠핑장');
 
+INSERT INTO `campsite_location` (`campsite_id`, `map_x`, `map_y`)
+VALUES (@campsite_1,'36.107901','128.417657');
+
 -- ----------------------------------------
 --
 -- induty

@@ -7,10 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommonExceptionCode implements ExceptionCode {
 
-    INVALID_PARAM("COMMON001", "Invalid param"),
-
-    /* Not found exception */
-    USER_NOT_FOUND("COMMON011", "Invalid user");
+    /* Invalid Request Exception */
+    INVALID_PARAM("COMMON001", "Invalid param");
 
     private final String code;
     private final String message;

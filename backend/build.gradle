@@ -56,6 +56,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.5'
 	// prometheus
 	implementation 'io.micrometer:micrometer-registry-prometheus:1.12.5'
+	// cool sms
+	implementation 'net.nurigo:sdk:4.3.0'
 	// test
 	testImplementation(
 		'org.springframework.boot:spring-boot-starter-test',
