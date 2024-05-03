@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
@@ -48,7 +48,7 @@ public interface CampsiteControllerDoc {
     Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
 
     class CampsiteListResponse {
-        public List<CampsiteDto.Response> campsiteList;
+        public Page<CampsiteDto.Response> campsiteList;
         public Pageable pageable;
     }
 
