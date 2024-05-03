@@ -227,6 +227,18 @@ CREATE TABLE `campsite_theme` (
   CONSTRAINT `campsite_theme_theme_FK` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 테마';
 
+-- d106.campsite_theme definition
+
+CREATE TABLE `campsite_like` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
+    `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
+    `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+    PRIMARY KEY (`id`),
+    KEY `campsite_like_campsite_FK` (`campsite_id`),
+    KEY `campsite_like_user_FK` (`user_id`),
+    CONSTRAINT `campsite_like_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
+    CONSTRAINT `campsite_like_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 좋아요';
 
 -- d106.room definition
 
