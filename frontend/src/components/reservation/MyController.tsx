@@ -46,7 +46,7 @@ const MyController = ({
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
         >
-          {formatSimpleDate(startDate)} ~ {formatSimpleDate(endDate)} ·{" "}
+          {formatSimpleDate(startDate)} ~ {formatSimpleDate(endDate)} ·&nbsp;
           {diffDays(startDate, endDate)}박
         </div>
         <div className="border-l-2 border-[#C9C9C9] mx-2" />

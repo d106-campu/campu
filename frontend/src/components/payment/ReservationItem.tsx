@@ -5,6 +5,7 @@ import stamp from "@/assets/images/stamp.png";
 import { FiMapPin } from "react-icons/fi";
 import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
 import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
+import { diffDays } from "@/utils/diffDays";
 
 interface IReservationItemProps {
   id: number;
@@ -91,7 +92,7 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
           <p className="pb-[15px] font-bold text-BLACK">
             {`${formatDate(data.startDate)} ~ ${formatSimpleDate(
               data.startDate
-            )}`}
+            )} · ${diffDays(data.startDate, data.endDate)}박 `}
           </p>
           <div className="flex gap-24">
             <div>
