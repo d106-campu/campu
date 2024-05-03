@@ -56,7 +56,7 @@ const SideTabbar: React.FC<ISideTabbarProps> = ({ campgrounds }) => {
       {/* 우하단 캠핑장 추가버튼  */}
       <div className="fixed right-16 bottom-10 transform -translate-y-1/3">
         <button
-          className="border border-MAIN_GREEN rounded-full p-4 text-MAIN_GREEN"
+          className="border border-MAIN_GREEN bg-white rounded-full p-4 text-MAIN_GREEN"
           onMouseEnter={() => setIsHover(true)} // 호버 시작 시
           onMouseLeave={() => setIsHover(false)} // 호버 종료 시
           onClick={toggleModal}
