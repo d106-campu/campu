@@ -18,7 +18,6 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         SELECT c
         FROM campsite c
             LEFT JOIN FETCH c.campsiteLocation loc
-            LEFT JOIN FETCH c.campsiteLikeSet like
         """)
     Page<Campsite> findAll(Pageable pageable);
 
@@ -26,7 +25,6 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         SELECT c
         FROM campsite c
             LEFT JOIN FETCH c.campsiteLocation loc
-            LEFT JOIN FETCH c.campsiteLikeSet like
         WHERE (c.indutyList IS NOT NULL)
             AND (c.indutyList LIKE %:induty%)
         """)
@@ -35,10 +33,9 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
     @Query("""
         SELECT c
         FROM campsite c
-            LEFT JOIN FETCH c.campsiteThemeSet ct
+            LEFT JOIN FETCH c.campsiteThemeList ct
             LEFT JOIN FETCH ct.theme t
             LEFT JOIN FETCH c.campsiteLocation loc
-            LEFT JOIN FETCH c.campsiteLikeSet like
         WHERE t.theme = :theme
         """)
     Page<Campsite> findByCampsiteThemeList_Theme_Theme(Pageable pageable, @Param("theme") String theme);

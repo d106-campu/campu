@@ -12,7 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +58,6 @@ public class User extends BaseTime {
     private LocalDateTime deleteTime;
 
     @OneToMany(mappedBy = "user")
-    private Set<CampsiteLike> campsiteLikeSet;
+    private List<CampsiteLike> campsiteLikeList;
 
 }

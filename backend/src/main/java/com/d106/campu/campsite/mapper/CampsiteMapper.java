@@ -14,9 +14,9 @@ public interface CampsiteMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hit", ignore = true)
-    @Mapping(target = "campsiteThemeSet", ignore = true)
+    @Mapping(target = "campsiteThemeList", ignore = true)
     @Mapping(target = "campsiteLocation.campsite", ignore = true)
-    @Mapping(target = "campsiteLikeSet", ignore = true)
+    @Mapping(target = "campsiteLikeList", ignore = true)
     Campsite toCampsite(CampsiteDto.CreateRequest createRequestDto);
 
 }
