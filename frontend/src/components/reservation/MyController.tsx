@@ -57,7 +57,7 @@ const MyController = ({
 
   return (
     <>
-      <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-center text-lg font-bold w-[95%] mx-auto">
+      <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-center font-bold w-[96%] mx-auto">
         <div
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
@@ -75,7 +75,7 @@ const MyController = ({
 
       {/* 모달 - 일정 변경 */}
       {scheduleModal && (
-        <Modal width="w-[60%]" onClose={toggleScheduleModal} title="일정 선택">
+        <Modal width="w-[55%]" onClose={toggleScheduleModal} title="일정 선택">
           <div>
             {/* @TODO: 달력 넣기 */}
             {/* @TODO: 초기화 버튼 */}
@@ -98,7 +98,7 @@ const MyController = ({
       {/* 모달 - 인원수 변경 */}
       {headCountModal && (
         <Modal
-          width="w-[60%]"
+          width="w-[55%]"
           onClose={toggleHeadCountModal}
           title="인원수 선택"
         >

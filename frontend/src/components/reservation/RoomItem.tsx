@@ -1,4 +1,5 @@
 import Button from "@/components/@common/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 interface IRoomItemProps {
   campsiteId: number;
@@ -17,6 +18,7 @@ interface IRoomItemProps {
 }
 
 const RoomItem = ({ room }: { room: IRoomItemProps }) => {
+  const navigate = useNavigate();
   return (
     <div
       className={`w-full flex items-center border-b py-7 ${
@@ -40,28 +42,43 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
       <div className="flex justify-between h-40 w-full pl-7">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-bold pb-3">{room.name}</h1>
-          <div className="flex justify-between gap-14">
+          <div
+            className={`flex justify-between ${
+              room.supplyList.length >= 5 ? "gap-10" : "gap-14"
+            } text-sm`}
+          >
             <div>
-              <p className="pb-[4px]">{room.induty}</p>
-              <p className="pb-[4px]">
+              <p className="pb-[10px]">{room.induty}</p>
+              <p className="pb-[10px]">
                 기준 {room.baseNo}인 (최대 {room.maxNo}인)
               </p>
-              <p className="pb-[4px]">
+              <p className="pb-[10px]">
                 인원 추가 가격 : {room.extraPrice.toLocaleString("ko-KR")}원
               </p>
-              <p className="pb-[4px]">화장실 개수: {room.toiletCnt}</p>
+              <p className="pb-[10px]">화장실 개수: {room.toiletCnt}</p>
             </div>
             {room.supplyList.length > 0 && (
               <>
                 <div className="border-r" />
                 <div>
-                  {room.supplyList &&
-                    room.supplyList.map((item, index) => (
-                      <p key={index} className="pb-[4px]">
-                        {item}
-                      </p>
-                    ))}
+                  {room.supplyList.slice(0, 4).map((item, index) => (
+                    <p key={index} className="pb-[10px]">
+                      {item}
+                    </p>
+                  ))}
                 </div>
+                {room.supplyList.length >= 5 && (
+                  <>
+                    <div className="border-r" />
+                    <div>
+                      {room.supplyList.slice(4).map((item, index) => (
+                        <p key={index} className="pb-[10px]">
+                          {item}
+                        </p>
+                      ))}
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -69,20 +86,24 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
         <div className="flex flex-col justify-between items-end">
           <div>
             <p
-              className={`text-2xl font-extrabold ${
+              className={`text-xl font-extrabold ${
                 room.available ? "text-MAIN_RED" : "text-SUB_RED"
               }`}
             >
               {room.price.toLocaleString("ko-KR")}원
             </p>
             {!room.available && (
-              <p className="text-end text-lg font-extrabold text-[#707070]">
+              <p className="text-end font-extrabold text-[#707070]">
                 예약 마감
               </p>
             )}
           </div>
           {room.available ? (
-            <Button width="w-40" text="예약하기" />
+            <Button
+              width="w-40"
+              text="예약하기"
+              onClick={() => navigate(`/camps/${room.campsiteId}/payment`)}
+            />
           ) : (
             <Button
               width="w-40"
