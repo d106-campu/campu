@@ -1,6 +1,7 @@
 package com.d106.campu.common.exception.handler;
 
 import com.d106.campu.common.exception.ConflictException;
+import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
@@ -37,6 +38,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
     @ExceptionHandler(value = {TooManyException.class})
     public Response handleTooManyException(TooManyException e) {
+        return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {InvalidException.class})
+    public Response handleInvalidException(InvalidException e) {
         return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
     }
 

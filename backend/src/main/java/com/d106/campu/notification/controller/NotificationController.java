@@ -1,5 +1,6 @@
 package com.d106.campu.notification.controller;
 
+import com.d106.campu.notification.controller.doc.NotificationControllerDoc;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("/notification")
 @RequiredArgsConstructor
 @RestController
-public class NotificationController {
+public class NotificationController implements NotificationControllerDoc {
 
     private final NotificationService NotificationService;
 
