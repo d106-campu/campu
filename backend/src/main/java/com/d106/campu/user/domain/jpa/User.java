@@ -1,5 +1,7 @@
 package com.d106.campu.user.domain.jpa;
 
+import com.d106.campu.auth.domain.jpa.Authority;
+import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.common.jpa.BaseTime;
 import com.d106.campu.user.constant.GenderType;
 import jakarta.persistence.Column;
@@ -9,7 +11,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,5 +62,24 @@ public class User extends BaseTime {
 
     @Column(name = "delete_time")
     private LocalDateTime deleteTime;
+
+    @OneToMany(mappedBy = "user")
+    private List<CampsiteLike> campsiteLikeList;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+        name = "user_authority",
+        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    private Set<Authority> authorities = new HashSet<>();
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
+    }
 
 }

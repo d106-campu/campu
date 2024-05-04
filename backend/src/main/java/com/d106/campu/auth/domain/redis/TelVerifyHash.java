@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -13,19 +14,13 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RedisHash(value = "telHash", timeToLive = AuthConstant.TEL_HASH_LIFE_SEC)
-public class TelHash {
+@RedisHash(value = "telVerifyHash", timeToLive = AuthConstant.TEL_VERIFY_HASH_LIFE_SEC)
+public class TelVerifyHash {
 
     @Id
     private String tel;
 
-    private int count;
-
-    private int authorizationCode;
-
-    public void increaseCountAndSetAuthorizationCode(int authorizationCode) {
-        this.count++;
-        this.authorizationCode = authorizationCode;
-    }
+    @Setter
+    private boolean authCheck;
 
 }
