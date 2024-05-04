@@ -1,13 +1,9 @@
 package com.d106.campu.auth.dto;
 
-import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.common.annotation.Account;
 import com.d106.campu.common.annotation.Nickname;
+import com.d106.campu.common.annotation.Password;
 import com.d106.campu.common.annotation.Tel;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 public class AuthDto {
@@ -33,16 +29,10 @@ public class AuthDto {
         @Tel
         private String tel;
 
-        @Schema(example = "abcd1234!")
-        @NotBlank
-        @Size(min = 8, max = 20)
-        @Pattern(regexp = RegExpression.strongPassword)
+        @Password
         private String password;
 
-        @Schema(example = "abcd1234!")
-        @NotBlank
-        @Size(min = 8, max = 20)
-        @Pattern(regexp = RegExpression.strongPassword)
+        @Password
         private String passwordCheck;
     }
 
@@ -52,10 +42,7 @@ public class AuthDto {
         @Account
         private String account;
 
-        @Schema(example = "abcd1234!")
-        @NotBlank
-        @Size(min = 8, max = 20)
-        @Pattern(regexp = RegExpression.strongPassword)
+        @Password
         private String password;
     }
 
