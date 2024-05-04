@@ -2,6 +2,7 @@ package com.d106.campu.auth.controller.doc;
 
 import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.auth.dto.AuthDto;
+import com.d106.campu.common.annotation.Account;
 import com.d106.campu.common.annotation.Tel;
 import com.d106.campu.common.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,11 +31,7 @@ public interface AuthControllerDoc {
             })),
         @ApiResponse(responseCode = "400", description = "아이디 유효성 검사 오류", content = @Content)
     })
-    Response checkAvailableAccount(
-        @NotBlank(message = "not blank")
-        @Size(min = 6, max = 12, message = "account length not valid")
-        @Pattern(regexp = RegExpression.account, message = "account format not valid") String account
-    );
+    Response checkAvailableAccount(@Account String account);
 
     @Operation(summary = "닉네임 중복확인", description = "회원가입에 사용 가능한 닉네임인지 확인한다.")
     @ApiResponses({

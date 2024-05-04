@@ -1,6 +1,7 @@
 package com.d106.campu.auth.dto;
 
 import com.d106.campu.auth.constant.RegExpression;
+import com.d106.campu.common.annotation.Account;
 import com.d106.campu.common.annotation.Tel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -22,10 +23,7 @@ public class AuthDto {
     @Data
     public static class JoinRequest {
 
-        @Schema(example = "account1")
-        @NotBlank(message = "not blank")
-        @Size(min = 6, max = 12, message = "account length not valid")
-        @Pattern(regexp = RegExpression.account, message = "account format not valid")
+        @Account
         private String account;
 
         @Schema(example = "nick1")
@@ -53,10 +51,7 @@ public class AuthDto {
     @Data
     public static class LoginRequest {
 
-        @Schema(example = "account1")
-        @NotBlank(message = "not blank")
-        @Size(min = 6, max = 12, message = "account length not valid")
-        @Pattern(regexp = RegExpression.account, message = "account format not valid")
+        @Account
         private String account;
 
         @Schema(example = "abcd1234!")
