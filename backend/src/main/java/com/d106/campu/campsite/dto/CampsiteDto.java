@@ -26,10 +26,10 @@ public class CampsiteDto {
         private String addr2;
         private String thumbnailImageUrl;
         private CampsiteLocation campsiteLocation;
+        private boolean like;
         /* TODO: 추가할 정보
          *  private int price;          // 가장 저렴한 방 가격
          *  private float rate;         // 별점
-         *  private boolean like;       // 내가 좋아요 눌렀는지
          *  private boolean available;  // 예약 가능 여부
          */
 
@@ -108,4 +108,13 @@ public class CampsiteDto {
         private Long id;
 
     }
+
+    @Data
+    @Builder
+    public static class LikeResponse {
+
+        private boolean like;
+
+    }
+
 }

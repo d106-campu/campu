@@ -12,7 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import java.util.Set;
+import jakarta.persistence.Transient;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -93,10 +94,17 @@ public class Campsite extends BaseTime {
     @Column(name = "hit")
     private long hit;
 
-    @OneToMany(mappedBy = "campsite")
-    private Set<CampsiteTheme> campsiteThemeSet;
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
+    private List<CampsiteTheme> campsiteThemeList;
 
     @OneToOne(mappedBy = "campsite")
     private CampsiteLocation campsiteLocation;
+
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
+    private List<CampsiteLike> campsiteLikeList;
+
+    @Transient
+    @Setter
+    private boolean like;
 
 }
