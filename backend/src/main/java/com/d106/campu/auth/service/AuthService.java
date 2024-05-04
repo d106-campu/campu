@@ -111,7 +111,12 @@ public class AuthService {
 
     private void checkAuthorization(String tel) {
         telVerifyHashRepository.findById(tel)
-            .orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL));
+            .map(telVerifyHash -> {
+                if (!telVerifyHash.isAuthCheck()) {
+                    throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL);
+                }
+                return telVerifyHash;
+            }).orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL));
     }
 
     private void checkTelSendLimit(String tel) {

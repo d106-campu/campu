@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RedisHash(value = "telVerifyHash", timeToLive = AuthConstant.TEL_VERIFY_HASH_LIFE)
+@RedisHash(value = "telVerifyHash", timeToLive = AuthConstant.TEL_VERIFY_HASH_LIFE_SEC)
 public class TelVerifyHash {
 
     @Id
