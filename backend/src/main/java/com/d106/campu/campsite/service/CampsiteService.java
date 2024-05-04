@@ -66,6 +66,7 @@ public class CampsiteService {
         return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
     }
 
+    @Transactional
     public CampsiteDto.LikeResponse likeCampsite(Long campsiteId) {
         /* TODO: Replace this with login user (using securityHelper) */
         User user = userRepository.findById(1L)
@@ -79,7 +80,7 @@ public class CampsiteService {
             cl -> campsiteLikeRepository.deleteById(cl.getId()),
             () -> campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build())
         );
-        return CampsiteDto.LikeResponse.builder().like(campsiteLike.isEmpty()).build();
+        return campsiteMapper.toCampsiteLikeResponseDto(campsiteLike.isEmpty());
     }
 
 }
