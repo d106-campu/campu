@@ -1,9 +1,9 @@
 package com.d106.campu.auth.constant;
 
-public enum AuthorityName {
+public enum RoleName {
 
     ADMIN,
-    MANAGER,
+    OWNER,
     USER
 
 }

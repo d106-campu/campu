@@ -1,11 +1,12 @@
 package com.d106.campu.auth.service;
 
 import com.d106.campu.auth.constant.AuthConstant;
-import com.d106.campu.auth.constant.AuthorityName;
-import com.d106.campu.auth.domain.jpa.Authority;
+import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.auth.domain.redis.TelHash;
 import com.d106.campu.auth.domain.redis.TelVerifyHash;
 import com.d106.campu.auth.dto.AuthDto.JoinRequest;
+import com.d106.campu.auth.dto.AuthDto.LoginRequest;
+import com.d106.campu.auth.dto.AuthDto.LoginResponse;
 import com.d106.campu.auth.dto.AuthDto.TelVerifyRequest;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.auth.mapper.AuthMapper;
@@ -20,6 +21,7 @@ import com.d106.campu.common.util.SmsUtil;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,9 +94,17 @@ public class AuthService {
 
         User user = authMapper.toUser(joinRequestDto);
         user.changePassword(passwordEncoder.encode(joinRequestDto.getPassword()));
-        user.addAuthority(new Authority(AuthorityName.USER));
+        user.changeRole(RoleName.USER);
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public LoginResponse login(LoginRequest loginRequestDto) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+            loginRequestDto.getAccount(), loginRequestDto.getPassword());
+
+        return null;
     }
 
     private TelVerifyHash getInitialTelVerifyHash(String tel) {

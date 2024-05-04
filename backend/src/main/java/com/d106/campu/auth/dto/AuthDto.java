@@ -46,4 +46,9 @@ public class AuthDto {
         private String password;
     }
 
+    @Data
+    public static class LoginResponse {
+
+    }
+
 }
