@@ -1,8 +1,8 @@
 package com.d106.campu.auth.controller.doc;
 
-import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.auth.dto.AuthDto;
 import com.d106.campu.common.annotation.Account;
+import com.d106.campu.common.annotation.Nickname;
 import com.d106.campu.common.annotation.Tel;
 import com.d106.campu.common.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,9 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -42,11 +39,7 @@ public interface AuthControllerDoc {
             })),
         @ApiResponse(responseCode = "400", content = @Content)
     })
-    Response checkAvailableNickname(
-        @NotBlank(message = "not blank")
-        @Size(min = 2, max = 8, message = "nickname length not valid")
-        @Pattern(regexp = RegExpression.nickname, message = "nickname format not valid") String nickname
-    );
+    Response checkAvailableNickname(@Nickname String nickname);
 
     @Operation(summary = "휴대폰 번호 중복확인", description = "회원가입에 사용 가능한 휴대폰 번호인지 확인한다.")
     @ApiResponses({

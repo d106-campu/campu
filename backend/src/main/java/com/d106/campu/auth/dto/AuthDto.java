@@ -2,6 +2,7 @@ package com.d106.campu.auth.dto;
 
 import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.common.annotation.Account;
+import com.d106.campu.common.annotation.Nickname;
 import com.d106.campu.common.annotation.Tel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -26,10 +27,7 @@ public class AuthDto {
         @Account
         private String account;
 
-        @Schema(example = "nick1")
-        @NotBlank(message = "not blank")
-        @Size(min = 2, max = 8, message = "nickname length not valid")
-        @Pattern(regexp = RegExpression.nickname, message = "nickname format not valid")
+        @Nickname
         private String nickname;
 
         @Tel
@@ -59,7 +57,6 @@ public class AuthDto {
         @Size(min = 8, max = 20)
         @Pattern(regexp = RegExpression.strongPassword)
         private String password;
-
     }
 
 }
