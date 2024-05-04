@@ -7,7 +7,7 @@ import photo4 from "@/assets/images/dummy/camping_spot_4.jpg";
 export const myCampingDummyList = [
   {
     id: 1,
-    name: "주용용캠핑장",
+    name: "주용용",
     image: photo4,
     rating: 4.5,
     price: "50,000",
@@ -16,7 +16,7 @@ export const myCampingDummyList = [
   },
   {
     id: 2,
-    name: "챔챔경캠핑장",
+    name: "챔챔경",
     image: photo2,
     rating: 4.8,
     price: "40,000",
@@ -25,7 +25,7 @@ export const myCampingDummyList = [
   },
   {
     id: 3,
-    name: "단비비캠핑장",
+    name: "단비비",
     image: photo3,
     rating: 3.8,
     price: "60,000",
@@ -34,7 +34,7 @@ export const myCampingDummyList = [
   },
   {
     id: 4,
-    name: "커커현캠핑장",
+    name: "커커현",
     image: photo4,
     rating: 3.8,
     price: "120,000",
@@ -43,7 +43,7 @@ export const myCampingDummyList = [
   },
   {
     id: 5,
-    name: "호호조캠핑장",
+    name: "호호조",
     image: photo1,
     rating: 4.0,
     price: "100,000",
@@ -52,7 +52,7 @@ export const myCampingDummyList = [
   },
   {
     id: 6,
-    name: "준준호캠핑장",
+    name: "준준호",
     image: photo2,
     rating: 4.1,
     price: "85,000",
@@ -61,7 +61,7 @@ export const myCampingDummyList = [
   },
   {
     id: 7,
-    name: "귀찮아캠핑장",
+    name: "귀찮아",
     image: photo3,
     rating: 4.1,
     price: "85,000",
@@ -70,7 +70,7 @@ export const myCampingDummyList = [
   },
   {
     id: 8,
-    name: "집갈래캠핑장",
+    name: "집갈래",
     image: photo4,
     rating: 4.1,
     price: "85,000",
@@ -79,7 +79,7 @@ export const myCampingDummyList = [
   },
   {
     id: 9,
-    name: "마지막캠핑장",
+    name: "마지막",
     image: photo4,
     rating: 4.1,
     price: "85,000",

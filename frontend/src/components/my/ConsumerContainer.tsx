@@ -1,10 +1,11 @@
 import MyReservation from '@/components/my/consumer/MyReservation';
 import MyReview from '@/components/my/consumer/MyReview';
 import MyFavoriteCamp from '@/components/my/consumer/MyFavoriteCamp';
-import FreeAlert from '@/components/my/consumer/FreeAlert';
-import MyProfile from '@/components/my/consumer/MyProfile';
+import FreeAlert from '@/components/my/freeAlert/FreeAlert';
+import MyProfile from '@/components/my/profile/MyProfile';
 import GetReservations from '@/components/my/consumer/MyReservationItem'; // 더미데이터
 import GetMyReviews from '@/components/my/consumer/MyReviewItem'; // 더미데이터
+import GetMyAlerts from '@/components/my/freeAlert/FreeAlertItem';
 
 interface IConsumerContainerProps {
   selectedComponent: string;
@@ -26,7 +27,7 @@ const ConsumerContainer = ({
       case 'MyFavoriteCamp':
         return <MyFavoriteCamp />;
       case 'FreeAlert':
-        return <FreeAlert />;
+        return <FreeAlert alerts={GetMyAlerts.alerts} totalMyAlerts={GetMyAlerts.totalMyAlerts}/>;
       case 'MyProfile':
         return <MyProfile />;
       default:
