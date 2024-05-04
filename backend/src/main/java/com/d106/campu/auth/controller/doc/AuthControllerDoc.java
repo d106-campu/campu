@@ -2,6 +2,7 @@ package com.d106.campu.auth.controller.doc;
 
 import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.auth.dto.AuthDto;
+import com.d106.campu.common.annotation.Tel;
 import com.d106.campu.common.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -59,10 +60,7 @@ public interface AuthControllerDoc {
             })),
         @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류", content = @Content)
     })
-    Response checkAvailableTel(
-        @NotBlank(message = "not blank")
-        @Pattern(regexp = RegExpression.tel, message = "tel format not valid") String tel
-    );
+    Response checkAvailableTel(@Tel String tel);
 
     @Operation(summary = "휴대폰 인증 번호 전송", description = "회원가입에 필요한 휴대폰 인증 번호를 전송한다.")
     @ApiResponses({
@@ -73,17 +71,14 @@ public interface AuthControllerDoc {
         @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류", content = @Content),
         @ApiResponse(responseCode = "409", description = "이미 가입된 휴대폰 번호", content = @Content)
     })
-    Response sendAuthorizationCode(
-        @NotBlank(message = "not blank")
-        @Pattern(regexp = RegExpression.tel, message = "tel format not valid") String tel
-    );
+    Response sendAuthorizationCode(@Tel String tel);
 
     @Operation(summary = "휴대폰 인증 번호 확인", description = "회원가입에 필요한 휴대폰 인증 번호를 확인한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "휴대폰 인증 번호 일치 여부를 확인",
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
-                @SchemaProperty(name = "data", schema = @Schema(implementation = VerifyResponse.class)),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = VerifyResponse.class))
             })),
         @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류", content = @Content),
         @ApiResponse(responseCode = "401", description = "휴대폰 인증 번호 일치 X", content = @Content),
@@ -104,12 +99,28 @@ public interface AuthControllerDoc {
     })
     Response join(@Valid AuthDto.JoinRequest joinRequestDto);
 
+    @Operation(summary = "로그인", description = "로그인을 한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "로그인 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = UserResponse.class))
+            })),
+        @ApiResponse(responseCode = "400", description = "요청 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "아이디 or 비밀번호가 틀림", content = @Content)
+    })
+    Response login(@Valid AuthDto.LoginRequest loginRequestDto);
+
     class AvailableResponse {
         public Boolean available;
     }
 
     class VerifyResponse {
         public Boolean verify;
+    }
+
+    class UserResponse {
+        public AuthDto.LoginRequest user;
     }
 
 }
