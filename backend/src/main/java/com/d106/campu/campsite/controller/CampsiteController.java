@@ -8,6 +8,7 @@ import com.d106.campu.common.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,12 @@ public class CampsiteController implements CampsiteControllerDoc {
     @PostMapping("/register")
     public Response createCampsite(@RequestBody CampsiteDto.CreateRequest createRequestDto) {
         return new Response(CampsiteConstant.CAMPSITE, campsiteService.createCampsite(createRequestDto));
+    }
+
+    @Override
+    @PostMapping("/like/{campsiteId}")
+    public Response likeCampsite(@PathVariable Long campsiteId) {
+        return new Response(CampsiteConstant.CAMPSITE_LIKE, campsiteService.likeCampsite(campsiteId));
     }
 
 }

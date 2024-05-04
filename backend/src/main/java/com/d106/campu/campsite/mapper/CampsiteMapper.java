@@ -12,10 +12,14 @@ public interface CampsiteMapper {
 
     CampsiteDto.CreateResponse toCreateResponseDto(Campsite campsite);
 
+    CampsiteDto.LikeResponse toCampsiteLikeResponseDto(Boolean like);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hit", ignore = true)
-    @Mapping(target = "campsiteThemeSet", ignore = true)
+    @Mapping(target = "campsiteThemeList", ignore = true)
     @Mapping(target = "campsiteLocation", ignore = true)
+    @Mapping(target = "campsiteLikeList", ignore = true)
+    @Mapping(target = "like", ignore = true)
     Campsite toCampsite(CampsiteDto.CreateRequest createRequestDto);
 
 }
