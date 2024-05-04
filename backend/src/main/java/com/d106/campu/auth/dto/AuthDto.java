@@ -28,7 +28,7 @@ public class AuthDto {
         @Pattern(regexp = RegExpression.account, message = "account format not valid")
         private String account;
 
-        @Schema(example = "nickname1")
+        @Schema(example = "nick1")
         @NotBlank(message = "not blank")
         @Size(min = 2, max = 8, message = "nickname length not valid")
         @Pattern(regexp = RegExpression.nickname, message = "nickname format not valid")
