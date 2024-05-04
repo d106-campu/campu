@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +48,18 @@ public interface CampsiteControllerDoc {
     })
     Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
 
+    @Operation(summary = "캠핑장 방 조회", description = "특정 캠핑장의 방 목록을 조회하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "방 목록 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteRoomListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
+    })
+    Response getCampsiteRoomList(long campsiteId);
+
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
         public Pageable pageable;
@@ -54,6 +67,10 @@ public interface CampsiteControllerDoc {
 
     class createCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;
+    }
+
+    class CampsiteRoomListResponse {
+        public List roomList;
     }
 
 }
