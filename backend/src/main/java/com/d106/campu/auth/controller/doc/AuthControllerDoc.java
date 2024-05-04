@@ -92,6 +92,18 @@ public interface AuthControllerDoc {
     })
     Response verifyAuthorizationCode(@Valid AuthDto.TelVerifyRequest telVerifyRequestDto);
 
+    @Operation(summary = "회원가입", description = "회원가입을 한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "회원가입 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })),
+        @ApiResponse(responseCode = "400", description = "요청 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "휴대폰 인증 X", content = @Content),
+        @ApiResponse(responseCode = "409", description = "입력 데이터 충돌", content = @Content)
+    })
+    Response join(@Valid AuthDto.JoinRequest joinRequestDto);
+
     class AvailableResponse {
         public Boolean available;
     }

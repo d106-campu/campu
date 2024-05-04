@@ -1,19 +1,26 @@
 package com.d106.campu.auth.service;
 
 import com.d106.campu.auth.constant.AuthConstant;
+import com.d106.campu.auth.constant.AuthorityName;
+import com.d106.campu.auth.domain.jpa.Authority;
 import com.d106.campu.auth.domain.redis.TelHash;
 import com.d106.campu.auth.domain.redis.TelVerifyHash;
+import com.d106.campu.auth.dto.AuthDto.JoinRequest;
 import com.d106.campu.auth.dto.AuthDto.TelVerifyRequest;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
+import com.d106.campu.auth.mapper.AuthMapper;
 import com.d106.campu.auth.repository.redis.TelHashRepository;
 import com.d106.campu.auth.repository.redis.TelVerifyHashRepository;
 import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.TooManyException;
+import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.RandomGenerator;
 import com.d106.campu.common.util.SmsUtil;
+import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +31,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final TelHashRepository telHashRepository;
     private final TelVerifyHashRepository telVerifyHashRepository;
+    private final AuthMapper authMapper;
+    private final PasswordEncoder passwordEncoder;
     private final SmsUtil smsUtil;
 
     @Transactional(readOnly = true)
@@ -74,6 +83,20 @@ public class AuthService {
         return authCheck;
     }
 
+    @Transactional
+    public void join(JoinRequest joinRequestDto) {
+        checkExistedAccount(joinRequestDto.getAccount());
+        checkExistedNickname(joinRequestDto.getNickname());
+        checkExistedTel(joinRequestDto.getTel());
+        checkAuthorization(joinRequestDto.getTel());
+
+        User user = authMapper.toUser(joinRequestDto);
+        user.changePassword(passwordEncoder.encode(joinRequestDto.getPassword()));
+        user.addAuthority(new Authority(AuthorityName.USER));
+
+        userRepository.save(user);
+    }
+
     private TelVerifyHash getInitialTelVerifyHash(String tel) {
         return TelVerifyHash.builder()
             .tel(tel)
@@ -84,6 +107,11 @@ public class AuthService {
         return TelHash.builder()
             .tel(tel)
             .build();
+    }
+
+    private void checkAuthorization(String tel) {
+        telVerifyHashRepository.findById(tel)
+            .orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL));
     }
 
     private void checkTelSendLimit(String tel) {
@@ -99,6 +127,20 @@ public class AuthService {
         userRepository.findByTelAndDeleteTimeIsNull(tel)
             .ifPresent(user -> {
                 throw new ConflictException(AuthExceptionCode.CONFLICT_TEL);
+            });
+    }
+
+    private void checkExistedNickname(String nickname) {
+        userRepository.findByNicknameAndDeleteTimeIsNull(nickname)
+            .ifPresent(user -> {
+                throw new ConflictException(AuthExceptionCode.CONFLICT_NICKNAME);
+            });
+    }
+
+    private void checkExistedAccount(String account) {
+        userRepository.findByAccount(account)
+            .ifPresent(user -> {
+                throw new ConflictException(AuthExceptionCode.CONFLICT_ACCOUNT);
             });
     }
 

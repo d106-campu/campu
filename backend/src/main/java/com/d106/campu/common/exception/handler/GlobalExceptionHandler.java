@@ -1,8 +1,9 @@
 package com.d106.campu.common.exception.handler;
 
 import com.d106.campu.common.exception.ConflictException;
-import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.common.exception.TooManyException;
+import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.response.ResponseFail;
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public Response handleParamsException(Exception e) {
         return new ResponseFail(CommonExceptionCode.INVALID_PARAM.getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = {UnauthorizedException.class})
+    public Response handleUnAuthorizedException(UnauthorizedException e) {
+        return new ResponseFail(e.getExceptionCode().getCode(), e.getMessage());
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
