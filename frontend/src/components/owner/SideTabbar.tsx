@@ -80,7 +80,7 @@ const SideTabbar: React.FC<ISideTabbarProps> = ({ campgrounds }) => {
         </Modal>
       )}
       {isHover && (
-        <div className="fixed text-sm right-20 bottom-28 p-4 border border-gray-300 rounded-md">
+        <div className="z-20 bg-white fixed text-sm right-20 bottom-28 p-4 border border-gray-300 rounded-md">
           🤗 추가로 등록할 캠핑장이 있으신가요?
         </div>
       )}
