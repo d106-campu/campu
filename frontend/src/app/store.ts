@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage";
 import { authReducer } from "@/features/login/authSlice";
 import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
+import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
 import { reservationReducer } from "@/features/reservation/ReservationSlice";
 
 const persistConfig = {
@@ -17,8 +18,9 @@ const persistConfig = {
     "auth",
     "campingMap",
     "selectedComp",
+    "favoriteCamps",
     "reservation",
-  ],
+   ],
 };
 
 const rootReducer = combineReducers({
@@ -27,6 +29,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   campingMap: campingMapReducer,
   selectedComp: selectedCompReducer,
+  favoriteCamps: favoriteCampsReducer,
   reservation: reservationReducer,
 });
 

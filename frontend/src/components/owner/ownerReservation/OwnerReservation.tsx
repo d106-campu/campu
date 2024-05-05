@@ -22,7 +22,7 @@ const OwnerReservation = ({
 
           {/* 예약 리스트 목록 */}
           <div className="flex justify-center py-4">
-            <div className="w-[70%] text-end">
+            <div className="w-[80%] text-end">
               <p>
                 <span className="text-MAIN_GREEN font-semibold">
                   {reservations.length}
