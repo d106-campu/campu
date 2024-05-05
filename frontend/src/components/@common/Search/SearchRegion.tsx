@@ -64,11 +64,11 @@ const SearchRegion = ({ arr }: { arr: IRegion[] }) => {
         <div>
           <button
             type="button"
-            className="relative bg-white p-2 flex items-center"
+            className="relative bg-white py-2 flex items-center"
             onClick={() => setIsSubRegionListOpen(!isSubRegionListOpen)}
           >
             <span className="pr-2 whitespace-nowrap">
-              {selectSubRegion ? selectSubRegion : "시군구 선택"}
+              {selectSubRegion ? selectSubRegion : selectRegion.subArea[0]}
             </span>
             <IoIosArrowDown />
           </button>

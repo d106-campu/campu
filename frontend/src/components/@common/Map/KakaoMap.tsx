@@ -15,6 +15,20 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
   useEffect(() => {
     if (locations.length > 0) {
       initMap();
+    } else {
+      // locations이 비어 있을 때 기본 위치로 지도 설정
+      const container = mapRef.current;
+      if (!container) return;
+
+      const options = {
+        center: new window.kakao.maps.LatLng(
+          36.1071305028147,
+          128.4169500162442
+        ),
+        level: 5,
+      };
+
+      new window.kakao.maps.Map(container, options);
     }
   }, [locations]);
 

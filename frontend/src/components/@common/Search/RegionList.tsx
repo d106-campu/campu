@@ -5,7 +5,7 @@ export interface IRegion {
 
 export const RegionList: IRegion[] = [
   {
-    name: "서울특별시",
+    name: "서울",
     subArea: [
       "강남구",
       "강동구",
@@ -71,7 +71,7 @@ export const RegionList: IRegion[] = [
     ],
   },
   {
-    name: "인천광역시",
+    name: "인천",
     subArea: [
       "계양구",
       "미추홀구",
@@ -86,11 +86,11 @@ export const RegionList: IRegion[] = [
     ],
   },
   {
-    name: "대전광역시",
+    name: "대전",
     subArea: ["대덕구", "동구", "서구", "유성구", "중구"],
   },
   {
-    name: "대구광역시",
+    name: "대구",
     subArea: [
       "남구",
       "달서구",
@@ -103,7 +103,7 @@ export const RegionList: IRegion[] = [
     ],
   },
   {
-    name: "부산광역시",
+    name: "부산",
     subArea: [
       "강서구",
       "금정구",
@@ -124,11 +124,11 @@ export const RegionList: IRegion[] = [
     ],
   },
   {
-    name: "울산광역시",
+    name: "울산",
     subArea: ["남구", "동구", "북구", "중구", "울주군"],
   },
   {
-    name: "광주광역시",
+    name: "광주",
     subArea: ["광산구", "남구", "동구", "북구", "서구"],
   },
   {
