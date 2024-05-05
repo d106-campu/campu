@@ -1,41 +1,45 @@
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store";
+import { updateStatus } from "@/features/reservation/ReservationSlice";
+import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
+import { diffDays } from "@/utils/diffDays";
 import Button from "@/components/@common/Button/Button";
 import Kakao_logo from "@/assets/images/kakao_logo.png";
 import stamp from "@/assets/images/stamp.png";
 import { FiMapPin } from "react-icons/fi";
 import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
-import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
-import { diffDays } from "@/utils/diffDays";
 
-interface IReservationItemProps {
-  id: number;
-  image: string;
-  campsite_faclt_nm: string;
-  campsite_tel: string;
-  campsite_addr1: string;
-  campsite_addr2: string;
-  roomName: string;
-  roomInduty: string;
-  supplyList: string[];
-  headCnt: number;
-  price: number;
-  startDate: string;
-  endDate: string;
-  checkIn: string;
-  checkOut: string;
-  status: reservationStatusType;
-}
-
-type reservationStatusType = "proceeding" | "complete";
-
-const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
-  // @TODO: 스토어에서 닉네임 가져오기
-  const nickname = "캐치캠핑핑핑";
-
-  const [status, setStatus] = useState<reservationStatusType>("proceeding"); // 예약 진행 상태
+const ReservationItem = () => {
+  const dispatch = useDispatch();
+  const {
+    reservationId,
+    image,
+    campsite_faclt_nm,
+    campsite_tel,
+    campsite_addr1,
+    campsite_addr2,
+    roomName,
+    roomInduty,
+    supplyList,
+    headCnt,
+    price,
+    startDate,
+    endDate,
+    checkIn,
+    checkOut,
+  } = useSelector((state: RootState) => state.reservation.data);
+  const status = useSelector((state: RootState) => state.reservation.status);
+  const nickname = "캐치캠핑핑핑"; // @TODO: 스토어에서 닉네임 가져오기
 
   const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
   const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
+
+  const handlePayment = () => {
+    // @TODO: 백으로 예약 아이디 넘기기
+    console.log(reservationId);
+    // 결제 로직 수행 후 상태 업데이트
+    dispatch(updateStatus("complete"));
+  };
 
   return (
     <div className="relative">
@@ -59,9 +63,7 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
         <div className="flex justify-between items-center px-5 pt-1">
           <div className="flex justify-center items-center py-2">
             {/* 캠핑장 이름 */}
-            <h2 className="text-2xl font-bold pl-3">
-              {data.campsite_faclt_nm}
-            </h2>
+            <h2 className="text-2xl font-bold pl-3">{campsite_faclt_nm}</h2>
           </div>
         </div>
       </div>
@@ -74,11 +76,11 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
             캠핑장 위치
           </h3>
           <p className="pb-[12px] font-bold text-BLACK">
-            {data.campsite_addr1} {data.campsite_addr2}
+            {campsite_addr1} {campsite_addr2}
           </p>
           <img
-            src={data.image}
-            alt={`${data.campsite_faclt_nm} ${data.roomName}`}
+            src={image}
+            alt={`${campsite_faclt_nm} ${roomName}`}
             className="w-full h-52 object-cover object-center rounded-xl"
           />
         </div>
@@ -90,45 +92,45 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
         <div className="w-[50%] p-4 h-auto text-gray-400">
           <h3>날짜</h3>
           <p className="pb-[15px] font-bold text-BLACK">
-            {`${formatDate(data.startDate)} ~ ${formatSimpleDate(
-              data.startDate
-            )} · ${diffDays(data.startDate, data.endDate)}박 `}
+            {`${formatDate(startDate)} ~ ${formatSimpleDate(
+              startDate
+            )} · ${diffDays(startDate, endDate)}박 `}
           </p>
           <div className="flex gap-24">
             <div>
               <h3>인원</h3>
-              <p className="pb-[15px] font-bold text-BLACK">
-                인원 {data.headCnt}
-              </p>
+              <p className="pb-[15px] font-bold text-BLACK">인원 {headCnt}</p>
               <h3>사이트</h3>
-              <p className="pb-[15px] font-bold text-BLACK">{data.roomName}</p>
+              <p className="pb-[15px] font-bold text-BLACK">{roomName}</p>
+              <h3>가격</h3>
+              <p className="pb-[15px] font-bold text-MAIN_RED">
+                {price.toLocaleString("ko-KR")}원
+              </p>
             </div>
             <div>
               <h3>캠핑장 유형</h3>
-              <p className="pb-[15px] font-bold text-BLACK">
-                {data.roomInduty}
-              </p>
+              <p className="pb-[15px] font-bold text-BLACK">{roomInduty}</p>
               <h3>입실·퇴실 시간</h3>
               <p className="pb-[15px] font-bold text-BLACK">
-                {data.checkIn} - {data.checkOut}
+                {checkIn} - {checkOut}
               </p>
+              <h3>전화번호</h3>
+              <p className="pb-[15px] font-bold text-BLACK">{campsite_tel}</p>
             </div>
           </div>
-          <div className="pb-[15px]">
-            <h3>기타 정보</h3>
-            {data.supplyList.map((item, index) => (
-              <span key={index} className="font-bold text-BLACK">
-                {item}
-                {index < data.supplyList.length - 1 && (
-                  <span className="text-BLACK">&nbsp;·&nbsp;</span>
-                )}
-              </span>
-            ))}
-          </div>
-          <h3>가격</h3>
-          <p className="pb-[15px] font-bold text-MAIN_RED">
-            {data.price.toLocaleString("ko-KR")}원
-          </p>
+          {supplyList.length > 0 && (
+            <div className="pb-[15px]">
+              <h3>기타 정보</h3>
+              {supplyList.map((item: string, index: number) => (
+                <span key={index} className="font-bold text-BLACK">
+                  {item}
+                  {index < supplyList.length - 1 && (
+                    <span className="text-BLACK">&nbsp;·&nbsp;</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -156,7 +158,7 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
                 <p>결제하기</p>
               </div>
             }
-            onClick={() => setStatus("complete")}
+            onClick={handlePayment}
           />
         ) : (
           <Button
@@ -166,7 +168,7 @@ const ReservationItem = ({ data }: { data: IReservationItemProps }) => {
             fontWeight="none"
             backgroundColor="bg-SUB_PINK"
             hoverBackgroundColor="hover:bg-HOVER_PINK"
-            onClick={() => setStatus("complete")}
+            onClick={() => dispatch(updateStatus("proceeding"))}
           />
         )}
       </div>
