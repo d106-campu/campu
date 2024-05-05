@@ -58,6 +58,18 @@ public interface CampsiteControllerDoc {
     })
     Response likeCampsite(Long campsiteId);
 
+    @Operation(summary = "찜한 캠핑장 목록 조회", description = "내가 찜한(좋아요를 누른) 캠핑장 목록을 조회하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 목록 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
+    })
+    Response getLikeCampsiteList(Pageable pageable);
+    
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
         public Pageable pageable;

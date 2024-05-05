@@ -44,4 +44,10 @@ public class CampsiteController implements CampsiteControllerDoc {
         return new Response(CampsiteConstant.CAMPSITE_LIKE, campsiteService.likeCampsite(campsiteId));
     }
 
+    @Override
+    @GetMapping("/like")
+    public Response getLikeCampsiteList(Pageable pageable) {
+        return new Response();
+    }
+
 }
