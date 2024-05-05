@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CampsiteLikeRepository extends JpaRepository<CampsiteLike, Long> {
 
+    boolean existsByCampsiteAndUser(Campsite campsite, User user);
+
     Optional<CampsiteLike> findByCampsiteAndUser(Campsite campsite, User user);
 
 }
