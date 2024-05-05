@@ -93,7 +93,7 @@ const ReservationItem = () => {
           <h3>날짜</h3>
           <p className="pb-[15px] font-bold text-BLACK">
             {`${formatDate(startDate)} ~ ${formatSimpleDate(
-              startDate
+              endDate
             )} · ${diffDays(startDate, endDate)}박 `}
           </p>
           <div className="flex gap-24">
