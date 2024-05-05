@@ -27,9 +27,10 @@ public class CampsiteController implements CampsiteControllerDoc {
     public Response getCampsiteList(
         Pageable pageable,
         @RequestParam(required = false) String induty,
-        @RequestParam(required = false) String theme
+        @RequestParam(required = false) String theme,
+        @RequestParam(required = false) boolean owner
     ) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable, induty, theme));
+        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable, induty, theme, owner));
     }
 
     @Override
