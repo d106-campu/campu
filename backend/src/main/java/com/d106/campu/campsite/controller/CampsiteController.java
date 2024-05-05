@@ -40,14 +40,14 @@ public class CampsiteController implements CampsiteControllerDoc {
 
     @Override
     @PostMapping("/like/{campsiteId}")
-    public Response likeCampsite(@PathVariable Long campsiteId) {
+    public Response likeCampsite(@PathVariable long campsiteId) {
         return new Response(CampsiteConstant.CAMPSITE_LIKE, campsiteService.likeCampsite(campsiteId));
     }
 
     @Override
     @GetMapping("/{campsiteId}/room")
-    public Response getCampsiteRoomList(@PathVariable long campsiteId) {
-        return new Response();
+    public Response getCampsiteRoomList(Pageable pageable, @PathVariable long campsiteId) {
+        return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST, campsiteService.getCampsiteRoomList(pageable, campsiteId));
     }
 
 }

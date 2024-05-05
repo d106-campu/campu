@@ -3,6 +3,7 @@ package com.d106.campu.campsite.controller.doc;
 import com.d106.campu.campsite.constant.RegExpression;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.room.dto.RoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +57,7 @@ public interface CampsiteControllerDoc {
             })),
         @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
     })
-    Response likeCampsite(Long campsiteId);
+    Response likeCampsite(long campsiteId);
 
     @Operation(summary = "캠핑장 방 조회", description = "특정 캠핑장의 방 목록을 조회하는 API를 호출한다.")
     @ApiResponses({
@@ -69,7 +69,7 @@ public interface CampsiteControllerDoc {
         ),
         @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
     })
-    Response getCampsiteRoomList(long campsiteId);
+    Response getCampsiteRoomList(Pageable pageable, long campsiteId);
 
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
@@ -85,7 +85,8 @@ public interface CampsiteControllerDoc {
     }
 
     class CampsiteRoomListResponse {
-        public List roomList;
+        public Page<RoomDto.ListResponse> roomList;
+        public Pageable pageable;
     }
 
 }
