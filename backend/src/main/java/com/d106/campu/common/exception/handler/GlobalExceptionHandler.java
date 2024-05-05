@@ -4,7 +4,6 @@ import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.exception.NotFoundException;
-import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.Response;
