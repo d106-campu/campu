@@ -24,6 +24,8 @@ public class SecurityConfig {
         "/swagger-ui/**",
         /* health */
         "/health/**",
+        /* campsite */
+        "/campsite/**",
     };
 
     @Value("${cors.origin.list}")
