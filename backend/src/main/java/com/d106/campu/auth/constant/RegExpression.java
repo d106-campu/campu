@@ -5,5 +5,6 @@ public class RegExpression {
     public static final String account = "[a-zA-Z0-9]+$";
     public static final String nickname = "[가-힣a-zA-Z0-9]+$";
     public static final String tel = "^[0-9]{2,3}[0-9]{3,4}[0-9]{4}$";
+    public static final String strongPassword = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=?\\{\\};':\"|,.<>/~`\\[\\]\\\\])[A-Za-z\\d!@#$%^&*()_+\\-=?\\{\\};':\"|,.<>/~`\\[\\]]{8,}$";
 
 }
