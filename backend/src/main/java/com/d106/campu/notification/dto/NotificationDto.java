@@ -2,6 +2,7 @@ package com.d106.campu.notification.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,6 +28,7 @@ public class NotificationDto {
 
         private Long notificationId;
         private String content;
+        private LocalDateTime createTime;
 
     }
 
@@ -57,6 +59,7 @@ public class NotificationDto {
 
         private Long notificationId;
         private String content;
+        private LocalDateTime createTime;
 
     }
 

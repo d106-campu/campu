@@ -21,7 +21,7 @@ public class EventListener {
     public void saveAndSendNotification(Object event) {
         TestEvent testEvent = (TestEvent) event;
         Long notificationId = notificationService.saveNotification(notificationMapper.fromTestEventToSaveRequestDto(testEvent));
-        notificationService.sendNotification(notificationMapper.fromTestEventToSendRequestDto(notificationId, testEvent));
+        notificationService.sendNotification(notificationId);
     }
 
     /**
@@ -32,7 +32,7 @@ public class EventListener {
     public void testSaveAndSendNotification(Object event) {
         TestEvent testEvent = (TestEvent) event;
         Long notificationId = notificationService.saveNotification(notificationMapper.fromTestEventToSaveRequestDto(testEvent));
-        notificationService.sendNotification(notificationMapper.fromTestEventToSendRequestDto(notificationId, testEvent));
+        notificationService.sendNotification(notificationId);
     }
 
 }

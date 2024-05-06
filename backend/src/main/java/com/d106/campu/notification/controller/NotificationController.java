@@ -8,6 +8,8 @@ import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -68,7 +70,7 @@ public class NotificationController implements NotificationControllerDoc {
 
     @Override
     @GetMapping("/list")
-    public Response getNotificationList(Pageable pageable) {
+    public Response getNotificationList(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new Response(NotificationConstant.NOTIFICATION_LIST, notificationService.getNotificationList(pageable));
     }
 

@@ -1,6 +1,7 @@
 package com.d106.campu.notification.service;
 
 import com.d106.campu.common.exception.InvalidException;
+import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.domain.jpa.Notification;
@@ -54,23 +55,24 @@ public class NotificationService {
         sseEmitter.onTimeout(() -> sseEmitterMap.remove(userId));
         sseEmitter.onError((e) -> sseEmitterMap.remove(userId));
         try {
-            NotificationDto.SendRequest sendRequestDto = NotificationDto.SendRequest.builder()
-                .userId(userId)
-                .content(NotificationConstant.SSE_SUCCESS)
-                .build();
-            sendNotification(sendRequestDto);
+            sseEmitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
+                .data(new Response(NotificationConstant.NOTIFICATION, NotificationConstant.SSE_SUCCESS)));
         } catch (Exception e) {
             throw new InvalidException(NotificationExceptionCode.INVALID_CONNECTION);
         }
         return sseEmitter;
     }
 
-    public void sendNotification(NotificationDto.SendRequest sendRequestDto) {
-        Optional.ofNullable(sseEmitterMap.get(sendRequestDto.getUserId())).ifPresent(emitter -> {
+    @Transactional(readOnly = true)
+    public void sendNotification(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+            .orElseThrow(() -> new NotFoundException(NotificationExceptionCode.NOT_FOUND_NOTIFICATION));
+
+        Optional.ofNullable(sseEmitterMap.get(notification.getUser().getId())).ifPresent(emitter -> {
             try {
                 emitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
                     .data(
-                        new Response(NotificationConstant.NOTIFICATION, notificationMapper.toSendResponseDto(sendRequestDto))));
+                        new Response(NotificationConstant.NOTIFICATION, notificationMapper.toSendResponseDto(notification))));
             } catch (Exception e) {
                 throw new InvalidException(NotificationExceptionCode.FAIL_SEND);
             }

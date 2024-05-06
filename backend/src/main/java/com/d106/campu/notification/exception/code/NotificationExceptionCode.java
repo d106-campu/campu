@@ -10,7 +10,10 @@ public enum NotificationExceptionCode implements ExceptionCode {
 
     /* Invalid Request Exception */
     INVALID_CONNECTION("NOTIFICATION001", "Invalid connection"),
-    FAIL_SEND("NOTIFICATION002", "Fail to send notification");
+    FAIL_SEND("NOTIFICATION002", "Fail to send notification"),
+
+    /* Not Found Exception */
+    NOT_FOUND_NOTIFICATION("NOTIFICATION301", "Not found notification");
 
     private final String code;
     private final String message;
