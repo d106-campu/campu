@@ -108,10 +108,8 @@ const Calendar = () => {
     endDate: Date | null
   ) => {
     if (startDate && endDate) {
-      // Interval 객체 생성
       const interval = { start: startDate, end: endDate };
-      // isWithinInterval 함수를 사용하여 dateToCheck가 interval 내에 있는지 확인
-      return isWithinInterval(dateToCheck, interval);
+      return isWithinInterval(dateToCheck, interval); // isWithinInterval 함수를 사용하여 dateToCheck가 interval 내에 있는지 확인
     }
     return false;
   };
@@ -124,25 +122,19 @@ const Calendar = () => {
   ): string => {
     const isStart = startDate && isEqual(day, startDate);
     const isEnd = endDate && isEqual(day, endDate);
-    const isInBetween =
-      startDate &&
-      endDate &&
-      isWithinInterval(day, { start: startDate, end: endDate });
 
     return [
-      isToday(day) && "text-MAIN_GREEN",
+      isToday(day) && "text-[#46A14F]",
       !isToday(day) && !isSameMonth(day, firstDayCurrentMonth) && "text-GRAY",
       startDate &&
         !isEqual(day, startDate) &&
         endDate &&
         !isEqual(day, endDate) &&
-        "hover:bg-gray-200",
-      isStart || isEnd || (isToday(day) && "font-bold"),
-      isStart && "bg-[#9DD8A3] rounded-full",
+        "hover:bg-SUB_GREEN_02",
+      startDate && isEqual(day, startDate) && "bg-[#9DD8A3]",
       endDate && isEqual(day, endDate) && "bg-[#9DD8A3]",
       getDay(day) === 0 && (isStart || isEnd ? "text-BLACK" : "text-rose-400"),
       getDay(day) === 6 && (isStart || isEnd ? "text-BLACK" : "text-blue-400"),
-      isInBetween && "text-BLACK bg-[#E1F9E3]",
       "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
     ]
       .filter(Boolean)
@@ -167,7 +159,7 @@ const Calendar = () => {
         <button
           type="button"
           onClick={nextMonth}
-          className="items-center justify-center  hover:text-MAIN_GREEN"
+          className="items-center justify-center hover:text-MAIN_GREEN"
         >
           <span className="sr-only">다음달</span>
           <FaChevronRight size={20} className="mr-6" aria-hidden="true" />
