@@ -12,16 +12,18 @@ import {
   format,
   getDay,
   isEqual,
-  isSameMonth,
   isToday,
   parse,
   startOfToday,
   isWithinInterval,
+  isBefore,
 } from "date-fns";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 
-// @TODO:윤년 추가하기
+// @TODO: 윤년 추가하기
+// @TODO: 예약 불가능한 날짜 처리
+// @TODO: 컴포넌트 분리하기
 const Calendar = () => {
   const dispatch = useDispatch();
   const { startDate, endDate } = useSelector(
@@ -79,8 +81,11 @@ const Calendar = () => {
     const dateIndex = parseInt(dateElement.dataset.index);
     const selectedDate = days[dateIndex];
 
-    // 1. startDate와 endDate가 둘 다 있을 경우
-    if (startDate && endDate) {
+    // 오늘 날짜 이전을 선택하려는 경우 return
+    if (isBefore(selectedDate, today)) return;
+
+    // 1. startDate와 endDate가 둘 다 있을 경우 또는 endDate와 selectedDate가 같은 경우
+    if ((startDate && endDate) || (endDate && isEqual(endDate, selectedDate))) {
       dispatch(setStartDate(selectedDate));
       dispatch(setEndDate(null));
       return;
@@ -88,6 +93,10 @@ const Calendar = () => {
 
     // 2. startDate가 있을 때 endDate가 없는 경우
     if (startDate) {
+      // 선택한 날짜가 시작 날짜와 같은 경우
+      if (isEqual(startDate, selectedDate)) {
+        return;
+      }
       // 선택한 날짜가 시작 날짜보다 이전인 경우
       if (startDate > selectedDate) {
         dispatch(setStartDate(selectedDate));
@@ -117,24 +126,34 @@ const Calendar = () => {
   const getDayClass = (
     day: Date,
     startDate: Date | null,
-    endDate: Date | null,
-    firstDayCurrentMonth: Date
+    endDate: Date | null
   ): string => {
     const isStart = startDate && isEqual(day, startDate);
     const isEnd = endDate && isEqual(day, endDate);
+    const isBeforeToday = isBefore(day, today);
 
     return [
-      isToday(day) && "text-[#46A14F]",
-      !isToday(day) && !isSameMonth(day, firstDayCurrentMonth) && "text-GRAY",
+      isToday(day) && "text-[#46A14F] font",
+      isBeforeToday && "text-GRAY", // 오늘 날짜 이전은 회색으로 표시
       startDate &&
         !isEqual(day, startDate) &&
         endDate &&
         !isEqual(day, endDate) &&
         "hover:bg-SUB_GREEN_02",
-      startDate && isEqual(day, startDate) && "bg-[#9DD8A3]",
-      endDate && isEqual(day, endDate) && "bg-[#9DD8A3]",
-      getDay(day) === 0 && (isStart || isEnd ? "text-BLACK" : "text-rose-400"),
-      getDay(day) === 6 && (isStart || isEnd ? "text-BLACK" : "text-blue-400"),
+      startDate && isEqual(day, startDate) && "bg-[#9DD8A3] text-black",
+      endDate && isEqual(day, endDate) && "bg-[#9DD8A3] text-black",
+      getDay(day) === 0 &&
+        (isBeforeToday
+          ? "text-GRAY"
+          : isStart || isEnd
+          ? "text-BLACK"
+          : "text-rose-400"),
+      getDay(day) === 6 &&
+        (isBeforeToday
+          ? "text-GRAY"
+          : isStart || isEnd
+          ? "text-BLACK"
+          : "text-blue-400"),
       "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
     ]
       .filter(Boolean)
@@ -200,12 +219,7 @@ const Calendar = () => {
                 <button
                   type="button"
                   onClick={handleSelectDate}
-                  className={getDayClass(
-                    day,
-                    startDate,
-                    endDate,
-                    firstDayCurrentMonth
-                  )}
+                  className={getDayClass(day, startDate, endDate)}
                 >
                   <time dateTime={format(day, "yyyy-MM-dd")}>
                     {format(day, "d")}
