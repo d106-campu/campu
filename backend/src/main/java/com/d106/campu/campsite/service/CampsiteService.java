@@ -52,7 +52,7 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         return responsePage == null ? null : responsePage.map((e) -> {
-            e.setLike(campsiteLikeRepository.findByCampsiteAndUser(e, user).isPresent());
+            e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
             return campsiteMapper.toCampsiteListResponseDto(e);
         });
     }
@@ -88,6 +88,16 @@ public class CampsiteService {
             () -> campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build())
         );
         return campsiteMapper.toCampsiteLikeResponseDto(campsiteLike.isEmpty());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CampsiteDto.Response> getLikeCampsiteList(Pageable pageable) {
+        /* TODO: Replace this with login user (using securityHelper) */
+        User user = userRepository.findById(1L)
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        return campsiteLikeRepository.findByUser(pageable, user)
+            .map(CampsiteLike::getCampsite).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
     @Transactional(readOnly = true)
