@@ -1,5 +1,6 @@
 package com.d106.campu.room.dto;
 
+import com.d106.campu.campsite.dto.CampsiteDto;
 import lombok.Data;
 
 public class RoomDto {
