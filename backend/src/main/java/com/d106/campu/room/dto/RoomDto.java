@@ -21,4 +21,13 @@ public class RoomDto {
 
     }
 
+    @Data
+    public static class RoomInfo {
+
+        private Long id;
+        private CampsiteDto.CampsiteInfo campsite;
+        private String name;
+
+    }
+
 }
