@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
@@ -99,7 +100,7 @@ public interface AuthControllerDoc {
         @ApiResponse(responseCode = "400", description = "요청 유효성 검사 오류", content = @Content),
         @ApiResponse(responseCode = "401", description = "아이디 or 비밀번호가 틀림", content = @Content)
     })
-    Response login(@Valid AuthDto.LoginRequest loginRequestDto);
+    Response login(@Valid AuthDto.LoginRequest loginRequestDto, HttpServletResponse servletResponse);
 
     class AvailableResponse {
         public Boolean available;

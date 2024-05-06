@@ -49,6 +49,9 @@ public class AuthDto {
     @Data
     public static class LoginResponse {
 
+        private String nickname;
+        private String profileImageUrl;
+        private String role;
     }
 
 }

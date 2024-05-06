@@ -16,12 +16,15 @@ import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.TooManyException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.common.security.CustomUser;
+import com.d106.campu.common.security.JwtManager;
 import com.d106.campu.common.util.RandomGenerator;
 import com.d106.campu.common.util.SmsUtil;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,7 @@ public class AuthService {
     private final TelVerifyHashRepository telVerifyHashRepository;
     private final AuthMapper authMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtManager jwtManager;
     private final SmsUtil smsUtil;
 
     @Transactional(readOnly = true)
@@ -100,11 +104,12 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequestDto) {
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-            loginRequestDto.getAccount(), loginRequestDto.getPassword());
+    public LoginResponse login(LoginRequest loginRequestDto, HttpServletResponse servletResponse) {
+        Authentication authentication = jwtManager.getAuthentication(loginRequestDto);
 
-        return null;
+        jwtManager.createAccessToken(authentication, servletResponse);
+
+        return authMapper.toLoginResponseDto((CustomUser) authentication.getPrincipal());
     }
 
     private TelVerifyHash getInitialTelVerifyHash(String tel) {
