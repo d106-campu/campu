@@ -26,6 +26,8 @@ public class SecurityConfig {
         "/health/**",
         /* campsite */
         "/campsite/**",
+        /* reservation */
+        "/reservation/**",
     };
 
     @Value("${cors.origin.list}")
