@@ -19,7 +19,8 @@ public interface HealthControllerDoc {
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
             })
-        )
+        ),
+        @ApiResponse(responseCode = "400", description = "서버 상태 확인 실패", content = @Content)
     })
     Response checkHealth();
 
@@ -29,7 +30,8 @@ public interface HealthControllerDoc {
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
             })
-        )
+        ),
+        @ApiResponse(responseCode = "400", description = "로그 info 상태 확인 실패", content = @Content)
     })
     Response checkLogInfo();
 
@@ -39,7 +41,8 @@ public interface HealthControllerDoc {
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
             })
-        )
+        ),
+        @ApiResponse(responseCode = "400", description = "로그 warn 상태 확인 실패", content = @Content)
     })
     Response checkLogWarn();
 
@@ -49,7 +52,8 @@ public interface HealthControllerDoc {
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
             })
-        )
+        ),
+        @ApiResponse(responseCode = "400", description = "로그 error 확인 실패", content = @Content)
     })
     Response checkLogError();
 
@@ -60,7 +64,8 @@ public interface HealthControllerDoc {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
                 @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteOriginalResponse.class)),
             })
-        )
+        ),
+        @ApiResponse(responseCode = "400", description = "캠핑장 원본 데이터 확인 실패", content = @Content)
     })
     Response checkCampsiteOriginal(Long campsiteOriginalId);
 

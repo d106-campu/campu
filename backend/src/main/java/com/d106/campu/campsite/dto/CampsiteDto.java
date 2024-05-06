@@ -117,4 +117,15 @@ public class CampsiteDto {
 
     }
 
+    @Data
+    public static class CampsiteInfo {
+
+        private Long id;
+        private String facltNm;
+        private String addr1;
+        private String addr2;
+        private String thumbnailImageUrl;
+
+    }
+
 }
