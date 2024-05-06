@@ -7,6 +7,7 @@ import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { diffDays } from "@/utils/diffDays";
 import Calendar from "@/components/@common/Calendar/Calendar";
+import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 
 interface IMyControllerProps {
   headCount: number;
@@ -71,13 +72,14 @@ const MyController = ({
               <span className="text-GRAY">일정 초기화</span>
             </button>
             {/* @TODO: 버튼에 변경된 날짜 넣기 */}
-            <Button
+            {/* <Button
               width="w-full"
               height="h-12"
               text="변경된 날짜"
               textSize="text-lg"
               onClick={toggleScheduleModal}
-            />
+            /> */}
+            <CalendarSubmit></CalendarSubmit>
           </div>
         </Modal>
       )}
