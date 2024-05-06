@@ -18,6 +18,7 @@ public interface AuthMapper {
     @Mapping(target = "birthYear", ignore = true)
     @Mapping(target = "profileImageUrl", ignore = true)
     @Mapping(target = "deleteTime", ignore = true)
+    @Mapping(target = "notificationList", ignore = true)
     @Mapping(target = "campsiteLikeList", ignore = true)
     User toUser(JoinRequest joinRequestDto);
 

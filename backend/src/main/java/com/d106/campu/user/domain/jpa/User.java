@@ -3,6 +3,7 @@ package com.d106.campu.user.domain.jpa;
 import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.user.constant.GenderType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -61,6 +62,9 @@ public class User extends BaseTime {
 
     @Column(name = "delete_time")
     private LocalDateTime deleteTime;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Notification> notificationList;
 
     @OneToMany(mappedBy = "user")
     private List<CampsiteLike> campsiteLikeList;
