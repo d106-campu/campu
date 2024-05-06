@@ -31,8 +31,7 @@ public class AuthDto {
 
         @Password
         private String password;
-
-        @Password
+        
         private String passwordCheck;
     }
 

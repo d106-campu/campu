@@ -12,14 +12,6 @@ public class AccountValidator implements ConstraintValidator<Account, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.trim().isEmpty()) {
-            return false;
-        }
-
-        if (value.length() < 6 || value.length() > 12) {
-            return false;
-        }
-
         return ACCOUNT_PATTERN.matcher(value).matches();
     }
 

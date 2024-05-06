@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AuthMapper {
 
-    String TO_USER_ROLE = "java(customUser.getAuthorities().stream().toList().size() == 0? null : customUser.getAuthorities().stream().toList().getFirst().getAuthority())";
+    String TO_USER_ROLE = "java(customUser.getAuthorities().isEmpty() ? null : customUser.getAuthorities().stream().toList().getFirst().getAuthority())";
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
