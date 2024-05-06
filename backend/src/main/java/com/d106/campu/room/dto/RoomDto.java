@@ -9,7 +9,6 @@ public class RoomDto {
     public static class ListResponse {
 
         private Long id;
-        private CampsiteDto.IdAndName campsite;
         private String induty;
         private String name;
         private int baseNo;
@@ -20,6 +19,15 @@ public class RoomDto {
         private int toiletCnt;
         private String supplyList;
         /* TODO: private boolean available; // 예약 가능 여부 */
+
+    }
+
+    @Data
+    public static class RoomInfo {
+
+        private Long id;
+        private CampsiteDto.CampsiteInfo campsite;
+        private String name;
 
     }
 

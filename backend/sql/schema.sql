@@ -2,15 +2,6 @@ DROP DATABASE IF EXISTS d106;
 CREATE DATABASE d106;
 USE d106;
 
-
--- d106.authority definition
-
-CREATE TABLE `authority` (
-  `authority_name` varchar(16) NOT NULL UNIQUE COMMENT '권한',
-  PRIMARY KEY (`authority_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='권한';
-
-
 -- d106.campsite_original definition
 
 CREATE TABLE `campsite_original` (
@@ -131,6 +122,7 @@ CREATE TABLE `theme` (
 
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
+  `role` varchar(16) NOT NULL COMMENT '권한',
   `account` varchar(16) NOT NULL UNIQUE COMMENT '아이디',
   `password` varchar(72) NOT NULL COMMENT '비밀번호',
   `nickname` varchar(8) NOT NULL UNIQUE COMMENT '닉네임',
@@ -274,17 +266,6 @@ CREATE TABLE `room_image` (
   KEY `room_image_room_FK` (`room_id`),
   CONSTRAINT `room_image_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방 이미지';
-
-
--- d106.user_authority definition
-
-CREATE TABLE `user_authority` (
-  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
-  `authority_name` varchar(16) NOT NULL COMMENT '권한 이름',
-  PRIMARY KEY (`user_id`,`authority_name`),
-  CONSTRAINT `user_authority_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `user_authority_authority_FK` FOREIGN KEY (`authority_name`) REFERENCES `authority` (`authority_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원 권한';
 
 
 -- d106.reservation definition
