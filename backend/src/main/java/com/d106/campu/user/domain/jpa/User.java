@@ -1,6 +1,6 @@
 package com.d106.campu.user.domain.jpa;
 
-import com.d106.campu.auth.domain.jpa.Authority;
+import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.common.jpa.BaseTime;
 import com.d106.campu.user.constant.GenderType;
@@ -11,14 +11,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +32,10 @@ public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "role", length = 16, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoleName role;
 
     @Column(name = "account", length = 16, unique = true, nullable = false)
     private String account;
@@ -66,20 +65,12 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<CampsiteLike> campsiteLikeList;
 
-    @Builder.Default
-    @ManyToMany
-    @JoinTable(
-        name = "user_authority",
-        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-    private Set<Authority> authorities = new HashSet<>();
+    public void changeRole(RoleName role) {
+        this.role = role;
+    }
 
     public void changePassword(String password) {
         this.password = password;
-    }
-
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
     }
 
 }
