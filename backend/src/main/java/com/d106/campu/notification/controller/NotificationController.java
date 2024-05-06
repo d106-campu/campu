@@ -3,6 +3,7 @@ package com.d106.campu.notification.controller;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.notification.controller.doc.NotificationControllerDoc;
 import com.d106.campu.notification.dto.NotificationDto;
+import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -43,16 +44,9 @@ public class NotificationController implements NotificationControllerDoc {
     }
 
     @Override
-    @PostMapping(value = "/send")
-    public Response sendNotification(@RequestBody NotificationDto.SendRequest sendRequestDto) {
-        notificationService.sendNotification(sendRequestDto.getUserId(), sendRequestDto.getContent());
-        return new Response();
-    }
-
-    @Override
     @PostMapping
     public Response saveNotification(@RequestBody NotificationDto.SaveRequest saveRequestDto) {
-        notificationService.saveNotification(saveRequestDto.getUserId(), saveRequestDto.getContent());
+        notificationService.saveNotification(saveRequestDto);
         return new Response();
     }
 
@@ -65,8 +59,8 @@ public class NotificationController implements NotificationControllerDoc {
 
     @Override
     @PostMapping("/publish")
-    public Response publishEvent(@RequestBody NotificationDto.publishEvent publishEventDto) {
-        notificationService.publishEvent(publishEventDto);
+    public Response publishEvent(@RequestBody PublishEventRequest publishEventRequestDto) {
+        notificationService.publishEvent(publishEventRequestDto);
         return new Response();
     }
 

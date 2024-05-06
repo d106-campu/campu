@@ -35,16 +35,6 @@ public interface NotificationControllerDoc {
     })
     ResponseEntity<SseEmitter> connectSseV2(@NotNull(message = "not null") Long userId);
 
-    @Operation(summary = "알림 전송 테스트", description = "알림 전송을 위한 API를 호출한다.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "알림 전송 성공",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공"))
-            })),
-        @ApiResponse(responseCode = "400", description = "알림 전송 실패", content = @Content)
-    })
-    Response sendNotification(@Valid NotificationDto.SendRequest sendRequestDto);
-
     @Operation(summary = "알림 저장 테스트", description = "알림 저장 테스트를 위한 API를 호출한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "알림 저장 성공",
@@ -73,6 +63,6 @@ public interface NotificationControllerDoc {
             })),
         @ApiResponse(responseCode = "400", description = "이벤트 발생 실패", content = @Content)
     })
-    Response publishEvent(@Valid NotificationDto.publishEvent publishEventDto);
+    Response publishEvent(@Valid NotificationDto.PublishEventRequest publishEventRequestDto);
 
 }

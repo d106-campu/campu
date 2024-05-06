@@ -5,6 +5,7 @@ import com.d106.campu.common.response.Response;
 import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
+import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.event.TestEvent;
 import com.d106.campu.notification.exception.code.NotificationExceptionCode;
 import com.d106.campu.notification.mapper.NotificationMapper;
@@ -51,18 +52,22 @@ public class NotificationService {
         sseEmitter.onTimeout(() -> sseEmitterMap.remove(userId));
         sseEmitter.onError((e) -> sseEmitterMap.remove(userId));
         try {
-            sendNotification(userId, NotificationConstant.SSE_SUCCESS);
+            NotificationDto.SendRequest sendRequestDto = NotificationDto.SendRequest.builder()
+                .userId(userId)
+                .content(NotificationConstant.SSE_SUCCESS)
+                .build();
+            sendNotification(sendRequestDto);
         } catch (Exception e) {
             throw new InvalidException(NotificationExceptionCode.INVALID_CONNECTION);
         }
         return sseEmitter;
     }
 
-    public void sendNotification(Long userId, String content) {
-        Optional.ofNullable(sseEmitterMap.get(userId)).ifPresent(emitter -> {
+    public void sendNotification(NotificationDto.SendRequest sendRequestDto) {
+        Optional.ofNullable(sseEmitterMap.get(sendRequestDto.getUserId())).ifPresent(emitter -> {
             try {
                 emitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
-                    .data(new Response(NotificationConstant.SSE_CONTENT, content)));
+                    .data(new Response(NotificationConstant.NOTIFICATION, notificationMapper.toSendResponse(sendRequestDto))));
             } catch (Exception e) {
                 throw new InvalidException(NotificationExceptionCode.FAIL_SEND);
             }
@@ -70,11 +75,12 @@ public class NotificationService {
     }
 
     @Transactional
-    public void saveNotification(Long userId, String content) {
-        Notification notification = notificationMapper.toNotification(content);
+    public Long saveNotification(NotificationDto.SaveRequest saveRequestDto) {
+        Notification notification = notificationMapper.toNotification(saveRequestDto);
         notification.setUser(
-            userRepository.findById(userId).orElseThrow(() -> new InvalidException(UserExceptionCode.USER_NOT_FOUND)));
-        notificationRepository.save(notification);
+            userRepository.findById(saveRequestDto.getUserId())
+                .orElseThrow(() -> new InvalidException(UserExceptionCode.USER_NOT_FOUND)));
+        return notificationRepository.save(notification).getId();
     }
 
     @Transactional
@@ -82,8 +88,8 @@ public class NotificationService {
         notificationRepository.deleteById(notificationId);
     }
 
-    public void publishEvent(NotificationDto.publishEvent publishEventDto) {
-        TestEvent testEvent = notificationMapper.toTestEvent(publishEventDto);
+    public void publishEvent(PublishEventRequest publishEventRequestDto) {
+        TestEvent testEvent = notificationMapper.toTestEvent(publishEventRequestDto);
         applicationEventPublisher.publishEvent(testEvent);
     }
 

@@ -1,6 +1,7 @@
 package com.d106.campu.common.event.listener;
 
 import com.d106.campu.notification.event.TestEvent;
+import com.d106.campu.notification.mapper.NotificationMapper;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -13,13 +14,14 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class EventListener {
 
     private final NotificationService notificationService;
+    private final NotificationMapper notificationMapper;
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = {TestEvent.class})
     public void saveAndSendNotification(Object event) {
         TestEvent testEvent = (TestEvent) event;
-        notificationService.saveNotification(testEvent.getUserId(), testEvent.getContent());
-        notificationService.sendNotification(testEvent.getUserId(), testEvent.getContent());
+        Long notificationId = notificationService.saveNotification(notificationMapper.fromTestEventToSaveRequestDto(testEvent));
+        notificationService.sendNotification(notificationMapper.fromTestEventToSendRequestDto(notificationId, testEvent));
     }
 
     /**
@@ -29,8 +31,8 @@ public class EventListener {
     @org.springframework.context.event.EventListener(classes = {TestEvent.class})
     public void testSaveAndSendNotification(Object event) {
         TestEvent testEvent = (TestEvent) event;
-        notificationService.saveNotification(testEvent.getUserId(), testEvent.getContent());
-        notificationService.sendNotification(testEvent.getUserId(), testEvent.getContent());
+        Long notificationId = notificationService.saveNotification(notificationMapper.fromTestEventToSaveRequestDto(testEvent));
+        notificationService.sendNotification(notificationMapper.fromTestEventToSendRequestDto(notificationId, testEvent));
     }
 
 }
