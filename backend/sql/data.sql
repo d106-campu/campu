@@ -51,6 +51,29 @@ VALUES ('카라반'),
        ('글램핑');
 
 SET @induty_caravan = (SELECT id FROM `induty` WHERE induty = '카라반');
+SET @induty_autocamping = (SELECT id FROM `induty` WHERE induty = '자동차야영장');
+SET @induty_camping = (SELECT id FROM `induty` WHERE induty = '일반야영장');
+SET @induty_glamping = (SELECT id FROM `induty` WHERE induty = '글램핑');
+
+-- ----------------------------------------
+--
+-- theme
+--
+-- ----------------------------------------
+
+INSERT INTO `theme` (`theme`)
+VALUES ('여름물놀이'),
+       ('걷기길'),
+       ('액티비티'),
+       ('봄꽃여행'),
+       ('가을단풍명소'),
+       ('겨울눈꽃명소'),
+       ('일몰명소'),
+       ('일출명소'),
+       ('수상레저'),
+       ('낚시'),
+       ('항공레저'),
+       ('스키');
 
 -- ----------------------------------------
 --
@@ -59,7 +82,10 @@ SET @induty_caravan = (SELECT id FROM `induty` WHERE induty = '카라반');
 -- ----------------------------------------
 
 INSERT INTO `room` (`campsite_id`, `induty_id`, `name`, `base_no`, `max_no`, `price`, `extra_price`, `room_cnt`, `toilet_cnt`, `supply_list`)
-VALUES (@campsite_1, @induty_caravan, 'A구역 (벚꽃 캠핑존)', 2, 4, 150000, 50000, 1, 1, null);
+VALUES (@campsite_1, @induty_caravan, 'A구역 (벚꽃 캠핑존)', 2, 4, 150000, 50000, 1, 1, null),
+       (@campsite_1, @induty_camping, 'B구역', 4, 6, 250000, 50000, 1, 1, null),
+       (@campsite_2, @induty_camping, '평상1', 4, 4, 100000, 0, 1, 1, null),
+       (@campsite_2, @induty_glamping, '글램핑A', 4, 6, 300000, 80000, 3, 2, null);
 
 SET @room_A = (SELECT id FROM `room` WHERE name = 'A구역 (벚꽃 캠핑존)');
 

@@ -117,4 +117,12 @@ public class CampsiteDto {
 
     }
 
+    @Data
+    public static class IdAndName {
+
+        private Long id;
+        private String facltNm;
+
+    }
+
 }

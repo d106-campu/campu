@@ -27,9 +27,10 @@ public class CampsiteController implements CampsiteControllerDoc {
     public Response getCampsiteList(
         Pageable pageable,
         @RequestParam(required = false) String induty,
-        @RequestParam(required = false) String theme
+        @RequestParam(required = false) String theme,
+        @RequestParam(required = false) boolean owner
     ) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable, induty, theme));
+        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable, induty, theme, owner));
     }
 
     @Override
@@ -40,8 +41,20 @@ public class CampsiteController implements CampsiteControllerDoc {
 
     @Override
     @PostMapping("/like/{campsiteId}")
-    public Response likeCampsite(@PathVariable Long campsiteId) {
+    public Response likeCampsite(@PathVariable long campsiteId) {
         return new Response(CampsiteConstant.CAMPSITE_LIKE, campsiteService.likeCampsite(campsiteId));
+    }
+
+    @Override
+    @GetMapping("/like")
+    public Response getLikeCampsiteList(Pageable pageable) {
+        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getLikeCampsiteList(pageable));
+    }
+
+    @Override
+    @GetMapping("/{campsiteId}/room")
+    public Response getCampsiteRoomList(Pageable pageable, @PathVariable long campsiteId) {
+        return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST, campsiteService.getCampsiteRoomList(pageable, campsiteId));
     }
 
 }
