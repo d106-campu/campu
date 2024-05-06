@@ -11,6 +11,7 @@ import ReviewListPage from "@/pages/reservation/reviewList";
 import ReviewPage from "@/pages/reservation/reviewList/review";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/camps/:campId/reviews",
     element: <ReviewListPage />,
+  },
+  {
+    path: "/camps/:campId/reviews/write",
+    element: <WriteReviewPage />,
   },
   {
     path: "/camps/:campId/reviews/:reviewId",
