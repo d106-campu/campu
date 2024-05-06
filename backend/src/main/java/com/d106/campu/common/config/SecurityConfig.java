@@ -28,6 +28,8 @@ public class SecurityConfig {
         "/health/**",
         /* notification */
         "/notification/**",
+        /* campsite */
+        "/campsite/**",
     };
 
     @Value("${cors.origin.list}")
