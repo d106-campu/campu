@@ -1,3 +1,11 @@
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store";
+import {
+  setStartDate,
+  setEndDate,
+  resetDate,
+} from "@/features/reservation/campingDateSlice";
 import {
   add,
   eachDayOfInterval,
@@ -11,14 +19,6 @@ import {
   startOfDay,
   startOfToday,
 } from "date-fns";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/app/store";
-import {
-  setStartDate,
-  setEndDate,
-  resetDate,
-} from "@/features/reservation/campingDateSlice";
-import { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 
@@ -57,6 +57,16 @@ const Calendar = () => {
     "col-start-7",
   ];
 
+  const previousMonth = () => {
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
+    setCurrentMonth(format(firstDayNextMonth, "yyyy년 MM월"));
+  };
+
+  const nextMonth = () => {
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
+    setCurrentMonth(format(firstDayNextMonth, "yyyy년 MM월"));
+  };
+
   // 날짜 설정 예시
   const handleSetStartDate = (date: Date) => {
     dispatch(setStartDate(date));
@@ -67,6 +77,7 @@ const Calendar = () => {
       <div className="flex justify-between items-center">
         <button
           type="button"
+          onClick={previousMonth}
           className="items-center justify-center  hover:text-MAIN_GREEN"
         >
           <span className="sr-only">이전달</span>
@@ -77,6 +88,7 @@ const Calendar = () => {
         </h2>
         <button
           type="button"
+          onClick={nextMonth}
           className="items-center justify-center  hover:text-MAIN_GREEN"
         >
           <span className="sr-only">다음달</span>
@@ -95,7 +107,8 @@ const Calendar = () => {
 
       <ul className="grid grid-cols-7 mt-2 text-base text-black">
         {days.map((day, dayIdx) => {
-          if (startDate && endDate) {``
+          if (startDate && endDate) {
+            ``;
             console.log(
               day,
               startDate,
