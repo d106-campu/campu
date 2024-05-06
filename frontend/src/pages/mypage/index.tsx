@@ -1,8 +1,8 @@
+import { useSelector } from 'react-redux';
 import Header from "@/components/@common/Header/Header";
 import Footer from "@/components/@common/Footer/Footer";
 import MySideBar from "@/components/my/MySideBar";
 import ConsumerContainer from "@/components/my/ConsumerContainer";
-import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 
 const MyPage = (): JSX.Element => {

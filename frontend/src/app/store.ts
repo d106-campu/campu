@@ -7,6 +7,7 @@ import { authReducer } from "@/features/login/authSlice";
 import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
 import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
+import { profileImageReducer } from "@/features/mypage/myProfile";
 
 const persistConfig = {
   key: "root",
@@ -17,7 +18,8 @@ const persistConfig = {
     "auth",
     "campingMap",
     "selectedComp",
-    "favoriteCamps"
+    "favoriteCamps",
+    "profileImage",
   ],
 };
 
@@ -28,6 +30,7 @@ const rootReducer = combineReducers({
   campingMap: campingMapReducer,
   selectedComp: selectedCompReducer,
   favoriteCamps: favoriteCampsReducer,
+  profileImage: profileImageReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

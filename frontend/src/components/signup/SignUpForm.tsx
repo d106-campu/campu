@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+// import { useDispatch } from 'react-redux';
+// import { setNickname } from '@/features/login/authSlice';
 import { ISignUpFormValues } from '@/types/auth';
 import Button from '@/components/@common/Button/Button';
 import InputField from '@/components/@common/Input/InputField';
@@ -20,6 +22,7 @@ const SignUpForm = ({
   openCertificationModal,
   // closeCertificationModal,
 }: ILoginFormProps): JSX.Element => {
+  // const dispatch = useDispatch();
   // 폼 입력 값 상태 관리
   const [values, setValues] = useState<ISignUpFormValues>({
     id: '',
@@ -96,6 +99,8 @@ const SignUpForm = ({
     const isValid = !Object.values(errors).some(error => error !== '' && error !== '사용 가능한 아이디입니다.' && error !== '사용 가능한 닉네임입니다.' && error !== '사용 가능한 휴대폰 번호입니다.' && error !== '인증 성공!');
     if (isValid) {
       console.log('회원가입 성공함');
+      // dispatch(setNickname(values.nickName));  // 닉네임을 전역 상태로 저장
+      // @TODO: 백엔드와 회원가입 api 연결 필요
     } else {
       console.log('회원가입 실패함', errors);
     }
@@ -150,7 +155,7 @@ const SignUpForm = ({
       textSize='text-[12.5px]'
       width='w-16'
       height='h-8'
-      padding='pt-5'
+      // padding='pt-5'
       onClick={handleCertificationClick} // 클릭하여 인증번호 입력 모달 열기
       textColor="text-white"
       borderRadius="rounded-md"
@@ -186,7 +191,7 @@ const SignUpForm = ({
   return (
     <>
       <div className="h-screen flex items-center justify-center">
-        <div className="w-[100%] h-[75vh] flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
+        <div className="w-[100%] h-auto flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
           <div className="w-[80%]">
             {/* 헤더 */}
             <div className="h-[30px] pt-8 flex items-center justify-center">
@@ -200,7 +205,7 @@ const SignUpForm = ({
             >
               로그인 &gt;
             </p>
-            <form onSubmit={handleSubmit} className='space-y-1'>
+            <form onSubmit={handleSubmit} className=''>
               {fields.map(field => (
                 <InputField
                   key={field.name}

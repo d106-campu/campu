@@ -52,7 +52,7 @@ const Button = ({
         ${visible ? 'block' : 'hidden'}
         text-center ${fontWeight} ${width} ${height} ${backgroundColor}
         ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor}
-        ${textColor} ${textSize} ${cursorPointer} ${outline}
+        ${textColor} ${textSize} ${cursorPointer} ${outline} ${padding}
       `}
       {...props}
     >
