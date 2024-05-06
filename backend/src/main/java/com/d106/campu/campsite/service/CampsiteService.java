@@ -1,5 +1,7 @@
 package com.d106.campu.campsite.service;
 
+import com.d106.campu.auth.constant.RoleName;
+import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
@@ -10,6 +12,7 @@ import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -44,7 +47,7 @@ public class CampsiteService {
 
         Page<Campsite> responsePage = null;
         if (owner) {
-            checkUserAuthorityManager(user);
+            checkUserRoleOwner(user);
             responsePage = campsiteRepository.findByUser(pageable, user);
         } else if (induty == null && theme == null) {
             responsePage = campsiteRepository.findAll(pageable);
@@ -67,7 +70,7 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException());*/
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        checkUserAuthorityManager(user);
+        checkUserRoleOwner(user);
 
         Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
         campsite.setUser(user);
@@ -112,6 +115,10 @@ public class CampsiteService {
     private void checkUserAuthorityManager(User user) {
 //        user.getAuthorities().stream().filter(authority -> authority.getAuthorityName().equals(AuthorityName.MANAGER))
 //            .findFirst().orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER));
+    private void checkUserRoleOwner(User user) {
+        if (!user.getRole().equals(RoleName.OWNER)) {
+            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
+        }
     }
 
 }
