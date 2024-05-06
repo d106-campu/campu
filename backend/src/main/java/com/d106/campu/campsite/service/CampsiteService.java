@@ -45,7 +45,7 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         return responsePage == null ? null : responsePage.map((e) -> {
-            e.setLike(campsiteLikeRepository.findByCampsiteAndUser(e, user).isPresent());
+            e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
             return campsiteMapper.toCampsiteListResponseDto(e);
         });
     }

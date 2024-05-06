@@ -12,6 +12,8 @@ public interface CampsiteLikeRepository extends JpaRepository<CampsiteLike, Long
 
     Page<CampsiteLike> findByUser(Pageable pageable, User user);
 
+    boolean existsByCampsiteAndUser(Campsite campsite, User user);
+
     Optional<CampsiteLike> findByCampsiteAndUser(Campsite campsite, User user);
 
 }
