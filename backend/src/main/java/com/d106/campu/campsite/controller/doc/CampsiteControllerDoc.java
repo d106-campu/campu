@@ -29,12 +29,14 @@ public interface CampsiteControllerDoc {
                 @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteListResponse.class)),
             })
         ),
-        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response getCampsiteList(
         Pageable pageable,
         @Pattern(regexp = RegExpression.induty, message = "induty should be among these: caravan, autocamping, camping, glamping") String induty,
-        @Pattern(regexp = RegExpression.theme, message = "theme should be among these: summer, trail, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme
+        @Pattern(regexp = RegExpression.theme, message = "theme should be among these: summer, trail, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme,
+        boolean owner
     );
 
     @Operation(summary = "캠핑장 등록", description = "사장님이 캠핑장 관리 페이지에서 캠핑장을 등록하는 API를 호출한다.")

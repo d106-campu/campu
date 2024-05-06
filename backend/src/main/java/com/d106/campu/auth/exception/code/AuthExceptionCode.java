@@ -11,6 +11,7 @@ public enum AuthExceptionCode implements ExceptionCode {
     /* UnAuthorized Exception */
     UNAUTHORIZED_TEL_AUTHORIZATION_CODE("AUTH101", "Not match authorization code"),
     UNAUTHORIZED_TEL("AUTH102", "Not authorized tel"),
+    UNAUTHORIZED_USER("AUTH103", "Not authorized user"),
 
     /* NotFound Exception */
     NOT_FOUND_TEL("AUTH301", "Tel not found"),
