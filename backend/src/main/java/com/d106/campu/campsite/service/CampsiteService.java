@@ -12,6 +12,9 @@ import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.room.dto.RoomDto;
+import com.d106.campu.room.mapper.RoomMapper;
+import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
@@ -28,9 +31,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CampsiteService {
 
     private final UserRepository userRepository;
+
     private final CampsiteRepository campsiteRepository;
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
+
+    private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
 
     @Transactional(readOnly = true)
     public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme, boolean owner) {
@@ -51,7 +58,7 @@ public class CampsiteService {
         }
 
         return responsePage == null ? null : responsePage.map((e) -> {
-            e.setLike(campsiteLikeRepository.findByCampsiteAndUser(e, user).isPresent());
+            e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
             return campsiteMapper.toCampsiteListResponseDto(e);
         });
     }
@@ -72,7 +79,7 @@ public class CampsiteService {
     }
 
     @Transactional
-    public CampsiteDto.LikeResponse likeCampsite(Long campsiteId) {
+    public CampsiteDto.LikeResponse likeCampsite(long campsiteId) {
         /* TODO: Replace this with login user (using securityHelper) */
         User user = userRepository.findById(1L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
@@ -86,6 +93,23 @@ public class CampsiteService {
             () -> campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build())
         );
         return campsiteMapper.toCampsiteLikeResponseDto(campsiteLike.isEmpty());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CampsiteDto.Response> getLikeCampsiteList(Pageable pageable) {
+        /* TODO: Replace this with login user (using securityHelper) */
+        User user = userRepository.findById(1L)
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        return campsiteLikeRepository.findByUser(pageable, user)
+            .map(CampsiteLike::getCampsite).map(campsiteMapper::toCampsiteListResponseDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RoomDto.ListResponse> getCampsiteRoomList(Pageable pageable, long campsiteId) {
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+        return roomRepository.findByCampsite(pageable, campsite).map(roomMapper::toRoomResponseDto);
     }
 
     private void checkUserAuthorityManager(User user) {

@@ -3,6 +3,7 @@ package com.d106.campu.campsite.controller.doc;
 import com.d106.campu.campsite.constant.RegExpression;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.room.dto.RoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -58,8 +59,32 @@ public interface CampsiteControllerDoc {
             })),
         @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
     })
-    Response likeCampsite(Long campsiteId);
+    Response likeCampsite(long campsiteId);
 
+    @Operation(summary = "캠핑장 방 조회", description = "특정 캠핑장의 방 목록을 조회하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "방 목록 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteRoomListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
+    })
+    Response getCampsiteRoomList(Pageable pageable, long campsiteId);
+
+    @Operation(summary = "찜한 캠핑장 목록 조회", description = "내가 찜한(좋아요를 누른) 캠핑장 목록을 조회하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 목록 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
+    })
+    Response getLikeCampsiteList(Pageable pageable);
+    
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
         public Pageable pageable;
@@ -71,6 +96,11 @@ public interface CampsiteControllerDoc {
 
     class CampsiteLikeResponse {
         public CampsiteDto.LikeResponse likeResponse;
+    }
+
+    class CampsiteRoomListResponse {
+        public Page<RoomDto.ListResponse> roomList;
+        public Pageable pageable;
     }
 
 }
