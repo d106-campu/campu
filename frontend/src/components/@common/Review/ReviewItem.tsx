@@ -13,7 +13,7 @@ const ReviewItem = ({ review }: { review: IReview }) => {
   };
 
   return (
-    <div className="w-[20rem] rounded-lg overflow-hidden shadow-lg bg-white">
+    <div className="w-[17rem] rounded-lg overflow-hidden shadow-lg bg-white cursor-pointer">
       {/* 리뷰 사진 최대 5개 */}
       {review.images && review.images.length > 0 ? (
         <div className="relative">
@@ -32,7 +32,10 @@ const ReviewItem = ({ review }: { review: IReview }) => {
                     className={`inline-block h-2 w-2 rounded-full mx-1 cursor-pointer ${
                       index === activeImage ? "bg-MAIN_GREEN" : "bg-[#C8C8C8]"
                     }`}
-                    onClick={() => handleDotClick(index)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleDotClick(index);
+                    }}
                   />
                 ))}
               </div>
@@ -63,7 +66,7 @@ const ReviewItem = ({ review }: { review: IReview }) => {
             />
             <p className="text-BLACK font-bold text-base">{review.nickname}</p>
           </div>
-          <Rating rating={review.rating} size={20} gap="gap-[0.7px]" />
+          <Rating rating={review.rating} size={15} gap="gap-[0.7px]" />
         </div>
 
         <div className="line-clamp-3">{review.content}</div>
