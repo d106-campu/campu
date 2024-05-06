@@ -7,6 +7,7 @@ import { authReducer } from "@/features/login/authSlice";
 import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
 import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
+import { reservationReducer } from "@/features/reservation/ReservationSlice";
 
 const persistConfig = {
   key: "root",
@@ -17,8 +18,9 @@ const persistConfig = {
     "auth",
     "campingMap",
     "selectedComp",
-    "favoriteCamps"
-  ],
+    "favoriteCamps",
+    "reservation",
+   ],
 };
 
 const rootReducer = combineReducers({
@@ -28,6 +30,7 @@ const rootReducer = combineReducers({
   campingMap: campingMapReducer,
   selectedComp: selectedCompReducer,
   favoriteCamps: favoriteCampsReducer,
+  reservation: reservationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

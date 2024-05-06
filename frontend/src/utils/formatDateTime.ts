@@ -1,0 +1,24 @@
+// 일정 날짜 format 함수 ex) 24.05.03(금)
+export const formatDate = (dateString: Date | string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  };
+  const date =
+    typeof dateString === "string" ? new Date(dateString) : dateString;
+  return new Intl.DateTimeFormat("ko-KR", options).format(date);
+};
+
+// 일정 날짜 format 함수 ex) 05.03(금)
+export const formatSimpleDate = (dateString: Date | string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  };
+  const date =
+    typeof dateString === "string" ? new Date(dateString) : dateString;
+  return new Intl.DateTimeFormat("ko-KR", options).format(date);
+};

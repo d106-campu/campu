@@ -17,7 +17,7 @@ const ReservationContainer = () => {
           startDate={startDate}
           endDate={endDate}
         />
-        <div className="w-[93%] mx-auto">
+        <div className="w-[95%] mx-auto">
           {/* 각 방에 대한 RoomItem 렌더링 */}
           {data.content.map((room) => (
             <RoomItem key={room.roomId} room={room} />
@@ -56,7 +56,7 @@ const data = {
       extraPrice: 20000, // 인당 추가가격
       roomCnt: 2, // 방 개수
       toiletCnt: 1, // 화장실 개수
-      supplyList: ["개별 바베큐장", "파쇄석", "텐트 옆 주차"], // 부대시설 목록
+      supplyList: [], // 부대시설 목록
       available: true, // 예약 가능 여부
     },
     {
@@ -86,7 +86,16 @@ const data = {
       extraPrice: 30000, // 인당 추가가격
       roomCnt: 2, // 방 개수
       toiletCnt: 1, // 화장실 개수
-      supplyList: ["개별 바베큐장", "파쇄석", "텐트 옆 주차"], // 부대시설 목록
+      supplyList: [
+        "개별 바베큐장",
+        "파쇄석",
+        "텐트 옆 주차",
+        "개별 바베큐장",
+        "파쇄석",
+        "텐트 옆 주차",
+        "개별 바베큐장",
+        "개별 바베큐장",
+      ], // 부대시설 목록
       available: true, // 예약 가능 여부
     },
     {
