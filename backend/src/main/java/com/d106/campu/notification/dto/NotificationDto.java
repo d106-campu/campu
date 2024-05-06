@@ -26,7 +26,6 @@ public class NotificationDto {
     public static class SendResponse {
 
         private Long notificationId;
-
         private String content;
 
     }
@@ -49,6 +48,14 @@ public class NotificationDto {
         private Long userId;
 
         @NotBlank
+        private String content;
+
+    }
+
+    @Data
+    public static class ListResponse {
+
+        private Long notificationId;
         private String content;
 
     }

@@ -1,11 +1,13 @@
 package com.d106.campu.notification.controller;
 
 import com.d106.campu.common.response.Response;
+import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.controller.doc.NotificationControllerDoc;
 import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,6 +64,12 @@ public class NotificationController implements NotificationControllerDoc {
     public Response publishEvent(@RequestBody PublishEventRequest publishEventRequestDto) {
         notificationService.publishEvent(publishEventRequestDto);
         return new Response();
+    }
+
+    @Override
+    @GetMapping("/list")
+    public Response getNotificationList(Pageable pageable) {
+        return new Response(NotificationConstant.NOTIFICATION_LIST, notificationService.getNotificationList(pageable));
     }
 
 }

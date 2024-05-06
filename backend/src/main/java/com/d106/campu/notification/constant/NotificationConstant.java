@@ -7,5 +7,6 @@ public class NotificationConstant {
     public static final String SSE_SUCCESS = "success";
     public static final String NOTIFICATION = "notification";
     public static final String SSE_TEST = "test";
+    public static final String NOTIFICATION_LIST = "notificationList";
 
 }

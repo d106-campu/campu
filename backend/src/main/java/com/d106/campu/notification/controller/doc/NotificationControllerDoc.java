@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -64,5 +66,23 @@ public interface NotificationControllerDoc {
         @ApiResponse(responseCode = "400", description = "이벤트 발생 실패", content = @Content)
     })
     Response publishEvent(@Valid NotificationDto.PublishEventRequest publishEventRequestDto);
+
+    @Operation(summary = "전체 알림 반환", description = "전체 알림을 반환한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "전체 알림 반환 성공",
+            content = @Content(schema = @Schema(implementation = NotificationListResponse.class))
+        ),
+        @ApiResponse(responseCode = "400", description = "전체 알림 반환 실패", content = @Content)
+    })
+    Response getNotificationList(Pageable pageable);
+
+    class NotificationListResponse {
+        public String result;
+        public Element data;
+
+        public static class Element {
+            public Page<NotificationDto.ListResponse> notificationList;
+        }
+    }
 
 }

@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -67,7 +69,8 @@ public class NotificationService {
         Optional.ofNullable(sseEmitterMap.get(sendRequestDto.getUserId())).ifPresent(emitter -> {
             try {
                 emitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
-                    .data(new Response(NotificationConstant.NOTIFICATION, notificationMapper.toSendResponse(sendRequestDto))));
+                    .data(
+                        new Response(NotificationConstant.NOTIFICATION, notificationMapper.toSendResponseDto(sendRequestDto))));
             } catch (Exception e) {
                 throw new InvalidException(NotificationExceptionCode.FAIL_SEND);
             }
@@ -91,6 +94,11 @@ public class NotificationService {
     public void publishEvent(PublishEventRequest publishEventRequestDto) {
         TestEvent testEvent = notificationMapper.toTestEvent(publishEventRequestDto);
         applicationEventPublisher.publishEvent(testEvent);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDto.ListResponse> getNotificationList(Pageable pageable) {
+        return notificationRepository.findAllByUser_Id(pageable, 1L).map(notificationMapper::toListResponseDto);
     }
 
 }

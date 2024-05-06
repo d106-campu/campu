@@ -2,6 +2,7 @@ package com.d106.campu.notification.mapper;
 
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
+import com.d106.campu.notification.dto.NotificationDto.ListResponse;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.event.TestEvent;
 import org.mapstruct.Mapper;
@@ -19,8 +20,11 @@ public interface NotificationMapper {
 
     NotificationDto.SendRequest fromTestEventToSendRequestDto(Long notificationId, TestEvent testEvent);
 
-    NotificationDto.SendResponse toSendResponse(NotificationDto.SendRequest sendRequestDto);
+    NotificationDto.SendResponse toSendResponseDto(NotificationDto.SendRequest sendRequestDto);
 
     TestEvent toTestEvent(PublishEventRequest publishEventRequestDto);
+
+    @Mapping(target = "notificationId", source = "id")
+    ListResponse toListResponseDto(Notification notification);
 
 }

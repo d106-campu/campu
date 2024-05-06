@@ -6,7 +6,7 @@ USE d106;
 --
 -- ----------------------------------------
 
-INSERT INTO `user` (`role`, account`, `password`, `nickname`, `gender`, `birth_year`, `profile_image_url`, `tel`)
+INSERT INTO `user` (`role`, `account`, `password`, `nickname`, `gender`, `birth_year`, `profile_image_url`, `tel`)
 VALUES ('ADMIN', 'hoing97s', '1234', 'hoing97s', 'M', '2000', 'https://avatars.githubusercontent.com/u/140311409', '01012312312'),
        ('USER', 'danbeeS2', '1234', 'danbeeS2', 'F', '2000', 'https://avatars.githubusercontent.com/u/120550679', '01012312314'),
        ('USER', 'cheesecat47', '1234', 'refo', 'M', '2000', 'https://avatars.githubusercontent.com/u/41780495', '01012312315'),
@@ -21,7 +21,7 @@ SET @user_cheesecat47 = (SELECT id FROM `user` WHERE account = 'cheesecat47');
 SET @user_Agwii = (SELECT id FROM `user` WHERE account = 'Agwii');
 SET @user_minnnnnk0 = (SELECT id FROM `user` WHERE account = 'minnnnnk0');
 SET @user_choihojo = (SELECT id FROM `user` WHERE account = 'choihojo');
-SET @user_manager = (SELECT id FROM `user` WHERE account = 'manager');
+SET @user_manager = (SELECT id FROM `user` WHERE account = 'sajangnim');
 
 -- ----------------------------------------
 --
