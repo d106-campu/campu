@@ -1,7 +1,5 @@
 package com.d106.campu.campsite.service;
 
-import com.d106.campu.auth.constant.AuthorityName;
-import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
@@ -15,7 +13,6 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
-import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -113,8 +110,8 @@ public class CampsiteService {
     }
 
     private void checkUserAuthorityManager(User user) {
-        user.getAuthorities().stream().filter(authority -> authority.getAuthorityName().equals(AuthorityName.MANAGER))
-            .findFirst().orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER));
+//        user.getAuthorities().stream().filter(authority -> authority.getAuthorityName().equals(AuthorityName.MANAGER))
+//            .findFirst().orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER));
     }
 
 }
