@@ -4,7 +4,7 @@ import ReviewList from "@/components/reservation/reviewList/ReviewList";
 
 const ReviewListContainer = () => {
   return (
-    <div className="max-w-[70%] mx-auto py-2">
+    <div className="max-w-[75%] mx-auto py-2">
       <CampSiteTitle types={data.types} campsiteName={data.campsite_faclt_nm} />
       <CampSiteRating rating={data.rating} />
       <ReviewList

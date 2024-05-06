@@ -1,14 +1,12 @@
 import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
 import BackButton from "@/components/reservation/reviewList/review/BackButton";
 import ReviewPhotos from "@/components/reservation/reviewList/review/ReviewPhotos";
-import { useParams } from "react-router-dom";
 
 const ReviewContainer = () => {
-  const { reviewId } = useParams();
   return (
-    <div className="max-w-[60%] mx-auto py-2">
+    <div className="max-w-[55%] mx-auto py-2">
       <div className="flex items-end gap-2">
-        <BackButton route={`/camps/${reviewId}/reviews`} />
+        <BackButton route={`/camps/${campData.id}/reviews`} />
         <CampSiteTitle
           types={campData.types}
           campsiteName={campData.campsite_faclt_nm}

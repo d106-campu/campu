@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
-import { IconType } from 'react-icons';
+import { IconType } from "react-icons";
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -21,6 +21,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconSize?: number;
   iconMargin?: string;
   visible?: boolean;
+  disabled?: boolean;
 }
 
 const Button = ({
@@ -37,22 +38,26 @@ const Button = ({
   borderColor,
   borderRadius = "rounded-lg",
   padding,
-  cursorPointer = 'cursor-pointer',
-  outline = 'outline-none',
+  cursorPointer = "cursor-pointer",
+  outline = "outline-none",
   icon: Icon,
   iconColor = "white",
   iconSize = 25,
   iconMargin = "mr-2",
+  disabled = false,
   children,
   ...props
 }: PropsWithChildren<IButtonProps>) => {
   return (
     <button
       className={`
-        ${visible ? 'block' : 'hidden'}
+        ${visible ? "block" : "hidden"}
         text-center ${fontWeight} ${width} ${height} ${backgroundColor}
         ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor}
-        ${textColor} ${textSize} ${cursorPointer} ${outline} ${padding}
+        ${textColor} ${textSize} ${cursorPointer} ${outline} ${padding} ${
+        disabled &&
+        "cursor-not-allowed opacity-50 bg-gray-300 hover:bg-gray-300"
+      }
       `}
       {...props}
     >
