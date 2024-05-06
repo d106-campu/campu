@@ -167,13 +167,16 @@ const Calendar = () => {
       </div>
       {/* 요일 */}
       <div className="grid grid-cols-7 mt-10 text-lg font-semibold leading-6 text-center text-GRAY">
-        <div className="text-red-400">일</div>
-        <div>월</div>
-        <div>화</div>
-        <div>수</div>
-        <div>목</div>
-        <div>금</div>
-        <div className="text-blue-400">토</div>
+        {["일", "월", "화", "수", "목", "금", "토"].map((day, index) => (
+          <div
+            key={index}
+            className={
+              index === 0 ? "text-red-400" : index === 6 ? "text-blue-400" : ""
+            }
+          >
+            {day}
+          </div>
+        ))}
       </div>
 
       <ul className="grid grid-cols-7 mt-2 text-base text-black">
@@ -190,9 +193,9 @@ const Calendar = () => {
               } py-1.5`}
             >
               <div
-                className={`${isBetween ? "bg-[#E1F9E3]" : ""} ${
-                  isStart ? "rounded-l-full" : ""
-                } ${isEnd ? "rounded-r-full" : ""}`}
+                className={`${isBetween ? "bg-[#E1F9E3]" : ""} 
+                ${isStart ? "rounded-l-full" : ""} 
+                ${isEnd ? "rounded-r-full" : ""}`}
               >
                 <button
                   type="button"
