@@ -31,7 +31,7 @@ public class NotificationService {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public SseEmitter connectSseV1() {
-        SseEmitter sseEmitter = new SseEmitter(NotificationConstant.SSE_TIMEOUT);
+        SseEmitter sseEmitter = new SseEmitter(NotificationConstant.SSE_TIMEOUT_MILLIS);
 //        sseEmitterMap.put(securityHelper.getLoginUsername(), sseEmitter);
 //        sseEmitter.onCompletion(() -> sseEmitterMap.remove(securityHelper.getLoginUsername()));
 //        sseEmitter.onTimeout(() -> sseEmitterMap.remove(securityHelper.getLoginUsername()));
