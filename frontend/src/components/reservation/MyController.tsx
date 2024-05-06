@@ -4,6 +4,7 @@ import Button from "@/components/@common/Button/Button";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import Calendar from "@/components/@common/Calendar/Calendar";
 
 interface IMyControllerProps {
   headCount: number;
@@ -78,6 +79,7 @@ const MyController = ({
         <Modal width="w-[60%]" onClose={toggleScheduleModal} title="일정 선택">
           <div>
             {/* @TODO: 달력 넣기 */}
+            <Calendar />
             {/* @TODO: 초기화 버튼 */}
             <button className="flex items-center gap-2 cursor-pointer p-2">
               <FaArrowRotateRight color="C9C9C9" />
