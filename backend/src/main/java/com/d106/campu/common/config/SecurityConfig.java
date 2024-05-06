@@ -1,5 +1,6 @@
 package com.d106.campu.common.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Value("${management.server.port}")
+    private int managementPort;
 
     public static final String[] PERMIT_URL_LIST = {
         /* auth */
@@ -63,6 +68,7 @@ public class SecurityConfig {
         /* authorization */
         http.authorizeHttpRequests(authorize -> authorize
             .requestMatchers(PERMIT_URL_LIST).permitAll()
+            .requestMatchers(checkPort()).permitAll()
             .anyRequest().authenticated());
 
         /* cors */
@@ -78,6 +84,10 @@ public class SecurityConfig {
         }));
 
         return http.build();
+    }
+
+    private RequestMatcher checkPort() {
+        return (HttpServletRequest request) -> managementPort == request.getLocalPort();
     }
 
 }
