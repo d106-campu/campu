@@ -1,5 +1,7 @@
 package com.d106.campu.campsite.service;
 
+import com.d106.campu.auth.constant.AuthorityName;
+import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
@@ -13,6 +15,7 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
+import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -37,19 +40,22 @@ public class CampsiteService {
     private final RoomMapper roomMapper;
 
     @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme) {
+    public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme, boolean owner) {
+        /* TODO: Replace this with login user (using securityHelper) */
+        User user = userRepository.findById(2L)
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
         Page<Campsite> responsePage = null;
-        if (induty == null && theme == null) {
+        if (owner) {
+            checkUserAuthorityManager(user);
+            responsePage = campsiteRepository.findByUser(pageable, user);
+        } else if (induty == null && theme == null) {
             responsePage = campsiteRepository.findAll(pageable);
         } else if (induty != null && !induty.isBlank()) {
             responsePage = campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue());
         } else if (theme != null && !theme.isBlank()) {
             responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue());
         }
-
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(1L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         return responsePage == null ? null : responsePage.map((e) -> {
             e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
@@ -64,8 +70,7 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException());*/
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-
-        /* TODO: Block if the login user does not have owner authority */
+        checkUserAuthorityManager(user);
 
         Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
         campsite.setUser(user);
@@ -105,6 +110,11 @@ public class CampsiteService {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
         return roomRepository.findByCampsite(pageable, campsite).map(roomMapper::toRoomResponseDto);
+    }
+
+    private void checkUserAuthorityManager(User user) {
+        user.getAuthorities().stream().filter(authority -> authority.getAuthorityName().equals(AuthorityName.MANAGER))
+            .findFirst().orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.d106.campu.campsite.repository.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
+import com.d106.campu.user.domain.jpa.User;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,8 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
             LEFT JOIN FETCH c.campsiteLocation loc
         """)
     Page<Campsite> findAll(Pageable pageable);
+
+    Page<Campsite> findByUser(Pageable pageable, User user);
 
     @Query("""
         SELECT c
