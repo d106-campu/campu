@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
+import Calendar from "@/components/@common/Calendar/Calendar";
+import { formatSimpleDate } from "@/utils/formatDateTime";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
@@ -27,6 +31,9 @@ interface ICampSiteIntro {
 
 const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   const [isLiked, setIsLiked] = useState<boolean>(data.isLiked);
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.campingDate
+  );
   return (
     <>
       <CampingPhotos main={data.main} photos={data.other} id={data.id} />
@@ -100,12 +107,31 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
           </div>
         </div>
 
-        <div className="pt-10 flex">
+        <div className="pt-10 flex justify-between">
           {/* 캠핑존 배치도 */}
           <CampSiteLayout
             layout={data.layout}
             campsite_name={data.campsite_faclt_nm}
           />
+          {/* 캘린더 */}
+          <div className="w-[50%] h-[420px]">
+            <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-BLACK text-center font-bold w-[75%] mx-auto">
+              <div className="flex-1 my-auto py-1 rounded-xl">
+                <p className="text-sm text-MAIN_GREEN">입실일</p>
+                {formatSimpleDate(startDate) || (
+                  <p className="text-sm">날짜를 선택해주세요</p>
+                )}
+              </div>
+              <div className="border-l-2 border-[#C9C9C9] mx-2" />
+              <div className="flex-1 my-auto py-1 rounded-xl">
+                <p className="text-sm text-MAIN_GREEN">퇴실일</p>
+                {formatSimpleDate(endDate) || (
+                  <p className="text-sm">날짜를 선택해주세요</p>
+                )}
+              </div>
+            </div>
+            <Calendar readOnly={true} />
+          </div>
         </div>
       </div>
     </>
