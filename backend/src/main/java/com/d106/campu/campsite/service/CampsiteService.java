@@ -1,5 +1,7 @@
 package com.d106.campu.campsite.service;
 
+import com.d106.campu.auth.constant.RoleName;
+import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
@@ -10,6 +12,7 @@ import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -36,6 +39,17 @@ public class CampsiteService {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
 
+    /**
+     * @param pageable
+     * @param induty   For campsites that has specific industry type.
+     * @param theme    For campsites that has specific theme.
+     * @param owner    For campsites that the current user manages.
+     * @return List of campsite.
+     * @throws NotFoundException     If not login status.
+     * @throws UnauthorizedException Only when `owner=true` option, if user does not have {@link RoleName#OWNER} role.
+     * @see Induty
+     * @see Theme
+     */
     @Transactional(readOnly = true)
     public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme, boolean owner) {
         /* TODO: Replace this with login user (using securityHelper) */
@@ -44,7 +58,7 @@ public class CampsiteService {
 
         Page<Campsite> responsePage = null;
         if (owner) {
-            checkUserAuthorityManager(user);
+            checkUserRoleOwner(user);
             responsePage = campsiteRepository.findByUser(pageable, user);
         } else if (induty == null && theme == null) {
             responsePage = campsiteRepository.findAll(pageable);
@@ -60,6 +74,14 @@ public class CampsiteService {
         });
     }
 
+    /**
+     * Regist a campsite.
+     *
+     * @param createRequestDto Campsite information.
+     * @return Saved campsite information.
+     * @throws NotFoundException     If not login status.
+     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
+     */
     @Transactional
     public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
         /* TODO: Replace this with login user (using securityHelper)
@@ -67,14 +89,23 @@ public class CampsiteService {
             .orElseThrow(() -> new NotFoundException());*/
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        checkUserAuthorityManager(user);
+        checkUserRoleOwner(user);
 
         Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
         campsite.setUser(user);
 
+        /* TODO: insert campsite location(coordinates), induty, etc. */
+
         return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
     }
 
+    /**
+     * Toggle whether the user like or not this campsite.
+     *
+     * @param campsiteId
+     * @return Current like status.
+     * @throws NotFoundException If not login status.
+     */
     @Transactional
     public CampsiteDto.LikeResponse likeCampsite(long campsiteId) {
         /* TODO: Replace this with login user (using securityHelper) */
@@ -92,6 +123,11 @@ public class CampsiteService {
         return campsiteMapper.toCampsiteLikeResponseDto(campsiteLike.isEmpty());
     }
 
+    /**
+     * @param pageable
+     * @return List of campsites that current user likes.
+     * @throws NotFoundException If not login status.
+     */
     @Transactional(readOnly = true)
     public Page<CampsiteDto.Response> getLikeCampsiteList(Pageable pageable) {
         /* TODO: Replace this with login user (using securityHelper) */
@@ -102,6 +138,12 @@ public class CampsiteService {
             .map(CampsiteLike::getCampsite).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
+    /**
+     * @param pageable
+     * @param campsiteId
+     * @return List of room information of the campsite.
+     * @throws NotFoundException If the `campsiteId` is wrong.
+     */
     @Transactional(readOnly = true)
     public Page<RoomDto.ListResponse> getCampsiteRoomList(Pageable pageable, long campsiteId) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
@@ -109,9 +151,14 @@ public class CampsiteService {
         return roomRepository.findByCampsite(pageable, campsite).map(roomMapper::toRoomResponseDto);
     }
 
-    private void checkUserAuthorityManager(User user) {
-//        user.getAuthorities().stream().filter(authority -> authority.getAuthorityName().equals(AuthorityName.MANAGER))
-//            .findFirst().orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER));
+    /**
+     * @param user Login user instance.
+     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
+     */
+    private void checkUserRoleOwner(User user) {
+        if (!user.getRole().equals(RoleName.OWNER)) {
+            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
+        }
     }
 
 }

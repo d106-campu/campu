@@ -314,3 +314,18 @@ CREATE TABLE `review_image` (
   KEY `review_image_review_FK` (`review_id`),
   CONSTRAINT `review_image_review_FK` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 리뷰 이미지';
+
+
+-- d106.notification definition
+
+CREATE TABLE `notification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
+  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+  `content` varchar(100) NOT NULL COMMENT '알림 내용',
+  `redirect_url` varchar(1024) DEFAULT NULL COMMENT '리디렉션 주소',
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
+  PRIMARY KEY (`id`),
+  KEY `notification_user_FK` (`user_id`),
+  CONSTRAINT `notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='알림';
