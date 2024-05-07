@@ -4,7 +4,7 @@ import ReviewPhotos from "@/components/reservation/reviewList/review/ReviewPhoto
 
 const ReviewContainer = () => {
   return (
-    <div className="max-w-[55%] mx-auto py-2">
+    <div className="max-w-[60%] mx-auto py-2">
       <div className="flex items-end gap-2">
         <BackButton route={`/camps/${campData.id}/reviews`} />
         <CampSiteTitle
