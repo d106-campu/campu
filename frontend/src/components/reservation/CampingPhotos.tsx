@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/@common/Button/Button";
 import { PiImage } from "react-icons/pi";
+import { scrollToTop } from "@/utils/scrollToTop";
 
 interface ICampingPhotosProps {
   id: number;
@@ -10,7 +11,6 @@ interface ICampingPhotosProps {
 
 const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
   const navigate = useNavigate();
-
   const displayedPhotos = photos.slice(0, 4); // 최대 4개의 사진만 가져옴
   const photoNum = displayedPhotos.length;
 
@@ -64,7 +64,10 @@ const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
           icon={PiImage}
           backgroundColor="bg-[#030303cc]"
           hoverBackgroundColor="hover:bg-[#030303]"
-          onClick={() => navigate(`/camps/${id}/photos`)}
+          onClick={() => {
+            navigate(`/camps/${id}/photos`);
+            scrollToTop();
+          }}
         />
       </div>
     </div>
