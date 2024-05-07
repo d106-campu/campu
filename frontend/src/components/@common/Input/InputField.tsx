@@ -8,6 +8,7 @@ interface IInputFieldProps {
   placeholder: string;
   maxLength?: number;
   error: string;
+  changeError?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   certificationButton?: JSX.Element; // 휴대폰 인증 버튼을 위해서만 사용
   flex?: string;
@@ -33,6 +34,14 @@ const positiveFeedbackMessages = [
   "올바른 비밀번호가 설정되었습니다.",
   "비밀번호가 일치합니다.",
 ];
+const ChangeProfilePositiveFBM = [
+  "인증번호 전송 버튼을 눌러주세요 !",
+  "인증번호를 전송했습니다 !",
+  "인증 버튼을 눌러주세요 !",
+  "알맞은 비밀번호를 입력했습니다.",
+  "새 비밀번호가 설정되었습니다.",
+  "새 비밀번호와 일치합니다.",
+]
 const InputField = ({
   // input 속성 필드
   label,
@@ -42,6 +51,7 @@ const InputField = ({
   placeholder,
   maxLength,
   error,
+  changeError = "",
   onChange,
   certificationButton,
   // 아래서부터 TailWind CSS
@@ -66,6 +76,10 @@ const InputField = ({
   const customErrorColor = isErrorPositiveFeedback
     ? "text-MAIN_GREEN"
     : errorTextColor;
+
+  const isChangeErrorPostiveFeedback = ChangeProfilePositiveFBM.includes(changeError);
+  const ProfileCustomErrorColor = isChangeErrorPostiveFeedback
+    ? "text-MAIN_GREEN" : errorTextColor;
 
   return (
     <div>
@@ -95,6 +109,7 @@ const InputField = ({
           </div>
         )}
       </div>
+      <h1 className={`${ProfileCustomErrorColor} text-center text-xs py-2`}>{changeError}</h1>
     </div>
   );
 };

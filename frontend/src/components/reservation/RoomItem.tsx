@@ -2,6 +2,7 @@ import Button from "@/components/@common/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setReservationData } from "@/features/reservation/ReservationSlice";
+import { scrollToTop } from "@/utils/scrollToTop";
 
 interface IRoomItemProps {
   campsiteId: number;
@@ -61,6 +62,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     };
     dispatch(setReservationData(newReservationData));
     navigate(`/camps/${room.campsiteId}/payment`);
+    scrollToTop();
   };
 
   return (

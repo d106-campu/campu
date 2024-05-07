@@ -4,6 +4,7 @@ import SearchCampingItem from "./SearchCampingItem";
 import { useDispatch } from "react-redux";
 import { addCampingData } from "@/features/search/campingMapSlice";
 import { useEffect } from "react";
+import SearchNoResult from "./SearchNoResult";
 
 const SearchSection = () => {
   const dispatch = useDispatch();
@@ -22,9 +23,13 @@ const SearchSection = () => {
         <SearchBar />
       </div>
       <div>
-        {dummy.map((camping: ICampingGround) => (
-          <SearchCampingItem key={camping.id} camping={camping} />
-        ))}
+        {dummy.length === 0 ? (
+          <SearchNoResult />
+        ) : (
+          dummy.map((camping: ICampingGround) => (
+            <SearchCampingItem key={camping.id} camping={camping} />
+          ))
+        )}
       </div>
     </>
   );

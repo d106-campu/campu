@@ -12,11 +12,7 @@ const ReservationContainer = () => {
             {data.content.length}
           </span>
         </h3>
-        <MyController
-          headCount={headConunt}
-          startDate={startDate}
-          endDate={endDate}
-        />
+        <MyController />
         <div className="w-[95%] mx-auto">
           {/* 각 방에 대한 RoomItem 렌더링 */}
           {data.content.map((room) => (
@@ -35,11 +31,6 @@ import dummy2 from "@/assets/images/dummy/camping_spot_1.png";
 import dummy3 from "@/assets/images/dummy/camping_spot_2.png";
 import dummy4 from "@/assets/images/dummy/camping_spot_3.png";
 import dummy5 from "@/assets/images/dummy/camping_spot_4.jpg";
-
-// 더미 데이터
-const headConunt = 2;
-const startDate = "2024-05-10";
-const endDate = "2024-05-14";
 
 // 더미 데이터
 const data = {

@@ -29,12 +29,12 @@ const ReviewPhotos = ({
         <p className="text-UNIMPORTANT_TEXT_02 ml-2">{date} 작성</p>
       </div>
 
-      <div className="flex ">
+      <div className="flex gap-4 px-3 pt-3 h-[450px]">
         {/* 메인 이미지 */}
         <img
           src={selectedImage}
           alt="리뷰 이미지"
-          className="w-[680px] rounded-2xl object-cover object-center"
+          className="w-[700px] rounded-2xl object-cover object-center"
         />
         {/* 썸네일 이미지 리스트 */}
         <div className="flex flex-col gap-4 items-center">

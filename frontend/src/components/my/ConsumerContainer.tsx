@@ -29,7 +29,7 @@ const ConsumerContainer = ({
       case 'FreeAlert':
         return <FreeAlert alerts={GetMyAlerts.alerts} totalMyAlerts={GetMyAlerts.totalMyAlerts}/>;
       case 'MyProfile':
-        return <MyProfile />;
+        return <MyProfile phoneVerified={false}/>;
       default:
         return <MyReservation {...firstReservation}/>;
     }

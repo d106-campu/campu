@@ -19,7 +19,7 @@ const ReservationAccordion = ({
   index
 }: IReservationAccordionProps): JSX.Element => {
   return ( 
-    <div className="bg-MAIN_GREEN text-white mb-10 rounded-2xl">
+    <div className={`bg-MAIN_GREEN text-white mb-10 rounded-2xl ${expanded ? '' : ' shadow-2xl'}`}>
       {/* 헤더 */}
       <div className="flex justify-between items-center px-5 py-1">
         <div className='flex justify-center items-center py-1'>
@@ -37,12 +37,12 @@ const ReservationAccordion = ({
         </div>
       </div>
       
-      <div className='text-sm bg-white text-black pt-1 pb-3 rounded-br-2xl rounded-bl-2xl shadow-md'>
+      <div className='text-sm bg-white text-black pt-1 pb-3 rounded-b-xl '>
         {expanded && (
-          <div>
-            <div className="w-full flex justify-center">
+          <div className="">
+            <div className="w-full flex justify-center rounded-2xl  shadow-md">
               {/* 좌측 주소 + 사진 */}
-              <div className='w-[45%] '>
+              <div className='w-[45%] pb-2'>
                 <h1 className='text-gray-400'>캠핑장 위치</h1>
                 <p>{reservation.address}</p>
                 <img 
@@ -69,27 +69,27 @@ const ReservationAccordion = ({
             </div>
 
             {/* "지도 보기"와 "리뷰 작성하기" 버튼 추가 */}
-            <div className='w-full flex justify-around items-center mt-3 pt-2 pb-1 rounded-br-3xl rounded-bl-3xl border-t-2 border-custom-gray border-dashed'>
+            <div className='w-full flex p-4 justify-around items-center bg-white rounded-2xl shadow-lg border-t-2 border-custom-gray border-dashed'>
               <Button
                 width='w-[300px]'
                 text='지도 보기'
-                textColor='text-black'
+                textColor="text-[#3A2929]"
                 fontWeight='none'
-                backgroundColor='bg-[#E8EFCF]'
+                backgroundColor='bg-[#E3F0E5]'
                 hoverTextColor='text-MAIN_GREEN'
-                hoverBackgroundColor='none'
+                hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
               />
               <Button
                 width='w-[300px]'
                 text='리뷰 작성하기'
-                textColor='text-black'
+                textColor="text-[#3A2929]"
                 fontWeight='none'
-                backgroundColor='bg-yellow-100'
+                backgroundColor='bg-SUB_YELLOW'
                 hoverTextColor='text-MAIN_GREEN'
-                hoverBackgroundColor='none'
+                hoverBackgroundColor="hover:bg-HOVER_YELLOW"
               />
             </div>
-        </div>
+          </div>
         )}
       </div>
     </div>

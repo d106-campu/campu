@@ -9,7 +9,7 @@ const PaymentPage = () => {
       <div>
         <PaymentContainer />
       </div>
-      <Footer />
+      <Footer state="onePage" />
     </>
   );
 };

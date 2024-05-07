@@ -28,7 +28,7 @@ const FreeAlertList = ({
               <img
                 src={alert.images[0]}
                 alt={alert.campsiteName}
-                className="w-[300px] h-[150px] object-cover rounded-lg mt-2"
+                className="w-[300px] h-[150px] object-cover object-center rounded-lg mt-2"
               />
             </div>
           </div>

@@ -111,7 +111,7 @@ const LoginForm = ({
   return (
     <>
       <div className="h-screen flex items-center justify-center">
-        <div className="w-full h-[75vh] flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
+        <div className="w-full h-auto flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
           <div className="w-[80%]">
             {/* 헤더 */}
             <p

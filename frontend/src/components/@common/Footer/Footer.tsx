@@ -1,8 +1,12 @@
 import { FaGithub, FaWindows } from "react-icons/fa";
 
-const Footer = () => {
+const Footer = ({ state }: { state?: string }) => {
   return (
-    <div className="w-full p-6 h-auto grid text-xs bg-gray-200 text-gray-400">
+    <div
+      className={`w-full p-6 h-auto grid text-xs bg-gray-200 text-gray-400 ${
+        state === "onePage" ? "fixed bottom-0" : ""
+      }`}
+    >
       <div className="flex items-center justify-around">
         <div className="flex items-center">
           <div className="text-xl px-20 font-semibold">CampU</div>

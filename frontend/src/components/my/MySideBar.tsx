@@ -1,6 +1,7 @@
-import profileImage from "@/assets/images/profile.png";
-import Button from "../@common/Button/Button";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
+import profileDefaultImage  from "@/assets/images/profile.png";
+import Button from "../@common/Button/Button";;
 import { setSelectedComp } from '@/features/mypage/componentSlice';
 
 interface IMySideBarProps {
@@ -13,6 +14,7 @@ const MySideBar = ({
   selectedComponent
 }:IMySideBarProps): JSX.Element => {
   const dispatch = useDispatch();
+  const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
 
   const handleComponentChange = (componentName: string) => {
     dispatch(setSelectedComp(componentName));
@@ -30,7 +32,7 @@ const MySideBar = ({
     <div>
       <div className="h-[200px] flex flex-col items-center py-5">
         <img
-          src={profileImage}
+          src={profileImage || profileDefaultImage}
           alt="프사"
           className="border-2 w-[125px] h-[125px] object-cover object-center rounded-full"
         />
@@ -47,7 +49,6 @@ const MySideBar = ({
               backgroundColor={selectedComponent === item.component ? "bg-SUB_GREEN_01" : "bg-white"}
               textColor={selectedComponent === item.component ? "text-MAIN_GREEN" : "text-GRAY"}
               hoverBackgroundColor="hover:bg-SUB_GREEN_01"
-              padding="py-4"
               fontWeight="none"
               onClick={() => handleComponentChange(item.component)}
             />

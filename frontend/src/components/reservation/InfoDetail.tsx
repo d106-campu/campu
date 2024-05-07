@@ -5,6 +5,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISimpleReviewList } from "@/types/review";
+import { scrollToTop } from "@/utils/scrollToTop";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface IData {
@@ -85,7 +86,10 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
           {/* @TODO: 클릭 시 리뷰 페이지로 이동하기 */}
           <button
             className="text-MAIN_GREEN font-bold"
-            onClick={() => navigate(`/camps/${data.id}/reviews`)}
+            onClick={() => {
+              navigate(`/camps/${data.id}/reviews`);
+              scrollToTop();
+            }}
           >
             리뷰 보기
           </button>

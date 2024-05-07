@@ -1,5 +1,6 @@
 // 일정 날짜 format 함수 ex) 24.05.03(금)
-export const formatDate = (dateString: Date | string) => {
+export const formatDate = (dateString: Date | string | null) => {
+  if (!dateString) return;
   const options: Intl.DateTimeFormatOptions = {
     year: "2-digit",
     month: "2-digit",
@@ -12,7 +13,8 @@ export const formatDate = (dateString: Date | string) => {
 };
 
 // 일정 날짜 format 함수 ex) 05.03(금)
-export const formatSimpleDate = (dateString: Date | string) => {
+export const formatSimpleDate = (dateString: Date | string | null) => {
+  if (!dateString) return;
   const options: Intl.DateTimeFormatOptions = {
     month: "2-digit",
     day: "2-digit",
