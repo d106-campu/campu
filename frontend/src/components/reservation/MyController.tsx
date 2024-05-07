@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import { formatSimpleDate } from "@/utils/formatDateTime";
@@ -8,36 +8,60 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { diffDays } from "@/utils/diffDays";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store";
+import { setHeadCount } from "@/features/reservation/HeadCountSlice";
+import {
+  setStartDate,
+  setEndDate,
+} from "@/features/reservation/campingDateSlice";
 
-interface IMyControllerProps {
-  headCount: number;
-  startDate: string;
-  endDate: string;
-}
+const MyController = () => {
+  const dispatch = useDispatch();
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.campingDate
+  );
+  const { headCount } = useSelector((state: RootState) => state.headCount);
 
-const MyController = ({
-  headCount,
-  startDate,
-  endDate,
-}: IMyControllerProps) => {
+  const [localHeadCount, setLocalHeadCount] = useState<number>(headCount); // 인원수
+
   const [scheduleModal, setScheduleModal] = useState<boolean>(false); // 일정 모달 상태관리
   const [headCountModal, setHeadCountModal] = useState<boolean>(false); // 인원수 모달 상태관리
-  const [peopleCount, setPeopleCount] = useState<number>(2); // 인원수 계산
 
-  const toggleScheduleModal = () => {
-    setScheduleModal(!scheduleModal);
+  const [initialStartDate, setInitialStartDate] = useState<Date | null>(
+    startDate
+  ); // 시작일 초기값
+  const [initialEndDate, setInitialEndDate] = useState<Date | null>(endDate); // 종료일 초기값
+  const initialHeadCount: number = headCount; // 인원수 초기값
+
+  const toggleScheduleModal = () => setScheduleModal(!scheduleModal);
+  const toggleHeadCountModal = () => setHeadCountModal(!headCountModal);
+
+  const increasePeople = () => setLocalHeadCount(localHeadCount + 1);
+  const decreasePeople = () =>
+    localHeadCount > 1 && setLocalHeadCount(localHeadCount - 1);
+
+  useEffect(() => {
+    setInitialStartDate(startDate);
+    setInitialEndDate(endDate);
+  }, []);
+
+  const headCountSubmit = () => {
+    dispatch(setHeadCount(localHeadCount));
+    // @TODO: 백에 방 조회 API 요청 다시 보내기
   };
 
-  const toggleHeadCountModal = () => {
-    setHeadCountModal(!headCountModal);
+  const calendarSubmit = () => {
+    setInitialStartDate(startDate);
+    setInitialEndDate(endDate);
+    // @TODO: 백에 방 조회 API 요청 다시 보내기
   };
 
-  const increasePepole = () => {
-    setPeopleCount(peopleCount + 1);
-  };
-  const decreasePepole = () => {
-    if (peopleCount > 1) {
-      setPeopleCount(peopleCount - 1);
+  // 일정 초기화
+  const resetCalendar = () => {
+    if (initialStartDate && initialEndDate) {
+      dispatch(setStartDate(initialStartDate));
+      dispatch(setEndDate(initialEndDate));
     }
   };
 
@@ -48,8 +72,9 @@ const MyController = ({
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
         >
-          {formatSimpleDate(startDate)} ~ {formatSimpleDate(endDate)} ·&nbsp;
-          {diffDays(startDate, endDate)}박
+          {formatSimpleDate(initialStartDate)} ~{" "}
+          {formatSimpleDate(initialEndDate)} ·&nbsp;
+          {diffDays(initialStartDate, initialEndDate)}박
         </div>
         <div className="border-l-2 border-[#C9C9C9] mx-2" />
         <div
@@ -64,22 +89,20 @@ const MyController = ({
       {scheduleModal && (
         <Modal width="w-[55%]" onClose={toggleScheduleModal} title="일정 선택">
           <div>
-            {/* @TODO: 달력 넣기 */}
             <Calendar />
-            {/* @TODO: 초기화 버튼 */}
-            <button className="flex items-center gap-2 cursor-pointer p-2">
+            <button
+              onClick={resetCalendar}
+              className="flex items-center gap-2 cursor-pointer p-2"
+            >
               <FaArrowRotateRight color="C9C9C9" />
               <span className="text-GRAY">일정 초기화</span>
             </button>
-            {/* @TODO: 버튼에 변경된 날짜 넣기 */}
-            {/* <Button
-              width="w-full"
-              height="h-12"
-              text="변경된 날짜"
-              textSize="text-lg"
-              onClick={toggleScheduleModal}
-            /> */}
-            <CalendarSubmit></CalendarSubmit>
+            <CalendarSubmit
+              onClick={() => {
+                calendarSubmit();
+                toggleScheduleModal();
+              }}
+            />
           </div>
         </Modal>
       )}
@@ -109,13 +132,13 @@ const MyController = ({
                 <div className="flex items-center">
                   <AiOutlineMinusCircle
                     size={30}
-                    onClick={decreasePepole}
+                    onClick={decreasePeople}
                     className="text-MAIN_GREEN cursor-pointer"
                   />
-                  <p className="p-3 text-xl">{peopleCount}</p>
+                  <p className="p-3 text-xl">{localHeadCount}</p>
                   <AiOutlinePlusCircle
                     size={30}
-                    onClick={increasePepole}
+                    onClick={increasePeople}
                     className="text-MAIN_GREEN cursor-pointer"
                   />
                 </div>
@@ -123,19 +146,21 @@ const MyController = ({
             </div>
 
             <button
-              onClick={() => setPeopleCount(headCount)}
+              onClick={() => setLocalHeadCount(initialHeadCount)}
               className="flex items-center gap-2 cursor-pointer p-2"
             >
               <FaArrowRotateRight color="C9C9C9" />
               <span className="text-GRAY">인원수 초기화</span>
             </button>
-            {/* @TODO: 버튼에 변경된 인원 수 넣기 */}
             <Button
               width="w-full"
               height="h-12"
-              text={`인원 ${peopleCount}명`}
+              text={`인원 ${localHeadCount}명`}
               textSize="text-lg"
-              onClick={toggleHeadCountModal}
+              onClick={() => {
+                toggleHeadCountModal();
+                headCountSubmit();
+              }}
             />
           </div>
         </Modal>
