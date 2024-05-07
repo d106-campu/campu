@@ -41,6 +41,23 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
     reviewRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // 복사 함수
+  // @TODO: 토스트 메시지로 바꾸기
+  const copyToClipboard = async () => {
+    if (!navigator.clipboard) {
+      alert("클립보드 사용이 불가능한 환경입니다.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(data.campsite_tel);
+      alert("전화번호가 클립보드에 복사되었습니다.");
+    } catch (err) {
+      console.error("클립보드 복사 실패:", err);
+      alert("클립보드 복사에 실패했습니다.");
+    }
+  };
+
   return (
     <>
       <CampingPhotos main={data.main} photos={data.other} id={data.id} />
@@ -72,7 +89,6 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
         </div>
 
         {/* 캠핑장 필수 정보 */}
-        {/* @TODO: 클릭 시 이동 */}
         <div className="p-2 text-sm">
           <div className="flex pt-1">
             <img src={mapIcon} className="w-5" />
@@ -86,7 +102,12 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
           <div className="flex py-2">
             <img src={phoneIcon} className="w-4" />
             <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.campsite_tel}</p>
-            <button className="pl-2 text-MAIN_GREEN font-bold">복사하기</button>
+            <button
+              onClick={copyToClipboard}
+              className="pl-2 text-MAIN_GREEN font-bold"
+            >
+              복사하기
+            </button>
           </div>
           <div className="flex">
             <img src={reviewIcon} className="w-5" />
