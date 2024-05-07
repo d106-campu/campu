@@ -3,9 +3,9 @@ import MyReview from '@/components/my/consumer/MyReview';
 import MyFavoriteCamp from '@/components/my/consumer/MyFavoriteCamp';
 import FreeAlert from '@/components/my/freeAlert/FreeAlert';
 import MyProfile from '@/components/my/profile/MyProfile';
-import GetReservations from '@/components/my/consumer/MyReservationItem'; // 더미데이터
-import GetMyReviews from '@/components/my/consumer/MyReviewItem'; // 더미데이터
-import GetMyAlerts from '@/components/my/freeAlert/FreeAlertItem';
+import GetReservations from '@/components/my/consumer/MyReservationItem'; // 예약내역 더미데이터
+import GetMyReviews from '@/components/my/consumer/MyReviewItem'; // 내가쓴리뷰 더미데이터
+import GetMyAlerts from '@/components/my/freeAlert/FreeAlertItem'; // 빈자리알림 더미데이터
 
 interface IConsumerContainerProps {
   selectedComponent: string;

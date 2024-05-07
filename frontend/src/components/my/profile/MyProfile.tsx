@@ -5,6 +5,7 @@ import { setNickname } from "@/features/login/authSlice";
 import { setIsProfileImage } from '@/features/mypage/myProfile';
 import profileDefaultImage from "@/assets/images/profile.png";
 import Button from "@/components/@common/Button/Button";
+import { RiArrowDropDownLine } from "react-icons/ri";
 import { IMyPhoneValues } from '@/types/profile';
 import { ChangePhoneModal } from "@/components/my/profile/ChangePhoneModal";
 import { ChangePasswordModal } from "@/components/my/profile/ChangePasswordModal";
@@ -49,9 +50,13 @@ const MyProfile = ({
   const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
   
   const [isEditingInfo, setIsEditingInfo] = useState<boolean>(false); // 기타정보 수정 가능 상태 관리
-  const [gender, setGender] = useState<string>('여성'); // 성별 상태 관리
-  const [age, setAge] = useState<string>('20대'); // 연령 상태 관리
-  
+  const [gender, setGender] = useState<string>('여성');
+  const [genderOpen, setGenderOpen] = useState<boolean>(false); 
+  const [age, setAge] = useState<string>('20대');
+  const [ageOpen, setAgeOpen] = useState<boolean>(false);
+  const genderRef = useRef(null);
+  const ageRef = useRef(null);
+
   // "닉네임"에서 수정 버튼을 클릭해야 수정이 가능하도록
   const handleEditNicknameClick = () => {
     if (isEditingNickname && nicknameMessage === '사용 가능한 닉네임입니다.') {
@@ -176,6 +181,28 @@ const MyProfile = ({
     dispatch(setIsProfileImage(profileDefaultImage)); // 기본 이미지로 설정
   };
 
+  // 드롭다운 메뉴 참조와 이벤트 객체 조정 -> 드롭다운 상태 관리
+  const handleClickOutside = (event: MouseEvent, ref: React.RefObject<HTMLDivElement>, setter: (value: boolean) => void) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      setter(false);
+    }
+  };
+
+  // 클릭 이벤트 감지
+  const onBodyClick = (event: MouseEvent) => {
+    handleClickOutside(event, genderRef, setGenderOpen);
+    handleClickOutside(event, ageRef, setAgeOpen);
+  };
+
+  // 클릭 이벤트 발생 될 때 드롭다운 외부 클릭 처리
+  useEffect(() => {
+    document.body.addEventListener('mousedown', onBodyClick);
+    return () => {
+      document.body.removeEventListener('mousedown', onBodyClick);
+    };
+  }, []);
+
+  // 유효성 검사 Field에 대해 값들을 처리
   useEffect(() => {
     Object.keys(values).forEach((field) => {
       validateField(field as keyof IMyPhoneValues, values[field as keyof IMyPhoneValues]);
@@ -242,21 +269,9 @@ const MyProfile = ({
             // onClick={() => {document.getElementById('imageUpload')?.click();}}
           />
           <div className="pt-2 flex justify-center">
-            <Button 
-              text="사진 변경"
-              width="w-full"
-              backgroundColor="bg-SUB_GREEN_01"
-              textColor="text-MAIN_GREEN"
-              hoverTextColor="text-green-700"
-              hoverBackgroundColor="hover:bg-SUB_GREEN_02"
-              padding="p-2"
-              fontWeight="none"
-              onClick={() => {document.getElementById('imageUpload')?.click();}}
-            />
-            {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
-            {profileImage !== profileDefaultImage && (
+            <div className="px-2 ">
               <Button 
-                text="기본 사진"
+                text="사진 변경"
                 width="w-full"
                 backgroundColor="bg-SUB_GREEN_01"
                 textColor="text-MAIN_GREEN"
@@ -264,12 +279,28 @@ const MyProfile = ({
                 hoverBackgroundColor="hover:bg-SUB_GREEN_02"
                 padding="p-2"
                 fontWeight="none"
-                onClick={() => {
-                  handleSetDefaultImage(); // 사용자가 이미지를 기본으로 변경했음을 추적
-                  dispatch(setIsProfileImage(profileDefaultImage));
-                }}
+                onClick={() => {document.getElementById('imageUpload')?.click();}}
               />
-            )}
+            </div>
+            {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
+            <div className="px-2 ">
+              {profileImage !== profileDefaultImage && (
+                <Button 
+                  text="기본 사진"
+                  width="w-full"
+                  backgroundColor="bg-SUB_GREEN_01"
+                  textColor="text-MAIN_GREEN"
+                  hoverTextColor="text-green-700"
+                  hoverBackgroundColor="hover:bg-SUB_GREEN_02"
+                  padding="p-2"
+                  fontWeight="none"
+                  onClick={() => {
+                    handleSetDefaultImage(); // 사용자가 이미지를 기본으로 변경했음을 추적
+                    dispatch(setIsProfileImage(profileDefaultImage));
+                  }}
+                />
+              )}
+            </div>
           </div>
           {/* 이미지 업로드 */}
           <input
@@ -284,13 +315,13 @@ const MyProfile = ({
       {/* 휴대폰 번호 */}
       <div className="w-full flex flex-col pb-5">
         <h1 className="pb-2">휴대폰 번호</h1>
-        <div className="flex justify-start">
+        <div className="flex items-center justify-start">
           <input
             type="text" 
             className="w-[25%] h-[35px] pl-2 outline-none border-2 rounded-md"
             disabled
           />
-          <div className="pl-5 flex justify-center">
+          <div className="pl-5 flex items-center  justify-center">
             <Button 
               text="전화번호 변경"
               width="w-full"
@@ -354,40 +385,55 @@ const MyProfile = ({
           )}
         </div>
         <div className="w-[50%] flex">
-          <div>
+          <div className="flex items-center ">
             <h1 className="text-GRAY">성별</h1>
-            {isEditingInfo ? (
-              <select
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                className="h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02 outline-none border-none"
+            <div className="pl-4 relative">
+              <button
+                onClick={() => { if (isEditingInfo) setGenderOpen(!genderOpen); }}
+                className="flex items-center h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02 outline-none"
               >
-                <option value="여성">여성</option>
-                <option value="남성">남성</option>
-              </select>
-            ) : (
-              <button className="h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02" disabled>{gender}</button>
-            )}
+                {gender}
+                {isEditingInfo && <RiArrowDropDownLine size={25} />}
+              </button>
+              {genderOpen && (
+                <ul ref={genderRef} className="absolute w-[70%] bg-white rounded-xl border-MAIN_GREEN z-10">
+                  {["여성", "남성"].map((select, idx) => (
+                    <li
+                      key={idx}
+                      onClick={() => { setGender(select); setGenderOpen(false); }}
+                      className="p-2 hover:bg-SUB_GREEN_02 hover:text-MAIN_GREEN cursor-pointer text-center text-sm border-MAIN_GREEN rounded-xl"
+                    >
+                      {select}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-          <div className="pl-10">
+          <div className="flex items-center pl-10">
             <h1 className="text-GRAY">연령</h1>
-            {isEditingInfo ? (
-              <select
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02 outline-none border-none"
+            <div className="pl-4 relative">
+              <button
+                onClick={() => { if (isEditingInfo) setAgeOpen(!ageOpen); }}
+                className="flex items-center h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02 outline-none"
               >
-                <option value="10대">10대</option>
-                <option value="20대">20대</option>
-                <option value="30대">30대</option>
-                <option value="40대">40대</option>
-                <option value="50대">50대</option>
-                <option value="60대">60대</option>
-                <option value="70대 이상">70대 이상</option>
-              </select>
-            ) : (
-              <button className="h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02" disabled>{age}</button>
-            )}
+                {age}
+                {isEditingInfo && <RiArrowDropDownLine size={25} />}
+              </button>
+              {ageOpen && (
+                <ul ref={ageRef} className="absolute w-[70%] bg-white rounded-xl z-10">
+                  {["10대", "20대", "30대", "40대", "50대~"].map((select, idx) => (
+                    <li
+                      key={idx}
+                      onClick={() => { setAge(select); setAgeOpen(false); }}
+                      className="p-2 hover:bg-SUB_GREEN_02 hover:text-MAIN_GREEN cursor-pointer text-center text-sm rounded-xl"
+                    >
+                      {select}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ export interface IReservationProps {
   nights: number;
   details: IDetailProps[];
   people: number;
-  environment: string;
-  price: string;
+  camInduty: string;
+  price: number;
   address: string;
 }

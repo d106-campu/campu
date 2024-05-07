@@ -1,6 +1,11 @@
 // import { useState } from 'react';
+// import { useSelector, useDispatch } from "react-redux";
+// import { RootState } from "@/app/store";
+// import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
+// import { diffDays } from "@/utils/diffDays";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import DummyImage from '@/assets/images/dummyCamping2.png';
+import { FiMapPin } from "react-icons/fi";
 import ReservationSection from '@/components/@common/Reservation/ReservationSection';
 import Button from '@/components/@common/Button/Button'
 import { IReservationProps } from '@/types/myReservation';
@@ -19,7 +24,7 @@ const ReservationAccordion = ({
   index
 }: IReservationAccordionProps): JSX.Element => {
   return ( 
-    <div className={`bg-MAIN_GREEN text-white mb-10 rounded-2xl ${expanded ? '' : ' shadow-2xl'}`}>
+    <div className={`bg-MAIN_GREEN text-white mb-10 rounded-2xl ${expanded ? '' : ' shadow-xl'}`}>
       {/* 헤더 */}
       <div className="flex justify-between items-center px-5 py-1">
         <div className='flex justify-center items-center py-1'>
@@ -42,20 +47,23 @@ const ReservationAccordion = ({
           <div className="">
             <div className="w-full flex justify-center rounded-2xl  shadow-md">
               {/* 좌측 주소 + 사진 */}
-              <div className='w-[45%] pb-2'>
-                <h1 className='text-gray-400'>캠핑장 위치</h1>
-                <p>{reservation.address}</p>
+              <div className='w-[45%] pb-4 p-2'>
+                <h3 className="flex items-center gap-1 text-gray-400">
+                  <FiMapPin />
+                  캠핑장 위치
+                </h3>
+                <p className="pb-[12px] font-bold text-BLACK">{reservation.address}</p>
                 <img 
                   src={DummyImage}
                   alt="캠핑장 사진"
-                  className='w-[450px] h-[250px] object-cover object-center rounded-xl'
+                  className='w-full h-52 object-cover object-center rounded-xl'
                 />
               </div>
               {/* 구분선 */}
               <div className="w-[2.5%] border-r-[1px] mr-6" />
 
               {/* 우측 섹션 세부내용 */}
-              <div className='w-[45%] h-auto pt-1'>
+              <div className='w-[45%] h-auto p-4'>
                 {reservation.details.map((detail, idx) => (
                   <ReservationSection
                     key={idx}

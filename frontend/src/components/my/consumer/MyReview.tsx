@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { IMyReview } from '@/types/review';
 import { FaArrowRightToBracket } from "react-icons/fa6";
+import Lottie from "react-lottie";
+import { noImageOptions } from "@/assets/lotties/lottieOptions";
 import Rating from "@/components/@common/Review/Rating";
 
 interface MyReviewProps {
@@ -78,18 +80,23 @@ const MyReview = ({
               </div>
             </div>
             {/* 우측 사진 */}
-            <div className='w-[50%] pr-3'>
+            <div className='w-[50%] pr-4'>
               <div className='flex flex-col items-end justify-center'>             
-              <button className='flex justify-end'>
-                <p className='text-xs pr-1'>삭 제</p>
+              <button className='flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2'>
+                <p className='text-xs p-1'>삭 제</p>
               </button>
-                {review.images.map((image, idx) => (
-                  <img
-                    key={idx}
-                    src={image}
-                    alt="Review"
-                    className='w-[300px] h-[150px] rounded-lg object-cover object-center'/>
-                ))}
+              {review.images.length > 0 ? (
+                  review.images.map((image, idx) => (
+                    <img key={idx} src={image} alt="Review" className='w-[300px] h-[150px] rounded-lg object-cover object-center'/>
+                  ))
+                ) : (
+                  <div className="flex flex-col justify-center h-60">
+                    <Lottie options={noImageOptions} height={150} width={300} speed={0.5} />
+                    <p className="text-UNIMPORTANT_TEXT_02 text-center text-sm">
+                      리뷰 사진을 등록하지 않았어요
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

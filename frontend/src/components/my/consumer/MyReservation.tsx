@@ -11,14 +11,14 @@ const MyReservation = ({
   nights,
   details,
   people,
-  environment,
+  camInduty,
   price,
   address
 }: IReservationProps): JSX.Element => {
   const [selectedFilter, setSelectedFilter] = useState('전체'); // 날짜 선택 상태 관리
   const [expanded, setExpanded] = useState<Record<number, boolean>>({}); // 아코디언 토글 상태 관리
   const [reservations, setReservations] = useState<IReservationProps[]>([
-    { campName, area, date, nights, details, people, environment, price, address }
+    { campName, area, date, nights, details, people, camInduty, price, address }
   ]); // 컨슈머컨테이너에서 받은 props로 예약 상태 관리
   const [viewCount, setViewCount] = useState<number>(4); // 초기에 표시할 예약내역 수 관리
   const initialViewCount = 4; // 렌더링 시 아코디언 첫 개수
