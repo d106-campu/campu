@@ -1,4 +1,4 @@
-import Calendar from "@/assets/images/CalendarDummy.png";
+import Calendar from "@/components/@common/Calendar/Calendar";
 import ReservationItem from "@/components/owner/ownerReservation/ReservationItem";
 
 const OwnerReservation = ({
@@ -13,13 +13,13 @@ const OwnerReservation = ({
           <span className="text-MAIN_GREEN">{selectCampground}</span> 의 예약
           내역
         </p>
-        {/* @TODO: 달력 컴포넌트 추가해야함 */}
         <div>
           {/* 달력 */}
-          <div className="flex justify-center">
-            <img className="w-[50%]" src={Calendar} />
+          <div className="flex justify-center w-full border rounded-md pt-4 pb-8">
+            <div className="w-[80%]">
+              <Calendar />
+            </div>
           </div>
-
           {/* 예약 리스트 목록 */}
           <div className="flex justify-center py-4">
             <div className="w-[80%] text-end">

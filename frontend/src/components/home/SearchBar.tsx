@@ -6,9 +6,14 @@ import SearchRegion from "@/components/@common/Search/SearchRegion";
 import { RegionList } from "@/components/@common/Search/RegionList";
 import { useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { IoIosArrowDown } from "react-icons/io";
+import Calendar from "../@common/Calendar/Calendar";
+import { FaArrowRotateRight } from "react-icons/fa6";
+import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 
 const SearchBar = () => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
@@ -32,18 +37,36 @@ const SearchBar = () => {
         </div>
 
         {/* 날짜 선택 */}
-        <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
-          <FaRegCalendarAlt />
-          <select className="rounded-md ml-2 outline-none text-sm">
-            <option>날짜 선택하기</option>
-          </select>
+        <div className="relative w-[33%]">
+          <div
+            className="flex items-center border bg-white rounded-md p-3 max-h-11"
+            onClick={() => setShowCalendar(!showCalendar)}
+          >
+            <FaRegCalendarAlt />
+            <div className="flex items-center w-full cursor-pointer text-sm px-2">
+              <p className="pr-2">날짜 선택</p>
+              <IoIosArrowDown />
+            </div>
+          </div>
+          {showCalendar && (
+            <div className="absolute top-full left-0 bg-white rounded-md z-20 mt-1 w-[400px] border pb-4">
+              <Calendar />
+              <div className="px-8">
+                <button className="flex items-center gap-2 cursor-pointer p-2">
+                  <FaArrowRotateRight color="C9C9C9" />
+                  <span className="text-GRAY">일정 초기화</span>
+                </button>
+                <CalendarSubmit></CalendarSubmit>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 인원 선택 */}
         <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <MdOutlinePersonOutline />
           <div className="flex items-center text-sm">
-            <p className="px-2">인원 선택</p>
+            <p className="px-2 whitespace-nowrap">인원 선택</p>
             <div className="flex items-center">
               <AiOutlineMinusCircle
                 onClick={handleDecrease}
