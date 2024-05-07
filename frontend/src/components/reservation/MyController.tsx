@@ -6,6 +6,8 @@ import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { diffDays } from "@/utils/diffDays";
+import Calendar from "@/components/@common/Calendar/Calendar";
+import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 
 interface IMyControllerProps {
   headCount: number;
@@ -63,19 +65,21 @@ const MyController = ({
         <Modal width="w-[55%]" onClose={toggleScheduleModal} title="일정 선택">
           <div>
             {/* @TODO: 달력 넣기 */}
+            <Calendar />
             {/* @TODO: 초기화 버튼 */}
             <button className="flex items-center gap-2 cursor-pointer p-2">
               <FaArrowRotateRight color="C9C9C9" />
               <span className="text-GRAY">일정 초기화</span>
             </button>
             {/* @TODO: 버튼에 변경된 날짜 넣기 */}
-            <Button
+            {/* <Button
               width="w-full"
               height="h-12"
               text="변경된 날짜"
               textSize="text-lg"
               onClick={toggleScheduleModal}
-            />
+            /> */}
+            <CalendarSubmit></CalendarSubmit>
           </div>
         </Modal>
       )}
