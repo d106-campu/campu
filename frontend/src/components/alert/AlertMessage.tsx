@@ -1,27 +1,30 @@
+import { diffDays } from "@/utils/diffDays";
+import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
 import { scrollToTop } from "@/utils/scrollToTop";
 import { useNavigate } from "react-router-dom";
 
 interface IAlertMessageProps {
-  nickname: string;
   time: number;
   campId: number;
   campingSite: string;
-  campingZone: string;
-  total: number;
-  schedule: string;
+  roomName: string;
+  headCnt: number;
+  startDate: string;
+  endDate: string;
 }
 const AlertMessage = ({
-  nickname,
   time,
   campId,
   campingSite,
-  campingZone,
-  total,
-  schedule,
+  roomName,
+  headCnt,
+  startDate,
+  endDate,
 }: IAlertMessageProps) => {
-  // @TODO: 클릭 시 해당 예약 페이지로 이동
-  const navigate = useNavigate();
+  // @TODO: 스토어에서 유저 닉네임 가져오기
+  const nickname = "캐치캠핑핑핑";
 
+  const navigate = useNavigate();
   const goToRevservation = (campId: number) => {
     navigate(`/camps/${campId}`);
     scrollToTop();
@@ -42,12 +45,17 @@ const AlertMessage = ({
             <span className="text-MAIN_GREEN font-bold"> {campingSite}</span>의
             빈자리가 나왔어요! 지금 바로 예약 해보세요 😊
           </p>
-          <div className="text-xs py-2 font-bold text-black">
-            <p>
-              {campingSite} - {campingZone}
-              <br />
-              인원 {total}명 / {schedule}
-            </p>
+          <div className="py-2 text-xs font-bold text-black">
+            <ul className="pl-3 list-disc list-outside ">
+              <li>
+                {campingSite} - {roomName}{" "}
+              </li>
+              <li>
+                {formatDate(startDate)} - {formatSimpleDate(endDate)} ·{" "}
+                {diffDays(startDate, endDate)}박
+              </li>
+              <li>인원 {headCnt}명</li>
+            </ul>
           </div>
 
           <p>서둘러 주세요, 자리가 금방 차버릴 수 있어요!</p>

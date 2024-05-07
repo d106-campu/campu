@@ -46,27 +46,23 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
             <div className="overflow-hidden rounded-lg">
               <div className="px-3 max-h-80 overflow-auto">
                 <h5 className="px-2 pb-2 text-sm">
-                  <span className="text-MAIN_GREEN font-bold">3</span> 개의
-                  새로운 알림이 있습니다.
+                  <span className="text-MAIN_GREEN font-bold">
+                    {data.alertCnt}
+                  </span>{" "}
+                  개의 새로운 알림이 있습니다.
                 </h5>
-                <AlertMessage
-                  nickname={"캐치캠핑핑핑"}
-                  time={1}
-                  campId={1}
-                  campingSite={"캠프유캠푸 캠핑장"}
-                  campingZone={"A구역(벚꽃 캠핑존) 10 "}
-                  total={3}
-                  schedule={"24.05.10(금) ~ 05.14 (화) · 4박"}
-                />
-                <AlertMessage
-                  nickname={"캐치캠핑핑핑"}
-                  time={1}
-                  campId={2}
-                  campingSite={"캠프유캠푸 캠핑장"}
-                  campingZone={"A구역(벚꽃 캠핑존) 10 "}
-                  total={3}
-                  schedule={"24.05.10(금) ~ 05.14 (화) · 4박"}
-                />
+                {data.alertList.map((alert) => (
+                  <AlertMessage
+                    key={alert.id}
+                    time={alert.time}
+                    campId={alert.campId}
+                    campingSite={alert.campsite_faclt_nm}
+                    roomName={alert.roomName}
+                    headCnt={alert.headCnt}
+                    startDate={alert.startDate}
+                    endDate={alert.endDate}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -76,3 +72,40 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
   );
 };
 export default AlertLink;
+
+// 더미 데이터
+const data = {
+  alertCnt: 3,
+  alertList: [
+    {
+      id: 1, // 알림 아이디
+      time: 1,
+      campId: 1,
+      campsite_faclt_nm: "캠프유캠푸 캠핑장",
+      roomName: "A구역(벚꽃 캠핑존) 10",
+      headCnt: 3,
+      startDate: "2024-05-05",
+      endDate: "2024-05-10",
+    },
+    {
+      id: 2, // 알림 아이디
+      time: 2,
+      campId: 1,
+      campsite_faclt_nm: "캠프유캠푸 캠핑장",
+      roomName: "C구역 (별자리 명소) 5",
+      headCnt: 3,
+      startDate: "2024-05-05",
+      endDate: "2024-05-10",
+    },
+    {
+      id: 3, // 알림 아이디
+      time: 2,
+      campId: 5,
+      campsite_faclt_nm: "노을숲 캠핑장",
+      roomName: "Z(편백숲) 구역 1",
+      headCnt: 3,
+      startDate: "2024-05-05",
+      endDate: "2024-05-10",
+    },
+  ],
+};
