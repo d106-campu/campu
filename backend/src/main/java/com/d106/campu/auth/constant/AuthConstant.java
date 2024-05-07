@@ -13,5 +13,6 @@ public class AuthConstant {
     public static final String AUTHORITIES_KEY = "auth";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_PREFIX = "Bearer ";
+    public static final int TOKEN_BEGIN_IDX = 7;
 
 }
