@@ -1,6 +1,10 @@
+import { scrollToTop } from "@/utils/scrollToTop";
+import { useNavigate } from "react-router-dom";
+
 interface IAlertMessageProps {
   nickname: string;
   time: number;
+  campId: number;
   campingSite: string;
   campingZone: string;
   total: number;
@@ -9,15 +13,25 @@ interface IAlertMessageProps {
 const AlertMessage = ({
   nickname,
   time,
+  campId,
   campingSite,
   campingZone,
   total,
   schedule,
 }: IAlertMessageProps) => {
+  // @TODO: 클릭 시 해당 예약 페이지로 이동
+  const navigate = useNavigate();
 
-  // @TODO: 클릭 시 해당 예약 페이지로 이동 
+  const goToRevservation = (campId: number) => {
+    navigate(`/camps/${campId}`);
+    scrollToTop();
+  };
+
   return (
-    <div className="pb-3">
+    <div
+      onClick={() => goToRevservation(campId)}
+      className="pb-3 cursor-pointer"
+    >
       <div className="px-5 pb-5 pt-3 text-sm text-SUB_BLACK bg-SUB_GREEN_01 rounded-lg">
         <>
           <p className="text-UNIMPORTANT_TEXT_02 text-xs text-end pb-2 pt-0">

@@ -1,12 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import AlertMessage from "@/components/alert/AlertMessage";
 
 const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
-  const toggleOpen = () => [setOpenAlert(!openAlert)];
+  const ref = useRef<HTMLDivElement>(null);
+
+  const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    setOpenAlert(!openAlert);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpenAlert(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside); // 문서 전체에 이벤트 리스너 추가
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    };
+  }, [ref]);
 
   return (
-    <div onClick={toggleOpen} className="relative">
+    <div ref={ref} onClick={toggleOpen} className="relative">
       <div className=" flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md">
         <div className="flex items-center justify-center text-sm  hover:text-MAIN_GREEN">
           알림
@@ -18,7 +35,10 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
 
       {/* 알림 목록 부분 */}
       {openAlert && (
-        <div className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp">
+        <div
+          onClick={(event) => event.stopPropagation()}
+          className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp"
+        >
           <div className="relative rounded-2xl pt-4">
             {/* 삼각형 모양 */}
             <div className="bg-white absolute h-6 w-6 rotate-45 transform origin-bottom-right -translate-y-1/2 left-10 top-1 rounded border-t-2 border-l-2" />
@@ -32,6 +52,7 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
                 <AlertMessage
                   nickname={"캐치캠핑핑핑"}
                   time={1}
+                  campId={1}
                   campingSite={"캠프유캠푸 캠핑장"}
                   campingZone={"A구역(벚꽃 캠핑존) 10 "}
                   total={3}
@@ -40,6 +61,7 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
                 <AlertMessage
                   nickname={"캐치캠핑핑핑"}
                   time={1}
+                  campId={2}
                   campingSite={"캠프유캠푸 캠핑장"}
                   campingZone={"A구역(벚꽃 캠핑존) 10 "}
                   total={3}
