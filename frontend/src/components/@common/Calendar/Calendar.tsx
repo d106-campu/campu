@@ -18,8 +18,7 @@ import {
   isWithinInterval,
   isBefore,
 } from "date-fns";
-import { FaChevronLeft } from "react-icons/fa6";
-import { FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 // @TODO: 윤년 추가하기
 // @TODO: 예약 불가능한 날짜 처리
