@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { IRegion } from "@/components//@common/Search/RegionList";
 import { IoIosArrowDown } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { setRegion, setSubRegion } from "@/features/search/searchBarSlice";
 
-const SearchRegion = ({ arr }: { arr: IRegion[] }) => {
+const SearchRegion = ({ list }: { list: IRegion[] }) => {
   const [selectRegion, setSelectRegion] = useState<IRegion | null>(null);
   const [selectSubRegion, setSelectSubRegion] = useState<string | null>(null);
   const [isRegionListOpen, setIsRegionListOpen] = useState<boolean>(false);
   const [isSubRegionListOpen, setIsSubRegionListOpen] =
     useState<boolean>(false);
 
+  const dispatch = useDispatch();
+
   const handleRegionClick = (region: IRegion) => {
     if (selectRegion === region) {
       setIsRegionListOpen(!isRegionListOpen);
     } else {
+      dispatch(setRegion(region.name)); // 리덕스 스토어에 저장
       setSelectRegion(region);
       setSelectSubRegion(null);
       setIsRegionListOpen(false);
@@ -20,6 +25,7 @@ const SearchRegion = ({ arr }: { arr: IRegion[] }) => {
   };
 
   const handleSubRegionClick = (subRegion: string) => {
+    dispatch(setSubRegion(subRegion)); // 리덕스 스토어에 저장
     setSelectSubRegion(subRegion);
     setIsRegionListOpen(false);
     setIsSubRegionListOpen(false);
@@ -41,7 +47,7 @@ const SearchRegion = ({ arr }: { arr: IRegion[] }) => {
       <div className="absolute mt-10 z-20">
         {isRegionListOpen && (
           <ul className="max-h-64 w-32 overflow-auto bg-white py-2 text-sm">
-            {arr.map((region, index) => (
+            {list.map((region, index) => (
               <li
                 key={index}
                 className={`py-2 text-center cursor-pointer ${

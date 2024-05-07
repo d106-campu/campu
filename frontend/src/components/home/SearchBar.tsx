@@ -10,21 +10,38 @@ import { IoIosArrowDown } from "react-icons/io";
 import Calendar from "../@common/Calendar/Calendar";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
+import { useDispatch } from "react-redux";
+import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
 
 const SearchBar = () => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
+      dispatch(setPeople(numberOfPeople - 1));
     }
   };
 
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
+      dispatch(setPeople(numberOfPeople + 1));
     }
+  };
+
+  const handleKeywordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchKeyword(e.target.value); // 입력한 검색어 업데이트
+  };
+
+  const handleSearch = () => {
+    dispatch(setKeyword(searchKeyword)); // 검색어를 리덕스 스토어에 저장
   };
 
   return (
@@ -33,7 +50,7 @@ const SearchBar = () => {
         {/* 지역 선택 */}
         <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <RiMapPinLine />
-          <SearchRegion arr={RegionList} />
+          <SearchRegion list={RegionList} />
         </div>
 
         {/* 날짜 선택 */}
@@ -89,10 +106,15 @@ const SearchBar = () => {
           <input
             className="ml-2 outline-none placeholder-black text-sm"
             placeholder="키워드로 캠핑장을 검색해보세요"
+            value={searchKeyword}
+            onChange={handleKeywordChange} // 검색어 입력 시 상태 업데이트
           ></input>
         </div>
         {/* 검색버튼 */}
-        <button className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap">
+        <button
+          onClick={handleSearch}
+          className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap"
+        >
           검색하기
         </button>
       </div>
