@@ -2,47 +2,37 @@ import { RiMapPinLine } from "react-icons/ri";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { LuSearch } from "react-icons/lu";
+import SearchRegion from "@/components/@common/Search/SearchRegion";
+import { RegionList } from "@/components/@common/Search/RegionList";
+import { useState } from "react";
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 
 const SearchBar = () => {
-  // 도 리스트
-  const provinceList = [
-    { id: 1, name: "서울특별시" },
-    { id: 2, name: "부산광역시" },
-    { id: 3, name: "대구광역시" },
-    { id: 4, name: "인천광역시" },
-    { id: 5, name: "광주광역시" },
-    { id: 6, name: "대전광역시" },
-    { id: 7, name: "울산광역시" },
-    { id: 8, name: "세종특별자치시" },
-    { id: 9, name: "경기도" },
-    { id: 10, name: "강원도" },
-    { id: 11, name: "충청북도" },
-    { id: 12, name: "충청남도" },
-    { id: 13, name: "전라북도" },
-    { id: 14, name: "전라남도" },
-    { id: 15, name: "경상북도" },
-    { id: 16, name: "경상남도" },
-    { id: 17, name: "제주특별자치도" },
-  ];
+  const [numberOfPeople, setNumberOfPeople] = useState(2);
+
+  const handleDecrease = () => {
+    if (numberOfPeople > 1) {
+      setNumberOfPeople(numberOfPeople - 1);
+    }
+  };
+
+  const handleIncrease = () => {
+    if (numberOfPeople < 6) {
+      setNumberOfPeople(numberOfPeople + 1);
+    }
+  };
 
   return (
     <>
       <div className="flex gap-2 items-center">
         {/* 지역 선택 */}
-        <div className="flex items-center flex-grow border bg-white rounded-md p-3">
+        <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <RiMapPinLine />
-          <select className="rounded-md ml-2 outline-none text-sm">
-            <option>지역 선택하기</option>
-            {provinceList.map((province, index) => (
-              <option key={index} value={province.name}>
-                {province.name}
-              </option>
-            ))}
-          </select>
+          <SearchRegion arr={RegionList} />
         </div>
 
         {/* 날짜 선택 */}
-        <div className="flex items-center flex-grow border bg-white rounded-md p-3">
+        <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <FaRegCalendarAlt />
           <select className="rounded-md ml-2 outline-none text-sm">
             <option>날짜 선택하기</option>
@@ -50,17 +40,28 @@ const SearchBar = () => {
         </div>
 
         {/* 인원 선택 */}
-        <div className="flex items-center flex-grow border bg-white rounded-md p-3">
+        <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <MdOutlinePersonOutline />
-          <select className="rounded-md ml-2 outline-none text-sm">
-            <option>인원 선택하기</option>
-          </select>
+          <div className="flex items-center text-sm">
+            <p className="px-2">인원 선택</p>
+            <div className="flex items-center">
+              <AiOutlineMinusCircle
+                onClick={handleDecrease}
+                className="text-MAIN_GREEN cursor-pointer"
+              />
+              <p className="px-3">{numberOfPeople}</p>
+              <AiOutlinePlusCircle
+                onClick={handleIncrease}
+                className="text-MAIN_GREEN cursor-pointer"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* 검색어 입력 */}
       <div className="flex mt-2 items-center">
-        <div className="flex w-full items-center border bg-white rounded-md p-3">
+        <div className="flex w-full items-center border bg-white rounded-md p-3 max-h-11">
           <LuSearch />
           <input
             className="ml-2 outline-none placeholder-black text-sm"
