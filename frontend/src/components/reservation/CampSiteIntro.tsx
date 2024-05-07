@@ -5,6 +5,7 @@ import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import { formatSimpleDate } from "@/utils/formatDateTime";
+import { useRefs } from "@/context/RefContext";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
@@ -34,6 +35,12 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
+
+  const { reviewRef } = useRefs();
+  const scrollToReviews = () => {
+    reviewRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <>
       <CampingPhotos main={data.main} photos={data.other} id={data.id} />
@@ -72,12 +79,14 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
             <p className="text-UNIMPORTANT_TEXT_01 pl-2">
               {data.campsite_addr1}
             </p>
-            <p className="pl-2 text-MAIN_GREEN font-bold">지도로 확인하기</p>
+            <button className="pl-2 text-MAIN_GREEN font-bold">
+              지도로 확인하기
+            </button>
           </div>
           <div className="flex py-2">
             <img src={phoneIcon} className="w-4" />
             <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.campsite_tel}</p>
-            <p className="pl-2 text-MAIN_GREEN font-bold">전화하기</p>
+            <button className="pl-2 text-MAIN_GREEN font-bold">복사하기</button>
           </div>
           <div className="flex">
             <img src={reviewIcon} className="w-5" />
@@ -85,7 +94,12 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
               방문자 리뷰 <span className="font-bold">{data.totalReview}</span>
               개
             </p>
-            <p className="pl-2 text-MAIN_GREEN font-bold">둘러보기</p>
+            <button
+              onClick={scrollToReviews}
+              className="pl-2 text-MAIN_GREEN font-bold"
+            >
+              둘러보기
+            </button>
           </div>
         </div>
 
