@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store';
 import { setIsLogin } from '@/features/login/authSlice';
 import logo from "@/assets/images/temp_log2.png";
-import profileImage from "@/assets/images/profile.png";
+import profileDefaultImage from "@/assets/images/profile.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
 import AlertLink from "@/components/alert/AlertLink ";
@@ -14,6 +14,7 @@ const Header = ({ page }: { page?: string }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
 
   const handleLogout = () => {
     dispatch(setIsLogin(false));
@@ -75,7 +76,7 @@ const Header = ({ page }: { page?: string }) => {
             </span>
           )}
         <img
-          src={profileImage}
+          src={profileImage || profileDefaultImage}
           alt="default profile"
           className="w-8 h-8 rounded-full cursor-pointer"
         />

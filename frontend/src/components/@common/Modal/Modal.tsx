@@ -14,6 +14,7 @@ interface IModalProps {
   onClose: () => void;
   title?: string;
   titleStyle?: string;
+  opacity?: string;
   children: React.ReactNode;
 }
 
@@ -30,6 +31,7 @@ const Modal = ({
   onClose,
   title,
   titleStyle = "text-lg font-bold",
+  opacity,
   children,
 }: PropsWithChildren<IModalProps>) => {
   const [isRendering, setIsRendering] = useState<boolean>(true);
@@ -58,13 +60,13 @@ const Modal = ({
       {/* 전체 화면을 덮는 반투명 배경 구성 */}
       <div
         className={`fixed w-full h-full top-0 left-0 right-0 bottom-0 z-[99]
-        ${isBackgroundColorDark ? "bg-black/70" : "bg-white/50"} `}
+        ${isBackgroundColorDark ? "bg-black/70" : "bg-white/50"} ${opacity}`}
         onClick={handleClose}
       />
       {/* 모달창*/}
       <div
         className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100]
-        ${width} ${padding} ${margin} ${rounded} ${actualContentBackgroundColor} ${actualTextColor} 
+        ${width} ${padding} ${margin} ${rounded} ${actualContentBackgroundColor} ${actualTextColor} ${opacity}
         ${isRendering ? "animate-modalOpen" : "animate-modalClose"}
         `}
       >
