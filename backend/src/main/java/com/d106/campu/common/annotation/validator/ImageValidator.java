@@ -45,7 +45,7 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
             }
 
             /* 10MB */
-            if (size > ImageConstant.PROFILE_SIZE_LIMIT) {
+            if (size > ImageConstant.IMAGE_SIZE_LIMIT) {
                 context.buildConstraintViolationWithTemplate("Profile size is too large").addConstraintViolation();
                 return false;
             }

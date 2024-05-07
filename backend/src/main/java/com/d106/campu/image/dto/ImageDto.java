@@ -20,7 +20,6 @@ public class ImageDto {
     public static class ProfileResponse {
 
         private String profileImageUrl;
-        private String size;
 
     }
 

@@ -45,6 +45,8 @@ public class SecurityConfig {
         "/campsite/**",
         /* reservation */
         "/reservation/**",
+        /* file */
+        "/file/**",
         /* image */
         "/image/**",
     };
