@@ -43,6 +43,12 @@ public class MyPageController implements MyPageControllerDoc {
     }
 
     @Override
+    @GetMapping("/profile")
+    public Response getProfile() {
+        return new Response(MyPageConstant.MY_PROFILE, myPageService.getProfile());
+    }
+
+    @Override
     @PostMapping("/profile/nickname")
     public Response updateNickname(@RequestParam String nickname) {
         myPageService.updateNickname(nickname);
