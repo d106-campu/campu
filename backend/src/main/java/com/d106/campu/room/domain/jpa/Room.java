@@ -56,6 +56,9 @@ public class Room extends BaseTime {
     @Column(name = "room_cnt", nullable = false)
     private int roomCnt;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "toilet_cnt", nullable = false)
     private int toiletCnt;
 
