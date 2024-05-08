@@ -34,7 +34,7 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
   };
 
   return (
-    <div className="flex text-sm">
+    <div className="flex text-xs">
       <button
         type="button"
         className="relative bg-white p-2 flex items-center"

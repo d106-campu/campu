@@ -8,12 +8,11 @@ import { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import Calendar from "@/components/@common/Calendar/Calendar";
-import { FaArrowRotateRight } from "react-icons/fa6";
-import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 import { useDispatch, useSelector } from "react-redux";
 import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/app/store";
+import { formatSimpleDate } from "@/utils/formatDateTime";
 
 const SearchBar = () => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
@@ -22,10 +21,9 @@ const SearchBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
-  const startDate = useSelector(
-    (state: RootState) => state.searchBar.startDate
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.campingDate
   );
-  const endDate = useSelector((state: RootState) => state.searchBar.endDate);
 
   // 스토어 저장 확인용
   // @TODO: API 호출 후, 스토어 비우는 로직 추가해야함
@@ -68,29 +66,24 @@ const SearchBar = () => {
         {/* 날짜 선택 */}
         <div className="relative w-[33%]">
           <div
-            className="flex items-center border bg-white rounded-md p-3 max-h-11"
+            className="flex items-center border bg-white rounded-md p-3 max-h-11 whitespace-nowrap"
             onClick={() => setShowCalendar(!showCalendar)}
           >
             <FaRegCalendarAlt />
-            <div className="flex items-center w-full cursor-pointer text-sm px-2">
+            <div className="flex items-center w-full cursor-pointer text-xs px-2">
               <p className="pr-2">
                 {startDate && endDate
-                  ? `${startDate} ~ ${endDate}`
+                  ? `${formatSimpleDate(startDate)} - ${formatSimpleDate(
+                      endDate
+                    )}`
                   : "날짜 선택"}
               </p>
               <IoIosArrowDown />
             </div>
           </div>
           {showCalendar && (
-            <div className="absolute top-full left-0 bg-white rounded-md z-20 mt-1 w-[400px] border pb-4">
+            <div className="absolute top-full left-0 bg-white rounded-md z-20 mt-1 w-[400px] border pb-8">
               <Calendar />
-              <div className="px-8">
-                <button className="flex items-center gap-2 cursor-pointer p-2">
-                  <FaArrowRotateRight color="C9C9C9" />
-                  <span className="text-GRAY">일정 초기화</span>
-                </button>
-                <CalendarSubmit></CalendarSubmit>
-              </div>
             </div>
           )}
         </div>
@@ -98,7 +91,7 @@ const SearchBar = () => {
         {/* 인원 선택 */}
         <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <MdOutlinePersonOutline />
-          <div className="flex items-center text-sm">
+          <div className="flex items-center text-xs">
             <p className="px-2 whitespace-nowrap">인원 선택</p>
             <div className="flex items-center">
               <AiOutlineMinusCircle
@@ -120,7 +113,7 @@ const SearchBar = () => {
         <div className="flex w-full items-center border bg-white rounded-md p-3 max-h-11">
           <LuSearch />
           <input
-            className="ml-2 outline-none placeholder-black text-sm"
+            className="ml-2 outline-none placeholder-black text-xs"
             placeholder="키워드로 캠핑장을 검색해보세요"
             value={searchKeyword}
             onChange={handleKeywordChange}
