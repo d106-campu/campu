@@ -28,8 +28,8 @@ public class CampsiteController implements CampsiteControllerDoc {
     @Override
     @GetMapping
     public Response getCampsiteList(
-        DoNmEnum doNm,
-        SigunguEnum sigunguNm,
+        @RequestParam(required = false) DoNmEnum doNm,
+        @RequestParam(required = false) SigunguEnum sigunguNm,
         LocalDate startDate,
         LocalDate endDate,
         int headCnt,
@@ -40,9 +40,7 @@ public class CampsiteController implements CampsiteControllerDoc {
     ) {
         return new Response(
             CampsiteConstant.CAMPSITE_LIST,
-            campsiteService.getCampsiteList(
-                doNm.getName(), sigunguNm.getName(), startDate, endDate, headCnt, induty, theme, owner, pageable
-            )
+            campsiteService.getCampsiteList(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, owner, pageable)
         );
     }
 

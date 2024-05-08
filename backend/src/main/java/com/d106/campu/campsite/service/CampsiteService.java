@@ -11,6 +11,8 @@ import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.common.constant.DoNmEnum;
+import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
@@ -61,8 +63,8 @@ public class CampsiteService {
      */
     @Transactional(readOnly = true)
     public Page<CampsiteDto.Response> getCampsiteList(
-        String doNm,
-        String sigunguNm,
+        DoNmEnum doNm,
+        SigunguEnum sigunguNm,
         LocalDate startDate,
         LocalDate endDate,
         int headCnt,
@@ -75,18 +77,21 @@ public class CampsiteService {
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
+        String doNmStr = (doNm == null) ? null : doNm.getName();
+        String sigunguNmStr = (sigunguNm == null) ? null : sigunguNm.getName();
+
         Page<Campsite> responsePage = null;
         if (owner) {
             checkUserRoleOwner(user);
             responsePage = campsiteRepository.findByUser(pageable, user);
         } else if (induty == null && theme == null) {
-            responsePage = campsiteRepository.findAll(pageable, doNm, sigunguNm);
+            responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr);
         } else if (induty != null && !induty.isBlank()) {
             responsePage = campsiteRepository.findByIndutyListContaining(
-                pageable, doNm, sigunguNm, Induty.of(induty).getValue());
+                pageable, doNmStr, sigunguNmStr, Induty.of(induty).getValue());
         } else if (theme != null && !theme.isBlank()) {
             responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(
-                pageable, doNm, sigunguNm, Theme.of(theme).getValue());
+                pageable, doNmStr, sigunguNmStr, Theme.of(theme).getValue());
         }
 
         return (responsePage == null) ? null : responsePage.map((campsite) -> {
