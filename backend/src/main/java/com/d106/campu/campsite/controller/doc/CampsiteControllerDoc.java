@@ -94,7 +94,6 @@ public interface CampsiteControllerDoc {
 
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
-        public Pageable pageable;
     }
 
     class CreateCampsiteResponse {
@@ -107,7 +106,6 @@ public interface CampsiteControllerDoc {
 
     class CampsiteRoomListResponse {
         public Page<RoomDto.ListResponse> roomList;
-        public Pageable pageable;
     }
 
 }
