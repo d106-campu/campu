@@ -8,10 +8,14 @@ import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.dto.MyPageDto.CampsiteLocationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.CampsiteResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.ReviewReservationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.ReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.RoomResponse;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
+import com.d106.campu.review.domain.jpa.QReviewImage;
 import com.d106.campu.room.domain.jpa.QRoom;
 import com.d106.campu.user.domain.jpa.QUser;
 import com.querydsl.core.BooleanBuilder;
@@ -21,6 +25,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,13 +45,14 @@ public class MyPageRepository {
     private final QRoom room = QRoom.room;
     private final QReservation reservation = QReservation.reservation;
     private final QReview review = QReview.review;
+    private final QReviewImage reviewImage = QReviewImage.reviewImage;
     private final QCampsiteLocation campsiteLocation = QCampsiteLocation.campsiteLocation;
 
     public Page<MyReservationResponse> getReservationList(Pageable pageable, String account, DateType dateType,
         UseType useType) {
 
         Expression<?>[] projections = new Expression[]{
-            campsite.id, campsite.addr1, campsite.thumbnailImageUrl,
+            campsite.id, campsite.facltNm, campsite.addr1, campsite.thumbnailImageUrl,
             room.id, room.name, room.supplyList,
             reservation.id, reservation.headCnt, reservation.price, reservation.startDate, reservation.endDate,
             campsiteLocation.mapX, campsiteLocation.mapY,
@@ -85,7 +91,7 @@ public class MyPageRepository {
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize()).fetch();
 
-        List<MyReservationResponse> myReservationResponses = new ArrayList<>();
+        List<MyReservationResponse> myReservationResponseList = new ArrayList<>();
         for (Tuple tuple : tuples) {
             String status;
             if (Objects.requireNonNull(tuple.get(reservation.endDate)).isAfter(LocalDate.now())) {
@@ -96,9 +102,10 @@ public class MyPageRepository {
                 status = MyPageConstant.RESERVATION;
             }
 
-            myReservationResponses.add(MyReservationResponse.builder()
+            myReservationResponseList.add(MyReservationResponse.builder()
                 .campsite(CampsiteResponse.builder()
                     .campsiteId(tuple.get(campsite.id))
+                    .campsiteName(tuple.get(campsite.facltNm))
                     .address(tuple.get(campsite.addr1))
                     .thumbnailImageUrl(tuple.get(campsite.thumbnailImageUrl))
                     .build())
@@ -120,13 +127,76 @@ public class MyPageRepository {
                     .mapY(tuple.get(campsiteLocation.mapY))
                     .build())
                 .build());
-
         }
 
-        return new PageImpl<>(myReservationResponses, pageable, getTotalCount(account));
+        return new PageImpl<>(myReservationResponseList, pageable, getReservationCountByAccount(account));
     }
 
-    private long getTotalCount(String account) {
+    public Page<MyReviewResponse> getReviewList(Pageable pageable, String account, DateType dateType) {
+
+        Expression<?>[] projections = new Expression[]{
+            review.id, review.score, review.content, review.createTime,
+            campsite.id, campsite.facltNm,
+            room.name,
+            reviewImage.url
+        };
+
+        BooleanBuilder predicate = new BooleanBuilder();
+        predicate.and(user.account.eq(account));
+
+        if (dateType.equals(DateType.MONTH)) {
+            predicate.and(review.createTime.goe(LocalDateTime.now().minusMonths(1L)));
+        } else if (dateType.equals(DateType.MONTH6)) {
+            predicate.and(review.createTime.goe(LocalDateTime.now().minusMonths(6L)));
+        } else if (dateType.equals(DateType.YEAR)) {
+            predicate.and(review.createTime.goe(LocalDateTime.now().minusYears(1L)));
+        }
+
+        OrderSpecifier<?>[] orderBys = new OrderSpecifier[]{
+            review.createTime.desc()
+        };
+
+        List<Tuple> tuples = jpaQueryFactory.select(projections)
+            .from(review).join(campsite).on(review.campsite.eq(campsite))
+            .join(user).on(reservation.user.eq(user))
+            .join(room).on(reservation.room.eq(room))
+            .leftJoin(reviewImage).on(reviewImage.review.eq(review))
+            .where(predicate)
+            .groupBy(review)
+            .orderBy(orderBys)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize()).fetch();
+
+        List<MyReviewResponse> myReviewResponseList = new ArrayList<>();
+        for (Tuple tuple : tuples) {
+            myReviewResponseList.add(MyReviewResponse.builder()
+                .review(ReviewResponse.builder()
+                    .reviewId(tuple.get(review.id))
+                    .score(tuple.get(review.score))
+                    .content(tuple.get(review.content))
+                    .createTime(tuple.get(review.createTime))
+                    .imageUrl(tuple.get(reviewImage.url))
+                    .build())
+                .reservation(ReviewReservationResponse.builder()
+                    .campsiteId(tuple.get(campsite.id))
+                    .campsiteName(tuple.get(campsite.facltNm))
+                    .roomName(tuple.get(room.name))
+                    .build())
+                .build());
+        }
+
+        return new PageImpl<>(myReviewResponseList, pageable, getReviewCountByAccount(account));
+    }
+
+    private long getReviewCountByAccount(String account) {
+        return Objects.requireNonNull(jpaQueryFactory.select(Expressions.ONE)
+            .from(review)
+            .join(review.reservation.user, user)
+            .where(user.account.eq(account))
+            .fetchOne()).longValue();
+    }
+
+    private long getReservationCountByAccount(String account) {
         return Objects.requireNonNull(jpaQueryFactory.select(Expressions.ONE)
             .from(reservation)
             .join(reservation.user, user)
