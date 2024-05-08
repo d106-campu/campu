@@ -77,9 +77,11 @@ public class Campsite extends BaseTime {
     private String indutyList;
 
     @Column(name = "thumbnail_image_url", length = 1024)
+    @Setter
     private String thumbnailImageUrl;
 
     @Column(name = "map_image_url", length = 1024)
+    @Setter
     private String mapImageUrl;
 
     @Column(name = "homepage", length = 1024)

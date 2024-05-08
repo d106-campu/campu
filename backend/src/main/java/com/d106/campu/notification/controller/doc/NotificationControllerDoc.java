@@ -70,19 +70,17 @@ public interface NotificationControllerDoc {
     @Operation(summary = "전체 알림 반환", description = "전체 알림을 반환한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "전체 알림 반환 성공",
-            content = @Content(schema = @Schema(implementation = NotificationListResponse.class))
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = NotificationListResponse.class))
+            })
         ),
         @ApiResponse(responseCode = "400", description = "전체 알림 반환 실패", content = @Content)
     })
     Response getNotificationList(Pageable pageable);
 
     class NotificationListResponse {
-        public String result;
-        public Element data;
-
-        public static class Element {
-            public Page<NotificationDto.ListResponse> notificationList;
-        }
+        public Page<NotificationDto.ListResponse> notificationList;
     }
 
 }

@@ -47,8 +47,6 @@ public class SecurityConfig {
         "/reservation/**",
         /* file */
         "/file/**",
-        /* image */
-        "/image/**",
     };
 
     @Value("${cors.origin.list}")

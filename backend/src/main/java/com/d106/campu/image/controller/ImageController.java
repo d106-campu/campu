@@ -6,6 +6,7 @@ import com.d106.campu.image.controller.doc.ImageControllerDoc;
 import com.d106.campu.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -19,9 +20,25 @@ public class ImageController implements ImageControllerDoc {
 
     private final ImageService imageService;
 
-    @PostMapping(value = "/campsite", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response uploadProfileImage(@RequestPart MultipartFile profileImage) {
-        return new Response(ImageConstant.PROFILE_IMAGE, imageService.uploadProfileImage(profileImage));
+    @Override
+    @PostMapping(value = "/user/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response uploadUserProfileImage(@RequestPart("profileImage") MultipartFile profileImage) {
+        return new Response(ImageConstant.PROFILE_IMAGE, imageService.uploadUserProfileImage(profileImage));
+    }
+
+    @Override
+    @PostMapping(value = "/campsite/{campsiteId}/thumbnail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response uploadCampsiteThumbnailImage(@PathVariable("campsiteId") Long campsiteId,
+        @RequestPart("thumbnailImage") MultipartFile thumbnailImage) {
+        return new Response(ImageConstant.THUMBNAIL_IMAGE,
+            imageService.uploadCampsiteThumbnailImage(campsiteId, thumbnailImage));
+    }
+
+    @Override
+    @PostMapping(value = "/campsite/{campsiteId}/map", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response uploadCampsiteMapImage(@PathVariable("campsiteId") Long campsiteId,
+        @RequestPart("mapImage") MultipartFile mapImage) {
+        return new Response(ImageConstant.MAP_IMAGE, imageService.uploadCampsiteMapImage(campsiteId, mapImage));
     }
 
 }

@@ -11,7 +11,7 @@ public enum ImageExtension {
     PNG("png", new String[]{"image/png"}),
     GIF("gif", new String[]{"image/gif"}),
     BMP("bmp", new String[]{"image/bmp"}),
-    ;
+    WEBP("webp", new String[]{"image/webp"});
 
     private final String imageExtensionLowerCase;
     private final String[] imageMimeTypeList;
