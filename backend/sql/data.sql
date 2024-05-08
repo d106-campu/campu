@@ -7,13 +7,13 @@ USE d106;
 -- ----------------------------------------
 
 INSERT INTO `user` (`role`, `account`, `password`, `nickname`, `gender`, `birth_year`, `profile_image_url`, `tel`)
-VALUES ('ADMIN', 'hoing97s', '1234', 'hoing97s', 'M', '2000', 'https://avatars.githubusercontent.com/u/140311409', '01012312312'),
-       ('USER', 'danbeeS2', '1234', 'danbeeS2', 'F', '2000', 'https://avatars.githubusercontent.com/u/120550679', '01012312314'),
-       ('USER', 'cheesecat47', '1234', 'refo', 'M', '2000', 'https://avatars.githubusercontent.com/u/41780495', '01012312315'),
-       ('USER', 'Agwii', '1234', 'Agwii', 'M', '2000', 'https://avatars.githubusercontent.com/u/139833245', '01012312316'),
-       ('USER', 'minnnnnk0', '1234', 'minnnnnk', 'F', '2000', 'https://avatars.githubusercontent.com/u/139419164', '01012312317'),
-       ('USER', 'choihojo', '1234', 'choihojo', 'M', '2000', 'https://avatars.githubusercontent.com/u/87483951?', '01012312318'),
-       ('OWNER', 'sajangnim', 'campu1!', 'sajang1', 'F', '2000', null, '01023123123');
+VALUES ('ADMIN', 'hoing97s', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'hoing97s', 'M', '2000', 'https://avatars.githubusercontent.com/u/140311409', '01012312312'),
+       ('USER', 'danbeeS2', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'danbeeS2', 'F', '2000', 'https://avatars.githubusercontent.com/u/120550679', '01012312314'),
+       ('USER', 'cheesecat47', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'refo', 'M', '2000', 'https://avatars.githubusercontent.com/u/41780495', '01012312315'),
+       ('USER', 'Agwii', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'Agwii', 'M', '2000', 'https://avatars.githubusercontent.com/u/139833245', '01012312316'),
+       ('USER', 'minnnnnk0', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'minnnnnk', 'F', '2000', 'https://avatars.githubusercontent.com/u/139419164', '01012312317'),
+       ('USER', 'choihojo', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'choihojo', 'M', '2000', 'https://avatars.githubusercontent.com/u/87483951?', '01012312318'),
+       ('OWNER', 'sajangnim', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y!', 'sajang1', 'F', '2000', null, '01023123123');
 
 SET @user_hoing97s = (SELECT id FROM `user` WHERE account = 'hoing97s');
 SET @user_danbeeS2 = (SELECT id FROM `user` WHERE account = 'danbeeS2');

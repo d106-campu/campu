@@ -5,10 +5,14 @@ import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.MyPageConstant;
 import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.controller.doc.MyPageControllerDoc;
+import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
 import com.d106.campu.mypage.service.MyPageService;
+import com.d106.campu.user.constant.GenderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +40,34 @@ public class MyPageController implements MyPageControllerDoc {
     @GetMapping("/campsite")
     public Response getCampsiteList(Pageable pageable) {
         return new Response(MyPageConstant.CAMPSITE_LIST, myPageService.getCampsiteList(pageable));
+    }
+
+    @Override
+    @PostMapping("/profile/nickname")
+    public Response updateNickname(@RequestParam String nickname) {
+        myPageService.updateNickname(nickname);
+        return new Response();
+    }
+
+    @Override
+    @PostMapping("/profile/tel")
+    public Response updateTel(@RequestParam String tel) {
+        myPageService.updateTel(tel);
+        return new Response();
+    }
+
+    @Override
+    @PostMapping("/profile/password")
+    public Response updatePassword(@RequestBody PasswordChangeRequest passwordChangeRequestDto) {
+        myPageService.updatePassword(passwordChangeRequestDto);
+        return new Response();
+    }
+
+    @Override
+    @PostMapping("/profile/etc/info")
+    public Response updateEtcInfo(@RequestParam GenderType gender, @RequestParam String birthYear) {
+        myPageService.updateEtcInfo(gender, birthYear);
+        return new Response();
     }
 
 }

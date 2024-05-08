@@ -79,4 +79,17 @@ public class User extends BaseTime {
         this.password = password;
     }
 
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeTel(String tel) {
+        this.tel = tel;
+    }
+
+    public void changeEtcInfo(GenderType gender, String birthYear) {
+        this.gender = gender;
+        this.birthYear = birthYear;
+    }
+
 }
