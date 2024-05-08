@@ -1,4 +1,3 @@
-// 더미
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface IUserLoginState {

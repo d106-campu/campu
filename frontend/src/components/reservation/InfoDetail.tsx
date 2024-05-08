@@ -6,6 +6,7 @@ import { FaStar } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISimpleReviewList } from "@/types/review";
 import { scrollToTop } from "@/utils/scrollToTop";
+import { useRefs } from "@/context/RefContext";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface IData {
@@ -33,6 +34,7 @@ interface IInfoDetailProps {
 
 const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
   const navigate = useNavigate();
+  const { reviewRef } = useRefs();
 
   const reviews = reviewsData.reviews ? reviewsData.reviews.slice(0, 3) : []; // 보여줄 리뷰 개수
   const [isOpen, setIsOpen] = useState<boolean>(false); // 아코디언 상태관리
@@ -73,7 +75,7 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
       </div>
 
       {/* 방문자 리뷰 */}
-      <div className="pt-10">
+      <div ref={reviewRef} className="pt-10">
         <h3 className="text-xl font-bold">방문자 리뷰</h3>
         <div className="flex justify-between pt-1">
           <div className="flex items-center text-BLACK font-bold">

@@ -72,7 +72,7 @@ const MyController = () => {
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
         >
-          {formatSimpleDate(initialStartDate)} ~{" "}
+          {formatSimpleDate(initialStartDate)} -{" "}
           {formatSimpleDate(initialEndDate)} ·&nbsp;
           {diffDays(initialStartDate, initialEndDate)}박
         </div>
@@ -89,7 +89,9 @@ const MyController = () => {
       {scheduleModal && (
         <Modal width="w-[55%]" onClose={toggleScheduleModal} title="일정 선택">
           <div>
-            <Calendar />
+            <div className="w-[70%] h-[375px] mx-auto">
+              <Calendar />
+            </div>
             <button
               onClick={resetCalendar}
               className="flex items-center gap-2 cursor-pointer p-2"

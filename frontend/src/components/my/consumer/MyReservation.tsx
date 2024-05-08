@@ -11,18 +11,18 @@ const MyReservation = ({
   nights,
   details,
   people,
-  environment,
+  camInduty,
   price,
   address
 }: IReservationProps): JSX.Element => {
   const [selectedFilter, setSelectedFilter] = useState('전체'); // 날짜 선택 상태 관리
   const [expanded, setExpanded] = useState<Record<number, boolean>>({}); // 아코디언 토글 상태 관리
   const [reservations, setReservations] = useState<IReservationProps[]>([
-    { campName, area, date, nights, details, people, environment, price, address }
+    { campName, area, date, nights, details, people, camInduty, price, address }
   ]); // 컨슈머컨테이너에서 받은 props로 예약 상태 관리
   const [viewCount, setViewCount] = useState<number>(4); // 초기에 표시할 예약내역 수 관리
   const initialViewCount = 4; // 렌더링 시 아코디언 첫 개수
-  const filters = ['오늘', '일주일', '한달', '1년', '전체']; // 날짜 관련 필터 목록
+  const filters = ['1년', '6개월', '한달', '전체'];; // 날짜 관련 필터 목록
 
   // 더미데이터 로드 후 가장 최근순으로 정렬하기 위한 계산
   useEffect(() => {
@@ -60,7 +60,7 @@ const MyReservation = ({
   };
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-10rem)]">
       {/* 예약 내역 헤더 */}
       <div className='flex justify-between'>
         <h1 className='text-lg font-bold pb-5'>예약 내역</h1>

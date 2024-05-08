@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useCallback } from "react";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
@@ -13,17 +13,12 @@ const CalendarSubmit = ({
     (state: RootState) => state.campingDate
   );
 
-  const isDisable = useMemo(() => {
-    return !startDate && !endDate;
+  const isDisabled = useMemo(() => {
+    return !startDate || !endDate;
   }, [startDate, endDate]);
 
   const selectedDateText = useMemo(() => {
-    if (!startDate && !endDate) return null;
-
-    if (startDate && !endDate) {
-      return formatSimpleDate(startDate);
-    }
-
+    if (!startDate || !endDate) return "날짜를 선택해주세요";
     if (startDate && endDate) {
       return `${formatSimpleDate(startDate)} - ${formatSimpleDate(
         endDate
@@ -31,15 +26,23 @@ const CalendarSubmit = ({
     }
   }, [startDate, endDate]);
 
+  // 조건부 클릭 이벤트 핸들러
+  const handleOnClick = useCallback(() => {
+    if (!isDisabled) onClick();
+  }, [isDisabled, onClick]);
+
   return (
-    <Button
-      onClick={onClick}
-      width="w-full"
-      height="h-12"
-      textSize="text-lg"
-      text={` ${selectedDateText ? selectedDateText : "날짜를 선택해주세요"}`}
-      disabled={isDisable}
-    />
+    <div>
+      <p className="text-end"></p>
+      <Button
+        onClick={handleOnClick}
+        width="w-full"
+        height="h-12"
+        textSize="text-lg"
+        text={`${selectedDateText ? selectedDateText : "날짜를 선택해주세요"}`}
+        disabled={isDisabled}
+      />
+    </div>
   );
 };
 

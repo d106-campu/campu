@@ -1,4 +1,4 @@
-// 일정 날짜 format 함수 ex) 24.05.03(금)
+// 일정 날짜 format 함수 ex) 24.05.03 (금)
 export const formatDate = (dateString: Date | string | null) => {
   if (!dateString) return;
   const options: Intl.DateTimeFormatOptions = {
@@ -9,10 +9,11 @@ export const formatDate = (dateString: Date | string | null) => {
   };
   const date =
     typeof dateString === "string" ? new Date(dateString) : dateString;
-  return new Intl.DateTimeFormat("ko-KR", options).format(date);
+  const formatted = new Intl.DateTimeFormat("ko-KR", options).format(date);
+  return formatted.replace(/(\.\s)(?=\()/g, " ");
 };
 
-// 일정 날짜 format 함수 ex) 05.03(금)
+// 일정 날짜 format 함수 ex) 05.03 (금)
 export const formatSimpleDate = (dateString: Date | string | null) => {
   if (!dateString) return;
   const options: Intl.DateTimeFormatOptions = {
@@ -22,5 +23,6 @@ export const formatSimpleDate = (dateString: Date | string | null) => {
   };
   const date =
     typeof dateString === "string" ? new Date(dateString) : dateString;
-  return new Intl.DateTimeFormat("ko-KR", options).format(date);
+  const formatted = new Intl.DateTimeFormat("ko-KR", options).format(date);
+  return formatted.replace(/(\.\s)(?=\()/g, " ");
 };

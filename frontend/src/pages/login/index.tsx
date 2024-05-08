@@ -13,6 +13,7 @@ const LoginPage = (): JSX.Element => {
   const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false); // 화면 크기에 대한 상태 관리
   const [certificationModal, setCertificationModal] = useState<boolean>(false); // 인증 모달 상태 관리
   const [phoneVerified, setPhoneVerified] = useState<boolean>(false); // 인증 성공 상태 관리 
+  const [phoneNumber, setPhoneNumber] = useState<string>(''); // 사용자가 입력한 휴대폰 번호 전달 상태 관리
   const [isFindpwdModal, setIsFindpwdModalOpen] = useState<boolean>(false); // 비밀번호 찾기 모달 상태 관리
 
   // 토글을 통해서 회원가입 & 로그인 좌우 이동, 활성화 여부 체크
@@ -49,7 +50,10 @@ const LoginPage = (): JSX.Element => {
 
   const openFindpwdModal = () => setIsFindpwdModalOpen(true); // 비밀번호 찾기 모달 열기
   const closeFindpwdModal = () => setIsFindpwdModalOpen(false); // 비밀번호 찾기 모달 닫기
-  const openCertificationModal = () => {setCertificationModal(true);}; // 휴대전화 인증 모달 열기
+  const openCertificationModal = (phone: string) => {
+    setCertificationModal(true);
+    setPhoneNumber(phone)
+  }; // 휴대전화 인증 모달 열기
   const closeCertificationModal = () => {setCertificationModal(false);}; // 휴대전화 인증 모달 닫기
 
   // 창 크기에 따른 Form 반응시키기
@@ -145,6 +149,7 @@ const LoginPage = (): JSX.Element => {
         <Certification 
           isOpen={certificationModal}
           onClose={closeCertificationModal}
+          phone={phoneNumber}
           onVerify={handleVerify}
         />
       )}

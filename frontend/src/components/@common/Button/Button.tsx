@@ -56,7 +56,7 @@ const Button = ({
         ${borderColor} ${borderRadius} ${hoverBackgroundColor} ${hoverTextColor}
         ${textColor} ${textSize} ${cursorPointer} ${outline} ${padding} ${
         disabled &&
-        "cursor-not-allowed opacity-50 bg-gray-300 hover:bg-gray-300"
+        "cursor-not-allowed opacity-50 bg-[#707070] hover:bg-[#707070]"
       }
       `}
       {...props}

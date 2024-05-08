@@ -6,7 +6,7 @@ interface TagListProps {
 }
 
 const TagList: React.FC<TagListProps> = ({ tags, onTagToggle }) => {
-  const [selectedTags, setSelectedTags] = useState<string[]>(["애견동반"]);
+  const [selectedTags, setSelectedTags] = useState<string[]>(["여름물놀이"]);
 
   const toggleTag = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
@@ -17,18 +17,18 @@ const TagList: React.FC<TagListProps> = ({ tags, onTagToggle }) => {
   };
 
   return (
-    <div className="flex flex-wrap gap-2 justify-center">
+    <div className="flex flex-wrap gap-1 justify-center">
       {tags.map((tag, index) => (
         <span
           key={index}
-          className={`px-4 py-2 text-sm ${
+          className={`px-4 py-2 text-xs ${
             selectedTags.includes(tag)
               ? "bg-MAIN_GREEN text-white"
               : "bg-[#E1F9E3]"
           } rounded-3xl cursor-pointer`}
           onClick={() => toggleTag(tag)}
         >
-          # {tag}
+          #{tag}
         </span>
       ))}
     </div>

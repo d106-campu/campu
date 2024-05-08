@@ -26,7 +26,7 @@ const SearchContainer = () => {
             <SearchSection />
           </div>
         </div>
-        <div className="h-[calc(100vh-8rem)] w-[60%]">
+        <div className="h-[calc(100vh-3rem)] w-[60%]">
           <KakaoMap locations={formattedLocations} />
         </div>
       </div>

@@ -18,7 +18,7 @@ const dummyReviews: IMyReviewList = {
       area: "A구역(벚꽃 캠핑존) 10",
       date: "2024.04.22 작성",
       rating: 4.8,
-      images: [photo1]
+      images: []
     },
     {
       campsiteName: "히히히헤헤 캠핑장",
