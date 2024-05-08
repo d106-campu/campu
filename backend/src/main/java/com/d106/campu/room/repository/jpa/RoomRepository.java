@@ -13,8 +13,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("""
         SELECT r
         FROM Room r
-            LEFT JOIN FETCH r.campsite c
-            LEFT JOIN FETCH r.induty i
+            LEFT JOIN r.campsite c
+            LEFT JOIN r.induty i
         WHERE r.campsite = :campsite
         """)
     Page<Room> findByCampsite(Pageable pageable, @Param("campsite") Campsite campsite);

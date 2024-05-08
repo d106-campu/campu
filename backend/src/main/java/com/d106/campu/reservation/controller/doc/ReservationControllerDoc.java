@@ -29,7 +29,6 @@ public interface ReservationControllerDoc {
 
     class ReservationListResponse {
         public Page<ReservationDto.Response> reservationList;
-        public Pageable pageable;
     }
 
 }
