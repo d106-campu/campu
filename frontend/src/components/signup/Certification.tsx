@@ -1,24 +1,48 @@
 import { useState } from 'react';
 import Button from '@/components/@common/Button/Button';
 import Modal from '@/components/@common/Modal/Modal';
+import { useSignup } from '@/hooks/auth/useSignup';
 
 interface CertificationProps {
   isOpen: boolean;
   onClose: () => void;
-  onVerify: (code: boolean) => void;
+  phone: string; // 사용자가 입력한 휴대폰 번호
+  onVerify: (verified: boolean) => void; // 인증 결과를 부모로 전달하는 콜백
 }
 
-const Certification = ({ isOpen, onClose, onVerify }: CertificationProps) => {
+const Certification = ({ isOpen, onClose, phone, onVerify  }: CertificationProps) => {
   const [isCode, setIsCode] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const { verifyPhone } = useSignup();
 
   const handleVerifyClick = () => {
     if (isCode.length === 6) {
-      onVerify(isCode === '123456'); // @TODO : 백엔드와 연결하여 전송받은 isCode와 맞추기
-      setIsCode('');
-      setErrorMessage('');
+      // 인증 번호 확인 요청을 위한 데이터 구성 -> 인증번호 코드는 반드시 6자리
+      const requestData = {
+        tel: phone,
+        authorizationCode: parseInt(isCode),
+      };
+
+      // 인증 번호 검증 요청
+      verifyPhone.mutate(requestData, {
+        onSuccess: (response) => {
+          const isVerified = response.data.verify; // 인증 여부 확인
+          if (isVerified) {
+            setErrorMessage('인증 성공!');
+            onVerify(true);
+          } else {
+            setErrorMessage('인증번호가 일치하지 않습니다.');
+            onVerify(false);
+          }
+        },
+        onError: (error) => {
+          setErrorMessage('인증 과정에서 오류가 발생했습니다.');
+          console.error('인증 실패:', error);
+          onVerify(false);
+        },
+      });
     } else {
-      setErrorMessage('인증번호가 일치하지 않습니다.')
+      setErrorMessage('인증번호가 일치하지 않습니다.');
     }
   };
 

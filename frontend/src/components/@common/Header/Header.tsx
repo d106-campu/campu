@@ -17,6 +17,7 @@ const Header = ({ page }: { page?: string }) => {
   const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
 
   const handleLogout = () => {
+    localStorage.removeItem('accessToken');
     dispatch(setIsLogin(false));
     navigate('/');
   };

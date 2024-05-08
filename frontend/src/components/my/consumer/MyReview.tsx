@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { IMyReview } from '@/types/review';
 import { FaArrowRightToBracket } from "react-icons/fa6";
+import Lottie from "react-lottie";
+import { noImageOptions } from "@/assets/lotties/lottieOptions";
 import Rating from "@/components/@common/Review/Rating";
 
 interface MyReviewProps {
@@ -15,7 +17,7 @@ const MyReview = ({
   const [selectedFilter, setSelectedFilter] = useState('전체'); // 날짜 선택 상태 관리
   const [isReviews, setIsReviews] = useState<IMyReview[]>(reviews.slice(0, 2));
   const [viewCount, setViewCount] = useState<number>(2); // 처음 보여줄 리뷰 개수 관리
-  const filters = ['오늘', '일주일', '한달', '1년', '전체']; // 날짜 관련 필터 목록
+  const filters = ['1년', '6개월', '한달', '전체']; // 날짜 관련 필터 목록
 
   // 날짜 선택에 따른 필터 체인지
   const handleFilterChange = (filter: string) => {
@@ -37,7 +39,7 @@ const MyReview = ({
   };
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-10rem)]">
       {/* 헤더 */}
       <div className='flex'>
         <h1 className='text-lg font-bold pb-5'>내가 쓴 리뷰</h1>
@@ -45,7 +47,7 @@ const MyReview = ({
       </div>
 
       {/* 날짜 선택 */}
-      <div className="flex space-x-2 pb-5">
+      <div className="flex space-x-2 pb-2">
         {filters.map(filter => (
           <button
             key={filter}
@@ -78,30 +80,35 @@ const MyReview = ({
               </div>
             </div>
             {/* 우측 사진 */}
-            <div className='w-[50%] pr-3'>
+            <div className='w-[50%] pr-4'>
               <div className='flex flex-col items-end justify-center'>             
-              <button className='flex justify-end'>
-                <p className='text-xs pr-1'>삭 제</p>
+              <button className='flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2'>
+                <p className='text-xs p-1'>삭 제</p>
               </button>
-                {review.images.map((image, idx) => (
-                  <img
-                    key={idx}
-                    src={image}
-                    alt="Review"
-                    className='w-[300px] h-[150px] rounded-lg object-cover object-center'/>
-                ))}
+              {review.images.length > 0 ? (
+                  review.images.map((image, idx) => (
+                    <img key={idx} src={image} alt="Review" className='w-[300px] h-[150px] rounded-lg object-cover object-center'/>
+                  ))
+                ) : (
+                  <div className="flex flex-col justify-center h-auto border rounded-2xl">
+                    <Lottie options={noImageOptions} height={150} width={300} speed={0.5} />
+                    <p className="text-UNIMPORTANT_TEXT_02 text-center text-sm">
+                      리뷰 사진을 등록하지 않았어요
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
         ))}
         {/* 더보기, 줄이기 토글 버튼 */}
-        <div className='flex justify-center pt-5'>
+        <div className='flex justify-center pt-3'>
           {viewCount < totalMyReview && (
-            <button onClick={showMoreReviews} className="mx-2 px-4 py-2">더보기</button>
+            <button onClick={showMoreReviews} className="mx-2 py-2">더보기</button>
           )}
           {viewCount > 2 && (
-            <button onClick={showLessReviews} className="mx-2 px-4 py-2">줄이기</button>
+            <button onClick={showLessReviews} className="mx-2 py-2">줄이기</button>
           )}
         </div>
       </div>

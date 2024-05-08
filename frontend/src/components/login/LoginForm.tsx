@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ILoginFormValues } from "@/types/auth";
 import { useDispatch } from "react-redux";
 import { setIsLogin } from "@/features/login/authSlice";
 import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
+import { useSignup } from '@/hooks/auth/useSignup';
+import {
+  MIN_ID_LENGTH, MAX_ID_LENGTH, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH,
+} from '@/constants/constants';
 
 interface ILoginFormProps {
   isSmallScreen: boolean;
@@ -16,7 +21,9 @@ const LoginForm = ({
   toggleForm,
   openFindpwdModal,
 }: ILoginFormProps): JSX.Element => {
+  const { loginMutation } = useSignup();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [values, setValues] = useState<ILoginFormValues>({
     id: "",
     password: "",
@@ -29,13 +36,13 @@ const LoginForm = ({
 
   // 로그인 유효성 검사 함수
   const validateLoginForm = () => {
-    let isValid = false;
+    let isValid = true;
     const newErrors = { id: "", password: "" };
 
     if (!values.id) {
       newErrors.id = "아이디를 입력해주세요.";
-      isValid = true;
-    } else if (values.id.length < 6) {
+      isValid = false;
+    } else if (values.id.length < MIN_ID_LENGTH) {
       newErrors.id = "아이디는 6자리 이상입니다.";
       isValid = false;
     } else if (!/^[a-zA-Z0-9]+$/.test(values.id)) {
@@ -45,8 +52,8 @@ const LoginForm = ({
 
     if (!values.password) {
       newErrors.password = "비밀번호를 입력해주세요.";
-      isValid = true;
-    } else if (values.password.length < 8) {
+      isValid = false;
+    } else if (values.password.length < MIN_PASSWORD_LENGTH) {
       newErrors.password = "비밀번호는 8자 이상입니다.";
       isValid = false;
     } else if (
@@ -56,23 +63,21 @@ const LoginForm = ({
       isValid = false;
     }
 
-    if (!isValid) {
-      // @TODO : 여기서 api 통신 연결 -> 아이디, 비번 틀렸을 때의 유효성 처리 필요
-      console.log("백엔드측으로 로그인 요청함");
-    }
-
     setErrors(newErrors);
     return isValid;
   };
 
   // 로그인 클릭 시 유효성 검사 함수에 대해 분기 처리
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    // e.preventDefault();
     if (validateLoginForm()) {
-      dispatch(setIsLogin(true));
-      console.log("로그인 성공함", setIsLogin);
-    } else {
-      console.log("로그인 실패함", errors);
+      loginMutation.mutate({ account: values.id, password: values.password }, {
+        onSuccess: () => {
+          console.log("로그인 버튼 딸깍!")
+          dispatch(setIsLogin(true));
+          navigate('/');
+        }
+      });
     }
   };
 
@@ -97,21 +102,21 @@ const LoginForm = ({
       name: "id",
       placeholder: "아이디를 입력하세요.",
       type: "text",
-      maxLength: 16,
+      maxLength: MAX_ID_LENGTH,
     },
     {
       label: "비밀번호",
       name: "password",
       placeholder: "비밀번호를 입력하세요.",
       type: "password",
-      maxLength: 20,
+      maxLength: MAX_PASSWORD_LENGTH,
     },
   ];
 
   return (
     <>
       <div className="h-screen flex items-center justify-center">
-        <div className="w-full h-auto flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
+        <div className="w-full h-auto min-h-[60vh] flex items-center justify-center rounded-2xl shadow-2xl bg-white relative">
           <div className="w-[80%]">
             {/* 헤더 */}
             <p
@@ -128,7 +133,7 @@ const LoginForm = ({
               <p className="text-center font-bold text-xl">로그인</p>
             </div>
             {/* 입력 폼 */}
-            <form onSubmit={handleSubmit} className="space-y-2">
+            <div className="space-y-2">
               {fields.map((field) => (
                 <InputField
                   key={field.name}
@@ -156,15 +161,16 @@ const LoginForm = ({
                   onClick={openFindpwdModal}
                 />
                 <Button
-                  type="submit"
+                  type="button"
                   text="로그인"
                   textSize="text-md"
                   width="w-full"
                   borderRadius="rounded-md"
                   padding="px-auto"
+                  onClick={handleSubmit}
                 />
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
