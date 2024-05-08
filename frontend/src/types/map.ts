@@ -10,4 +10,5 @@ export interface IMapProps {
   rate?: number;
   lat?: number | undefined;
   lng?: number | undefined;
+  level?: number;
 }
