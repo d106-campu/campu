@@ -14,6 +14,7 @@ import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
+import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -21,6 +22,7 @@ import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -87,14 +89,15 @@ public class CampsiteService {
                 pageable, doNm, sigunguNm, Theme.of(theme).getValue());
         }
 
-        return responsePage == null ? null : responsePage.map((e) -> {
-            // Can I reserve or not
-            e.setAvailable(e.getRoomList().stream()
-                .filter(room -> reservationRepository.existsReservationOnDateRange(room, startDate, endDate)).findFirst()
-                .isEmpty());
+        return (responsePage == null) ? null : responsePage.map((campsite) -> {
+            // available at least one room can be reserved on the date range
+            List<Room> roomList = campsite.getRoomList();
+            List<Room> roomWithReservationList = roomList.stream()
+                .filter(room -> reservationRepository.existsReservationOnDateRange(room, startDate, endDate)).toList();
+            campsite.setAvailable((roomList.size() - roomWithReservationList.size()) > 0);
             // Did I like this campsite
-            e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
-            return campsiteMapper.toCampsiteListResponseDto(e);
+            campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+            return campsiteMapper.toCampsiteListResponseDto(campsite);
         });
     }
 
