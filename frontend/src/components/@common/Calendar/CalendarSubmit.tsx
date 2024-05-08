@@ -1,5 +1,6 @@
+import { PropsWithChildren, useCallback } from "react";
 import { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { formatSimpleDate } from "@/utils/formatDateTime";
 import { diffDays } from "@/utils/diffDays";
@@ -9,23 +10,19 @@ import {
   setStartDate,
 } from "@/features/reservation/campingDateSlice";
 
-const CalendarSubmit = () => {
-  const dispatch = useDispatch();
+const CalendarSubmit = ({
+  onClick,
+}: PropsWithChildren<{ onClick: () => void }>) => {
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
 
-  const isDisable = useMemo(() => {
-    return !startDate && !endDate;
+  const isDisabled = useMemo(() => {
+    return !startDate || !endDate;
   }, [startDate, endDate]);
 
   const selectedDateText = useMemo(() => {
-    if (!startDate && !endDate) return null;
-
-    if (startDate && !endDate) {
-      return formatSimpleDate(startDate);
-    }
-
+    if (!startDate || !endDate) return "날짜를 선택해주세요";
     if (startDate && endDate) {
       return `${formatSimpleDate(startDate)} - ${formatSimpleDate(
         endDate
@@ -33,24 +30,22 @@ const CalendarSubmit = () => {
     }
   }, [startDate, endDate]);
 
-  // 스토어에 날짜 저장
-  const submitToStore = () => {
-    dispatch(setStartDate(startDate));
-    dispatch(setEndDate(endDate));
-  };
+  // 조건부 클릭 이벤트 핸들러
+  const handleOnClick = useCallback(() => {
+    if (!isDisabled) onClick();
+  }, [isDisabled, onClick]);
 
   return (
     <div>
+      <p className="text-end"></p>
       <Button
+        onClick={handleOnClick}
         width="w-full"
         height="h-12"
         textSize="text-lg"
-        text={` ${
-          selectedDateText ? selectedDateText : "날짜를 선택해주세요."
-        }`}
-        disabled={isDisable}
-        onClick={submitToStore}
-      ></Button>
+        text={`${selectedDateText ? selectedDateText : "날짜를 선택해주세요"}`}
+        disabled={isDisabled}
+      />
     </div>
   );
 };

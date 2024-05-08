@@ -11,6 +11,7 @@ import { reservationReducer } from "@/features/reservation/ReservationSlice";
 import { profileImageReducer } from "@/features/mypage/myProfile";
 import { campingDateReducer } from "@/features/reservation/campingDateSlice";
 import { searchBarReducer } from "@/features/search/searchBarSlice";
+import { headCountReducer } from "@/features/reservation/HeadCountSlice";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,8 @@ const persistConfig = {
     "profileImage",
     "reservation",
     "searchBar",
+    "campingDate",
+    "headCount",
   ],
 };
 
@@ -39,6 +42,7 @@ const rootReducer = combineReducers({
   reservation: reservationReducer,
   campingDate: campingDateReducer,
   searchBar: searchBarReducer,
+  headCount: headCountReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

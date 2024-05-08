@@ -1,7 +1,8 @@
 export const diffDays = (
-  startDateString: string | Date,
-  endDateString: string | Date
+  startDateString: string | Date | null,
+  endDateString: string | Date | null
 ) => {
+  if (!startDateString || !endDateString) return;
   // string이면 Date 객체로 변환
   const startDate =
     typeof startDateString === "string"
@@ -14,4 +15,4 @@ export const diffDays = (
   const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
-0
+0;
