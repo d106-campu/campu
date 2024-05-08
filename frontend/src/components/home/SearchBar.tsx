@@ -12,6 +12,7 @@ import { FaArrowRotateRight } from "react-icons/fa6";
 import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 import { useDispatch } from "react-redux";
 import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
@@ -19,6 +20,7 @@ const SearchBar = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
@@ -34,14 +36,13 @@ const SearchBar = () => {
     }
   };
 
-  const handleKeywordChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchKeyword(e.target.value); // 입력한 검색어 업데이트
+  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    dispatch(setKeyword(searchKeyword));
   };
 
-  const handleSearch = () => {
-    dispatch(setKeyword(searchKeyword)); // 검색어를 리덕스 스토어에 저장
+  const goToSearchPage = () => {
+    navigate("/search");
   };
 
   return (
@@ -107,12 +108,12 @@ const SearchBar = () => {
             className="ml-2 outline-none placeholder-black text-sm"
             placeholder="키워드로 캠핑장을 검색해보세요"
             value={searchKeyword}
-            onChange={handleKeywordChange} // 검색어 입력 시 상태 업데이트
+            onChange={handleKeywordChange}
           ></input>
         </div>
         {/* 검색버튼 */}
         <button
-          onClick={handleSearch}
+          onClick={goToSearchPage}
           className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap"
         >
           검색하기
