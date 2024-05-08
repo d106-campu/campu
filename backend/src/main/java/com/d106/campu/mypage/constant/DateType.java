@@ -5,5 +5,6 @@ public enum DateType {
     MONTH,
     MONTH6,
     YEAR,
+    TOTAL,
 
 }

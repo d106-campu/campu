@@ -8,26 +8,44 @@ public class MyPageDto {
 
     @Builder
     @Getter
-    public static class ReservationResponse {
-        /* campsite */
+    public static class MyReservationResponse {
+
+        private CampsiteResponse campsite;
+        private RoomResponse room;
+        private ReservationResponse reservation;
+        private CampsiteLocationResponse campsiteLocation;
+    }
+
+    @Builder
+    @Getter
+    public static class CampsiteResponse {
         private Long campsiteId;
         private String address;
         private String thumbnailImageUrl;
+    }
 
-        /* room */
+    @Builder
+    @Getter
+    public static class RoomResponse {
         private Long roomId;
         private String roomName;
         private String supplyList;
+    }
 
-        /* reservation */
+    @Builder
+    @Getter
+    public static class ReservationResponse {
         private Long reservationId;
         private Integer headCnt;
         private Integer price;
         private LocalDate startDate;
         private LocalDate endDate;
         private String status;
+    }
 
-        /* campsite location */
+    @Builder
+    @Getter
+    public static class CampsiteLocationResponse {
         private Double mapX;
         private Double mapY;
     }

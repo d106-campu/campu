@@ -5,7 +5,11 @@ import com.d106.campu.campsite.domain.jpa.QCampsiteLocation;
 import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.MyPageConstant;
 import com.d106.campu.mypage.constant.UseType;
+import com.d106.campu.mypage.dto.MyPageDto.CampsiteLocationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.CampsiteResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.RoomResponse;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.room.domain.jpa.QRoom;
@@ -38,7 +42,8 @@ public class MyPageRepository {
     private final QReview review = QReview.review;
     private final QCampsiteLocation campsiteLocation = QCampsiteLocation.campsiteLocation;
 
-    public Page<ReservationResponse> getReservationList(Pageable pageable, String account, DateType dateType, UseType useType) {
+    public Page<MyReservationResponse> getReservationList(Pageable pageable, String account, DateType dateType,
+        UseType useType) {
 
         Expression<?>[] projections = new Expression[]{
             campsite.id, campsite.addr1, campsite.thumbnailImageUrl,
@@ -80,7 +85,7 @@ public class MyPageRepository {
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize()).fetch();
 
-        List<ReservationResponse> reservationResponses = new ArrayList<>();
+        List<MyReservationResponse> myReservationResponses = new ArrayList<>();
         for (Tuple tuple : tuples) {
             String status;
             if (Objects.requireNonNull(tuple.get(reservation.endDate)).isAfter(LocalDate.now())) {
@@ -91,25 +96,34 @@ public class MyPageRepository {
                 status = MyPageConstant.RESERVATION;
             }
 
-            reservationResponses.add(ReservationResponse.builder()
-                .campsiteId(tuple.get(campsite.id))
-                .address(tuple.get(campsite.addr1))
-                .thumbnailImageUrl(tuple.get(campsite.thumbnailImageUrl))
-                .roomId(tuple.get(room.id))
-                .roomName(tuple.get(room.name))
-                .supplyList(tuple.get(room.supplyList))
-                .reservationId(tuple.get(reservation.id))
-                .headCnt(tuple.get(reservation.headCnt))
-                .price(tuple.get(reservation.price))
-                .startDate(tuple.get(reservation.startDate))
-                .endDate(tuple.get(reservation.endDate))
-                .status(status)
-                .mapX(tuple.get(campsiteLocation.mapX))
-                .mapY(tuple.get(campsiteLocation.mapY))
+            myReservationResponses.add(MyReservationResponse.builder()
+                .campsite(CampsiteResponse.builder()
+                    .campsiteId(tuple.get(campsite.id))
+                    .address(tuple.get(campsite.addr1))
+                    .thumbnailImageUrl(tuple.get(campsite.thumbnailImageUrl))
+                    .build())
+                .room(RoomResponse.builder()
+                    .roomId(tuple.get(room.id))
+                    .roomName(tuple.get(room.name))
+                    .supplyList(tuple.get(room.supplyList))
+                    .build())
+                .reservation(ReservationResponse.builder()
+                    .reservationId(tuple.get(reservation.id))
+                    .headCnt(tuple.get(reservation.headCnt))
+                    .price(tuple.get(reservation.price))
+                    .startDate(tuple.get(reservation.startDate))
+                    .endDate(tuple.get(reservation.endDate))
+                    .status(status)
+                    .build())
+                .campsiteLocation(CampsiteLocationResponse.builder()
+                    .mapX(tuple.get(campsiteLocation.mapX))
+                    .mapY(tuple.get(campsiteLocation.mapY))
+                    .build())
                 .build());
+
         }
 
-        return new PageImpl<>(reservationResponses, pageable, getTotalCount(account));
+        return new PageImpl<>(myReservationResponses, pageable, getTotalCount(account));
     }
 
     private long getTotalCount(String account) {

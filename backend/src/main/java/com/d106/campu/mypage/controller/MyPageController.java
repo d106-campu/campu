@@ -22,8 +22,7 @@ public class MyPageController implements MyPageControllerDoc {
 
     @Override
     @GetMapping("/reservation")
-    public Response getReservationList(Pageable pageable, @RequestParam(required = false) DateType dateType,
-        @RequestParam UseType useType) {
+    public Response getReservationList(Pageable pageable, @RequestParam DateType dateType, @RequestParam UseType useType) {
         return new Response(MyPageConstant.RESERVATION_LIST, myPageService.getReservationList(pageable, dateType, useType));
     }
 
