@@ -26,7 +26,7 @@ public class ReviewImage {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review", nullable = false)
+    @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
     @Column(name = "url")
