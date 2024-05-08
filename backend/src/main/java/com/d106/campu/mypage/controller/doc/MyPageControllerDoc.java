@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@Tag(name = "09. 마이 페이지 API", description = "마이페이지 관련 API (예약내역, 내가 쓴 리뷰 조회 등)")
+@Tag(name = "03. 마이 페이지 API", description = "마이페이지 관련 API (예약내역, 내가 쓴 리뷰 조회 등)")
 public interface MyPageControllerDoc {
 
     @Operation(summary = "사용자 예약 내역 조회", description = "사용자의 예약 내역을 조회한다.")
