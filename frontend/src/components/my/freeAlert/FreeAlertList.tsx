@@ -70,14 +70,14 @@ const FreeAlertList = ({
           </div>
         </div>
       ))}
-      <div className='flex justify-center mt-4'>
+      <div className='flex justify-center pt-3'>
         {viewCount < totalMyAlerts && (
-          <button onClick={handleShowMoreAlerts} className="mx-2 px-4 py-2 rounded-lg">
+          <button onClick={handleShowMoreAlerts} className="mx-2 py-2">
             더보기
           </button>
         )}
         {viewCount > 2 && (
-          <button onClick={handleShowLessAlerts} className="mx-2 px-4 py-2 rounded-lg">
+          <button onClick={handleShowLessAlerts} className="mx-2 py-2">
             줄이기
           </button>
         )}

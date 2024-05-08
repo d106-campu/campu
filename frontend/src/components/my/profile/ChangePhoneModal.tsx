@@ -4,6 +4,7 @@ import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
 import { IMyPhoneValues } from '@/types/profile';
 import ChangePhoneSuccessModal from "@/components/my/profile/ChangePhoneSuccessModal";
+import { PHONE_LENGTH, PHONE_VERIFY_LENGTH  } from "@/constants/constants";
 
 interface IChangePhoneModalProps {
   isOpen: boolean;
@@ -65,7 +66,7 @@ export const ChangePhoneModal = ({
 
   // "인증번호 전송" 버튼 클릭과 관련하여 세밀한 유효성 검사
   const handleCertificationClick = () => {
-    if (values.phone.length === 11) {
+    if (values.phone.length === PHONE_LENGTH) {
       setErrors(prevErrors => ({
         ...prevErrors,
         phone: '인증번호를 전송했습니다 !'
@@ -118,8 +119,8 @@ export const ChangePhoneModal = ({
 
   // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
   const fields: Array<{ label: string; name: keyof IMyPhoneValues; placeholder: string; maxLength: number; type: string }> = [
-    { label: '새로운 휴대폰 번호', name: 'phone', placeholder: '새로운 휴대폰 번호 입력', maxLength: 11, type: 'text'},
-    { label: '본인 인증을 위해 새 번호로 전송된 인증번호를 입력해주세요.', name: 'verifyNums', placeholder: '새 인증번호를 입력해주세요.', maxLength: 6, type: 'text'  },
+    { label: '새로운 휴대폰 번호', name: 'phone', placeholder: '새로운 휴대폰 번호 입력', maxLength: PHONE_LENGTH, type: 'text'},
+    { label: '본인 인증을 위해 새 번호로 전송된 인증번호를 입력해주세요.', name: 'verifyNums', placeholder: '새 인증번호를 입력해주세요.', maxLength: PHONE_VERIFY_LENGTH, type: 'text'  },
   ];
 
   // phoneVerified 값 바뀔때마다 유효성 검사 작동

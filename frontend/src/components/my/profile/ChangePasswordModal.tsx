@@ -4,6 +4,7 @@ import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
 import { IMyPhoneValues } from '@/types/profile';
 import ChangePasswordSuccessModal from '@/components/my/profile/ChangePasswordSuccessModal'
+import { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH  } from "@/constants/constants";
 
 interface IOChangePasswordModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const ChangePasswordModal = ({
     let message = '';
     switch (field) {
       case 'password':
-        if (value.length < 8) {
+        if (value.length < MIN_PASSWORD_LENGTH) {
           message = '기존 비밀번호는 8자 이상입니다.';
         } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value)) {
           message = '비밀번호는 영문자, 숫자, 특수문자 조합입니다.';
@@ -43,7 +44,7 @@ export const ChangePasswordModal = ({
         }
         break;
       case 'newPassword':
-        if (value.length < 8) {
+        if (value.length < MIN_PASSWORD_LENGTH) {
           message = '새 비밀번호는 8자 이상이어야 합니다.';
         } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value)) {
           message = '영문자, 숫자, 특수문자 조합으로 설정해주세요.';
@@ -90,9 +91,9 @@ export const ChangePasswordModal = ({
 
   // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
   const fields: Array<{ label: string; name: keyof typeof values; placeholder: string; maxLength: number; type: string }> = [
-    { label: '기존 비밀번호', name: 'password', placeholder: '기존 비밀번호 입력', maxLength: 20, type: 'password' },
-    { label: '새 비밀번호', name: 'newPassword', placeholder: '새 비밀번호 입력', maxLength: 20, type: 'password' },
-    { label: '새 비밀번호 확인', name: 'confirmPassword', placeholder: '비밀번호 재입력', maxLength: 20, type: 'password' },
+    { label: '기존 비밀번호', name: 'password', placeholder: '기존 비밀번호 입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
+    { label: '새 비밀번호', name: 'newPassword', placeholder: '새 비밀번호 입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
+    { label: '새 비밀번호 확인', name: 'confirmPassword', placeholder: '비밀번호 재입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
   ];
 
 

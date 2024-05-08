@@ -3,13 +3,10 @@
 function createDummyData() {
   const camps = ["커현 캠핑장", "주노준호 캠핑장", "단비꼬야 캠핑장", "주용용 캠핑장", "챔경 캠핑장", "호조해조 캠핑장"];
   const areas = ["A구역", "B구역", "C구역", "D구역", "E구역", "F구역"];
-  const environments = ["숲 · 호수", "문화재 · 기념관", "산 · 언덕", "바다 · 해변", "평야 · 초원", "강 · 다리"];
-  const detailsData = [
-      { title: "기반", content: "파쇄석 · 개별 바베큐장 · 텐트옆 주차"},
-      { title: "기반", content: "자갈 · 공용 바베큐장 · 차량금지" },
-      { title: "기반", content: "흙 · 개별 화장실 · 애완동물 허용" },
-      { title: "기반", content: "대리석 · 야경 명소 · 애완동물 금지" }
-    ];
+  const campInduty = ["차박", "카라반", "텐트", "글램핑", "오토캠핑", "야영"];
+  const campsite_tel = [
+      "010-1234-5678", "010-1111-2222", "010-5678-1234", "010-4444-7777", "010-3333-6666", "010-2222-4444"
+  ];
     
 
   return Array.from({ length: 10 }, (_, index) => {
@@ -34,31 +31,25 @@ function createDummyData() {
         {
           titleLeft: "인원",
           contentLeft: `성인 ${2 + index % 4}`,
-          titleRight: "입실 · 퇴실 시간",
-          contentRight: "14:00 - 11:00",
+          titleRight: "캠핑장 유형",
+          contentRight: campInduty[index % campInduty.length],
         },
         {
           titleLeft: "사이트",
           contentLeft: `${areas[index % areas.length]}(벚꽃 캠핑존) ${10 + index * 5}`,
-          titleRight: "주변 환경",
-          contentRight: environments[index % environments.length],
-        },
-        {
-          titleLeft: "기타정보",
-          contentLeft: detailsData[index % detailsData.length].content,
-          titleRight: "",
-          contentRight: "",
+          titleRight: "입실 · 퇴실 시간",
+          contentRight: "14:00 - 11:00",
         },
         {
           titleLeft: "가격",
-          contentLeft: `${100000 + (index % 5) * 10000}원`,
-          titleRight: "",
-          contentRight: "",
-        }
+          contentLeft: `${100000 + (index % 5) * 10000}`,
+          titleRight: "전화번호",
+          contentRight: campsite_tel[index % campsite_tel.length],
+        },
       ],
       people: 2 + index % 4,
-      environment: environments[index % environments.length],
-      price: `${100000 + (index % 5) * 10000}원`,
+      camInduty: campInduty[index % campInduty.length],
+      price: 100000 + (index % 5) * 10000,
       address: `경상북도 칠곡군 가산면 금화리 산${49 + index * 3}`
     };
   });

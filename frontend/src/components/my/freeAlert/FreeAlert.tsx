@@ -47,7 +47,7 @@ const FreeAlert = ({
   };
 
   return (
-  <div>
+  <div className="min-h-[calc(100vh-10rem)]">
     {/* 관심 캠핑장 헤더 */}
     <div className='flex flex-col pb-4'>
       <h1 className='text-lg font-bold'>
@@ -57,7 +57,7 @@ const FreeAlert = ({
       <h1 className="text-sm text-gray-400">"유저 닉네임"님이 빈자리 알림은 설정한 캠핑장입니다.</h1>
     </div>
 
-    <div className='max-h-[550px] overflow-y-auto relative'>
+    <div className='max-h-[500px] overflow-y-auto relative'>
       {/* 빈자리 알림 설정한 더미데이터 리스트 */}
       <FreeAlertList
         alerts={visibleAlerts}
