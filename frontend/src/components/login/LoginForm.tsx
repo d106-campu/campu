@@ -6,6 +6,9 @@ import { setIsLogin } from "@/features/login/authSlice";
 import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
 import { useSignup } from '@/hooks/auth/useSignup';
+import {
+  MIN_ID_LENGTH, MAX_ID_LENGTH, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH,
+} from '@/constants/constants';
 
 interface ILoginFormProps {
   isSmallScreen: boolean;
@@ -39,7 +42,7 @@ const LoginForm = ({
     if (!values.id) {
       newErrors.id = "아이디를 입력해주세요.";
       isValid = false;
-    } else if (values.id.length < 6) {
+    } else if (values.id.length < MIN_ID_LENGTH) {
       newErrors.id = "아이디는 6자리 이상입니다.";
       isValid = false;
     } else if (!/^[a-zA-Z0-9]+$/.test(values.id)) {
@@ -50,7 +53,7 @@ const LoginForm = ({
     if (!values.password) {
       newErrors.password = "비밀번호를 입력해주세요.";
       isValid = false;
-    } else if (values.password.length < 8) {
+    } else if (values.password.length < MIN_PASSWORD_LENGTH) {
       newErrors.password = "비밀번호는 8자 이상입니다.";
       isValid = false;
     } else if (
@@ -99,14 +102,14 @@ const LoginForm = ({
       name: "id",
       placeholder: "아이디를 입력하세요.",
       type: "text",
-      maxLength: 16,
+      maxLength: MAX_ID_LENGTH,
     },
     {
       label: "비밀번호",
       name: "password",
       placeholder: "비밀번호를 입력하세요.",
       type: "password",
-      maxLength: 20,
+      maxLength: MAX_PASSWORD_LENGTH,
     },
   ];
 

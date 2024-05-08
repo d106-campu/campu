@@ -6,6 +6,9 @@ import Button from '@/components/@common/Button/Button';
 import InputField from '@/components/@common/Input/InputField';
 import { useSignup } from '@/hooks/auth/useSignup';
 import { checkIdDuplicate, checkNicknameDuplicate } from '@/services/auth/api';
+import {
+  MIN_ID_LENGTH, MAX_ID_LENGTH, MIN_NICKNAME_LENGTH, MAX_NICKNAME_LENGTH, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, PHONE_LENGTH
+} from '@/constants/constants';
 
 interface ILoginFormProps {
   isSmallScreen: boolean;
@@ -50,7 +53,7 @@ const SignUpForm = ({
     if (value) {
       switch (field) {
         case 'id':
-          if (value.length < 6 || value.length > 16) {
+          if (value.length < MIN_ID_LENGTH || value.length > MAX_ID_LENGTH) {
             message = '아이디는 6~16자 이내로 해주세요.';
           } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
             message = '영문자와 숫자 조합으로 설정해주세요.';
@@ -60,7 +63,7 @@ const SignUpForm = ({
           }
           break;
         case 'nickName':
-          if (value.length < 2 || value.length > 8) {
+          if (value.length < MIN_NICKNAME_LENGTH || value.length > MAX_NICKNAME_LENGTH) {
             message = '닉네임은 2~8자 이내로 해주세요.';
           } else if (!/^[가-힣a-zA-Z0-9]+$/.test(value)) {
             message = '특수문자, 띄워쓰기는 사용할 수 없습니다.';
@@ -70,7 +73,7 @@ const SignUpForm = ({
           }
           break;
         case 'password':
-          if (value.length < 8) {
+          if (value.length < MIN_PASSWORD_LENGTH) {
             message = '비밀번호는 8자 이상이어야 합니다.';
           } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value)) {
             message = '영문자, 숫자, 특수문자 조합으로 설정해주세요.';
@@ -157,16 +160,16 @@ const SignUpForm = ({
 
   // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
   const fields: Array<{ label: string; name: keyof ISignUpFormValues; placeholder: string; maxLength: number; type?: string }> = [
-    { label: '아이디', name: 'id', placeholder: '아이디는 6~16자 이내로 해주세요.', maxLength: 16 },
-    { label: '닉네임', name: 'nickName', placeholder: '닉네임은 8자 이내로 해주세요.', maxLength: 8 },
-    { label: '휴대폰 번호', name: 'phone', placeholder: '숫자만 입력해주세요.', maxLength: 11 },
-    { label: '비밀번호', name: 'password', placeholder: '비밀번호는 영문자, 숫자, 특수문자를 포함한 8자 이상입니다.', maxLength: 20, type: 'password' },
-    { label: '비밀번호 확인', name: 'confirmPassword', placeholder: '비밀번호를 한번 더 입력해주세요.', maxLength: 20, type: 'password' }
+    { label: '아이디', name: 'id', placeholder: '아이디는 6~16자 이내로 해주세요.', maxLength: MAX_ID_LENGTH },
+    { label: '닉네임', name: 'nickName', placeholder: '닉네임은 8자 이내로 해주세요.', maxLength: MAX_NICKNAME_LENGTH },
+    { label: '휴대폰 번호', name: 'phone', placeholder: '숫자만 입력해주세요.', maxLength: PHONE_LENGTH },
+    { label: '비밀번호', name: 'password', placeholder: '비밀번호는 영문자, 숫자, 특수문자를 포함한 8자 이상입니다.', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
+    { label: '비밀번호 확인', name: 'confirmPassword', placeholder: '비밀번호를 한번 더 입력해주세요.', maxLength: MAX_PASSWORD_LENGTH, type: 'password' }
   ];
 
   // 휴대폰 인증 버튼이 작동될 때 한번 더 따로 유효성 검사
   const handleCertificationClick = async () => {
-    if (values.phone.length === 11) {
+    if (values.phone.length === PHONE_LENGTH) {
       // 휴대폰 번호 중복 확인 요청 API 호출 -> checkPhone 호출
       checkPhone.mutate(values.phone, {
         onSuccess: (res) => {

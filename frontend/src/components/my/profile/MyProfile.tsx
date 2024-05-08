@@ -9,6 +9,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { IMyPhoneValues } from '@/types/profile';
 import { ChangePhoneModal } from "@/components/my/profile/ChangePhoneModal";
 import { ChangePasswordModal } from "@/components/my/profile/ChangePasswordModal";
+import { MIN_NICKNAME_LENGTH, MAX_NICKNAME_LENGTH } from "@/constants/constants";
 
 interface IMyProfileProps {
   phoneVerified: boolean;
@@ -88,7 +89,7 @@ const MyProfile = ({
     if (value) {
       switch (field) {
         case 'nickName':
-          if (value.length < 2 || value.length > 8) {
+          if (value.length < MIN_NICKNAME_LENGTH || value.length > MAX_NICKNAME_LENGTH) {
             message = '닉네임은 2~8자 이내로 해주세요.';
           } else if (!/^[가-힣a-zA-Z0-9]+$/.test(value)) {
             message = '특수문자, 띄워쓰기는 사용할 수 없습니다.';
@@ -253,7 +254,7 @@ const MyProfile = ({
               type="text"
               className={`w-full h-[35px] pl-2 outline-none border-2 rounded-md ${isEditingNickname ? '' : 'pointer-events-none'}`}
               disabled={!isEditingNickname}
-              maxLength={8}
+              maxLength={MAX_NICKNAME_LENGTH}
               value={values.nickName}
               onChange={handleChangeNickname}
             />
