@@ -6,8 +6,9 @@ declare global {
 }
 
 export interface IMapProps {
-  facltNm: string;
-  rate: number;
+  facltNm?: string;
+  rate?: number;
   lat?: number | undefined;
   lng?: number | undefined;
+  level?: number;
 }
