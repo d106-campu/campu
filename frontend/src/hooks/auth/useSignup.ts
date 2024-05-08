@@ -5,12 +5,14 @@ import {
   postSignUp,
   sendPhoneVerificationCode,
   verifyPhoneNumber,
-  checkPhoneDuplicate
+  checkPhoneDuplicate,
+  login
 } from '@/services/auth/api';
 import { ISignUpReq, IVerifyPhoneReq } from '@/types/auth';
+import { useNavigate } from 'react-router-dom';
 
 export const useSignup = () => {
-  // const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // 아이디 중복 검사
   const checkId = (account: string) => useQuery({
@@ -57,12 +59,25 @@ export const useSignup = () => {
     mutationFn: (data: IVerifyPhoneReq) => verifyPhoneNumber(data)
   });
 
+  // 로그인 요청
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (res) => {
+      console.log("로그인 성공!! :", res)
+      navigate('/'); // 메인 페이지로 이동
+    },
+    onError: (error) => {
+      console.error('로그인 실패 :', error);
+    }
+  });
+
   return {
     checkId,
     checkNickname,
     signupMutation,
     checkPhone,
     sendVerificationCode,
-    verifyPhone
+    verifyPhone,
+    loginMutation
   };
 };
