@@ -39,7 +39,7 @@ const MyReview = ({
   };
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-10rem)]">
       {/* 헤더 */}
       <div className='flex'>
         <h1 className='text-lg font-bold pb-5'>내가 쓴 리뷰</h1>
@@ -47,7 +47,7 @@ const MyReview = ({
       </div>
 
       {/* 날짜 선택 */}
-      <div className="flex space-x-2 pb-5">
+      <div className="flex space-x-2 pb-2">
         {filters.map(filter => (
           <button
             key={filter}
@@ -90,7 +90,7 @@ const MyReview = ({
                     <img key={idx} src={image} alt="Review" className='w-[300px] h-[150px] rounded-lg object-cover object-center'/>
                   ))
                 ) : (
-                  <div className="flex flex-col justify-center h-60">
+                  <div className="flex flex-col justify-center h-auto border rounded-2xl">
                     <Lottie options={noImageOptions} height={150} width={300} speed={0.5} />
                     <p className="text-UNIMPORTANT_TEXT_02 text-center text-sm">
                       리뷰 사진을 등록하지 않았어요
@@ -103,12 +103,12 @@ const MyReview = ({
         </div>
         ))}
         {/* 더보기, 줄이기 토글 버튼 */}
-        <div className='flex justify-center pt-5'>
+        <div className='flex justify-center pt-3'>
           {viewCount < totalMyReview && (
-            <button onClick={showMoreReviews} className="mx-2 px-4 py-2">더보기</button>
+            <button onClick={showMoreReviews} className="mx-2 py-2">더보기</button>
           )}
           {viewCount > 2 && (
-            <button onClick={showLessReviews} className="mx-2 px-4 py-2">줄이기</button>
+            <button onClick={showLessReviews} className="mx-2 py-2">줄이기</button>
           )}
         </div>
       </div>

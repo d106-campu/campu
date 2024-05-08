@@ -26,7 +26,7 @@ const MyFavoriteCamp = (): JSX.Element => {
   };
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-10rem)]">
       {/* 관심 캠핑장 헤더 */}
       <div className='flex flex-col pb-4'>
         <h1 className='text-lg font-bold'>내가 찜한 캠핑장 <span className='text-MAIN_GREEN font-thin pl-1'>{allCamps.length}</span></h1>
@@ -35,7 +35,7 @@ const MyFavoriteCamp = (): JSX.Element => {
 
       {/* 관심 캠핑장 카드 */}
       <div className='max-h-[550px] overflow-y-auto'>
-        <div className='grid grid-cols-2 gap-4 px-2 pb-2'>
+        <div className='grid grid-cols-2 gap-4'>
           {visibleCamps.map(camp => (
             <MyFavoriteCampItem 
               key={camp.id}
@@ -46,13 +46,13 @@ const MyFavoriteCamp = (): JSX.Element => {
         </div>
 
         {/* 더보기, 줄이기 버튼 */}
-        <div className='flex justify-center pt-6'>
-          <div className='px-2'>
+        <div className='flex justify-center pt-2'>
+          <div className=''>
             {visibleCamps.length < allCamps.length && (
               <button onClick={handleShowMoreCamps}>더보기</button>
             )}
           </div>
-          <div className='px-2'>
+          <div className=''>
             {visibleCamps.length > initialCampsToShow && (
               <button onClick={handleShowLessCamps}>줄이기</button> 
             )}

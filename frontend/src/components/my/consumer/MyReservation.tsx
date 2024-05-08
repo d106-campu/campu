@@ -60,7 +60,7 @@ const MyReservation = ({
   };
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-10rem)]">
       {/* 예약 내역 헤더 */}
       <div className='flex justify-between'>
         <h1 className='text-lg font-bold pb-5'>예약 내역</h1>

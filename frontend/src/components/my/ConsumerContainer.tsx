@@ -35,7 +35,7 @@ const ConsumerContainer = ({
     }
   };
   return (
-    <div className='w-full min-h-[calc(100vh-3rem)]'>
+    <div className='w-full'>
       {renderComponent()}
     </div>
   );

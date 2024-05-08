@@ -211,7 +211,7 @@ const MyProfile = ({
 
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-10rem)]">
       {/* 프로필 수정 헤더 */}
       <div className='flex flex-col pb-4'>
         <h1 className='text-lg font-bold'>
