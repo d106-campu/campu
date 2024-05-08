@@ -13,12 +13,14 @@ import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CampsiteService {
 
+    private final ReservationRepository reservationRepository;
+
     private final UserRepository userRepository;
 
     private final CampsiteRepository campsiteRepository;
@@ -40,10 +44,15 @@ public class CampsiteService {
     private final RoomMapper roomMapper;
 
     /**
+     * @param doNm      To limit location.
+     * @param sigunguNm To limit location.
+     * @param startDate To check reservation availability.
+     * @param endDate   To check reservation availability.
+     * @param headCnt   To filter available room.
+     * @param induty    For campsites that has specific industry type.
+     * @param theme     For campsites that has specific theme.
+     * @param owner     For campsites that the current user manages.
      * @param pageable
-     * @param induty   For campsites that has specific industry type.
-     * @param theme    For campsites that has specific theme.
-     * @param owner    For campsites that the current user manages.
      * @return List of campsite.
      * @throws NotFoundException     If not login status.
      * @throws UnauthorizedException Only when `owner=true` option, if user does not have {@link RoleName#OWNER} role.
@@ -51,7 +60,17 @@ public class CampsiteService {
      * @see Theme
      */
     @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme, boolean owner) {
+    public Page<CampsiteDto.Response> getCampsiteList(
+        String doNm,
+        String sigunguNm,
+        LocalDate startDate,
+        LocalDate endDate,
+        int headCnt,
+        String induty,
+        String theme,
+        boolean owner,
+        Pageable pageable
+    ) {
         /* TODO: Replace this with login user (using securityHelper) */
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
@@ -61,16 +80,22 @@ public class CampsiteService {
             checkUserRoleOwner(user);
             responsePage = campsiteRepository.findByUser(pageable, user);
         } else if (induty == null && theme == null) {
-            responsePage = campsiteRepository.findAll(pageable);
+            responsePage = campsiteRepository.findAll(pageable, doNm, sigunguNm);
         } else if (induty != null && !induty.isBlank()) {
-            responsePage = campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue());
+            responsePage = campsiteRepository.findByIndutyListContaining(
+                pageable, doNm, sigunguNm, Induty.of(induty).getValue());
         } else if (theme != null && !theme.isBlank()) {
-            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue());
+            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(
+                pageable, doNm, sigunguNm, Theme.of(theme).getValue());
         }
 
-        return responsePage == null ? null : responsePage.map((e) -> {
-            e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
-            return campsiteMapper.toCampsiteListResponseDto(e);
+        return (responsePage == null) ? null : responsePage.map((campsite) -> {
+            // available at least one room can be reserved on the date range
+            campsite.setAvailable(campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt))
+                .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
+            // Did I like this campsite
+            campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+            return campsiteMapper.toCampsiteListResponseDto(campsite);
         });
     }
 
@@ -121,21 +146,6 @@ public class CampsiteService {
             () -> campsiteLikeRepository.save(CampsiteLike.builder().campsite(campsite).user(user).build())
         );
         return campsiteMapper.toCampsiteLikeResponseDto(campsiteLike.isEmpty());
-    }
-
-    /**
-     * @param pageable
-     * @return List of campsites that current user likes.
-     * @throws NotFoundException If not login status.
-     */
-    @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getLikeCampsiteList(Pageable pageable) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(1L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-
-        return campsiteLikeRepository.findByUser(pageable, user)
-            .map(CampsiteLike::getCampsite).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
     /**

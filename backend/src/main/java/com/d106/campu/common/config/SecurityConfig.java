@@ -25,7 +25,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Value("${management.server.port}")
@@ -45,6 +45,8 @@ public class SecurityConfig {
         "/campsite/**",
         /* reservation */
         "/reservation/**",
+        /* file */
+        "/file/**",
     };
 
     @Value("${cors.origin.list}")
@@ -87,19 +89,6 @@ public class SecurityConfig {
             httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(jwtAccessDeniedHandler)
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint);
         });
-
-        /* cors */
-        http.cors(cors -> cors.configurationSource(request -> {
-            CorsConfiguration corsConfig = new CorsConfiguration();
-            corsConfig.setAllowedOrigins(originList);
-            corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-            corsConfig.setAllowedHeaders(List.of("*"));
-            corsConfig.addExposedHeader("Authorization");
-            corsConfig.setAllowCredentials(true);
-
-            return corsConfig;
-        }));
-
 
         /* cors */
         http.cors(cors -> cors.configurationSource(request -> {

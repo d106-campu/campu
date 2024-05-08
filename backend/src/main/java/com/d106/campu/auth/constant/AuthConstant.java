@@ -8,7 +8,7 @@ public class AuthConstant {
     public static final int TEL_HASH_LIFE_SEC = 180;
     public static final int TEL_VERIFY_HASH_LIFE_SEC = 3600;
     public static final int TEL_SEND_LIMIT = 3;
-    public static final String TEL_AUTH_SEND_MESSAGE = "[campu] 회원가입 인증번호\n ";
+    public static final String TEL_AUTH_SEND_MESSAGE = "[campu] 인증번호\n ";
     public static final int SECOND_TO_MILLISECOND = 1000;
     public static final String AUTHORITIES_KEY = "auth";
     public static final String AUTHORIZATION_HEADER = "Authorization";

@@ -60,7 +60,8 @@ public interface AuthControllerDoc {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공"))
             })),
         @ApiResponse(responseCode = "400", description = "휴대폰 번호 유효성 검사 오류", content = @Content),
-        @ApiResponse(responseCode = "409", description = "이미 가입된 휴대폰 번호", content = @Content)
+        @ApiResponse(responseCode = "409", description = "이미 가입된 휴대폰 번호", content = @Content),
+        @ApiResponse(responseCode = "429", description = "전송 횟수 초과", content = @Content)
     })
     Response sendAuthorizationCode(@Tel String tel);
 

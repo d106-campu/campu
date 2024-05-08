@@ -4,7 +4,10 @@ import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.controller.doc.CampsiteControllerDoc;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.service.CampsiteService;
+import com.d106.campu.common.constant.DoNmEnum;
+import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.response.Response;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +28,22 @@ public class CampsiteController implements CampsiteControllerDoc {
     @Override
     @GetMapping
     public Response getCampsiteList(
-        Pageable pageable,
+        DoNmEnum doNm,
+        SigunguEnum sigunguNm,
+        LocalDate startDate,
+        LocalDate endDate,
+        int headCnt,
         @RequestParam(required = false) String induty,
         @RequestParam(required = false) String theme,
-        @RequestParam(required = false) boolean owner
+        @RequestParam(required = false) boolean owner,
+        Pageable pageable
     ) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getCampsiteList(pageable, induty, theme, owner));
+        return new Response(
+            CampsiteConstant.CAMPSITE_LIST,
+            campsiteService.getCampsiteList(
+                doNm.getName(), sigunguNm.getName(), startDate, endDate, headCnt, induty, theme, owner, pageable
+            )
+        );
     }
 
     @Override
@@ -43,12 +56,6 @@ public class CampsiteController implements CampsiteControllerDoc {
     @PostMapping("/like/{campsiteId}")
     public Response likeCampsite(@PathVariable long campsiteId) {
         return new Response(CampsiteConstant.CAMPSITE_LIKE, campsiteService.likeCampsite(campsiteId));
-    }
-
-    @Override
-    @GetMapping("/like")
-    public Response getLikeCampsiteList(Pageable pageable) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getLikeCampsiteList(pageable));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.d106.campu.campsite.domain.jpa;
 
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.user.domain.jpa.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,9 +78,11 @@ public class Campsite extends BaseTime {
     private String indutyList;
 
     @Column(name = "thumbnail_image_url", length = 1024)
+    @Setter
     private String thumbnailImageUrl;
 
     @Column(name = "map_image_url", length = 1024)
+    @Setter
     private String mapImageUrl;
 
     @Column(name = "homepage", length = 1024)
@@ -103,8 +106,15 @@ public class Campsite extends BaseTime {
     @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
     private List<CampsiteLike> campsiteLikeList;
 
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
+    private List<Room> roomList;
+
     @Transient
     @Setter
     private boolean like;
+
+    @Transient
+    @Setter
+    private boolean available;
 
 }

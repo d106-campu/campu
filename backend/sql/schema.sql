@@ -225,6 +225,8 @@ CREATE TABLE `campsite_like` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
     `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
     `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+    `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+    `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
     PRIMARY KEY (`id`),
     KEY `campsite_like_campsite_FK` (`campsite_id`),
     KEY `campsite_like_user_FK` (`user_id`),
@@ -244,6 +246,7 @@ CREATE TABLE `room` (
   `price` int(11) NOT NULL COMMENT '가격',
   `extra_price` int(11) DEFAULT NULL COMMENT '인당 추가가격',
   `room_cnt` int(11) NOT NULL COMMENT '방 개수',
+  `image_url` varchar(1024) DEFAULT NULL COMMENT '이미지 주소',
   `toilet_cnt` int(11) NOT NULL DEFAULT 0 COMMENT '화장실 개수',
   `supply_list` varchar(512) DEFAULT NULL COMMENT '부대시설 목록',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
@@ -254,18 +257,6 @@ CREATE TABLE `room` (
   CONSTRAINT `room_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
   CONSTRAINT `room_induty_FK` FOREIGN KEY (`induty_id`) REFERENCES `induty` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방';
-
-
--- d106.room_image definition
-
-CREATE TABLE `room_image` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `room_id` bigint(20) NOT NULL COMMENT '방 식별번호',
-  `url` varchar(1024) NOT NULL COMMENT '이미지 주소',
-  PRIMARY KEY (`id`),
-  KEY `room_image_room_FK` (`room_id`),
-  CONSTRAINT `room_image_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방 이미지';
 
 
 -- d106.reservation definition
@@ -296,6 +287,8 @@ CREATE TABLE `review` (
   `reservation_id` bigint(20) NOT NULL COMMENT '예약 식별번호',
   `score` int(11) NOT NULL COMMENT '리뷰 점수',
   `content` varchar(200) NOT NULL COMMENT '리뷰 내용',
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
   PRIMARY KEY (`id`),
   KEY `review_campsite_FK` (`campsite_id`),
   KEY `review_reservation_FK` (`reservation_id`),
