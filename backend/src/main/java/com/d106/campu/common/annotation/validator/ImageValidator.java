@@ -13,7 +13,7 @@ import org.apache.tika.Tika;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @author D102
+ * @author D106
  */
 public class ImageValidator implements ConstraintValidator<Image, MultipartFile> {
 
