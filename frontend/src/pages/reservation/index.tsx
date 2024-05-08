@@ -39,6 +39,8 @@ const data = {
   campsite_tel: "010-1234-5678",
   campsite_addr1: "경상북도 칠곡군 가산면 금화리 산 49-1",
   campsite_addr2: "캠프유캠푸 캠핑장",
+  mapX: 36.1334375,
+  mapY: 128.3710625,
   types: ["오토캠핑", "글램핑", "카라반"],
   isLiked: true,
   totalReview: 7,

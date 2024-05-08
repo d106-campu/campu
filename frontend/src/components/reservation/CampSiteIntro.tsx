@@ -5,11 +5,13 @@ import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import { formatSimpleDate } from "@/utils/formatDateTime";
+import { copyToClipboard } from "@/utils/copyToClipboard";
 import { useRefs } from "@/context/RefContext";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
 import mapIcon from "@/assets/svg/map.svg";
+import MapModal from "../@common/Map/MapModal";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface ICampSiteIntro {
@@ -18,6 +20,9 @@ interface ICampSiteIntro {
   campsite_tel: string;
   campsite_addr1: string;
   campsite_addr2: string;
+  mapX: number;
+  mapY: number;
+  rating: number;
   types: string[];
   isLiked: boolean;
   totalReview: number;
@@ -31,6 +36,7 @@ interface ICampSiteIntro {
 }
 
 const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
+  const [mapModal, setMapModal] = useState<boolean>(false); // 지도 모달 상태관리
   const [isLiked, setIsLiked] = useState<boolean>(data.isLiked);
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
@@ -41,22 +47,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
     reviewRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 복사 함수
-  // @TODO: 토스트 메시지로 바꾸기
-  const copyToClipboard = async () => {
-    if (!navigator.clipboard) {
-      alert("클립보드 사용이 불가능한 환경입니다.");
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(data.campsite_tel);
-      alert("전화번호가 클립보드에 복사되었습니다.");
-    } catch (err) {
-      console.error("클립보드 복사 실패:", err);
-      alert("클립보드 복사에 실패했습니다.");
-    }
-  };
+  const toggleMapModal = () => setMapModal(!mapModal);
 
   return (
     <>
@@ -95,15 +86,29 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
             <p className="text-UNIMPORTANT_TEXT_01 pl-2">
               {data.campsite_addr1}
             </p>
-            <button className="pl-2 text-MAIN_GREEN font-bold">
+            <button
+              onClick={toggleMapModal}
+              className="pl-2 text-MAIN_GREEN font-bold"
+            >
               지도로 확인하기
             </button>
+            {mapModal && (
+              <MapModal
+                lat={data.mapX}
+                lng={data.mapY}
+                facltNm={data.campsite_faclt_nm}
+                addr1={data.campsite_addr1}
+                rate={data.rating}
+                level={5}
+                toggleModal={toggleMapModal}
+              />
+            )}
           </div>
           <div className="flex py-2">
             <img src={phoneIcon} className="w-4" />
             <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.campsite_tel}</p>
             <button
-              onClick={copyToClipboard}
+              onClick={() => copyToClipboard(data.campsite_tel)}
               className="pl-2 text-MAIN_GREEN font-bold"
             >
               복사하기
