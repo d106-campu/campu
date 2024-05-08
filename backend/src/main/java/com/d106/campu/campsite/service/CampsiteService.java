@@ -152,21 +152,6 @@ public class CampsiteService {
 
     /**
      * @param pageable
-     * @return List of campsites that current user likes.
-     * @throws NotFoundException If not login status.
-     */
-    @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getLikeCampsiteList(Pageable pageable) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(1L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-
-        return campsiteLikeRepository.findByUser(pageable, user)
-            .map(CampsiteLike::getCampsite).map(campsiteMapper::toCampsiteListResponseDto);
-    }
-
-    /**
-     * @param pageable
      * @param campsiteId
      * @return List of room information of the campsite.
      * @throws NotFoundException If the `campsiteId` is wrong.
