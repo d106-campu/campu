@@ -15,11 +15,21 @@ const OwnerReview = ({
           <CampSiteRating rating={data.rating} />
         </div>
         <div className="py-4">
-          <ReviewList
-            campsiteId={data.id}
-            totalReview={data.totalReview}
-            reviews={data.reviews}
-          />
+          <div>
+            리뷰
+            <span className="text-MAIN_GREEN font-semibold pl-2 pr-1">
+              {data.reviews.length}
+            </span>
+            개
+          </div>
+          <div className="flex flex-wrap justify-center gap-5 my-2 pb-10">
+            {data.reviews &&
+              data.reviews.map((review) => (
+                <div key={review.id}>
+                  <ReviewItem review={review} />
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     </>
@@ -39,7 +49,7 @@ import photo3 from "@/assets/images/dummy/camping_spot_4.jpg";
 import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
 import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 import CampSiteRating from "@/components/reservation/reviewList/CampSiteRating";
-import ReviewList from "@/components/reservation/reviewList/ReviewList";
+import ReviewItem from "@/components/@common/Review/ReviewItem";
 
 // 더미 데이터
 const data = {

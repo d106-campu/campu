@@ -185,7 +185,7 @@ const Calendar = ({ readOnly = false }: ICalendarProps) => {
           <span className="sr-only">이전달</span>
           <FaChevronLeft size={20} className="ml-6" aria-hidden="true" />
         </button>
-        <h2 className="text-xl font-semibold ">
+        <h2 className="text-xl font-semibold whitespace-nowrap">
           {format(firstDayCurrentMonth, "yyyy년 MM월")}
         </h2>
         <button
