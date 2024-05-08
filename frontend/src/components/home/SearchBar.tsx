@@ -70,7 +70,7 @@ const SearchBar = () => {
             onClick={() => setShowCalendar(!showCalendar)}
           >
             <FaRegCalendarAlt />
-            <div className="flex items-center w-full cursor-pointer text-sm px-2">
+            <div className="flex items-center w-full cursor-pointer text-xs px-2">
               <p className="pr-2">
                 {startDate && endDate
                   ? `${formatSimpleDate(startDate)} - ${formatSimpleDate(
@@ -91,7 +91,7 @@ const SearchBar = () => {
         {/* 인원 선택 */}
         <div className="flex items-center w-[33%] border bg-white rounded-md p-3 max-h-11">
           <MdOutlinePersonOutline />
-          <div className="flex items-center text-sm">
+          <div className="flex items-center text-xs">
             <p className="px-2 whitespace-nowrap">인원 선택</p>
             <div className="flex items-center">
               <AiOutlineMinusCircle
@@ -113,7 +113,7 @@ const SearchBar = () => {
         <div className="flex w-full items-center border bg-white rounded-md p-3 max-h-11">
           <LuSearch />
           <input
-            className="ml-2 outline-none placeholder-black text-sm"
+            className="ml-2 outline-none placeholder-black text-xs"
             placeholder="키워드로 캠핑장을 검색해보세요"
             value={searchKeyword}
             onChange={handleKeywordChange}
