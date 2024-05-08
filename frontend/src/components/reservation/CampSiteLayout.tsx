@@ -9,14 +9,14 @@ interface ICampSiteLayoutProps {
 }
 
 const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);    // 모달 상태관리
+  const [isOpen, setIsOpen] = useState<boolean>(false); // 모달 상태관리
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
   return (
     <>
-      <div className="relative group w-[50%]">
+      <div className="relative group w-[62%]">
         <h3 className="text-xl font-bold pb-2">캠핑존 배치도</h3>
         <img
           src={layout}
@@ -25,7 +25,7 @@ const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
           onClick={() => openModal()}
         />
         {layout && (
-          <div className="absolute bottom-2 right-2">
+          <div className="absolute top-12 right-2">
             <Button
               width="w-9"
               height="h-9"
