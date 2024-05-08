@@ -3,18 +3,23 @@ package com.d106.campu.repository.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.mapper.CampsiteMapperImpl;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.common.constant.DoNmEnum;
+import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -31,121 +36,94 @@ import org.springframework.test.context.TestPropertySource;
 @ComponentScan(basePackageClasses = {CampsiteMapper.class, CampsiteMapperImpl.class})
 class CampsiteRepositoryTest {
 
-    @Autowired
-    CampsiteRepository campsiteRepository;
+    @Autowired CampsiteRepository campsiteRepository;
+    @Autowired UserRepository userRepository;
+    @Autowired CampsiteMapper campsiteMapper;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    CampsiteMapper campsiteMapper;
+    User owner = User.builder().role(RoleName.OWNER).account("o").password("p").nickname("o").tel("01012312310").build();
+    Campsite campsite1 = Campsite.builder().user(owner).facltNm("c1").tel("01012312310")
+        .doNm(DoNmEnum.경상북도.getName())
+        .sigunguNm(SigunguEnum.구미시.getName())
+        .indutyList("일반야영장,카라반")
+        .build();
+    Campsite campsite2 = Campsite.builder().user(owner).facltNm("c2").tel("01012312311")
+        .doNm(DoNmEnum.경상북도.getName())
+        .sigunguNm(SigunguEnum.구미시.getName())
+        .indutyList("카라반")
+        .build();
 
     @DisplayName("테스트 데이터 추가")
     @BeforeEach
     void prepare() {
-        User user = User.builder()
-            .account("testuser1")
-            .password("testpw1")
-            .nickname("user")
-            .tel("01012312310")
-            .build();
-
-        User savedUser = userRepository.save(user);
-        assertThat(savedUser).isEqualTo(user);
-
-        Campsite campsite = Campsite.builder()
-            .user(user)
-            .facltNm("캠프유캠푸 캠핑장")
-            .tel("01012312310")
-            .build();
-        Campsite savedCampsite = campsiteRepository.save(campsite);
-        assertThat(savedCampsite).isEqualTo(campsite);
+        userRepository.save(owner);
+        campsiteRepository.saveAll(List.of(campsite1, campsite2));
     }
 
+    @Test
     @DisplayName("캠핑장 전체 목록 조회")
-    @Test
-    public void findAll() {
+    void findAll() {
         List<Campsite> result = campsiteRepository.findAll();
-        assertThat(result.size()).isGreaterThanOrEqualTo(1);
+        assertThat(result.size()).isGreaterThanOrEqualTo(2);
     }
 
+    @ParameterizedTest(name = "#{index} {0}")
+    @CsvSource({
+        "일반야영장 유형이 있는 조회, 일반야영장, 1",
+        "카라반 유형이 있는 캠핑장 조회, 카라반, 2",
+        "존재하지 않는 유형으로 캠핑장 조회, ABC, 0"
+    })
     @DisplayName("캠핑장 유형별 목록 조회")
-    @Test
-    public void findByInduty() {
-        Campsite campsite1 = Campsite.builder()
-            .user(userRepository.findByAccount("testuser1").get())
-            .facltNm("캠프유캠푸 캠핑장")
-            .tel("01012312313")
-            .indutyList("일반야영장,카라반")
-            .build();
-        Campsite campsite2 = Campsite.builder()
-            .user(userRepository.findByAccount("testuser1").get())
-            .facltNm("캠프유캠푸 캠핑장")
-            .tel("01012312314")
-            .indutyList("카라반")
-            .build();
-        List<Campsite> savedCampsite = campsiteRepository.saveAll(List.of(campsite1, campsite2));
-        assertThat(savedCampsite.size()).isEqualTo(2);
-        assertThat(campsiteRepository.findAll().size()).isGreaterThan(2);
-
-        Page<Campsite> result = campsiteRepository.findByIndutyListContaining(null, "일반야영장");
-        assertThat(result.getTotalElements()).isEqualTo(1);
-
-        result = campsiteRepository.findByIndutyListContaining(null, "카라반");
-        assertThat(result.getTotalElements()).isEqualTo(2);
-
-        result = campsiteRepository.findByIndutyListContaining(null, "존재하지않는유형");
-        assertThat(result.getTotalElements()).isEqualTo(0);
+    void findByInduty(String description, String induty, int expected) {
+        Page<Campsite> result = campsiteRepository.findByIndutyListContaining(null, DoNmEnum.경상북도.getName(),
+            SigunguEnum.구미시.getName(), induty);
+        assertThat(result.getTotalElements()).isEqualTo(expected);
     }
 
-    @DisplayName("캠핑장 등록 - 정상")
-    @Test
-    public void createCampsite1() {
-        // given
-        CampsiteDto.CreateRequest createRequestDto = CampsiteDto.CreateRequest.builder()
-            .user(userRepository.findByAccount("testuser1").get())
-            .facltNm("캠프유캠푸 캠핑장1")
-            .tel("01012312311")
-            .build();
+    @Nested
+    @DisplayName("캠핑장 등록 테스트")
+    class Register {
 
-        // when
-        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
-        campsiteRepository.save(campsite);
+        @Test
+        @DisplayName("등록 성공")
+        public void createCampsite1() {
+            CampsiteDto.CreateRequest createRequestDto = CampsiteDto.CreateRequest.builder()
+                .user(owner)
+                .facltNm("c3")
+                .doNm(DoNmEnum.경상북도.getName())
+                .sigunguNm(SigunguEnum.구미시.getName())
+                .tel("01012312312")
+                .indutyList("카라반,자동차야영장")
+                .build();
 
-        // then
-        Optional<Campsite> result = campsiteRepository.findByFacltNm(campsite.getFacltNm());
+            Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
+            Campsite savedCampsite = campsiteRepository.save(campsite);
+            assertThat(savedCampsite).isEqualTo(campsite);
+        }
 
-        assertThat(result).isNotNull();
-        assertThat(result.get()).isEqualTo(campsite);
-    }
+        @Test
+        @DisplayName("등록 실패: 유저 없는 경우")
+        public void createCampsite2() {
+            Campsite campsite = Campsite.builder().facltNm("c4").tel("01012312313")
+                .doNm(DoNmEnum.경상북도.getName())
+                .sigunguNm(SigunguEnum.구미시.getName())
+                .indutyList("카라반")
+                .build();
 
-    @DisplayName("캠핑장 등록 - 실패: 유저 없는 경우")
-    @Test
-    public void createCampsite2() {
-        // given
-        CampsiteDto.CreateRequest createRequestDto = CampsiteDto.CreateRequest.builder()
-            .facltNm("캠프유캠푸 캠핑장1")
-            .tel("01012312312")
-            .build();
+            assertThatThrownBy(() -> campsiteRepository.save(campsite));
+        }
 
-        // when
-        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
-        assertThatThrownBy(() -> campsiteRepository.save(campsite));
-    }
-
-    @DisplayName("캠핑장 등록 - 실패: 유효성 검사 실패")
-    @Test
-    public void createCampsite3() {
-        // given
-        CampsiteDto.CreateRequest createRequestDto = CampsiteDto.CreateRequest.builder()
-            .user(userRepository.findByAccount("testuser1").get())
-            .facltNm("캠프유캠푸 캠핑장")
-            .tel("012345678901")
-            .build();
-
-        // when
-        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
-        assertThatThrownBy(() -> campsiteRepository.save(campsite));
+        @Test
+        @DisplayName("등록 실패: 유효성 검사 실패")
+        public void createCampsite3() {
+            Campsite campsite = Campsite.builder().facltNm("c5").tel("012345678901")
+                .user(owner)
+                .doNm(DoNmEnum.경상북도.getName())
+                .sigunguNm(SigunguEnum.구미시.getName())
+                .indutyList("카라반")
+                .build();
+            
+            assertThatThrownBy(() -> campsiteRepository.save(campsite));
+        }
     }
 
 }

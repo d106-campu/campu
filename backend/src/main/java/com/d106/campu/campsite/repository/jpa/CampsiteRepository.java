@@ -17,8 +17,9 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         SELECT c
         FROM campsite c
             LEFT JOIN FETCH c.campsiteLocation loc
+        WHERE c.doNm = :doNm AND c.sigunguNm = :sigunguNm
         """)
-    Page<Campsite> findAll(Pageable pageable);
+    Page<Campsite> findAll(Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm);
 
     Page<Campsite> findByUser(Pageable pageable, User user);
 
@@ -26,10 +27,12 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         SELECT c
         FROM campsite c
             LEFT JOIN FETCH c.campsiteLocation loc
-        WHERE (c.indutyList IS NOT NULL)
-            AND (c.indutyList LIKE %:induty%)
+        WHERE c.doNm = :doNm AND c.sigunguNm = :sigunguNm
+            AND (c.indutyList IS NOT NULL) AND (c.indutyList LIKE %:induty%)
         """)
-    Page<Campsite> findByIndutyListContaining(Pageable pageable, @Param("induty") String induty);
+    Page<Campsite> findByIndutyListContaining(
+        Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("induty") String induty
+    );
 
     @Query("""
         SELECT c
@@ -37,8 +40,11 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
             LEFT JOIN FETCH c.campsiteThemeList ct
             LEFT JOIN FETCH ct.theme t
             LEFT JOIN FETCH c.campsiteLocation loc
-        WHERE t.theme = :theme
+        WHERE c.doNm = :doNm AND c.sigunguNm = :sigunguNm
+            AND t.theme = :theme
         """)
-    Page<Campsite> findByCampsiteThemeList_Theme_Theme(Pageable pageable, @Param("theme") String theme);
+    Page<Campsite> findByCampsiteThemeList_Theme_Theme(
+        Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("theme") String theme
+    );
 
 }

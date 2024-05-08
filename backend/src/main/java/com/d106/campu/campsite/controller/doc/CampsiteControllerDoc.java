@@ -2,6 +2,8 @@ package com.d106.campu.campsite.controller.doc;
 
 import com.d106.campu.campsite.constant.RegExpression;
 import com.d106.campu.campsite.dto.CampsiteDto;
+import com.d106.campu.common.constant.DoNmEnum;
+import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.room.dto.RoomDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -33,10 +36,14 @@ public interface CampsiteControllerDoc {
         @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response getCampsiteList(
-        Pageable pageable,
+        DoNmEnum doNm,
+        SigunguEnum sigunguNm,
+        LocalDate startDate,
+        LocalDate endDate,
         @Pattern(regexp = RegExpression.induty, message = "induty should be among these: caravan, autocamping, camping, glamping") String induty,
         @Pattern(regexp = RegExpression.theme, message = "theme should be among these: summer, trail, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme,
-        boolean owner
+        boolean owner,
+        Pageable pageable
     );
 
     @Operation(summary = "캠핑장 등록", description = "사장님이 캠핑장 관리 페이지에서 캠핑장을 등록하는 API를 호출한다.")
@@ -84,10 +91,9 @@ public interface CampsiteControllerDoc {
         @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response getLikeCampsiteList(Pageable pageable);
-    
+
     class CampsiteListResponse {
         public Page<CampsiteDto.Response> campsiteList;
-        public Pageable pageable;
     }
 
     class CreateCampsiteResponse {
@@ -100,7 +106,6 @@ public interface CampsiteControllerDoc {
 
     class CampsiteRoomListResponse {
         public Page<RoomDto.ListResponse> roomList;
-        public Pageable pageable;
     }
 
 }

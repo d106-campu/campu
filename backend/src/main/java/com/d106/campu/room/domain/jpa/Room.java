@@ -2,6 +2,7 @@ package com.d106.campu.room.domain.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.reservation.domain.jpa.Reservation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,5 +61,8 @@ public class Room extends BaseTime {
 
     @Column(name = "supply_list")
     private String supplyList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<Reservation> reservationList;
 
 }
