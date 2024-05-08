@@ -12,6 +12,7 @@ import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
 import com.d106.campu.mypage.repository.MyPageRepository;
+import com.d106.campu.user.constant.GenderType;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -76,6 +77,14 @@ public class MyPageService {
         checkChangedPassword(passwordChangeRequestDto.getNewPassword(), passwordChangeRequestDto.getNewPasswordCheck());
 
         user.changePassword(passwordEncoder.encode(passwordChangeRequestDto.getNewPassword()));
+    }
+
+    @Transactional
+    public void updateEtcInfo(GenderType gender, String birthYear) {
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        user.changeEtcInfo(gender, birthYear);
     }
 
     private void checkChangedPassword(String changedPassword, String checkChangePassword) {

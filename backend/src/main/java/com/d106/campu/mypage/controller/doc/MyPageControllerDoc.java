@@ -9,6 +9,7 @@ import com.d106.campu.mypage.dto.MyPageDto;
 import com.d106.campu.mypage.dto.MyPageDto.MyCampsiteResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
+import com.d106.campu.user.constant.GenderType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -102,6 +103,18 @@ public interface MyPageControllerDoc {
         @ApiResponse(responseCode = "409", description = "기존 비밀번호 틀림 or 변경될 비밀번호가 같지 않음", content = @Content)
     })
     Response updatePassword(@Valid MyPageDto.PasswordChangeRequest passwordChangeRequestDto);
+
+    @Operation(summary = "프로필 설정 - 기타정보 수정", description = "기타정보를 수정한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "기타정보 수정 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "유저를 찾지 못함", content = @Content),
+    })
+    Response updateEtcInfo(GenderType gender, String birthYear);
 
     class ReservationListResponse {
         public Page<MyReservationResponse> reservationList;

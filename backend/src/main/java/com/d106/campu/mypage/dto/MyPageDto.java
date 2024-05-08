@@ -1,6 +1,7 @@
 package com.d106.campu.mypage.dto;
 
 import com.d106.campu.common.annotation.Password;
+import com.d106.campu.user.constant.GenderType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -110,6 +111,13 @@ public class MyPageDto {
 
         @Password
         private String newPasswordCheck;
+    }
+
+    @Data
+    public static class EtcInfoChangeRequest {
+
+        private GenderType gender;
+        private String birthYear;
     }
 
 }

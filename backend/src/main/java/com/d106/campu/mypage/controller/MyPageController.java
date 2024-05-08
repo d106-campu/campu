@@ -7,11 +7,12 @@ import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.controller.doc.MyPageControllerDoc;
 import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
 import com.d106.campu.mypage.service.MyPageService;
-import jakarta.validation.Valid;
+import com.d106.campu.user.constant.GenderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,8 +58,15 @@ public class MyPageController implements MyPageControllerDoc {
 
     @Override
     @PostMapping("/profile/password")
-    public Response updatePassword(@Valid PasswordChangeRequest passwordChangeRequestDto) {
+    public Response updatePassword(@RequestBody PasswordChangeRequest passwordChangeRequestDto) {
         myPageService.updatePassword(passwordChangeRequestDto);
+        return new Response();
+    }
+
+    @Override
+    @PostMapping("/profile/etc/info")
+    public Response updateEtcInfo(@RequestParam GenderType gender, @RequestParam String birthYear) {
+        myPageService.updateEtcInfo(gender, birthYear);
         return new Response();
     }
 
