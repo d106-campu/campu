@@ -1,8 +1,10 @@
 import { all } from "redux-saga/effects";
+import { watchToggleLikes } from "./campsiteLikesSaga";
 
 function* rootSaga() {
   yield all([
-    // 여기에 다른 사가를 등록합니다.
+    watchToggleLikes(),
+    // 여기에 다른 사가들을 등록
   ]);
 }
 
