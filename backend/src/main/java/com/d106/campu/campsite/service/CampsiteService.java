@@ -19,6 +19,7 @@ import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class CampsiteService {
+
+    private final ReservationRepository reservationRepository;
 
     private final UserRepository userRepository;
 
@@ -42,6 +45,8 @@ public class CampsiteService {
     /**
      * @param doNm      To limit location.
      * @param sigunguNm To limit location.
+     * @param startDate To check reservation availability.
+     * @param endDate   To check reservation availability.
      * @param induty    For campsites that has specific industry type.
      * @param theme     For campsites that has specific theme.
      * @param owner     For campsites that the current user manages.
@@ -56,6 +61,8 @@ public class CampsiteService {
     public Page<CampsiteDto.Response> getCampsiteList(
         String doNm,
         String sigunguNm,
+        LocalDate startDate,
+        LocalDate endDate,
         String induty,
         String theme,
         boolean owner,

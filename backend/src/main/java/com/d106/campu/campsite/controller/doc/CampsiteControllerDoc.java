@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +38,8 @@ public interface CampsiteControllerDoc {
     Response getCampsiteList(
         DoNmEnum doNm,
         SigunguEnum sigunguNm,
+        LocalDate startDate,
+        LocalDate endDate,
         @Pattern(regexp = RegExpression.induty, message = "induty should be among these: caravan, autocamping, camping, glamping") String induty,
         @Pattern(regexp = RegExpression.theme, message = "theme should be among these: summer, trail, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme,
         boolean owner,

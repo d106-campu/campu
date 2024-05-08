@@ -7,6 +7,7 @@ import com.d106.campu.campsite.service.CampsiteService;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.response.Response;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,8 @@ public class CampsiteController implements CampsiteControllerDoc {
     public Response getCampsiteList(
         DoNmEnum doNm,
         SigunguEnum sigunguNm,
+        LocalDate startDate,
+        LocalDate endDate,
         @RequestParam(required = false) String induty,
         @RequestParam(required = false) String theme,
         @RequestParam(required = false) boolean owner,
@@ -37,7 +40,7 @@ public class CampsiteController implements CampsiteControllerDoc {
         return new Response(
             CampsiteConstant.CAMPSITE_LIST,
             campsiteService.getCampsiteList(
-                doNm.getName(), sigunguNm.getName(), induty, theme, owner, pageable
+                doNm.getName(), sigunguNm.getName(), startDate, endDate, induty, theme, owner, pageable
             )
         );
     }
