@@ -9,6 +9,7 @@ import com.d106.campu.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,13 @@ public class MyPageController implements MyPageControllerDoc {
     @GetMapping("/campsite")
     public Response getCampsiteList(Pageable pageable) {
         return new Response(MyPageConstant.CAMPSITE_LIST, myPageService.getCampsiteList(pageable));
+    }
+
+    @Override
+    @PostMapping("/profile/nickname")
+    public Response updateNickname(@RequestParam String nickname) {
+        myPageService.updateNickname(nickname);
+        return new Response();
     }
 
 }

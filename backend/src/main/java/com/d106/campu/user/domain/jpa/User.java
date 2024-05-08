@@ -79,4 +79,8 @@ public class User extends BaseTime {
         this.password = password;
     }
 
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
 }

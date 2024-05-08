@@ -12,7 +12,10 @@ public enum UserExceptionCode implements ExceptionCode {
     INVALID_LOGIN("USER001", "Invalid account or password"),
 
     /* Not found exception */
-    USER_NOT_FOUND("USER201", "Invalid user");
+    USER_NOT_FOUND("USER201", "Invalid user"),
+
+    /* Conflict exception */
+    NICKNAME_CONFLICT("USER401", "Conflict nickname");
 
     private final String code;
     private final String message;
