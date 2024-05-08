@@ -10,6 +10,7 @@ import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
+import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
 import com.d106.campu.mypage.repository.MyPageRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
@@ -17,6 +18,7 @@ import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ public class MyPageService {
     private final MyPageRepository myPageRepository;
     private final UserRepository userRepository;
     private final TelVerifyHashRepository telVerifyHashRepository;
+    private final PasswordEncoder passwordEncoder;
     private final SecurityHelper securityHelper;
 
     @Transactional(readOnly = true)
@@ -62,6 +65,29 @@ public class MyPageService {
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         user.changeTel(tel);
+    }
+
+    @Transactional
+    public void updatePassword(PasswordChangeRequest passwordChangeRequestDto) {
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        verifyCurrentPassword(passwordChangeRequestDto.getCurrentPassword(), user.getPassword());
+        checkChangedPassword(passwordChangeRequestDto.getNewPassword(), passwordChangeRequestDto.getNewPasswordCheck());
+
+        user.changePassword(passwordEncoder.encode(passwordChangeRequestDto.getNewPassword()));
+    }
+
+    private void checkChangedPassword(String changedPassword, String checkChangePassword) {
+        if (!changedPassword.equals(checkChangePassword)) {
+            throw new UnauthorizedException(UserExceptionCode.CHANGE_PASSWORD_NOT_MATCH);
+        }
+    }
+
+    private void verifyCurrentPassword(String requestPassword, String password) {
+        if (!passwordEncoder.matches(requestPassword, password)) {
+            throw new UnauthorizedException(UserExceptionCode.CURRENT_PASSWORD_NOT_MATCH);
+        }
     }
 
     private void checkAuthorization(String tel) {

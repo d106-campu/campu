@@ -5,7 +5,9 @@ import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.MyPageConstant;
 import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.controller.doc.MyPageControllerDoc;
+import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
 import com.d106.campu.mypage.service.MyPageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +52,13 @@ public class MyPageController implements MyPageControllerDoc {
     @PostMapping("/profile/tel")
     public Response updateTel(@RequestParam String tel) {
         myPageService.updateTel(tel);
+        return new Response();
+    }
+
+    @Override
+    @PostMapping("/profile/password")
+    public Response updatePassword(@Valid PasswordChangeRequest passwordChangeRequestDto) {
+        myPageService.updatePassword(passwordChangeRequestDto);
         return new Response();
     }
 
