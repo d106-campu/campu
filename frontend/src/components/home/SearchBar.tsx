@@ -4,31 +4,42 @@ import { MdOutlinePersonOutline } from "react-icons/md";
 import { LuSearch } from "react-icons/lu";
 import SearchRegion from "@/components/@common/Search/SearchRegion";
 import { RegionList } from "@/components/@common/Search/RegionList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import Calendar from "../@common/Calendar/Calendar";
+import Calendar from "@/components/@common/Calendar/Calendar";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "@/app/store";
 
 const SearchBar = () => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [showCalendar, setShowCalendar] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const searchBarState = useSelector((state: RootState) => state.searchBar);
+  const startDate = useSelector(
+    (state: RootState) => state.searchBar.startDate
+  );
+  const endDate = useSelector((state: RootState) => state.searchBar.endDate);
 
+  // 스토어 저장 확인용
+  // @TODO: API 호출 후, 스토어 비우는 로직 추가해야함
+  useEffect(() => {
+    console.log(searchBarState);
+  }, [searchBarState]);
+
+  // 인원 증감 함수
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
       dispatch(setPeople(numberOfPeople - 1));
     }
   };
-
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
@@ -62,7 +73,11 @@ const SearchBar = () => {
           >
             <FaRegCalendarAlt />
             <div className="flex items-center w-full cursor-pointer text-sm px-2">
-              <p className="pr-2">날짜 선택</p>
+              <p className="pr-2">
+                {startDate && endDate
+                  ? `${startDate} ~ ${endDate}`
+                  : "날짜 선택"}
+              </p>
               <IoIosArrowDown />
             </div>
           </div>
@@ -90,7 +105,7 @@ const SearchBar = () => {
                 onClick={handleDecrease}
                 className="text-MAIN_GREEN cursor-pointer"
               />
-              <p className="px-3">{numberOfPeople}</p>
+              <p className="px-3">{searchBarState.numberOfPeople}</p>
               <AiOutlinePlusCircle
                 onClick={handleIncrease}
                 className="text-MAIN_GREEN cursor-pointer"
