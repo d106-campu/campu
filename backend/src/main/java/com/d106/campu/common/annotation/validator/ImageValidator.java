@@ -25,32 +25,32 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
     }
 
     @Override
-    public boolean isValid(MultipartFile profile, ConstraintValidatorContext context) {
-        if (profile.isEmpty()) {
-            context.buildConstraintViolationWithTemplate("Profile is empty").addConstraintViolation();
+    public boolean isValid(MultipartFile image, ConstraintValidatorContext context) {
+        if (image.isEmpty()) {
+            context.buildConstraintViolationWithTemplate("image is empty").addConstraintViolation();
             return false;
         }
 
-        final String name = profile.getOriginalFilename();
+        final String name = image.getOriginalFilename();
         if (StringUtils.isBlank(name)) {
-            context.buildConstraintViolationWithTemplate("Profile name is empty").addConstraintViolation();
+            context.buildConstraintViolationWithTemplate("image name is empty").addConstraintViolation();
             return false;
         }
 
         try {
-            int size = profile.getBytes().length;
+            int size = image.getBytes().length;
             if (size == 0) {
-                context.buildConstraintViolationWithTemplate("Profile size is empty").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("image size is empty").addConstraintViolation();
                 return false;
             }
 
             /* 10MB */
             if (size > ImageConstant.IMAGE_SIZE_LIMIT) {
-                context.buildConstraintViolationWithTemplate("Profile size is too large").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("image size is too large").addConstraintViolation();
                 return false;
             }
         } catch (IOException e) {
-            context.buildConstraintViolationWithTemplate("Error while reading profile").addConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Error while reading image").addConstraintViolation();
             return false;
         }
 
@@ -64,11 +64,11 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
             }
         }
         if (!isValidExtension) {
-            context.buildConstraintViolationWithTemplate("Invalid profile extension").addConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Invalid image extension").addConstraintViolation();
             return false;
         }
 
-        final String detectedMimeType = getMimeTypeByTika(profile);
+        final String detectedMimeType = getMimeTypeByTika(image);
         boolean isValidMimeType = false;
         for (ImageExtension allowedExtension : allowedExtensionList) {
             if (ArrayUtils.contains(allowedExtension.getImageMimeTypeList(), detectedMimeType)) {
@@ -77,7 +77,7 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
             }
         }
         if (!isValidMimeType) {
-            context.buildConstraintViolationWithTemplate("Modified profile extension").addConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Modified image extension").addConstraintViolation();
             return false;
         }
 
@@ -87,12 +87,12 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
     /**
      * Get mime type by Tika
      *
-     * @param profile
+     * @param image
      * @return
      */
-    private String getMimeTypeByTika(MultipartFile profile) {
+    private String getMimeTypeByTika(MultipartFile image) {
         try {
-            return new Tika().detect(profile.getInputStream());
+            return new Tika().detect(image.getInputStream());
         } catch (IOException e) {
             return null;
         }
