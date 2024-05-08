@@ -33,9 +33,7 @@ public class ImageService {
 
     @Transactional
     public ImageDto.ProfileResponse uploadProfileImage(MultipartFile profileImage) {
-//        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-//            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_OUND));
-        User user = userRepository.findByAccount("choihojo")
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
         Path basePath = ImageConstant.USER_DIR.resolve(user.getId().toString());
         String fileName = saveFile(basePath, profileImage);
