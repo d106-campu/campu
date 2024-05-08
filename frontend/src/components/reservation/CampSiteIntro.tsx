@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
+import Calendar from "@/components/@common/Calendar/Calendar";
+import { formatSimpleDate } from "@/utils/formatDateTime";
+import { useRefs } from "@/context/RefContext";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
@@ -27,6 +32,32 @@ interface ICampSiteIntro {
 
 const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   const [isLiked, setIsLiked] = useState<boolean>(data.isLiked);
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.campingDate
+  );
+
+  const { reviewRef } = useRefs();
+  const scrollToReviews = () => {
+    reviewRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 복사 함수
+  // @TODO: 토스트 메시지로 바꾸기
+  const copyToClipboard = async () => {
+    if (!navigator.clipboard) {
+      alert("클립보드 사용이 불가능한 환경입니다.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(data.campsite_tel);
+      alert("전화번호가 클립보드에 복사되었습니다.");
+    } catch (err) {
+      console.error("클립보드 복사 실패:", err);
+      alert("클립보드 복사에 실패했습니다.");
+    }
+  };
+
   return (
     <>
       <CampingPhotos main={data.main} photos={data.other} id={data.id} />
@@ -58,19 +89,25 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
         </div>
 
         {/* 캠핑장 필수 정보 */}
-        {/* @TODO: 클릭 시 이동 */}
         <div className="p-2 text-sm">
           <div className="flex pt-1">
             <img src={mapIcon} className="w-5" />
             <p className="text-UNIMPORTANT_TEXT_01 pl-2">
               {data.campsite_addr1}
             </p>
-            <p className="pl-2 text-MAIN_GREEN font-bold">지도로 확인하기</p>
+            <button className="pl-2 text-MAIN_GREEN font-bold">
+              지도로 확인하기
+            </button>
           </div>
           <div className="flex py-2">
             <img src={phoneIcon} className="w-4" />
             <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.campsite_tel}</p>
-            <p className="pl-2 text-MAIN_GREEN font-bold">전화하기</p>
+            <button
+              onClick={copyToClipboard}
+              className="pl-2 text-MAIN_GREEN font-bold"
+            >
+              복사하기
+            </button>
           </div>
           <div className="flex">
             <img src={reviewIcon} className="w-5" />
@@ -78,7 +115,12 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
               방문자 리뷰 <span className="font-bold">{data.totalReview}</span>
               개
             </p>
-            <p className="pl-2 text-MAIN_GREEN font-bold">둘러보기</p>
+            <button
+              onClick={scrollToReviews}
+              className="pl-2 text-MAIN_GREEN font-bold"
+            >
+              둘러보기
+            </button>
           </div>
         </div>
 
@@ -100,12 +142,31 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
           </div>
         </div>
 
-        <div className="pt-10 flex">
+        <div className="pt-10 flex justify-between">
           {/* 캠핑존 배치도 */}
           <CampSiteLayout
             layout={data.layout}
             campsite_name={data.campsite_faclt_nm}
           />
+          {/* 캘린더 */}
+          <div className="w-[50%] h-[420px]">
+            <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-BLACK text-center font-bold w-[75%] mx-auto">
+              <div className="flex-1 my-auto py-1 rounded-xl">
+                <p className="text-sm text-MAIN_GREEN">입실일</p>
+                {formatSimpleDate(startDate) || (
+                  <p className="text-sm">날짜를 선택해주세요</p>
+                )}
+              </div>
+              <div className="border-l-2 border-[#C9C9C9] mx-2" />
+              <div className="flex-1 my-auto py-1 rounded-xl">
+                <p className="text-sm text-MAIN_GREEN">퇴실일</p>
+                {formatSimpleDate(endDate) || (
+                  <p className="text-sm">날짜를 선택해주세요</p>
+                )}
+              </div>
+            </div>
+            <Calendar readOnly={true} />
+          </div>
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
 import {
@@ -20,10 +20,14 @@ import {
 } from "date-fns";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
+interface ICalendarProps {
+  readOnly?: boolean;
+}
+
 // @TODO: 윤년 추가하기
 // @TODO: 예약 불가능한 날짜 처리
 // @TODO: 컴포넌트 분리하기
-const Calendar = () => {
+const Calendar = ({ readOnly = false }: ICalendarProps) => {
   const dispatch = useDispatch();
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
@@ -70,6 +74,8 @@ const Calendar = () => {
 
   // 날짜 선택 함수
   const handleSelectDate = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (readOnly) return; // 읽기 전용이면 return
+
     // button 선택 시 근처(감싸고 있는) li tag 설정
     const dateElement = event.currentTarget.closest("li");
 
@@ -134,7 +140,8 @@ const Calendar = () => {
     return [
       isToday(day) && "text-[#46A14F] font",
       isBeforeToday && "text-GRAY", // 오늘 날짜 이전은 회색으로 표시
-      startDate &&
+      !readOnly &&
+        startDate &&
         !isEqual(day, startDate) &&
         endDate &&
         !isEqual(day, endDate) &&
@@ -153,14 +160,21 @@ const Calendar = () => {
           : isStart || isEnd
           ? "text-BLACK"
           : "text-blue-400"),
+      readOnly && "cursor-default",
       "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
     ]
       .filter(Boolean)
       .join(" ");
   };
 
+  useEffect(() => {
+    if (startDate) {
+      setCurrentMonth(format(startDate, "yyyy년 MM월"));
+    }
+  }, [startDate]);
+
   return (
-    <div className="text-SUB_BLACK max-w-[60%] mx-auto pt-5">
+    <div className="text-SUB_BLACK max-w-[80%] mx-auto pt-5">
       {/* 연도 + 월 + 버튼 */}
       <div className="flex justify-between items-center">
         <button
@@ -196,7 +210,7 @@ const Calendar = () => {
           </div>
         ))}
       </div>
-
+      {/* 날짜 */}
       <ul className="grid grid-cols-7 mt-2 text-base text-black">
         {days.map((day, dayIdx) => {
           const isBetween = isDateInBetweenStartAndEnd(day, startDate, endDate);
@@ -211,9 +225,11 @@ const Calendar = () => {
               } py-1.5`}
             >
               <div
-                className={`${isBetween ? "bg-[#E1F9E3]" : ""} 
-                ${isStart ? "rounded-l-full" : ""} 
-                ${isEnd ? "rounded-r-full" : ""}`}
+                className={`${isBetween && "bg-[#E1F9E3]"} 
+                ${getDay(day) === 0 && !isStart && "rounded-l-lg"}
+                ${getDay(day) === 6 && !isEnd && "rounded-r-lg"}
+                ${isStart && "rounded-l-full"} 
+                ${isEnd && "rounded-r-full"}`}
               >
                 <button
                   type="button"
