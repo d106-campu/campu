@@ -14,17 +14,21 @@ const LikeButton = ({
   className,
   iconSize = 38,
 }: ILikeButtonProps) => {
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const isLiked = useSelector(
     (state: RootState) => state.campsiteLike.likes[campsiteId] !== undefined
   );
   const dispatch = useDispatch();
 
   const handleToggleLike = () => {
-    if (isLiked) {
-      dispatch(removeLike(campsiteId));
-    } else {
-      dispatch(addLike(campsiteId));
+    if (isLogin) {
+      if (isLiked) {
+        dispatch(removeLike(campsiteId));
+      } else {
+        dispatch(addLike(campsiteId));
+      }
     }
+    return;
   };
 
   return (
