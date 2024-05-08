@@ -14,7 +14,9 @@ import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
 import com.d106.campu.mypage.repository.MyPageRepository;
 import com.d106.campu.user.constant.GenderType;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.dto.UserDto;
 import com.d106.campu.user.exception.code.UserExceptionCode;
+import com.d106.campu.user.mapper.UserMapper;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,7 @@ public class MyPageService {
     private final MyPageRepository myPageRepository;
     private final UserRepository userRepository;
     private final TelVerifyHashRepository telVerifyHashRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final SecurityHelper securityHelper;
 
@@ -46,6 +49,12 @@ public class MyPageService {
     @Transactional(readOnly = true)
     public Object getCampsiteList(Pageable pageable) {
         return myPageRepository.getCampsiteList(pageable, securityHelper.getLoginAccount());
+    }
+
+    @Transactional(readOnly = true)
+    public UserDto.ProfileResponse getProfile() {
+        return userMapper.toProfileResponseDto(userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND)));
     }
 
     @Transactional

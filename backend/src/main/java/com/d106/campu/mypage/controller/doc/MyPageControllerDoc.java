@@ -62,6 +62,17 @@ public interface MyPageControllerDoc {
     })
     Response getCampsiteList(Pageable pageable);
 
+    @Operation(summary = "마이 프로필 조회", description = "로그인한 사용자의 프로필을 조회한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "프로필 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+    })
+    Response getProfile();
+
     @Operation(summary = "프로필 설정 - 닉네임 수정", description = "닉네임을 수정한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "닉네임 수정 성공",
