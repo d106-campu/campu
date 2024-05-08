@@ -13,6 +13,7 @@ import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -87,6 +88,11 @@ public class CampsiteService {
         }
 
         return responsePage == null ? null : responsePage.map((e) -> {
+            // Can I reserve or not
+            e.setAvailable(e.getRoomList().stream()
+                .filter(room -> reservationRepository.existsReservationOnDateRange(room, startDate, endDate)).findFirst()
+                .isEmpty());
+            // Did I like this campsite
             e.setLike(campsiteLikeRepository.existsByCampsiteAndUser(e, user));
             return campsiteMapper.toCampsiteListResponseDto(e);
         });
