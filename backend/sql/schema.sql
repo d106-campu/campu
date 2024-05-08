@@ -225,6 +225,8 @@ CREATE TABLE `campsite_like` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
     `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
     `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+    `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+    `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
     PRIMARY KEY (`id`),
     KEY `campsite_like_campsite_FK` (`campsite_id`),
     KEY `campsite_like_user_FK` (`user_id`),

@@ -1,12 +1,14 @@
 package com.d106.campu.mypage.repository;
 
 import com.d106.campu.campsite.domain.jpa.QCampsite;
+import com.d106.campu.campsite.domain.jpa.QCampsiteLike;
 import com.d106.campu.campsite.domain.jpa.QCampsiteLocation;
 import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.MyPageConstant;
 import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.dto.MyPageDto.CampsiteLocationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.CampsiteResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyCampsiteResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
@@ -42,6 +44,7 @@ public class MyPageRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private final QUser user = QUser.user;
     private final QCampsite campsite = QCampsite.campsite;
+    private final QCampsiteLike campsiteLike = QCampsiteLike.campsiteLike;
     private final QRoom room = QRoom.room;
     private final QReservation reservation = QReservation.reservation;
     private final QReview review = QReview.review;
@@ -186,6 +189,58 @@ public class MyPageRepository {
         }
 
         return new PageImpl<>(myReviewResponseList, pageable, getReviewCountByAccount(account));
+    }
+
+    public Page<MyCampsiteResponse> getCampsiteList(Pageable pageable, String account) {
+        Expression<?>[] projections = new Expression[]{
+            campsite.id, campsite.facltNm, campsite.thumbnailImageUrl,
+            campsite.lineIntro, campsite.addr1,
+            room.price.min(),
+            review.score.avg(),
+        };
+
+        BooleanBuilder predicate = new BooleanBuilder();
+        predicate.and(user.account.eq(account));
+
+        OrderSpecifier<?>[] orderBys = new OrderSpecifier[]{
+            campsiteLike.createTime.desc()
+        };
+
+        List<Tuple> tuples = jpaQueryFactory.select(projections)
+            .from(campsiteLike).join(campsite).on(campsiteLike.campsite.eq(campsite))
+            .join(user).on(campsiteLike.user.eq(user))
+            .join(room).on(room.campsite.eq(campsite))
+            .leftJoin(review).on(review.campsite.eq(campsite))
+            .where(predicate)
+            .groupBy(campsite)
+            .orderBy(orderBys)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize()).fetch();
+
+        List<MyCampsiteResponse> myCampsiteResponseList = new ArrayList<>();
+        for (Tuple tuple : tuples) {
+            Double score = tuple.get(review.score.avg());
+
+            myCampsiteResponseList.add(MyCampsiteResponse.builder()
+                .campsiteId(tuple.get(campsite.id))
+                .campsiteName(tuple.get(campsite.facltNm))
+                .thumbnailImageUrl(tuple.get(campsite.thumbnailImageUrl))
+                .lineIntro(tuple.get(campsite.intro))
+                .address(tuple.get(campsite.addr1))
+                .minPrice(tuple.get(room.price.min()))
+                .score(score == null ? 0.0 : Math.round(score * 10) / 10.0)
+                .build());
+        }
+
+        return new PageImpl<>(myCampsiteResponseList, pageable, getCampsiteCountByAccount(account));
+    }
+
+    private long getCampsiteCountByAccount(String account) {
+        return Objects.requireNonNull(jpaQueryFactory.select(Expressions.ONE)
+            .from(campsiteLike)
+            .join(campsiteLike.user, user)
+            .where(user.account.eq(account))
+            .fetchOne()).longValue();
     }
 
     private long getReviewCountByAccount(String account) {

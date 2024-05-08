@@ -29,4 +29,9 @@ public class MyPageService {
         return myPageRepository.getReviewList(pageable, securityHelper.getLoginAccount(), dateType);
     }
 
+    @Transactional(readOnly = true)
+    public Object getCampsiteList(Pageable pageable) {
+        return myPageRepository.getCampsiteList(pageable, securityHelper.getLoginAccount());
+    }
+
 }
