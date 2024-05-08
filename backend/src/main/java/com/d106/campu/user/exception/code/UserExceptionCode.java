@@ -15,7 +15,8 @@ public enum UserExceptionCode implements ExceptionCode {
     USER_NOT_FOUND("USER201", "Invalid user"),
 
     /* Conflict exception */
-    NICKNAME_CONFLICT("USER401", "Conflict nickname");
+    NICKNAME_CONFLICT("USER401", "Conflict nickname"),
+    TEL_CONFLICT("USER402", "Conflict tel");
 
     private final String code;
     private final String message;

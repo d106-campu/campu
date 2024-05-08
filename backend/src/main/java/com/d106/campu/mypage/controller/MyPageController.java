@@ -46,4 +46,11 @@ public class MyPageController implements MyPageControllerDoc {
         return new Response();
     }
 
+    @Override
+    @PostMapping("/profile/tel")
+    public Response updateTel(@RequestParam String tel) {
+        myPageService.updateTel(tel);
+        return new Response();
+    }
+
 }

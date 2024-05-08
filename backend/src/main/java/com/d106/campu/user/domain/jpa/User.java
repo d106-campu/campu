@@ -83,4 +83,8 @@ public class User extends BaseTime {
         this.nickname = nickname;
     }
 
+    public void changeTel(String tel) {
+        this.tel = tel;
+    }
+
 }

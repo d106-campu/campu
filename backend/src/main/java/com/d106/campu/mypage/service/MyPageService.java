@@ -1,7 +1,10 @@
 package com.d106.campu.mypage.service;
 
+import com.d106.campu.auth.exception.code.AuthExceptionCode;
+import com.d106.campu.auth.repository.redis.TelVerifyHashRepository;
 import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.UseType;
@@ -23,6 +26,7 @@ public class MyPageService {
 
     private final MyPageRepository myPageRepository;
     private final UserRepository userRepository;
+    private final TelVerifyHashRepository telVerifyHashRepository;
     private final SecurityHelper securityHelper;
 
     @Transactional(readOnly = true)
@@ -47,6 +51,34 @@ public class MyPageService {
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         user.changeNickname(nickname);
+    }
+
+    @Transactional
+    public void updateTel(String tel) {
+        checkExistedTel(tel);
+        checkAuthorization(tel);
+
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+
+        user.changeTel(tel);
+    }
+
+    private void checkAuthorization(String tel) {
+        telVerifyHashRepository.findById(tel)
+            .map(telVerifyHash -> {
+                if (!telVerifyHash.isAuthCheck()) {
+                    throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL);
+                }
+                return telVerifyHash;
+            }).orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL));
+    }
+
+    private void checkExistedTel(String tel) {
+        userRepository.findByTelAndDeleteTimeIsNull(tel)
+            .ifPresent(user -> {
+                throw new ConflictException(UserExceptionCode.TEL_CONFLICT);
+            });
     }
 
     private void checkExistedNickname(String nickname) {
