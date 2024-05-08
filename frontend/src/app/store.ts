@@ -10,6 +10,8 @@ import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
 import { reservationReducer } from "@/features/reservation/ReservationSlice";
 import { profileImageReducer } from "@/features/mypage/myProfile";
 import { campingDateReducer } from "@/features/reservation/campingDateSlice";
+import { headCountReducer } from "@/features/reservation/HeadCountSlice";
+import { searchBarReducer } from "@/features/search/searchBarSlice";
 
 const persistConfig = {
   key: "root",
@@ -23,6 +25,9 @@ const persistConfig = {
     "favoriteCamps",
     "profileImage",
     "reservation",
+    "campingDate",
+    "headCount",
+    "searchBar",
   ],
 };
 
