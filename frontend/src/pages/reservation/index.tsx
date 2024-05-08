@@ -55,7 +55,7 @@ const data = {
   checkIn: "14:00",
   checkOut: "11:00",
   mannerTime: "23:00 - 07:00",
-  rating: 4.5,
+  rating: 3.8,
   owner: {
     name: "김싸피",
     campSite: "캠프유캠푸 캠핑장",

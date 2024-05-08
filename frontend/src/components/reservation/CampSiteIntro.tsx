@@ -11,7 +11,7 @@ import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
 import mapIcon from "@/assets/svg/map.svg";
-import MapModal from "../@common/Map/MapModal";
+import MapModal from "@/components/@common/Map/MapModal";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface ICampSiteIntro {

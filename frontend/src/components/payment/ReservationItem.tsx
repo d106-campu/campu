@@ -4,10 +4,12 @@ import { updateStatus } from "@/features/reservation/ReservationSlice";
 import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
 import { diffDays } from "@/utils/diffDays";
 import Button from "@/components/@common/Button/Button";
+import MapModal from "@/components/@common/Map/MapModal";
 import Kakao_logo from "@/assets/images/kakao_logo.png";
 import stamp from "@/assets/images/stamp.png";
 import { FiMapPin } from "react-icons/fi";
 import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
+import { useState } from "react";
 
 const ReservationItem = () => {
   const dispatch = useDispatch();
@@ -18,6 +20,9 @@ const ReservationItem = () => {
     campsite_tel,
     campsite_addr1,
     campsite_addr2,
+    mapX,
+    mapY,
+    rating,
     roomName,
     roomInduty,
     supplyList,
@@ -33,6 +38,9 @@ const ReservationItem = () => {
 
   const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
   const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
+
+  const [mapModal, setMapModal] = useState<boolean>(false); // 지도 모달 상태관리
+  const toggleMapModal = () => setMapModal(!mapModal);
 
   const handlePayment = () => {
     // @TODO: 백으로 예약 아이디 넘기기
@@ -137,6 +145,7 @@ const ReservationItem = () => {
       {/* 버튼 + 절취선 */}
       <div className="w-full flex p-4 justify-around items-center bg-white rounded-2xl shadow-lg border-t-2 border-custom-gray border-dashed">
         <Button
+          onClick={toggleMapModal}
           width="w-[40%]"
           text="지도 보기"
           textColor="text-[#3A2929]"
@@ -144,6 +153,17 @@ const ReservationItem = () => {
           backgroundColor="bg-[#E3F0E5]"
           hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
         />
+        {mapModal && (
+          <MapModal
+            lat={mapX}
+            lng={mapY}
+            facltNm={campsite_faclt_nm}
+            addr1={campsite_addr1}
+            rate={rating}
+            level={5}
+            toggleModal={toggleMapModal}
+          />
+        )}
         {status === "proceeding" ? (
           <Button
             width="w-[40%]"

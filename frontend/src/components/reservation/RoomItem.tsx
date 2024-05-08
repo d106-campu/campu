@@ -34,6 +34,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     checkOut: "11:00", // 캠핑장 퇴실 시간
     mapX: 36.1334375, // 위도
     mapY: 128.3710625, //경도
+    rating: 3, // 별점
   };
 
   //  @TODO: 시작일과 종료일 및 인원수 리덕스로 상태 가져오기
@@ -50,6 +51,9 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
       campsite_tel: campsite.tel, // 캠핑장 전화번호
       campsite_addr1: campsite.addr1, // 캠핑장 주소
       campsite_addr2: campsite.addr2, // 캠핑장 상세 주소
+      mapX: campsite.mapX, // 위도
+      mapY: campsite.mapY, // 경도
+      rating: campsite.rating, // 별점
       roomName: room.name, // 캠핑장 방 이름
       roomInduty: room.induty, // 캠핑 유형
       supplyList: room.supplyList,
@@ -60,6 +64,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
       checkIn: campsite.checkIn, // 캠핑장 입실 시간
       checkOut: campsite.checkOut, // 캠핑장 퇴실 시간
     };
+
     dispatch(setReservationData(newReservationData));
     navigate(`/camps/${room.campsiteId}/payment`);
     scrollToTop();
