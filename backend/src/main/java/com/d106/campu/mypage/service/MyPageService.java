@@ -53,15 +53,18 @@ public class MyPageService {
 
     @Transactional(readOnly = true)
     public UserDto.ProfileResponse getProfile() {
-        return userMapper.toProfileResponseDto(userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND)));
+        return userMapper.toProfileResponseDto(getUserByAccount());
+    }
+
+    private User getUserByAccount() {
+        return userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
     }
 
     @Transactional
     public void updateNickname(String nickname) {
         checkExistedNickname(nickname);
-        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         user.changeNickname(nickname);
     }
@@ -71,16 +74,14 @@ public class MyPageService {
         checkExistedTel(tel);
         checkAuthorization(tel);
 
-        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         user.changeTel(tel);
     }
 
     @Transactional
     public void updatePassword(PasswordChangeRequest passwordChangeRequestDto) {
-        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         verifyCurrentPassword(passwordChangeRequestDto.getCurrentPassword(), user.getPassword());
         checkChangedPassword(passwordChangeRequestDto.getNewPassword(), passwordChangeRequestDto.getNewPasswordCheck());
@@ -90,8 +91,7 @@ public class MyPageService {
 
     @Transactional
     public void updateEtcInfo(GenderType gender, String birthYear) {
-        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         user.changeEtcInfo(gender, birthYear);
     }
