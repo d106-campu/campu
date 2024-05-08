@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Builder
@@ -27,7 +26,6 @@ public class Notification extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -37,5 +35,13 @@ public class Notification extends BaseTime {
 
     @Column(name = "redirect_url", length = 1024)
     private String redirectUrl;
+
+    public void setUser(User user) {
+        if (this.user != null) {
+            this.user.getNotificationList().remove(this);
+        }
+        this.user = user;
+        user.getNotificationList().add(this);
+    }
 
 }

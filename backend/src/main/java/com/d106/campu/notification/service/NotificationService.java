@@ -3,6 +3,7 @@ package com.d106.campu.notification.service;
 import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
@@ -11,6 +12,7 @@ import com.d106.campu.notification.event.TestEvent;
 import com.d106.campu.notification.exception.code.NotificationExceptionCode;
 import com.d106.campu.notification.mapper.NotificationMapper;
 import com.d106.campu.notification.repository.jpa.NotificationRepository;
+import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.util.Map;
@@ -33,15 +35,20 @@ public class NotificationService {
     private final NotificationMapper notificationMapper;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final SecurityHelper securityHelper;
 
     public SseEmitter connectSseV1() {
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new InvalidException(UserExceptionCode.USER_NOT_FOUND));
+
         SseEmitter sseEmitter = new SseEmitter(NotificationConstant.SSE_TIMEOUT_MILLIS);
-//        sseEmitterMap.put(securityHelper.getLoginUsername(), sseEmitter);
-//        sseEmitter.onCompletion(() -> sseEmitterMap.remove(securityHelper.getLoginUsername()));
-//        sseEmitter.onTimeout(() -> sseEmitterMap.remove(securityHelper.getLoginUsername()));
-//        sseEmitter.onError((e) -> sseEmitterMap.remove(securityHelper.getLoginUsername()));
+        sseEmitterMap.put(user.getId(), sseEmitter);
+        sseEmitter.onCompletion(() -> sseEmitterMap.remove(user.getId()));
+        sseEmitter.onTimeout(() -> sseEmitterMap.remove(user.getId()));
+        sseEmitter.onError((e) -> sseEmitterMap.remove(user.getId()));
         try {
-//            sendNotification(userId, NotificationConstant.SSE_SUCCESS);
+            sseEmitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
+                .data(new Response(NotificationConstant.NOTIFICATION, NotificationConstant.SSE_SUCCESS)));
         } catch (Exception e) {
             throw new InvalidException(NotificationExceptionCode.INVALID_CONNECTION);
         }
@@ -85,6 +92,7 @@ public class NotificationService {
         notification.setUser(
             userRepository.findById(saveRequestDto.getUserId())
                 .orElseThrow(() -> new InvalidException(UserExceptionCode.USER_NOT_FOUND)));
+        notificationRepository.save(notification);
         return notificationRepository.save(notification).getId();
     }
 

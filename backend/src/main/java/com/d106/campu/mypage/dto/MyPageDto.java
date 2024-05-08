@@ -84,4 +84,17 @@ public class MyPageDto {
         private String roomName;
     }
 
+    @Builder
+    @Getter
+    public static class MyCampsiteResponse {
+
+        private Long campsiteId;
+        private String campsiteName;
+        private String thumbnailImageUrl;
+        private String lineIntro;
+        private String address;
+        private Integer minPrice;
+        private Double score;
+    }
+
 }

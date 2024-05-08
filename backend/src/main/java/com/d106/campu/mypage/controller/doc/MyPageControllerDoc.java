@@ -3,7 +3,9 @@ package com.d106.campu.mypage.controller.doc;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.UseType;
-import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyCampsiteResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,12 +45,28 @@ public interface MyPageControllerDoc {
     })
     Response getReviewList(Pageable pageable, DateType dateType);
 
+    @Operation(summary = "내가 찜한 캠핑장 조회", description = "자신이 찜한 캠핑장을 조회한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "내가 찜한 캠핑장 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteLikeListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
+    })
+    Response getCampsiteList(Pageable pageable);
+
     class ReservationListResponse {
-        public Page<ReservationResponse> reservationList;
+        public Page<MyReservationResponse> reservationList;
     }
 
     class ReviewListResponse {
-        public Page<ReservationResponse> reviewList;
+        public Page<MyReviewResponse> reviewList;
+    }
+
+    class CampsiteLikeListResponse {
+        public Page<MyCampsiteResponse> campsiteList;
     }
 
 }

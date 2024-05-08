@@ -1,5 +1,6 @@
 package com.d106.campu.campsite.domain.jpa;
 
+import com.d106.campu.common.jpa.BaseTime;
 import com.d106.campu.user.domain.jpa.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CampsiteLike {
+public class CampsiteLike extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

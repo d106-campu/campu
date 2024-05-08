@@ -32,4 +32,10 @@ public class MyPageController implements MyPageControllerDoc {
         return new Response(MyPageConstant.REVIEW_LIST, myPageService.getReviewList(pageable, dateType));
     }
 
+    @Override
+    @GetMapping("/campsite")
+    public Response getCampsiteList(Pageable pageable) {
+        return new Response(MyPageConstant.CAMPSITE_LIST, myPageService.getCampsiteList(pageable));
+    }
+
 }
