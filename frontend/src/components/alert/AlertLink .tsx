@@ -1,17 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import AlertMessage from "@/components/alert/AlertMessage";
 
 const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
-  const toggleOpen = () => [setOpenAlert(!openAlert)];
+  const ref = useRef<HTMLDivElement>(null);
+
+  const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    setOpenAlert(!openAlert);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpenAlert(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside); // 문서 전체에 이벤트 리스너 추가
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    };
+  }, [ref]);
 
   return (
-    <div className="relative">
+    <div ref={ref} onClick={toggleOpen} className="relative">
       <div className=" flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md">
-        <div
-          className="flex items-center justify-center text-sm  hover:text-MAIN_GREEN"
-          onClick={toggleOpen}
-        >
+        <div className="flex items-center justify-center text-sm  hover:text-MAIN_GREEN">
           알림
         </div>
         {hasAlert && (
@@ -21,7 +35,10 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
 
       {/* 알림 목록 부분 */}
       {openAlert && (
-        <div className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp">
+        <div
+          onClick={(event) => event.stopPropagation()}
+          className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp"
+        >
           <div className="relative rounded-2xl pt-4">
             {/* 삼각형 모양 */}
             <div className="bg-white absolute h-6 w-6 rotate-45 transform origin-bottom-right -translate-y-1/2 left-10 top-1 rounded border-t-2 border-l-2" />
@@ -29,25 +46,23 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
             <div className="overflow-hidden rounded-lg">
               <div className="px-3 max-h-80 overflow-auto">
                 <h5 className="px-2 pb-2 text-sm">
-                  <span className="text-MAIN_GREEN font-bold">3</span> 개의
-                  새로운 알림이 있습니다.
+                  <span className="text-MAIN_GREEN font-bold">
+                    {data.alertCnt}
+                  </span>{" "}
+                  개의 새로운 알림이 있습니다.
                 </h5>
-                <AlertMessage
-                  nickname={"캐치캠핑핑핑"}
-                  time={1}
-                  campingSite={"캠프유캠푸 캠핑장"}
-                  campingZone={"A구역(벚꽃 캠핑존) 10 "}
-                  total={3}
-                  schedule={"24.05.10(금) ~ 05.14 (화) · 4박"}
-                />
-                <AlertMessage
-                  nickname={"캐치캠핑핑핑"}
-                  time={1}
-                  campingSite={"캠프유캠푸 캠핑장"}
-                  campingZone={"A구역(벚꽃 캠핑존) 10 "}
-                  total={3}
-                  schedule={"24.05.10(금) ~ 05.14 (화) · 4박"}
-                />
+                {data.alertList.map((alert) => (
+                  <AlertMessage
+                    key={alert.id}
+                    time={alert.time}
+                    campId={alert.campId}
+                    campingSite={alert.campsite_faclt_nm}
+                    roomName={alert.roomName}
+                    headCnt={alert.headCnt}
+                    startDate={alert.startDate}
+                    endDate={alert.endDate}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -57,3 +72,40 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
   );
 };
 export default AlertLink;
+
+// 더미 데이터
+const data = {
+  alertCnt: 3,
+  alertList: [
+    {
+      id: 1, // 알림 아이디
+      time: 1,
+      campId: 1,
+      campsite_faclt_nm: "캠프유캠푸 캠핑장",
+      roomName: "A구역(벚꽃 캠핑존) 10",
+      headCnt: 3,
+      startDate: "2024-05-05",
+      endDate: "2024-05-10",
+    },
+    {
+      id: 2, // 알림 아이디
+      time: 2,
+      campId: 1,
+      campsite_faclt_nm: "캠프유캠푸 캠핑장",
+      roomName: "C구역 (별자리 명소) 5",
+      headCnt: 3,
+      startDate: "2024-05-05",
+      endDate: "2024-05-10",
+    },
+    {
+      id: 3, // 알림 아이디
+      time: 2,
+      campId: 5,
+      campsite_faclt_nm: "노을숲 캠핑장",
+      roomName: "Z(편백숲) 구역 1",
+      headCnt: 3,
+      startDate: "2024-05-05",
+      endDate: "2024-05-10",
+    },
+  ],
+};

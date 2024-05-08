@@ -5,17 +5,21 @@ import dummy from "@/assets/images/dummyCamping3.png";
 
 const RecommendThema = () => {
   const tags = [
-    "애견동반",
-    "힐링캠핑",
-    "야경명소",
-    "물놀이",
-    "매너타임",
-    "노키즈",
-    "장비대여",
-    "장박가능",
+    "여름물놀이",
+    "걷기길",
+    "액티비티",
+    "봄꽃여행",
+    "가을단풍명소",
+    "겨울눈꽃명소",
+    "일몰명소",
+    "일출명소",
+    "수상레저",
+    "낚시",
+    "항공레저",
+    "스키",
   ];
 
-  const [selectedTags, setSelectedTags] = useState<string[]>(["애견동반"]);
+  const [selectedTags, setSelectedTags] = useState<string[]>(["여름물놀이"]);
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {

@@ -2,6 +2,7 @@ import ReviewItem from "@/components/@common/Review/ReviewItem";
 import { IReview } from "@/types/review";
 import { useNavigate } from "react-router-dom";
 import { PiNotePencilLight } from "react-icons/pi";
+import { scrollToTop } from "@/utils/scrollToTop";
 
 interface IReviewListProps {
   campsiteId: number;
@@ -21,7 +22,10 @@ const ReviewList = ({ campsiteId, totalReview, reviews }: IReviewListProps) => {
         </h3>
         {/* @TODO: 예약내역이 있을 경우에만 보이도록 */}
         <button
-          onClick={() => navigate(`/camps/${campsiteId}/reviews/write`)}
+          onClick={() => {
+            navigate(`/camps/${campsiteId}/reviews/write`);
+            scrollToTop();
+          }}
           className="flex items-end gap-1 text-sm"
         >
           리뷰 작성하기
@@ -36,9 +40,10 @@ const ReviewList = ({ campsiteId, totalReview, reviews }: IReviewListProps) => {
           reviews.map((review) => (
             <div
               key={review.id}
-              onClick={() =>
-                navigate(`/camps/${campsiteId}/reviews/${review.id}`)
-              }
+              onClick={() => {
+                navigate(`/camps/${campsiteId}/reviews/${review.id}`);
+                scrollToTop();
+              }}
             >
               <ReviewItem review={review} />
             </div>
