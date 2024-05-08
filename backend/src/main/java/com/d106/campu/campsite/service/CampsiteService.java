@@ -40,10 +40,12 @@ public class CampsiteService {
     private final RoomMapper roomMapper;
 
     /**
+     * @param doNm      To limit location.
+     * @param sigunguNm To limit location.
+     * @param induty    For campsites that has specific industry type.
+     * @param theme     For campsites that has specific theme.
+     * @param owner     For campsites that the current user manages.
      * @param pageable
-     * @param induty   For campsites that has specific industry type.
-     * @param theme    For campsites that has specific theme.
-     * @param owner    For campsites that the current user manages.
      * @return List of campsite.
      * @throws NotFoundException     If not login status.
      * @throws UnauthorizedException Only when `owner=true` option, if user does not have {@link RoleName#OWNER} role.
@@ -51,7 +53,14 @@ public class CampsiteService {
      * @see Theme
      */
     @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getCampsiteList(Pageable pageable, String induty, String theme, boolean owner) {
+    public Page<CampsiteDto.Response> getCampsiteList(
+        String doNm,
+        String sigunguNm,
+        String induty,
+        String theme,
+        boolean owner,
+        Pageable pageable
+    ) {
         /* TODO: Replace this with login user (using securityHelper) */
         User user = userRepository.findById(2L)
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
@@ -61,11 +70,13 @@ public class CampsiteService {
             checkUserRoleOwner(user);
             responsePage = campsiteRepository.findByUser(pageable, user);
         } else if (induty == null && theme == null) {
-            responsePage = campsiteRepository.findAll(pageable);
+            responsePage = campsiteRepository.findAll(pageable, doNm, sigunguNm);
         } else if (induty != null && !induty.isBlank()) {
-            responsePage = campsiteRepository.findByIndutyListContaining(pageable, Induty.of(induty).getValue());
+            responsePage = campsiteRepository.findByIndutyListContaining(
+                pageable, doNm, sigunguNm, Induty.of(induty).getValue());
         } else if (theme != null && !theme.isBlank()) {
-            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(pageable, Theme.of(theme).getValue());
+            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(
+                pageable, doNm, sigunguNm, Theme.of(theme).getValue());
         }
 
         return responsePage == null ? null : responsePage.map((e) -> {
