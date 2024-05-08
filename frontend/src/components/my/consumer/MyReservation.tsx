@@ -22,7 +22,7 @@ const MyReservation = ({
   ]); // 컨슈머컨테이너에서 받은 props로 예약 상태 관리
   const [viewCount, setViewCount] = useState<number>(4); // 초기에 표시할 예약내역 수 관리
   const initialViewCount = 4; // 렌더링 시 아코디언 첫 개수
-  const filters = ['오늘', '일주일', '한달', '1년', '전체']; // 날짜 관련 필터 목록
+  const filters = ['1년', '6개월', '한달', '전체'];; // 날짜 관련 필터 목록
 
   // 더미데이터 로드 후 가장 최근순으로 정렬하기 위한 계산
   useEffect(() => {

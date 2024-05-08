@@ -17,7 +17,7 @@ const MyReview = ({
   const [selectedFilter, setSelectedFilter] = useState('전체'); // 날짜 선택 상태 관리
   const [isReviews, setIsReviews] = useState<IMyReview[]>(reviews.slice(0, 2));
   const [viewCount, setViewCount] = useState<number>(2); // 처음 보여줄 리뷰 개수 관리
-  const filters = ['오늘', '일주일', '한달', '1년', '전체']; // 날짜 관련 필터 목록
+  const filters = ['1년', '6개월', '한달', '전체']; // 날짜 관련 필터 목록
 
   // 날짜 선택에 따른 필터 체인지
   const handleFilterChange = (filter: string) => {

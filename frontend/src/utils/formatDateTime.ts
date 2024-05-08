@@ -9,10 +9,7 @@ export const formatDate = (dateString: Date | string) => {
   };
   const date =
     typeof dateString === "string" ? new Date(dateString) : dateString;
-  if (isNaN(date.getTime())) {
-    console.error("formateDate로 제공하는 날짜 확인 :", dateString);
-    return "유효하지 않은 날짜임";  // 유효하지 않은 날짜 처리
-  }
+
   return new Intl.DateTimeFormat("ko-KR", options).format(date);
 };
 
@@ -25,9 +22,6 @@ export const formatSimpleDate = (dateString: Date | string) => {
   };
   const date =
     typeof dateString === "string" ? new Date(dateString) : dateString;
-  if (isNaN(date.getTime())) {
-    console.error("formatSimpleDate로 제공하는 날짜 확인 :", dateString);
-    return "유효하지 않은 날짜임";  // 유효하지 않은 날짜 처리
-  }
+
   return new Intl.DateTimeFormat("ko-KR", options).format(date);
 };

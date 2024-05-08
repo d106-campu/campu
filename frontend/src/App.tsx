@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import MyPage from "@/pages/mypage";
@@ -9,9 +10,9 @@ import PhotosPage from "@/pages/reservation/photos";
 import PaymentPage from "@/pages/payment";
 import ReviewListPage from "@/pages/reservation/reviewList";
 import ReviewPage from "@/pages/reservation/reviewList/review";
+import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
-import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 
 const router = createBrowserRouter([
   {
@@ -60,11 +61,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </Provider>
     </>
   );
