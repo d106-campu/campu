@@ -32,6 +32,7 @@ public class CampsiteController implements CampsiteControllerDoc {
         SigunguEnum sigunguNm,
         LocalDate startDate,
         LocalDate endDate,
+        int headCnt,
         @RequestParam(required = false) String induty,
         @RequestParam(required = false) String theme,
         @RequestParam(required = false) boolean owner,
@@ -40,7 +41,7 @@ public class CampsiteController implements CampsiteControllerDoc {
         return new Response(
             CampsiteConstant.CAMPSITE_LIST,
             campsiteService.getCampsiteList(
-                doNm.getName(), sigunguNm.getName(), startDate, endDate, induty, theme, owner, pageable
+                doNm.getName(), sigunguNm.getName(), startDate, endDate, headCnt, induty, theme, owner, pageable
             )
         );
     }

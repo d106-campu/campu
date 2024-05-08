@@ -40,6 +40,7 @@ public interface CampsiteControllerDoc {
         SigunguEnum sigunguNm,
         LocalDate startDate,
         LocalDate endDate,
+        int headCnt,
         @Pattern(regexp = RegExpression.induty, message = "induty should be among these: caravan, autocamping, camping, glamping") String induty,
         @Pattern(regexp = RegExpression.theme, message = "theme should be among these: summer, trail, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme,
         boolean owner,

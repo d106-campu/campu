@@ -14,7 +14,6 @@ import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
-import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -22,7 +21,6 @@ import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,6 +48,7 @@ public class CampsiteService {
      * @param sigunguNm To limit location.
      * @param startDate To check reservation availability.
      * @param endDate   To check reservation availability.
+     * @param headCnt   To filter available room.
      * @param induty    For campsites that has specific industry type.
      * @param theme     For campsites that has specific theme.
      * @param owner     For campsites that the current user manages.
@@ -66,6 +65,7 @@ public class CampsiteService {
         String sigunguNm,
         LocalDate startDate,
         LocalDate endDate,
+        int headCnt,
         String induty,
         String theme,
         boolean owner,
@@ -91,10 +91,8 @@ public class CampsiteService {
 
         return (responsePage == null) ? null : responsePage.map((campsite) -> {
             // available at least one room can be reserved on the date range
-            List<Room> roomList = campsite.getRoomList();
-            List<Room> roomWithReservationList = roomList.stream()
-                .filter(room -> reservationRepository.existsReservationOnDateRange(room, startDate, endDate)).toList();
-            campsite.setAvailable((roomList.size() - roomWithReservationList.size()) > 0);
+            campsite.setAvailable(campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt))
+                .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
             // Did I like this campsite
             campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
             return campsiteMapper.toCampsiteListResponseDto(campsite);
