@@ -45,12 +45,10 @@ public interface MyPageControllerDoc {
 
     class ReservationListResponse {
         public Page<ReservationResponse> reservationList;
-        public Pageable pageable;
     }
 
     class ReviewListResponse {
         public Page<ReservationResponse> reviewList;
-        public Pageable pageable;
     }
 
 }
