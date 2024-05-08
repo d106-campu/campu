@@ -26,4 +26,10 @@ public class MyPageController implements MyPageControllerDoc {
         return new Response(MyPageConstant.RESERVATION_LIST, myPageService.getReservationList(pageable, dateType, useType));
     }
 
+    @Override
+    @GetMapping("/review")
+    public Response getReviewList(Pageable pageable, @RequestParam DateType dateType) {
+        return new Response(MyPageConstant.REVIEW_LIST, myPageService.getReviewList(pageable, dateType));
+    }
+
 }
