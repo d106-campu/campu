@@ -1,6 +1,12 @@
-export interface ILocationSimpleRes {
+
+export interface IMapInfo {
   mapX: number;
   mapY: number;
+}
+
+// 지도 중심 좌표 ( 지역 기준 )
+export interface IMapCoordinates {
+  center: IMapInfo;
 }
 
 export interface ICampsiteSimpleRes {
@@ -12,30 +18,36 @@ export interface ICampsiteSimpleRes {
   addr1: string;
   addr2: string | null;
   thumbnailImageUrl: string;
-  campsiteLocation: ILocationSimpleRes;
+  campsiteLocation: IMapInfo;
   like: boolean;
   available: boolean;
 }
 
-// 캠핑장 조회 Response (data.campsiteList.content)
 export interface ICampsiteListRes {
   content: ICampsiteSimpleRes[];
 }
 
-export interface IPageableSimpleReq  {
-  page : number;
+// 캠핑장 조회 Response
+export interface ICampsiteRes {
+  mapCoordinates: IMapCoordinates;
+  campsiteList: ICampsiteListRes;
+}
+
+export interface IPageableSimpleReq {
+  page: number;
   size: number;
 }
 
-// 캠핑장 조회 Request 
+// 캠핑장 조회 Request
 export interface ICampsiteReq {
-  doNm ?: string;
-  sigunguNm  ?: string;
-  startDate : string;
-  endDate : string;
-  induty ?: string;
-  theme ?: string;
-  pageable : IPageableSimpleReq
+  doNm?: string;
+  sigunguNm?: string;
+  startDate: string;
+  endDate: string;
+  headCnt: number;
+  induty?: string;
+  theme?: string;
+  pageable: IPageableSimpleReq;
 }
 
 // 더미데이터 Type
