@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import AlertMessage from "@/components/alert/AlertMessage";
 
-const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
+const AlertLink = ({ hasAlert, page }: { hasAlert: boolean, page?: string }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -24,8 +24,10 @@ const AlertLink = ({ hasAlert }: { hasAlert: boolean }) => {
 
   return (
     <div ref={ref} onClick={toggleOpen} className="relative">
-      <div className=" flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md">
-        <div className="flex items-center justify-center text-sm  hover:text-MAIN_GREEN">
+      <div className={`flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md  ${
+        page === "login" ? "hover:bg-white/10 hover:text-white/70" : "hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
+      }`}>
+        <div className="flex items-center justify-center text-sm">
           알림
         </div>
         {hasAlert && (

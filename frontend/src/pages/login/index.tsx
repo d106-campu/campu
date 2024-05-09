@@ -6,6 +6,7 @@ import BG_Login from '@/assets/images/bg_loginG.jpg';
 import Header from "@/components/@common/Header/Header";
 import Certification from "@/components/signup/Certification";
 import PasswordRecoveryModal from "@/components/login/FindPWD";
+import SignUpSuccessModal from "@/components/signup/modal/SignUpSuccessModal";
 
 const LoginPage = (): JSX.Element => {
   const [isSignUpActive, setIsSignUpActive] = useState<boolean>(false); // 회원가입 폼인지 로그인 폼인지에 대한 상태 관리
@@ -15,6 +16,7 @@ const LoginPage = (): JSX.Element => {
   const [phoneVerified, setPhoneVerified] = useState<boolean>(false); // 인증 성공 상태 관리 
   const [phoneNumber, setPhoneNumber] = useState<string>(''); // 사용자가 입력한 휴대폰 번호 전달 상태 관리
   const [isFindpwdModal, setIsFindpwdModalOpen] = useState<boolean>(false); // 비밀번호 찾기 모달 상태 관리
+  const [signUpSuccess, setSignUpSuccess] = useState<boolean>(false); // 회원가입 성공 모달 상태 관리
 
   // 토글을 통해서 회원가입 & 로그인 좌우 이동, 활성화 여부 체크
   const toggleForms = (): void => {
@@ -55,6 +57,12 @@ const LoginPage = (): JSX.Element => {
     setPhoneNumber(phone)
   }; // 휴대전화 인증 모달 열기
   const closeCertificationModal = () => {setCertificationModal(false);}; // 휴대전화 인증 모달 닫기
+  
+  // 회원가입 성공 모달 열기 & 닫기
+  const handleSignUpSuccess = () => {
+    setSignUpSuccess(true); // 회원가입 성공 모달 표시
+    setTimeout(() => setSignUpSuccess(false), 1500); // 1.5초 후 모달 자동 닫기
+  };
 
   // 창 크기에 따른 Form 반응시키기
   useEffect(() => {
@@ -73,8 +81,8 @@ const LoginPage = (): JSX.Element => {
 
   return (
     <>
-      <Header />
-      <div style={backgroundImageStyle} className='w-screen h-[calc(100vh-3rem)] flex items-center justify-center'>       
+      <Header page={"login"}/>
+      <div style={backgroundImageStyle} className='w-screen h-[calc(100vh] flex items-center justify-center'>       
         {/* 밑판 */}
         <div
           className='w-[70%] min-w-[600px] sm:min-w-[640px] md:min-w-[700px] lg:min-w-[800px]
@@ -134,6 +142,7 @@ const LoginPage = (): JSX.Element => {
                 closeCertificationModal={closeCertificationModal}
                 phoneVerified={phoneVerified}
                 resetPhoneVerification={resetPhoneVerification}
+                onSignUpSuccess={handleSignUpSuccess}
               /> :
               <LoginForm
                 isSmallScreen={isSmallScreen}
@@ -160,6 +169,13 @@ const LoginPage = (): JSX.Element => {
           onClose={closeFindpwdModal}
         />
       )}
+      {/* 회원가입 성공 모달 렌더링 */}
+      {signUpSuccess &&
+        <SignUpSuccessModal
+          isOpen={signUpSuccess}
+          onClose={() => setSignUpSuccess(false)}
+        />
+      }
     </>
   );
 };

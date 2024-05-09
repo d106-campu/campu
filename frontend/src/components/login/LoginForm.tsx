@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ILoginFormValues } from "@/types/auth";
 import { useDispatch } from "react-redux";
 import { setIsLogin } from "@/features/login/authSlice";
@@ -9,6 +8,7 @@ import { useSignup } from '@/hooks/auth/useSignup';
 import {
   MIN_ID_LENGTH, MAX_ID_LENGTH, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH,
 } from '@/constants/constants';
+import Toast from '@/components/@common/Toast/Toast';
 
 interface ILoginFormProps {
   isSmallScreen: boolean;
@@ -23,7 +23,6 @@ const LoginForm = ({
 }: ILoginFormProps): JSX.Element => {
   const { loginMutation } = useSignup();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [values, setValues] = useState<ILoginFormValues>({
     id: "",
     password: "",
@@ -73,9 +72,9 @@ const LoginForm = ({
     if (validateLoginForm()) {
       loginMutation.mutate({ account: values.id, password: values.password }, {
         onSuccess: () => {
-          console.log("로그인 버튼 딸깍!")
+          console.log("로그인 성공!");
+          Toast.success('로그인 되었습니다 !');
           dispatch(setIsLogin(true));
-          navigate('/');
         }
       });
     }

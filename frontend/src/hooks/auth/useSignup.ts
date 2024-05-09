@@ -48,7 +48,6 @@ export const useSignup = () => {
     }
   });
 
-
    // 휴대폰 인증번호 전송
    const sendVerificationCode = useMutation({
     mutationFn: (tel: string) => sendPhoneVerificationCode(tel)
@@ -64,7 +63,7 @@ export const useSignup = () => {
     mutationFn: login,
     onSuccess: (res) => {
       console.log("로그인 성공!! :", res)
-      navigate('/'); // 메인 페이지로 이동
+      navigate('/');
     },
     onError: (error) => {
       console.error('로그인 실패 :', error);
