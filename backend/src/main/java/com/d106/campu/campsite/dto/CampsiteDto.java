@@ -8,9 +8,12 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.data.domain.Page;
 
 public class CampsiteDto {
 
@@ -126,6 +129,26 @@ public class CampsiteDto {
         private String addr2;
         private String thumbnailImageUrl;
 
+    }
+
+    @SuperBuilder
+    public static class CampsiteListResponse {
+        public Page<CampsiteDto.Response> campsiteList;
+
+        public CampsiteListResponse(Page<Response> campsiteList) {
+            this.campsiteList = campsiteList;
+        }
+    }
+
+    @SuperBuilder
+    public static class CampsiteListWithCenterResponse extends CampsiteListResponse {
+
+        public Map<String, CampsiteLocation> mapCoordinates;
+
+        public CampsiteListWithCenterResponse(Page<Response> campsiteList, Map<String, CampsiteLocation> mapCoordinates) {
+            super(campsiteList);
+            this.mapCoordinates = mapCoordinates;
+        }
     }
 
 }

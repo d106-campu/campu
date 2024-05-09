@@ -6,6 +6,7 @@ import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
+import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
@@ -22,10 +23,17 @@ import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.awt.geom.Point2D;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +70,7 @@ public class CampsiteService {
      * @see Theme
      */
     @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getCampsiteList(
+    public CampsiteDto.CampsiteListResponse getCampsiteList(
         DoNmEnum doNm,
         SigunguEnum sigunguNm,
         LocalDate startDate,
@@ -94,14 +102,62 @@ public class CampsiteService {
                 pageable, doNmStr, sigunguNmStr, Theme.of(theme).getValue());
         }
 
-        return (responsePage == null) ? null : responsePage.map((campsite) -> {
+        if (responsePage == null) {
+            return null;
+        }
+
+        // TODO: Time-consuming tasks. Need to optimise.
+        List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
             // available at least one room can be reserved on the date range
             campsite.setAvailable(campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt))
                 .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
             // Did I like this campsite
             campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
-            return campsiteMapper.toCampsiteListResponseDto(campsite);
-        });
+            return campsite;
+        }).toList());
+
+        if (induty != null || theme != null) {
+            Collections.shuffle(responseList);
+            return CampsiteDto.CampsiteListResponse.builder().campsiteList(responseListToPage(pageable, responseList)).build();
+        } else {
+            CampsiteLocation center = getCenterOfCampsites(responseList);
+            responseList.sort(Comparator.comparingDouble(
+                    c -> Point2D.distance(
+                        center.getMapX(), center.getMapY(),
+                        c.getCampsiteLocation().getMapX(), c.getCampsiteLocation().getMapY()
+                    )
+                )
+            );
+
+            return CampsiteDto.CampsiteListWithCenterResponse.builder()
+                .campsiteList(responseListToPage(pageable, responseList))
+                .mapCoordinates(new HashMap<>() {{
+                    put("center", center);
+                }})
+                .build();
+        }
+    }
+
+    private Page<CampsiteDto.Response> responseListToPage(Pageable pageable, List<Campsite> responseList) {
+        return new PageImpl<>(responseList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()),
+            responseList.size()).map(campsiteMapper::toCampsiteListResponseDto);
+    }
+
+    /**
+     * Get center coordination from the list of campsites.
+     *
+     * @param campsiteList List of campsites.
+     * @return Coordination instance that includes
+     */
+    public CampsiteLocation getCenterOfCampsites(List<Campsite> campsiteList) {
+        double xAvg = 0, yAvg = 0;
+
+        for (Campsite campsite : campsiteList) {
+            xAvg += campsite.getCampsiteLocation().getMapX();
+            yAvg += campsite.getCampsiteLocation().getMapY();
+        }
+
+        return CampsiteLocation.builder().mapX(xAvg / campsiteList.size()).mapY(yAvg / campsiteList.size()).build();
     }
 
     /**
