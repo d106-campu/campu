@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import Modal from "../Modal/Modal";
 import KakaoMap from "./KakaoMap";
 import { copyToClipboard } from "@/utils/copyToClipboard";
@@ -24,10 +23,6 @@ const MapModal = ({
   level = 5,
   toggleModal,
 }: IMapModalProps) => {
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const toggleModal = () => {
-  //   setIsOpen(!isOpen);
-  // };
 
   // level: 지도 확대 정도 ( 기본 5로 임의 지정 )
   const locations = [{ lat, lng, facltNm, rate, level }];
