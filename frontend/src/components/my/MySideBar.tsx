@@ -15,6 +15,7 @@ const MySideBar = ({
 }:IMySideBarProps): JSX.Element => {
   const dispatch = useDispatch();
   const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
+  const nickname = useSelector((state: RootState) => state.auth.nickname);  // 닉네임 스토어에서 꺼내오기
 
   const handleComponentChange = (componentName: string) => {
     dispatch(setSelectedComp(componentName));
@@ -36,7 +37,7 @@ const MySideBar = ({
           alt="프사"
           className="border-2 w-[125px] h-[125px] object-cover object-center rounded-full"
         />
-        <h1 className="text-lg pt-2">유저 닉네임</h1>
+        <h1 className="text-lg pt-2">{nickname}</h1>
       </div>
       <div className="flex flex-col py-5 text-GRAY ">
         {sideItem.map(item => (

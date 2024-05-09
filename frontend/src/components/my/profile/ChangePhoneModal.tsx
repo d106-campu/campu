@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
-import { IMyPhoneValues } from '@/types/profile';
+import { IMyPhoneValues } from '@/types/user';
 import ChangePhoneSuccessModal from "@/components/my/profile/ChangePhoneSuccessModal";
 import { PHONE_LENGTH, PHONE_VERIFY_LENGTH  } from "@/constants/constants";
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
-import { IMyPhoneValues } from '@/types/profile';
+import { IMyPhoneValues } from '@/types/user';
 import ChangePasswordSuccessModal from '@/components/my/profile/ChangePasswordSuccessModal'
 import { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH  } from "@/constants/constants";
 
