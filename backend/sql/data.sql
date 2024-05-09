@@ -13,7 +13,7 @@ VALUES ('ADMIN', 'hoing97s', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1Sj
        ('USER', 'Agwii', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'Agwii', 'M', '2000', 'https://avatars.githubusercontent.com/u/139833245', '01012312316'),
        ('USER', 'minnnnnk0', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'minnnnnk', 'F', '2000', 'https://avatars.githubusercontent.com/u/139419164', '01012312317'),
        ('USER', 'choihojo', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'choihojo', 'M', '2000', 'https://avatars.githubusercontent.com/u/87483951?', '01012312318'),
-       ('OWNER', 'sajangnim', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y!', 'sajang1', 'F', '2000', null, '01023123123');
+       ('OWNER', 'sajangnim', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'sajang1', 'F', '2000', null, '01023123123');
 
 SET @user_hoing97s = (SELECT id FROM `user` WHERE account = 'hoing97s');
 SET @user_danbeeS2 = (SELECT id FROM `user` WHERE account = 'danbeeS2');
