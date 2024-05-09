@@ -20,26 +20,62 @@ const RecommendThema = () => {
     "스키",
   ];
 
-  const [selectedTags, setSelectedTags] = useState<string>("여름물놀이");
+  const [selectedTag, setSelectedTag] = useState<string>("여름물놀이");
   const { useCampsiteList } = useCampsite();
+
+  // @TODO: 백엔드 완료되면 삭제
+  const tabToThema = (tab: string) => {
+    switch (tab) {
+      case "여름물놀이":
+        return "summer";
+      case "걷기길":
+        return "trail";
+      case "액티비티":
+        return "activity";
+      case "봄꽃여행":
+        return "spring";
+      case "가을단풍명소":
+        return "autumn";
+      case "겨울눈꽃명소":
+        return "winter";
+      case "일몰명소":
+        return "sunset";
+      case "일출명소":
+        return "sunrise";
+      case "수상레저":
+        return "watersports";
+      case "낚시":
+        return "fishing";
+      case "항공레저":
+        return "airsports";
+      case "스키":
+        return "skiing";
+      default:
+        throw new Error("Invalid tab name");
+    }
+  };
+
+  const themaValue = tabToThema(selectedTag);
 
   // 주말 날짜
   const weekendDates = dayOfWeekend();
   const saturday = weekendDates.saturday;
   const sunday = weekendDates.sunday;
 
+  // ( 주말 기준 ) 테마별 추천 캠핑장 리스트 조회
+  // @TODO: 백엔드 구현 끝나면 유형 이름 수정해야함
   const { data: campsiteOfThema } = useCampsiteList({
     startDate: saturday,
     endDate: sunday,
     headCnt: 2,
-    theme: selectedTags,
+    theme: themaValue,
     pageable: { page: 0, size: 6 },
   });
 
   console.log(campsiteOfThema?.data.campsiteList.content);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(tag);
+    setSelectedTag(tag);
   };
 
   return (
