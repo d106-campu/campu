@@ -68,19 +68,19 @@ public interface ImageControllerDoc {
     Response uploadCampsiteGeneralImageList(@NotNull Long campsiteId, List<MultipartFile> generalImageList);
 
     class ProfileResponse {
-        private String profileImage;
+        public String profileImage;
     }
 
     class ThumbnailResponse {
-        private String thumbnailImage;
+        public String thumbnailImage;
     }
 
     class MapResponse {
-        private String mapImage;
+        public String mapImage;
     }
 
     class ListGeneralResponse {
-        private List<String> generalImageList;
+        public List<String> generalImageList;
     }
 
 }
