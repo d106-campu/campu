@@ -91,7 +91,7 @@ public interface CampsiteControllerDoc {
         ),
         @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
     })
-    Response getCampsiteRoomList(Pageable pageable, long campsiteId);
+    Response getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt, Pageable pageable);
 
     class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;
@@ -102,7 +102,7 @@ public interface CampsiteControllerDoc {
     }
 
     class CampsiteRoomListResponse {
-        public Page<RoomDto.ListResponse> roomList;
+        public Page<RoomDto.Response> roomList;
     }
 
 }

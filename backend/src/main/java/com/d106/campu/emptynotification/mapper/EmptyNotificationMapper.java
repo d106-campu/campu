@@ -19,6 +19,7 @@ public interface EmptyNotificationMapper {
 
     List<MyEmptyNotificationResponse> toMyEmptyNotificationResponseDto(List<EmptyNotification> emptyNotificationList);
 
+    @Mapping(target = "roomId", source = "id")
     @Mapping(target = "roomName", source = "name")
     EmptyNotificationRoomResponse toEmptyNotificationRoomResponseDto(Room room);
 

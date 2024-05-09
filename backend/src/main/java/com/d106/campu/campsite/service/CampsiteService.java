@@ -216,16 +216,29 @@ public class CampsiteService {
     }
 
     /**
-     * @param pageable
      * @param campsiteId
+     * @param startDate  To check reservation availability.
+     * @param endDate    To check reservation availability.
+     * @param headCnt    To filter available room.
+     * @param pageable
      * @return List of room information of the campsite.
      * @throws NotFoundException If the `campsiteId` is wrong.
      */
     @Transactional(readOnly = true)
-    public Page<RoomDto.ListResponse> getCampsiteRoomList(Pageable pageable, long campsiteId) {
+    public Page<RoomDto.Response> getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
+        Pageable pageable) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
-        return roomRepository.findByCampsite(pageable, campsite).map(roomMapper::toRoomResponseDto);
+
+        List<Room> roomList = roomRepository.findByCampsite(campsite, pageable)
+            .filter(room -> room.getMaxNo() >= headCnt)
+            .map(room -> {
+                room.setAvailable(!reservationRepository.existsReservationOnDateRange(room, startDate, endDate));
+                return room;
+            }).toList();
+
+        return new PageImpl<>(roomList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()),
+            roomList.size()).map(roomMapper::toRoomResponseDto);
     }
 
     /**

@@ -10,9 +10,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EmptyNotificationRepository extends JpaRepository<EmptyNotification, Long> {
 
     long countByUser(User user);
-    
+
     boolean existsByStartDateAndEndDateAndUserAndRoom(LocalDate startDate, LocalDate endDate, User user, Room room);
 
     List<EmptyNotification> findByUser_Account(String account);
+
+    void deleteByUserAndRoom(User user, Room room);
 
 }

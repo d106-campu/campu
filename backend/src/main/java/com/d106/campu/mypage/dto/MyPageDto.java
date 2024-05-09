@@ -114,6 +114,7 @@ public class MyPageDto {
     @Getter
     public static class EmptyNotificationRoomResponse {
 
+        private Long roomId;
         private String roomName;
         private CampsiteResponse campsite;
     }
