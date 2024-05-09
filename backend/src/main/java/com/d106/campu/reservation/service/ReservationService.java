@@ -1,6 +1,8 @@
 package com.d106.campu.reservation.service;
 
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.common.util.SecurityHelper;
+import com.d106.campu.reservation.dto.ReservationDto;
 import com.d106.campu.reservation.mapper.ReservationMapper;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.user.domain.jpa.User;
@@ -23,12 +25,16 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
 
+    private final SecurityHelper securityHelper;
+
     @Transactional(readOnly = true)
-    public Page getReservationList(Pageable pageable) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(1L)
+    public Page<ReservationDto.Response> getReservationList(Pageable pageable) {
+        return reservationRepository.findByUser(pageable, getUserByAccount()).map(reservationMapper::toReservationResponseDto);
+    }
+
+    private User getUserByAccount() {
+        return userRepository.findByAccount(securityHelper.getLoginAccount())
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        return reservationRepository.findByUser(pageable, user).map(reservationMapper::toReservationResponseDto);
     }
 
 }
