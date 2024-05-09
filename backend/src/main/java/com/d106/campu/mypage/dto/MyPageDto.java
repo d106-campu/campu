@@ -100,6 +100,24 @@ public class MyPageDto {
         private Double score;
     }
 
+    @Builder
+    @Getter
+    public static class MyEmptyNotificationResponse {
+
+        private Long emptyNotificationId;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private EmptyNotificationRoomResponse room;
+    }
+
+    @Builder
+    @Getter
+    public static class EmptyNotificationRoomResponse {
+
+        private String roomName;
+        private CampsiteResponse campsite;
+    }
+
     @Data
     public static class PasswordChangeRequest {
 

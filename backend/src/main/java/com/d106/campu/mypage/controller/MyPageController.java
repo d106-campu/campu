@@ -43,6 +43,12 @@ public class MyPageController implements MyPageControllerDoc {
     }
 
     @Override
+    @GetMapping("/empty-notification")
+    public Response getEmptyNotificationList() {
+        return new Response(MyPageConstant.EMPTY_NOTIFICATION_LIST, myPageService.getEmptyNotificationList());
+    }
+
+    @Override
     @GetMapping("/profile")
     public Response getProfile() {
         return new Response(MyPageConstant.MY_PROFILE, myPageService.getProfile());

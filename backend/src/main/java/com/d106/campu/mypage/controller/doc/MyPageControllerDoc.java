@@ -7,6 +7,7 @@ import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.UseType;
 import com.d106.campu.mypage.dto.MyPageDto;
 import com.d106.campu.mypage.dto.MyPageDto.MyCampsiteResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyEmptyNotificationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
 import com.d106.campu.user.constant.GenderType;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -61,6 +63,18 @@ public interface MyPageControllerDoc {
         @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response getCampsiteList(Pageable pageable);
+
+    @Operation(summary = "내가 등록한 빈 자리 알림 조회", description = "자신이 등록한 빈자리 알림을 조회한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "내가 등록한 빈자리 알림 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = EmptyNotificationListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
+    })
+    Response getEmptyNotificationList();
 
     @Operation(summary = "마이 프로필 조회", description = "로그인한 사용자의 프로필을 조회한다.")
     @ApiResponses({
@@ -137,6 +151,10 @@ public interface MyPageControllerDoc {
 
     class CampsiteLikeListResponse {
         public Page<MyCampsiteResponse> campsiteList;
+    }
+
+    class EmptyNotificationListResponse {
+        public List<MyEmptyNotificationResponse> emptyNotificationList;
     }
 
 }
