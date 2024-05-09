@@ -6,14 +6,12 @@ import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import LikeButton from "@/components/@common/Like/LikeButton";
-import { formatSimpleDate } from "@/utils/formatDateTime";
 import { copyToClipboard } from "@/utils/copyToClipboard";
-import { useRefs } from "@/context/RefContext";
-import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
 import mapIcon from "@/assets/svg/map.svg";
 import MapModal from "@/components/@common/Map/MapModal";
+import { useState } from "react";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface ICampSiteIntro {
