@@ -2,6 +2,7 @@ package com.d106.campu.emptynotification.mapper;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.emptynotification.domain.jpa.EmptyNotification;
+import com.d106.campu.emptynotification.dto.EmptyNotificationDto.CreateRequest;
 import com.d106.campu.mypage.dto.MyPageDto.CampsiteResponse;
 import com.d106.campu.mypage.dto.MyPageDto.EmptyNotificationRoomResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyEmptyNotificationResponse;
@@ -25,5 +26,10 @@ public interface EmptyNotificationMapper {
     @Mapping(target = "campsiteName", source = "facltNm")
     @Mapping(target = "address", source = "addr1")
     CampsiteResponse toCampsiteResponseDto(Campsite campsite);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "room", ignore = true)
+    EmptyNotification toEmptyNotification(CreateRequest createRequestDto);
 
 }
