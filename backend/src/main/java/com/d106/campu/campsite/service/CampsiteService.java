@@ -164,8 +164,7 @@ public class CampsiteService {
 
     @Transactional(readOnly = true)
     public Page<CampsiteDto.Response> getOwnerCampsiteList(Pageable pageable) {
-        User user = userRepository.findById(2L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
         checkUserRoleOwner(user);
         return campsiteRepository.findByUser(pageable, user).map(campsiteMapper::toCampsiteListResponseDto);
     }
