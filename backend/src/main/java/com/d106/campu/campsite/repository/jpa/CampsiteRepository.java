@@ -30,7 +30,7 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
             AND (c.indutyList IS NOT NULL) AND (c.indutyList LIKE %:induty%)
         """)
-    Page<Campsite> findByIndutyListContaining(
+    Page<Campsite> findByInduty(
         Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("induty") String induty
     );
 
@@ -43,7 +43,7 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
             AND t.theme = :theme
         """)
-    Page<Campsite> findByCampsiteThemeList_Theme_Theme(
+    Page<Campsite> findByTheme(
         Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("theme") String theme
     );
 
