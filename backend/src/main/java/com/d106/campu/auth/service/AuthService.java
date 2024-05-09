@@ -128,7 +128,7 @@ public class AuthService {
             .tel(tel)
             .build();
     }
-
+    
     private void checkAuthorization(String tel) {
         telVerifyHashRepository.findById(tel)
             .map(telVerifyHash -> {
