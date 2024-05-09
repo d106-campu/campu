@@ -43,4 +43,9 @@ public class EmptyNotification extends BaseTime {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    public void setUserAndRoom(User user, Room room) {
+        this.user = user;
+        this.room = room;
+    }
+
 }
