@@ -42,6 +42,7 @@ const ChangeProfilePositiveFBM = [
   "알맞은 비밀번호를 입력했습니다.",
   "새 비밀번호가 설정되었습니다.",
   "새 비밀번호와 일치합니다.",
+  "닉네임이 변경되었습니다 !",
 ]
 const InputField = ({
   // input 속성 필드

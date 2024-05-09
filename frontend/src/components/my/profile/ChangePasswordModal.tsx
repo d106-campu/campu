@@ -2,17 +2,18 @@ import { useState } from 'react';
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
-import { IMyPhoneValues } from '@/types/profile';
+import { IUserProfileUpdate } from '@/types/user';
 import ChangePasswordSuccessModal from '@/components/my/profile/ChangePasswordSuccessModal'
 import { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH  } from "@/constants/constants";
+
 
 interface IOChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
-  values: IMyPhoneValues;
-  errors: IMyPhoneValues;
-  setValues: React.Dispatch<React.SetStateAction<IMyPhoneValues>>;
-  setErrors: React.Dispatch<React.SetStateAction<IMyPhoneValues>>;
+  values: IUserProfileUpdate;
+  errors: IUserProfileUpdate;
+  setValues: React.Dispatch<React.SetStateAction<IUserProfileUpdate>>;
+  setErrors: React.Dispatch<React.SetStateAction<IUserProfileUpdate>>;
 }
 
 export const ChangePasswordModal = ({
@@ -34,7 +35,7 @@ export const ChangePasswordModal = ({
   const validateField = (field: keyof typeof values, value: string) => {
     let message = '';
     switch (field) {
-      case 'password':
+      case 'currentPassword':
         if (value.length < MIN_PASSWORD_LENGTH) {
           message = '기존 비밀번호는 8자 이상입니다.';
         } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value)) {
@@ -48,19 +49,19 @@ export const ChangePasswordModal = ({
           message = '새 비밀번호는 8자 이상이어야 합니다.';
         } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value)) {
           message = '영문자, 숫자, 특수문자 조합으로 설정해주세요.';
-        } else if (value === values.password) {
+        } else if (value === values.currentPassword) {
           message = '기존 비밀번호를 설정하실 수 없습니다.'
         } else {
           message = '새 비밀번호가 설정되었습니다.';
         }
-        if (values.confirmPassword && value !== values.confirmPassword) {
+        if (values.newPasswordCheck && value !== values.newPasswordCheck) {
           setErrors(prev => ({ ...prev, confirmPassword: '비밀번호가 일치하지 않습니다.' }));
         }
         break;
-      case 'confirmPassword':
+      case 'newPasswordCheck':
         if (value !== values.newPassword) {
           message = '비밀번호가 일치하지 않습니다.';
-        } else if (value === values.password) {
+        } else if (value === values.currentPassword) {
           message = '기존 비밀번호를 설정하실 수 없습니다.'
         } else {
           message = '새 비밀번호와 일치합니다.';
@@ -72,7 +73,7 @@ export const ChangePasswordModal = ({
 
   // "변경하기" 버튼 제출에 대한 검사
   const handleSubmit = () => {
-    if (!values.password || !values.confirmPassword || !values.newPassword || values.newPassword !== values.confirmPassword) {
+    if (!values.currentPassword || !values.newPasswordCheck || !values.newPassword || values.newPassword !== values.newPasswordCheck) {
       console.error("유효성 검사 통과못했어요!!");
       return;
     }
@@ -91,9 +92,9 @@ export const ChangePasswordModal = ({
 
   // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
   const fields: Array<{ label: string; name: keyof typeof values; placeholder: string; maxLength: number; type: string }> = [
-    { label: '기존 비밀번호', name: 'password', placeholder: '기존 비밀번호 입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
+    { label: '기존 비밀번호', name: 'currentPassword', placeholder: '기존 비밀번호 입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
     { label: '새 비밀번호', name: 'newPassword', placeholder: '새 비밀번호 입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
-    { label: '새 비밀번호 확인', name: 'confirmPassword', placeholder: '비밀번호 재입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
+    { label: '새 비밀번호 확인', name: 'newPasswordCheck', placeholder: '비밀번호 재입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
   ];
 
 
@@ -112,7 +113,7 @@ export const ChangePasswordModal = ({
             label={field.label}
             type={field.type}
             name={field.name}
-            value={values[field.name]}
+            value={values[field.name] || ''}
             onChange={(e) => handleChange(field.name, e.target.value)}
             placeholder={field.placeholder}
             error=""
@@ -124,7 +125,7 @@ export const ChangePasswordModal = ({
             <Button
               text="변경하기"
               onClick={handleSubmit}
-              disabled={!values.password || !values.confirmPassword || !values.newPassword || values.newPassword !== values.confirmPassword}
+              disabled={!values.currentPassword || !values.newPasswordCheck || !values.newPassword || values.newPassword !== values.newPasswordCheck}
             />
           </div>
         </div>

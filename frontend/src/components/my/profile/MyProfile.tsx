@@ -5,11 +5,12 @@ import { setNickname } from "@/features/login/authSlice";
 import { setIsProfileImage } from '@/features/mypage/myProfile';
 import profileDefaultImage from "@/assets/images/profile.png";
 import Button from "@/components/@common/Button/Button";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { IMyPhoneValues } from '@/types/profile';
+import { IUserProfileUpdate } from '@/types/user';
 import { ChangePhoneModal } from "@/components/my/profile/ChangePhoneModal";
 import { ChangePasswordModal } from "@/components/my/profile/ChangePasswordModal";
 import { MIN_NICKNAME_LENGTH, MAX_NICKNAME_LENGTH } from "@/constants/constants";
+import { useUser } from '@/hooks/user/useUser';
+import { checkNicknameDuplicate } from "@/services/auth/api";
 
 interface IMyProfileProps {
   phoneVerified: boolean;
@@ -20,26 +21,27 @@ const MyProfile = ({
 }: IMyProfileProps): JSX.Element => {
   const dispatch = useDispatch();
   const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
-  // const nickname = useSelector((state: RootState) => state.auth.nickname);  // 닉네임 스토어에서 꺼내오기
+  const { userProfileQuery, updateNickNameMutation } = useUser();
 
   // 폼 입력 값 상태 관리
-  const [values, setValues] = useState<IMyPhoneValues>({
-    nickName: '',
-    password: '',
+  const [values, setValues] = useState<IUserProfileUpdate>({
+    account: '',
+    nickname: '',
+    tel: '',
     newPassword: '',
-    confirmPassword: '',
-    phone: '',
+    currentPassword: '',
+    newPasswordCheck: '',
     verifyNums: '',
   });
 
   // 유효성 통과 실패하면 오류 메세지 관리
-  const [errors, setErrors] = useState<IMyPhoneValues>({
-    nickName: '',
-    password: '',
+  const [errors, setErrors] = useState<IUserProfileUpdate>({
+    account: '',
+    nickname: '',
+    tel: '',
     newPassword: '',
-    confirmPassword: '',
-    phone: '',
-    verifyNums: '',
+    currentPassword: '',
+    newPasswordCheck: '',
   });
 
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState<boolean>(false); // 휴대폰 변경 모달 관리Z
@@ -49,52 +51,78 @@ const MyProfile = ({
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false); // 닉네임 수정 가능 상태 관리
   const [nicknameMessage, setNicknameMessage] = useState<string>(''); // 닉네임 유효성 통과 상태 관리
   const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
+
+  // 휴대폰 번호 보여줄 때 하이픈 추가 함수
+  function formatPhoneNumber(phoneNumber: string): string {
+    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+  }
   
-  const [isEditingInfo, setIsEditingInfo] = useState<boolean>(false); // 기타정보 수정 가능 상태 관리
-  const [gender, setGender] = useState<string>('여성');
-  const [genderOpen, setGenderOpen] = useState<boolean>(false); 
-  const [age, setAge] = useState<string>('20대');
-  const [ageOpen, setAgeOpen] = useState<boolean>(false);
-  const genderRef = useRef(null);
-  const ageRef = useRef(null);
+  // 프로필 조회 API 요청 진행
+  useEffect(() => {
+    if (userProfileQuery.isSuccess && userProfileQuery.data) {
+      console.log("프로필 조회 성공")
+      const { account = '', nickname = '', tel = '' } = userProfileQuery.data.data.myProfile;
+      setValues(v => ({ ...v, account, nickname, tel: formatPhoneNumber(tel) }));
+      dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
+    }
+  }, [userProfileQuery.data, userProfileQuery.isSuccess]);
 
   // "닉네임"에서 수정 버튼을 클릭해야 수정이 가능하도록
-  const handleEditNicknameClick = () => {
-    if (isEditingNickname && nicknameMessage === '사용 가능한 닉네임입니다.') {
-      // 닉네임을 성공적으로 변경 후에는 에러 메시지를 초기화
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        nickName: '',
-      }));
-      dispatch(setNickname(values.nickName)); // 수정된 닉네임 다시 전역 업데이트
-      setNicknameMessage('');
-      setIsEditingNickname(false); // 닉네임 수정 종료시키기
+  const handleEditNicknameClick = async () => {
+    if (isEditingNickname) {
+      // 닉네임 유효성 검사 및 중복 검사를 모두 통과했는지 확인
+      if (nicknameMessage === '사용 가능한 닉네임입니다.' && isSaveButtonEnabled) {
+        // 중복 검사 후 닉네임 업데이트
+        const checkResult = await checkNicknameDuplicate(values.nickname);
+        if (checkResult.data.available) {
+          // 닉네임 변경 API 호출
+          updateNickNameMutation.mutate({
+            nickname: values.nickname
+          }, {
+            onSuccess: () => {
+              console.log('닉네임 변경 성공@@');
+              dispatch(setNickname(values.nickname));
+              setIsEditingNickname(false);  // 편집 상태 해제
+              setNicknameMessage(''); 
+              setErrors(prev => ({ ...prev, nickname: '닉네임이 변경되었습니다 !' }))
+            },
+            onError: (error) => {
+              console.error('닉네임 변경 중 오류 발생:', error);
+              setNicknameMessage('닉네임 변경에 실패했습니다. 다시 시도해주세요.');
+            }
+          });
+        } else {
+          setNicknameMessage('이미 사용 중인 닉네임입니다.');
+        }
+      }
     } else {
-      setIsEditingNickname(prevState => !prevState);
+      setIsEditingNickname(true);  // 닉네임 수정 모드 활성화
+      setNicknameMessage('');
     }
   };
 
   // "닉네임" 수정 시 input 추적해서 유효성 검사
   const handleChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setValues(prev => ({ ...prev, nickName: value }));
-    validateField('nickName', value); // 닉네임 유효성 검사와 연결
+    setValues(prev => ({ ...prev, nickname: value }));
+    validateField('nickname', value); // 닉네임 유효성 검사와 연결
     setIsSaveButtonEnabled(nicknameMessage  === '사용 가능한 닉네임입니다.');
   };
 
-
   // 실시간 사용자가 입력하는 프로필 수정 input 값 유효성 검사
-  const validateField = (field: keyof IMyPhoneValues, value: string) => {
+  const validateField = async (field: keyof IUserProfileUpdate, value: string) => {
     let message = '';
     if (value) {
       switch (field) {
-        case 'nickName':
+        case 'nickname':
           if (value.length < MIN_NICKNAME_LENGTH || value.length > MAX_NICKNAME_LENGTH) {
             message = '닉네임은 2~8자 이내로 해주세요.';
           } else if (!/^[가-힣a-zA-Z0-9]+$/.test(value)) {
             message = '특수문자, 띄워쓰기는 사용할 수 없습니다.';
           } else {
-            message = '사용 가능한 닉네임입니다.';
+            const res = await checkNicknameDuplicate(value);
+            message = res.data.available ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.';
+            setIsSaveButtonEnabled(res.data.available);
           }
           setNicknameMessage(message);
           break;
@@ -102,18 +130,6 @@ const MyProfile = ({
     }
     setErrors(prev => ({ ...prev, [field]: message }));
   };
-
-  // "기타정보"에서 수정 버튼을 클릭해야 수정이 가능하도록
-  const handleEditInfoClick = () => {
-    setIsEditingInfo(prevState => !prevState);
-  };
-
-  // "기타정보"에서 상태 변경 후 "저장" 버튼 클릭 시 처리
-  const handleSaveInfoClick = () => {
-    // @TODO: 여기서 백엔드와 연결 후 서버에 변경된 성별과 연령을 저장.
-    setIsEditingInfo(false);
-  };
-
 
   // 휴대폰 번호 변경 모달 열기
   const handlePhoneModalOpen = () => {
@@ -126,12 +142,12 @@ const MyProfile = ({
     // 모달이 닫힐 때 휴대폰 번호와 인증번호 관련 상태 및 오류 상태 초기화
     setValues(prev => ({
       ...prev,
-      phone: '',
+      tel: '',
       verifyNums: '',
     }));
     setErrors(prev => ({
       ...prev,
-      phone: '',
+      tel: '',
       verifyNums: '',
     }));
   };
@@ -147,15 +163,15 @@ const MyProfile = ({
     // 모달 닫힐 때 비밀번호, 비밀번호 확인 관련 상태와 오류 메세지 초기화
     setValues(prev => ({
       ...prev,
-      password: '',
       newPassword: '',
-      confirmPassword: '',
+      currentPassword: '',
+      newPasswordCheck: '',
     }));
     setErrors(prev => ({
       ...prev,
-      password: '',
       newPassword: '',
-      confirmPassword: '',
+      currentPassword: '',
+      newPasswordCheck: '',
     }));
   }
 
@@ -182,31 +198,16 @@ const MyProfile = ({
     dispatch(setIsProfileImage(profileDefaultImage)); // 기본 이미지로 설정
   };
 
-  // 드롭다운 메뉴 참조와 이벤트 객체 조정 -> 드롭다운 상태 관리
-  const handleClickOutside = (event: MouseEvent, ref: React.RefObject<HTMLDivElement>, setter: (value: boolean) => void) => {
-    if (ref.current && !ref.current.contains(event.target as Node)) {
-      setter(false);
-    }
-  };
-
-  // 클릭 이벤트 감지
-  const onBodyClick = (event: MouseEvent) => {
-    handleClickOutside(event, genderRef, setGenderOpen);
-    handleClickOutside(event, ageRef, setAgeOpen);
-  };
-
-  // 클릭 이벤트 발생 될 때 드롭다운 외부 클릭 처리
-  useEffect(() => {
-    document.body.addEventListener('mousedown', onBodyClick);
-    return () => {
-      document.body.removeEventListener('mousedown', onBodyClick);
-    };
-  }, []);
-
   // 유효성 검사 Field에 대해 값들을 처리
   useEffect(() => {
     Object.keys(values).forEach((field) => {
-      validateField(field as keyof IMyPhoneValues, values[field as keyof IMyPhoneValues]);
+      const key = field as keyof IUserProfileUpdate;
+      const value = values[key];
+
+      // undefined가 아닐 때만 유효성 검사를 수행
+      if (value !== undefined) { 
+        validateField(key, value);
+      }
     });
   }, [phoneVerified]);
 
@@ -218,7 +219,7 @@ const MyProfile = ({
         <h1 className='text-lg font-bold'>
           프로필 설정
         </h1>
-        <h1 className="text-sm text-gray-400">"유저 닉네임"님의 프로필을 변경할 수 있습니다.</h1>
+        <h1 className="text-sm text-gray-400">{values.nickname}님의 프로필을 변경할 수 있습니다.</h1>
       </div>
 
       {/* 아이디 + 닉네임 */}
@@ -230,6 +231,7 @@ const MyProfile = ({
               type="text"
               className="w-full h-[35px] pl-2 outline-none border-2 rounded-md bg-gray-100"
               disabled // 수정 불가능하게 막기
+              value={values.account || ''}
             />
           </div>
           <div className="pb-5">
@@ -255,10 +257,10 @@ const MyProfile = ({
               className={`w-full h-[35px] pl-2 outline-none border-2 rounded-md ${isEditingNickname ? '' : 'pointer-events-none'}`}
               disabled={!isEditingNickname}
               maxLength={MAX_NICKNAME_LENGTH}
-              value={values.nickName}
+              value={values.nickname || ''}
               onChange={handleChangeNickname}
             />
-            <p className={`pl-2 pt-2 text-xs flex justify-end items-center ${nicknameMessage === '사용 가능한 닉네임입니다.' ? 'text-MAIN_GREEN' : 'text-red-500'}`}>{errors.nickName}</p> 
+            <p className={`pl-2 pt-2 text-xs flex justify-end items-center ${nicknameMessage === '사용 가능한 닉네임입니다.' || '닉네임이 변경되었습니다 !' ? 'text-MAIN_GREEN' : 'text-red-500'}`}>{errors.nickname}</p> 
           </div>
         </div>
         {/* 프로필 이미지 */}
@@ -321,6 +323,7 @@ const MyProfile = ({
             type="text" 
             className="w-[25%] h-[35px] pl-2 outline-none border-2 rounded-md"
             disabled
+            value={values.tel || ''}
           />
           <div className="pl-5 flex items-center  justify-center">
             <Button 
@@ -373,71 +376,6 @@ const MyProfile = ({
           setErrors={setErrors}
         />
       )}
-
-      {/* 추가 기타 정보 */}
-      <div className="w-full">
-        <div className="w-[50%] flex justify-between">
-          <h1 className="pb-2">기타 정보</h1>
-          {/* 수정 또는 저장 버튼 제공 */}
-          {isEditingInfo ? (
-            <button onClick={handleSaveInfoClick} className="hover:text-MAIN_GREEN text-sm">저 장</button>
-          ) : (
-            <button onClick={handleEditInfoClick} className="hover:text-MAIN_GREEN text-sm">수 정</button>
-          )}
-        </div>
-        <div className="w-[50%] flex">
-          <div className="flex items-center ">
-            <h1 className="text-GRAY">성별</h1>
-            <div className="pl-4 relative">
-              <button
-                onClick={() => { if (isEditingInfo) setGenderOpen(!genderOpen); }}
-                className="flex items-center h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02 outline-none"
-              >
-                {gender}
-                {isEditingInfo && <RiArrowDropDownLine size={25} />}
-              </button>
-              {genderOpen && (
-                <ul ref={genderRef} className="absolute w-[70%] bg-white rounded-xl border-MAIN_GREEN z-10">
-                  {["여성", "남성"].map((select, idx) => (
-                    <li
-                      key={idx}
-                      onClick={() => { setGender(select); setGenderOpen(false); }}
-                      className="p-2 hover:bg-SUB_GREEN_02 hover:text-MAIN_GREEN cursor-pointer text-center text-sm border-MAIN_GREEN rounded-xl"
-                    >
-                      {select}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center pl-10">
-            <h1 className="text-GRAY">연령</h1>
-            <div className="pl-4 relative">
-              <button
-                onClick={() => { if (isEditingInfo) setAgeOpen(!ageOpen); }}
-                className="flex items-center h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02 outline-none"
-              >
-                {age}
-                {isEditingInfo && <RiArrowDropDownLine size={25} />}
-              </button>
-              {ageOpen && (
-                <ul ref={ageRef} className="absolute w-[70%] bg-white rounded-xl z-10">
-                  {["10대", "20대", "30대", "40대", "50대~"].map((select, idx) => (
-                    <li
-                      key={idx}
-                      onClick={() => { setAge(select); setAgeOpen(false); }}
-                      className="p-2 hover:bg-SUB_GREEN_02 hover:text-MAIN_GREEN cursor-pointer text-center text-sm rounded-xl"
-                    >
-                      {select}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
