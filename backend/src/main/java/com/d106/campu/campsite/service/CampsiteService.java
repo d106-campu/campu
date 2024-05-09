@@ -20,6 +20,7 @@ import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
+import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -217,7 +218,16 @@ public class CampsiteService {
         Pageable pageable) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
-        return roomRepository.findByCampsite(campsite, pageable).map(roomMapper::toRoomResponseDto);
+
+        List<Room> roomList = roomRepository.findByCampsite(campsite, pageable)
+            .filter(room -> room.getMaxNo() >= headCnt)
+            .map(room -> {
+                room.setAvailable(!reservationRepository.existsReservationOnDateRange(room, startDate, endDate));
+                return room;
+            }).toList();
+
+        return new PageImpl<>(roomList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()),
+            roomList.size()).map(roomMapper::toRoomResponseDto);
     }
 
     /**

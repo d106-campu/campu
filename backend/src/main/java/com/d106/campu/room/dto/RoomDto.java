@@ -18,8 +18,8 @@ public class RoomDto {
         private int roomCnt;
         private int toiletCnt;
         private String supplyList;
+        private boolean available;
         /* TODO:
-         *  private boolean available; // 예약 가능 여부
          *  private String imageUrl; // 방 이미지 경로
          */
 
