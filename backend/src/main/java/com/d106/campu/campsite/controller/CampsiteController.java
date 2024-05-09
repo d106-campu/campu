@@ -38,10 +38,8 @@ public class CampsiteController implements CampsiteControllerDoc {
         @RequestParam(required = false) boolean owner,
         Pageable pageable
     ) {
-        return new Response(
-            CampsiteConstant.CAMPSITE_LIST,
-            campsiteService.getCampsiteList(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, owner, pageable)
-        );
+        return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, owner,
+            pageable);
     }
 
     @Override

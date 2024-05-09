@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Size;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.domain.Page;
@@ -132,15 +133,19 @@ public class CampsiteDto {
     }
 
     @SuperBuilder
+    @Getter
     public static class CampsiteListResponse {
+
         public Page<CampsiteDto.Response> campsiteList;
 
         public CampsiteListResponse(Page<Response> campsiteList) {
             this.campsiteList = campsiteList;
         }
+
     }
 
     @SuperBuilder
+    @Getter
     public static class CampsiteListWithCenterResponse extends CampsiteListResponse {
 
         public Map<String, CampsiteLocation> mapCoordinates;
@@ -149,6 +154,7 @@ public class CampsiteDto {
             super(campsiteList);
             this.mapCoordinates = mapCoordinates;
         }
+
     }
 
 }

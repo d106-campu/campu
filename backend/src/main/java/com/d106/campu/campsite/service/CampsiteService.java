@@ -2,6 +2,7 @@ package com.d106.campu.campsite.service;
 
 import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
+import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
 import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
 import com.d106.campu.campsite.domain.jpa.Campsite;
@@ -16,6 +17,7 @@ import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.common.response.Response;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
@@ -70,7 +72,7 @@ public class CampsiteService {
      * @see Theme
      */
     @Transactional(readOnly = true)
-    public CampsiteDto.CampsiteListResponse getCampsiteList(
+    public Response getCampsiteListResponse(
         DoNmEnum doNm,
         SigunguEnum sigunguNm,
         LocalDate startDate,
@@ -118,7 +120,7 @@ public class CampsiteService {
 
         if (induty != null || theme != null) {
             Collections.shuffle(responseList);
-            return CampsiteDto.CampsiteListResponse.builder().campsiteList(responseListToPage(pageable, responseList)).build();
+            return new Response(CampsiteConstant.CAMPSITE_LIST, responseListToPage(pageable, responseList));
         } else {
             CampsiteLocation center = getCenterOfCampsites(responseList);
             responseList.sort(Comparator.comparingDouble(
@@ -129,12 +131,11 @@ public class CampsiteService {
                 )
             );
 
-            return CampsiteDto.CampsiteListWithCenterResponse.builder()
-                .campsiteList(responseListToPage(pageable, responseList))
-                .mapCoordinates(new HashMap<>() {{
-                    put("center", center);
-                }})
-                .build();
+            Response response = new Response(CampsiteConstant.CAMPSITE_LIST, responseListToPage(pageable, responseList));
+            response.setDataIntoResponse(CampsiteConstant.MAP_COORDINATES, new HashMap<>() {{
+                put("center", center);
+            }});
+            return response;
         }
     }
 
