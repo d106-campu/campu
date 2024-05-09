@@ -34,11 +34,13 @@ import layout from "@/assets/images/dummy/dummyCampsiteLayout.jpeg";
 
 // 더미데이터
 const data = {
-  id: 1,
+  id: 3,
   campsite_faclt_nm: "캠프유캠푸 캠핑장",
   campsite_tel: "010-1234-5678",
   campsite_addr1: "경상북도 칠곡군 가산면 금화리 산 49-1",
   campsite_addr2: "캠프유캠푸 캠핑장",
+  mapX: 36.1334375,
+  mapY: 128.3710625,
   types: ["오토캠핑", "글램핑", "카라반"],
   isLiked: true,
   totalReview: 7,
@@ -53,7 +55,7 @@ const data = {
   checkIn: "14:00",
   checkOut: "11:00",
   mannerTime: "23:00 - 07:00",
-  rating: 4.5,
+  rating: 3.8,
   owner: {
     name: "김싸피",
     campSite: "캠프유캠푸 캠핑장",
