@@ -1,6 +1,8 @@
 package com.d106.campu.campsite.controller;
 
 import com.d106.campu.campsite.constant.CampsiteConstant;
+import com.d106.campu.campsite.constant.IndutyEnum;
+import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.controller.doc.CampsiteControllerDoc;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.service.CampsiteService;
@@ -33,8 +35,8 @@ public class CampsiteController implements CampsiteControllerDoc {
         LocalDate startDate,
         LocalDate endDate,
         int headCnt,
-        @RequestParam(required = false) String induty,
-        @RequestParam(required = false) String theme,
+        @RequestParam(required = false) IndutyEnum induty,
+        @RequestParam(required = false) ThemeEnum theme,
         @RequestParam(required = false) boolean owner,
         Pageable pageable
     ) {

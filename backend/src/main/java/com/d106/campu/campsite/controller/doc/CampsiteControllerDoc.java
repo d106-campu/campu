@@ -1,6 +1,7 @@
 package com.d106.campu.campsite.controller.doc;
 
-import com.d106.campu.campsite.constant.RegExpression;
+import com.d106.campu.campsite.constant.IndutyEnum;
+import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
@@ -14,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +41,8 @@ public interface CampsiteControllerDoc {
         LocalDate startDate,
         LocalDate endDate,
         int headCnt,
-        @Pattern(regexp = RegExpression.induty, message = "induty should be among these: caravan, autocamping, camping, glamping") String induty,
-        @Pattern(regexp = RegExpression.theme, message = "theme should be among these: summer, trail, activity, spring, autumn, winter, sunset, sunrise, watersports, fishing, airsports, skiing") String theme,
+        IndutyEnum induty,
+        ThemeEnum theme,
         boolean owner,
         Pageable pageable
     );

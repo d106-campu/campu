@@ -74,7 +74,7 @@ class CampsiteRepositoryTest {
     })
     @DisplayName("캠핑장 유형별 목록 조회")
     void findByInduty(String description, String induty, int expected) {
-        Page<Campsite> result = campsiteRepository.findByIndutyListContaining(null, DoNmEnum.경상북도.getName(),
+        Page<Campsite> result = campsiteRepository.findByInduty(null, DoNmEnum.경상북도.getName(),
             SigunguEnum.구미시.getName(), induty);
         assertThat(result.getTotalElements()).isEqualTo(expected);
     }
@@ -121,7 +121,7 @@ class CampsiteRepositoryTest {
                 .sigunguNm(SigunguEnum.구미시.getName())
                 .indutyList("카라반")
                 .build();
-            
+
             assertThatThrownBy(() -> campsiteRepository.save(campsite));
         }
     }
