@@ -3,6 +3,7 @@ package com.d106.campu.campsite.domain.jpa;
 import com.d106.campu.common.jpa.BaseTime;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.user.domain.jpa.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -97,6 +98,9 @@ public class Campsite extends BaseTime {
     @Column(name = "hit")
     private long hit;
 
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CampsiteImage> campsiteImageList;
+
     @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
     private List<CampsiteTheme> campsiteThemeList;
 
@@ -116,5 +120,10 @@ public class Campsite extends BaseTime {
     @Transient
     @Setter
     private boolean available;
+
+    public void addCampsiteImage(CampsiteImage campsiteImage) {
+        this.campsiteImageList.add(campsiteImage);
+        campsiteImage.setCampsite(this);
+    }
 
 }
