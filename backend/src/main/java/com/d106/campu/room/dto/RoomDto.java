@@ -6,11 +6,11 @@ import lombok.Data;
 public class RoomDto {
 
     @Data
-    public static class ListResponse {
+    public static class Response {
 
         private Long id;
-        private String induty;
         private String name;
+        private String induty;
         private int baseNo;
         private int maxNo;
         private int price;
@@ -18,7 +18,10 @@ public class RoomDto {
         private int roomCnt;
         private int toiletCnt;
         private String supplyList;
-        /* TODO: private boolean available; // 예약 가능 여부 */
+        /* TODO:
+         *  private boolean available; // 예약 가능 여부
+         *  private String imageUrl; // 방 이미지 경로
+         */
 
     }
 

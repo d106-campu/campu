@@ -56,8 +56,10 @@ public class CampsiteController implements CampsiteControllerDoc {
 
     @Override
     @GetMapping("/{campsiteId}/room")
-    public Response getCampsiteRoomList(Pageable pageable, @PathVariable long campsiteId) {
-        return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST, campsiteService.getCampsiteRoomList(pageable, campsiteId));
+    public Response getCampsiteRoomList(@PathVariable long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
+        Pageable pageable) {
+        return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST,
+            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, pageable));
     }
 
 }
