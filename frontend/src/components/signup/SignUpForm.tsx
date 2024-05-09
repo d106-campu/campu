@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { setNickname } from '@/features/login/authSlice';
 import { ISignUpFormValues } from '@/types/auth';
 import Button from '@/components/@common/Button/Button';
 import InputField from '@/components/@common/Input/InputField';
@@ -9,7 +7,7 @@ import { checkIdDuplicate, checkNicknameDuplicate } from '@/services/auth/api';
 import {
   MIN_ID_LENGTH, MAX_ID_LENGTH, MIN_NICKNAME_LENGTH, MAX_NICKNAME_LENGTH, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, PHONE_LENGTH
 } from '@/constants/constants';
-// import Toast from '@/components/@common/Toast/Toast';
+import Toast from '@/components/@common/Toast/Toast';
 
 interface ILoginFormProps {
   isSmallScreen: boolean;
@@ -186,8 +184,9 @@ const SignUpForm = ({
                 openCertificationModal(values.phone);
               },
               onError: (error) => {
-                console.error('인증 번호 전송 실패:', error);
-                setErrors(prev => ({ ...prev, phone: '인증번호 전송 실패! 다시 시도해주세요.' }));
+                console.error('인증 번호 전송 실패:', error); // 같은 번호로 연속해서 3번까지만 전송되도록 함
+                Toast.error('연속적인 인증 요청으로 인해 중단되었습니다.')
+                setErrors(prev => ({ ...prev, phone: '잠시 후에 다시 시도해주세요.' }));
               }
             });
           } else {

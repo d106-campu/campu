@@ -13,7 +13,7 @@ interface CertificationProps {
 const Certification = ({ isOpen, onClose, phone, onVerify  }: CertificationProps) => {
   const [isCode, setIsCode] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { verifyPhone } = useSignup();
+  const { verifyPhone, sendVerificationCode  } = useSignup();
 
   const handleVerifyClick = () => {
     if (isCode.length === 6) {
@@ -46,6 +46,19 @@ const Certification = ({ isOpen, onClose, phone, onVerify  }: CertificationProps
     }
   };
 
+  // 인증번호 재전송
+  const handleResendCode = () => {
+    sendVerificationCode.mutate(phone, {
+      onSuccess: () => {
+        setIsCode(''); // 코드 입력 초기화해주기
+        setErrorMessage('새 인증번호가 발송되었습니다.');
+      },
+      onError: () => {
+        setErrorMessage('인증번호 재전송에 실패했습니다. 다시 시도해주세요.');
+      }
+    });
+  };
+
   // 숫자만 입력 허용하고 최대 6자리
   const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newCode = event.target.value;
@@ -58,33 +71,35 @@ const Certification = ({ isOpen, onClose, phone, onVerify  }: CertificationProps
   if (!isOpen) return null;
 
   return (
-    <Modal width="w-1/3" onClose={onClose} title='휴대폰 인증' hasIcon={false}>
-      <div className="p-4 flex flex-col items-center">
-        <p className="text-sm text-gray-500 mb-4">본인 확인을 위해 휴대폰으로 전송된 인증번호를 입력해주세요.</p>
-        <input
-          type="text"
-          className="w-[90%] p-2 border-2 border-gray-100 rounded text-center outline-none"
-          placeholder="인증번호 입력"
-          value={isCode}
-          onChange={handleCodeChange}
-          maxLength={6}
-        />
-        {errorMessage && (
-          <p className="text-red-400 text-center mt-2">{errorMessage}</p>
-        )}
-        <div className="w-full pt-10 flex space-x-4 justify-center">
-          <Button
-            text="재전송"
-            width='w-[40%]'
-            backgroundColor='bg-gray-400'
-            onClick={() => { /* @TODO : 재전송 로직 추가 */ }} />
-          <Button
-            text="인증 확인"
-            width='w-[40%]'
-            onClick={handleVerifyClick} />
+    <>
+      <Modal width="w-1/3" onClose={onClose} title='휴대폰 인증' hasIcon={false}>
+        <div className="p-4 flex flex-col items-center">
+          <p className="text-sm text-gray-500 mb-4">본인 확인을 위해 휴대폰으로 전송된 인증번호를 입력해주세요.</p>
+          <input
+            type="text"
+            className="w-[90%] p-2 border-2 border-gray-100 rounded text-center outline-none"
+            placeholder="인증번호 입력"
+            value={isCode}
+            onChange={handleCodeChange}
+            maxLength={6}
+          />
+          {errorMessage && (
+            <p className="text-red-400 text-center mt-2">{errorMessage}</p>
+          )}
+          <div className="w-full pt-10 flex space-x-4 justify-center">
+            <Button
+              text="재전송"
+              width='w-[40%]'
+              backgroundColor='bg-gray-400'
+              onClick={handleResendCode}/>
+            <Button
+              text="인증 확인"
+              width='w-[40%]'
+              onClick={handleVerifyClick} />
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 
