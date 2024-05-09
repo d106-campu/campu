@@ -1,6 +1,5 @@
 import { useState } from "react";
 import TagList from "@/components/home/TagList";
-import RecommendItem from "@/components/home/recommend/RecommendItem";
 import dummy from "@/assets/images/dummyCamping3.png";
 
 const RecommendThema = () => {
@@ -48,7 +47,7 @@ const RecommendThema = () => {
               selectedTags.includes(theme)
             );
             if (matchesSelectedTags) {
-              return <RecommendItem key={campground.id} item={campground} />;
+              return 
             }
             return null;
           })}
