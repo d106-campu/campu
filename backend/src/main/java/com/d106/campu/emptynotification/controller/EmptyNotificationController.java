@@ -5,6 +5,8 @@ import com.d106.campu.emptynotification.controller.doc.EmptyNotificationControll
 import com.d106.campu.emptynotification.dto.EmptyNotificationDto.CreateRequest;
 import com.d106.campu.emptynotification.service.EmptyNotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,13 @@ public class EmptyNotificationController implements EmptyNotificationControllerD
     @PostMapping
     public Response create(@RequestBody CreateRequest createRequestDto) {
         emptyNotificationService.create(createRequestDto);
+        return new Response();
+    }
+
+    @Override
+    @DeleteMapping("/{roomId}")
+    public Response delete(@PathVariable Long roomId) {
+        emptyNotificationService.delete(roomId);
         return new Response();
     }
 

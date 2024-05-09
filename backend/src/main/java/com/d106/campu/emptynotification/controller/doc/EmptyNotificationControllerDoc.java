@@ -29,4 +29,17 @@ public interface EmptyNotificationControllerDoc {
     })
     Response create(@Valid EmptyNotificationDto.CreateRequest createRequestDto);
 
+    @Operation(summary = "빈 자리 알림 삭제", description = "빈 자리 알림을 삭제하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "빈 자리 알림 삭제 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        ),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "유저 or 빈자리 알림을 못찾음", content = @Content),
+    })
+    Response delete(Long roomId);
+
 }

@@ -45,6 +45,15 @@ public class EmptyNotificationService {
         emptyNotificationRepository.save(emptyNotification);
     }
 
+    @Transactional
+    public void delete(Long roomId) {
+        User user = getUserByAccount();
+        Room room = roomRepository.findById(roomId)
+            .orElseThrow(() -> new NotFoundException(RoomExceptionCode.NOT_FOUND_ROOM));
+
+        emptyNotificationRepository.deleteByUserAndRoom(user, room);
+    }
+
     private void checkLimitCount(User user) {
         long count = emptyNotificationRepository.countByUser(user);
         if (count >= EmptyNotificationConstant.EMPTY_NOTIFICATION_LIMIT) {
