@@ -21,6 +21,8 @@ export interface IRoomItem {
   roomCnt: number;
   toiletCnt: number;
   supplyList: string[] | null;
+  available: boolean;
+  image_url: string;
 }
 
 // 방 목록

@@ -4,21 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { setReservationData } from "@/features/reservation/ReservationSlice";
 import { scrollToTop } from "@/utils/scrollToTop";
+import { IRoomItem } from "@/types/reservation";
 
-interface IRoomItemProps {
-  campsiteId: number;
-  roomId: number;
-  image: string;
-  name: string;
-  induty: string;
-  baseNo: number;
-  maxNo: number;
-  price: number;
-  extraPrice: number;
-  roomCnt: number;
-  toiletCnt: number;
-  supplyList: string[];
-  available: boolean;
+interface IRoomItemProps extends IRoomItem {
+  // campsiteId: number;
 }
 
 const RoomItem = ({ room }: { room: IRoomItemProps }) => {
@@ -27,6 +16,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
 
   // @TODO: 캠프장 정보는 리액트 쿼리로 가져오기
   const campsite = {
+    campsiteId: 1,
     facltNm: "캠프유캠푸 캠핑장", // 캠핑장 이름
     tel: "010-1234-5678", // 캠핑장 전화번호
     addr1: "경상북도 칠곡군 가산면 금화리 산 49-1", // 캠핑장 주소
@@ -46,8 +36,8 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
   const makeReservation = () => {
     // 예약 정보 업데이트
     const newReservationData = {
-      id: room.roomId,
-      image: room.image,
+      id: room.id,
+      image: room.image_url,
       campsite_faclt_nm: campsite.facltNm, // 캠핑장 이름
       campsite_tel: campsite.tel, // 캠핑장 전화번호
       campsite_addr1: campsite.addr1, // 캠핑장 주소
@@ -67,7 +57,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     };
 
     dispatch(setReservationData(newReservationData));
-    navigate(`/camps/${room.campsiteId}/payment`);
+    navigate(`/camps/${campsite.campsiteId}/payment`);
     scrollToTop();
   };
 
@@ -77,9 +67,9 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
         room.available ? "text-BLACK" : "text-UNIMPORTANT_TEXT_02"
       }`}
     >
-      <div key={room.roomId} className="w-[50%] relative">
+      <div key={room.id} className="w-[50%] relative">
         <img
-          src={room.image}
+          src={room.image_url}
           alt={room.name}
           className={`w-full h-40 rounded-lg h-30 object-cover object-center ${
             room.available ? "" : "opacity-30"
@@ -96,7 +86,9 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
           <h1 className="text-xl font-bold pb-3">{room.name}</h1>
           <div
             className={`flex justify-between ${
-              room.supplyList.length >= 5 ? "gap-10" : "gap-14"
+              room.supplyList && room.supplyList.length >= 5
+                ? "gap-10"
+                : "gap-14"
             } text-sm`}
           >
             <div>
@@ -109,7 +101,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
               </p>
               <p className="pb-[10px]">화장실 개수: {room.toiletCnt}</p>
             </div>
-            {room.supplyList.length > 0 && (
+            {room.supplyList && room.supplyList.length > 0 && (
               <>
                 <div className="border-r" />
                 <div>

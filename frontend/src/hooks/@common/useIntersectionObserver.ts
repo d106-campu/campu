@@ -7,7 +7,7 @@ interface IUserIntersectionObserverProps {
   fetchNextPage: () => Promise<InfiniteQueryObserverResult>; // 다음 페이지의 데이터를 불러오는 함수
 }
 
-const userIntersectionObserver = ({
+const useIntersectionObserver = ({
   threshold = 0.1, // 타겟 요소의 10%가 보이면 콜백이 실행
   hasNextPage,
   fetchNextPage,
@@ -45,4 +45,4 @@ const userIntersectionObserver = ({
 
   return { setTarget };
 };
-export default userIntersectionObserver;
+export default useIntersectionObserver;
