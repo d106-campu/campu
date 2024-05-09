@@ -6,8 +6,12 @@ import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
+import com.d106.campu.emptynotification.mapper.EmptyNotificationMapper;
+import com.d106.campu.emptynotification.repository.jpa.EmptyNotificationRepository;
 import com.d106.campu.mypage.constant.DateType;
 import com.d106.campu.mypage.constant.UseType;
+import com.d106.campu.mypage.dto.MyPageDto.MyCampsiteResponse;
+import com.d106.campu.mypage.dto.MyPageDto.MyEmptyNotificationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.MyReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.PasswordChangeRequest;
@@ -18,6 +22,7 @@ import com.d106.campu.user.dto.UserDto;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.mapper.UserMapper;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +37,9 @@ public class MyPageService {
     private final MyPageRepository myPageRepository;
     private final UserRepository userRepository;
     private final TelVerifyHashRepository telVerifyHashRepository;
+    private final EmptyNotificationRepository emptyNotificationRepository;
     private final UserMapper userMapper;
+    private final EmptyNotificationMapper emptyNotificationMapper;
     private final PasswordEncoder passwordEncoder;
     private final SecurityHelper securityHelper;
 
@@ -47,18 +54,19 @@ public class MyPageService {
     }
 
     @Transactional(readOnly = true)
-    public Object getCampsiteList(Pageable pageable) {
+    public Page<MyCampsiteResponse> getCampsiteList(Pageable pageable) {
         return myPageRepository.getCampsiteList(pageable, securityHelper.getLoginAccount());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyEmptyNotificationResponse> getEmptyNotificationList() {
+        return emptyNotificationMapper.toMyEmptyNotificationResponseDto(
+            emptyNotificationRepository.findByUser_Account(securityHelper.getLoginAccount()));
     }
 
     @Transactional(readOnly = true)
     public UserDto.ProfileResponse getProfile() {
         return userMapper.toProfileResponseDto(getUserByAccount());
-    }
-
-    private User getUserByAccount() {
-        return userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
     }
 
     @Transactional
@@ -130,6 +138,11 @@ public class MyPageService {
             .ifPresent(user -> {
                 throw new ConflictException(UserExceptionCode.NICKNAME_CONFLICT);
             });
+    }
+
+    private User getUserByAccount() {
+        return userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
     }
 
 }
