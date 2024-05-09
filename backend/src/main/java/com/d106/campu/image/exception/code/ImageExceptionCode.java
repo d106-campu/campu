@@ -9,7 +9,8 @@ import lombok.Getter;
 public enum ImageExceptionCode implements ExceptionCode {
 
     /* Invalid Request Exception */
-    IMAGE_FAIL_SAVE("IMAGE001", "Failed to save image");
+    IMAGE_SAVE_FAIL("IMAGE001", "Failed to save image"),
+    DIR_CREATE_FAIL("IMAGE002", "Failed to create directory");
 
     private final String code;
     private final String message;
