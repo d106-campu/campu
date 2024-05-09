@@ -52,6 +52,7 @@ const MyProfile = ({
   const [nicknameMessage, setNicknameMessage] = useState<string>(''); // 닉네임 유효성 통과 상태 관리
   const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
 
+  // 휴대폰 번호 보여줄 때 하이픈 추가 함수
   function formatPhoneNumber(phoneNumber: string): string {
     return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
   }
