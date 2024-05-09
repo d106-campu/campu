@@ -19,9 +19,7 @@ public class RoomDto {
         private int toiletCnt;
         private String supplyList;
         private boolean available;
-        /* TODO:
-         *  private String imageUrl; // 방 이미지 경로
-         */
+        private String imageUrl;
 
     }
 
