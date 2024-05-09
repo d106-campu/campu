@@ -34,7 +34,7 @@ import layout from "@/assets/images/dummy/dummyCampsiteLayout.jpeg";
 
 // 더미데이터
 const data = {
-  id: 1,
+  id: 3,
   campsite_faclt_nm: "캠프유캠푸 캠핑장",
   campsite_tel: "010-1234-5678",
   campsite_addr1: "경상북도 칠곡군 가산면 금화리 산 49-1",

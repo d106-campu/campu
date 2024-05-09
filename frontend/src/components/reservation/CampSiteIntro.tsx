@@ -1,9 +1,11 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { formatSimpleDate } from "@/utils/formatDateTime";
+import { useRefs } from "@/context/RefContext";
 import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
 import Calendar from "@/components/@common/Calendar/Calendar";
+import LikeButton from "@/components/@common/Like/LikeButton";
 import { formatSimpleDate } from "@/utils/formatDateTime";
 import { copyToClipboard } from "@/utils/copyToClipboard";
 import { useRefs } from "@/context/RefContext";
@@ -37,7 +39,6 @@ interface ICampSiteIntro {
 
 const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   const [mapModal, setMapModal] = useState<boolean>(false); // 지도 모달 상태관리
-  const [isLiked, setIsLiked] = useState<boolean>(data.isLiked);
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
@@ -66,17 +67,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
         <div className="flex justify-between items-end">
           <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
           {/* 좋아요 */}
-          <button
-            onClick={() => {
-              setIsLiked(!isLiked);
-            }}
-          >
-            {isLiked ? (
-              <VscHeartFilled size={38} color="#FF777E" />
-            ) : (
-              <VscHeart size={38} color="#e9e9e9" />
-            )}
-          </button>
+          <LikeButton campsiteId={data.id} />
         </div>
 
         {/* 캠핑장 필수 정보 */}
