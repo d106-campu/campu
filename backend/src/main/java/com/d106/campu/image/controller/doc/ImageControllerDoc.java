@@ -55,6 +55,7 @@ public interface ImageControllerDoc {
         @Image(allowedExtensionList = {ImageExtension.JPG, ImageExtension.PNG, ImageExtension.GIF,
             ImageExtension.BMP, ImageExtension.WEBP}, message = "invalid image") MultipartFile mapImage);
 
+    /* TODO: 리스트로 받을 때 유효성 검사를 기존 @Image 어노테이션을 이용하여 할 수 있는지 알아봐야 한다. */
     @Operation(summary = "캠핑장 일반 이미지 업로드", description = "캠핑장 일반 이미지를 업로드한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "성공시 업로드한 캠핑장 일반 이미지 URL을 반환한다.",

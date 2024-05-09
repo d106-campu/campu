@@ -103,7 +103,8 @@ public class ImageService {
             throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
         }
 
-//        campsiteImageRepository.deleteAllByCampsite_Id(campsite.getId());
+        campsiteImageRepository.deleteAllByCampsite_Id(campsite.getId());
+        campsiteImageRepository.flush();
 
         Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
         createAndCleanDirectory(basePath);

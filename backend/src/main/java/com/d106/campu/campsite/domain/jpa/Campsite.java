@@ -126,9 +126,4 @@ public class Campsite extends BaseTime {
         campsiteImage.setCampsite(this);
     }
 
-    public void deleteCampsiteImage(CampsiteImage campsiteImage) {
-        this.campsiteImageList.remove(campsiteImage);
-        campsiteImage.setCampsite(null);
-    }
-
 }
