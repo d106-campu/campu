@@ -66,7 +66,6 @@ public class CampsiteService {
      * @param headCnt   To filter available room.
      * @param induty    For campsites that has specific industry type.
      * @param theme     For campsites that has specific theme.
-     * @param owner     For campsites that the current user manages.
      * @param pageable
      * @return List of campsite.
      * @throws NotFoundException     If not login status.
@@ -83,7 +82,6 @@ public class CampsiteService {
         int headCnt,
         String induty,
         String theme,
-        boolean owner,
         Pageable pageable
     ) {
         User user = getUserByAccount();
@@ -92,10 +90,7 @@ public class CampsiteService {
         String sigunguNmStr = (sigunguNm == null) ? null : sigunguNm.getName();
 
         Page<Campsite> responsePage = null;
-        if (owner) {
-            checkUserRoleOwner(user);
-            responsePage = campsiteRepository.findByUser(pageable, user);
-        } else if (induty == null && theme == null) {
+        if (induty == null && theme == null) {
             responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr);
         } else if (induty != null && !induty.isBlank()) {
             responsePage = campsiteRepository.findByIndutyListContaining(
@@ -160,6 +155,13 @@ public class CampsiteService {
         }
 
         return CampsiteLocation.builder().mapX(xAvg / campsiteList.size()).mapY(yAvg / campsiteList.size()).build();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CampsiteDto.Response> getOwnerCampsiteList(Pageable pageable) {
+        User user = getUserByAccount();
+        checkUserRoleOwner(user);
+        return campsiteRepository.findByUser(pageable, user).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
     /**

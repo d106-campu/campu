@@ -35,11 +35,15 @@ public class CampsiteController implements CampsiteControllerDoc {
         int headCnt,
         @RequestParam(required = false) String induty,
         @RequestParam(required = false) String theme,
-        @RequestParam(required = false) boolean owner,
         Pageable pageable
     ) {
-        return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, owner,
-            pageable);
+        return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, pageable);
+    }
+
+    @Override
+    @GetMapping("/owner")
+    public Response getOwnerCampsiteList(Pageable pageable) {
+        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getOwnerCampsiteList(pageable));
     }
 
     @Override
