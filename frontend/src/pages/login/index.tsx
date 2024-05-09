@@ -6,6 +6,9 @@ import BG_Login from '@/assets/images/bg_loginG.jpg';
 import Header from "@/components/@common/Header/Header";
 import Certification from "@/components/signup/Certification";
 import PasswordRecoveryModal from "@/components/login/FindPWD";
+import SignUpSuccessModal from "@/components/signup/modal/SignUpSuccessModal";
+import CertificationSuccessModal from '@/components/signup/modal/CertificationSuccessModal';
+import CertificationFailModal from '@/components/signup/modal/CertificationFailModal';
 
 const LoginPage = (): JSX.Element => {
   const [isSignUpActive, setIsSignUpActive] = useState<boolean>(false); // 회원가입 폼인지 로그인 폼인지에 대한 상태 관리
@@ -15,6 +18,9 @@ const LoginPage = (): JSX.Element => {
   const [phoneVerified, setPhoneVerified] = useState<boolean>(false); // 인증 성공 상태 관리 
   const [phoneNumber, setPhoneNumber] = useState<string>(''); // 사용자가 입력한 휴대폰 번호 전달 상태 관리
   const [isFindpwdModal, setIsFindpwdModalOpen] = useState<boolean>(false); // 비밀번호 찾기 모달 상태 관리
+  const [signUpSuccess, setSignUpSuccess] = useState<boolean>(false); // 회원가입 성공 모달 상태 관리
+  const [showSuccessModal, setCertificationSuccessModal] = useState<boolean>(false); // 인증 성공 모달
+  const [showFailModal, setCertificationFailModal] = useState<boolean>(false); // 인증 실패 모달
 
   // 토글을 통해서 회원가입 & 로그인 좌우 이동, 활성화 여부 체크
   const toggleForms = (): void => {
@@ -37,10 +43,15 @@ const LoginPage = (): JSX.Element => {
 
   // 인증번호 검증 함수
   const handleVerify = (verified: boolean) => {
-    // @TODO : 백엔드 API 통신 로직 필요 -> 인증 성공, 실패 판별 후 SignUpForm으로 전달해야함
-    setPhoneVerified(verified)
-    console.log("인증번호 검증 확인 :", verified ? "인증 성공!" : "인증 실패!");
-    setCertificationModal(false); // 모달 닫기
+    if (verified) {
+      setPhoneVerified(true);
+      setCertificationSuccessModal(true);
+      setCertificationModal(false); // 성공 시에만 인증 모달 닫기
+      setTimeout(() => setCertificationSuccessModal(false), 1500); // 성공 안내 모달은 자동으로 닫아주기
+    } else {
+      setCertificationFailModal(true); // 실패 모달 표시
+      setTimeout(() => setCertificationFailModal(false), 1500); // 실패 안내 모달은 자동으로 닫아주기
+    }
   };
 
   // 인증 초기화 함수
@@ -55,6 +66,12 @@ const LoginPage = (): JSX.Element => {
     setPhoneNumber(phone)
   }; // 휴대전화 인증 모달 열기
   const closeCertificationModal = () => {setCertificationModal(false);}; // 휴대전화 인증 모달 닫기
+  
+  // 회원가입 성공 모달 열기 & 닫기
+  const handleSignUpSuccess = () => {
+    setSignUpSuccess(true); // 회원가입 성공 모달 표시
+    setTimeout(() => setSignUpSuccess(false), 1500); // 1.5초 후 모달 자동 닫기
+  };
 
   // 창 크기에 따른 Form 반응시키기
   useEffect(() => {
@@ -73,8 +90,8 @@ const LoginPage = (): JSX.Element => {
 
   return (
     <>
-      <Header />
-      <div style={backgroundImageStyle} className='w-screen h-[calc(100vh-3rem)] flex items-center justify-center'>       
+      <Header page={"login"}/>
+      <div style={backgroundImageStyle} className='w-screen h-[calc(100vh] flex items-center justify-center'>       
         {/* 밑판 */}
         <div
           className='w-[70%] min-w-[600px] sm:min-w-[640px] md:min-w-[700px] lg:min-w-[800px]
@@ -134,6 +151,7 @@ const LoginPage = (): JSX.Element => {
                 closeCertificationModal={closeCertificationModal}
                 phoneVerified={phoneVerified}
                 resetPhoneVerification={resetPhoneVerification}
+                onSignUpSuccess={handleSignUpSuccess}
               /> :
               <LoginForm
                 isSmallScreen={isSmallScreen}
@@ -158,6 +176,27 @@ const LoginPage = (): JSX.Element => {
         <PasswordRecoveryModal
           isOpen={isFindpwdModal}
           onClose={closeFindpwdModal}
+        />
+      )}
+      {/* 회원가입 성공 모달 렌더링 */}
+      {signUpSuccess &&
+        <SignUpSuccessModal
+          isOpen={signUpSuccess}
+          onClose={() => setSignUpSuccess(false)}
+        />
+      }
+      {/* 인증 성공 안내 모달 렌더링 */}
+      {showSuccessModal && (
+        <CertificationSuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => setCertificationSuccessModal(false)}
+        />
+      )}
+      {/* 인증 실패 안내 모달 렌더링 */}
+      {showFailModal && (
+        <CertificationFailModal
+          isOpen={showFailModal}
+          onClose={() => setCertificationFailModal(false)}
         />
       )}
     </>

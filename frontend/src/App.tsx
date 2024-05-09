@@ -11,6 +11,9 @@ import PaymentPage from "@/pages/payment";
 import ReviewListPage from "@/pages/reservation/reviewList";
 import ReviewPage from "@/pages/reservation/reviewList/review";
 import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import '@/components/@common/Toast/Toast.css'
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
@@ -68,6 +71,7 @@ function App() {
     <>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
+          <ToastContainer position="top-center"/>
           <RouterProvider router={router} />
         </QueryClientProvider>
       </Provider>

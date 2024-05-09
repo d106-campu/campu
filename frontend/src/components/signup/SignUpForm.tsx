@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { setNickname } from '@/features/login/authSlice';
 import { ISignUpFormValues } from '@/types/auth';
 import Button from '@/components/@common/Button/Button';
 import InputField from '@/components/@common/Input/InputField';
@@ -9,12 +7,14 @@ import { checkIdDuplicate, checkNicknameDuplicate } from '@/services/auth/api';
 import {
   MIN_ID_LENGTH, MAX_ID_LENGTH, MIN_NICKNAME_LENGTH, MAX_NICKNAME_LENGTH, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, PHONE_LENGTH
 } from '@/constants/constants';
+import Toast from '@/components/@common/Toast/Toast';
 
 interface ILoginFormProps {
   isSmallScreen: boolean;
   toggleForm: () => void;
   phoneVerified: boolean; // 인증 성공 여부 확인
   resetPhoneVerification: () => void; // 인증 상태 초기화
+  onSignUpSuccess: () => void;
   openCertificationModal: (phone: string) => void; // 모달을 여는 함수
   closeCertificationModal: () => void; // 모달을 닫는 함수
 }
@@ -25,6 +25,7 @@ const SignUpForm = ({
   phoneVerified,
   resetPhoneVerification,
   openCertificationModal,
+  onSignUpSuccess,
   // closeCertificationModal,
 }: ILoginFormProps): JSX.Element => {
   const { signupMutation, sendVerificationCode, checkPhone } = useSignup();
@@ -127,7 +128,9 @@ const SignUpForm = ({
       }, {
         onSuccess: (res) => {
           console.log('회원가입 성공함 !:', res);
-          // @TODO: 회원가입 성공 모달 띄우고 로그인폼으로 이동시키기
+          // Toast.success('회원가입이 완료되었습니다 !');
+          onSignUpSuccess();
+          toggleForm(); // 로그인 폼으로 전환
         },
         onError: (error) => {
           console.error('회원가입 에러발생 ㅠ:', error);
@@ -181,8 +184,9 @@ const SignUpForm = ({
                 openCertificationModal(values.phone);
               },
               onError: (error) => {
-                console.error('인증 번호 전송 실패:', error);
-                setErrors(prev => ({ ...prev, phone: '인증번호 전송 실패! 다시 시도해주세요.' }));
+                console.error('인증 번호 전송 실패:', error); // 같은 번호로 연속해서 3번까지만 전송되도록 함
+                Toast.error('연속적인 인증 요청으로 인해 중단되었습니다.')
+                setErrors(prev => ({ ...prev, phone: '잠시 후에 다시 시도해주세요.' }));
               }
             });
           } else {
