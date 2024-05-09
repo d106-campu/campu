@@ -22,6 +22,7 @@ public interface CampsiteMapper {
     @Mapping(target = "roomList", ignore = true)
     @Mapping(target = "like", ignore = true)
     @Mapping(target = "available", ignore = true)
+    @Mapping(target = "price", ignore = true)
     Campsite toCampsite(CampsiteDto.CreateRequest createRequestDto);
 
 }

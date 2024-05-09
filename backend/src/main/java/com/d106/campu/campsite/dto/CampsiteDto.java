@@ -32,8 +32,8 @@ public class CampsiteDto {
         private CampsiteLocation campsiteLocation;
         private boolean like;
         private boolean available;
+        private Integer price;
         /* TODO: 추가할 정보
-         *  private int price;          // 가장 저렴한 방 가격
          *  private float rate;         // 별점
          */
 

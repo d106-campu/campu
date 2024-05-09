@@ -117,4 +117,8 @@ public class Campsite extends BaseTime {
     @Setter
     private boolean available;
 
+    @Transient
+    @Setter
+    private Integer price;
+
 }
