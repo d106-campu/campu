@@ -10,13 +10,13 @@ import {
 
 // ID 중복 확인
 export const checkIdDuplicate = async (account: string): Promise<APIResponse<ICheckIdRes>> => {
-  const response = await axiosCommonInstance.get(`/auth/account`, { params: { account: account } });
+  const response = await axiosCommonInstance.get(`/auth/account`, { params: { account } });
   return response.data;
 };
 
 // 닉네임 중복 확인
 export const checkNicknameDuplicate = async (nickname: string): Promise<APIResponse<ICheckIdRes>> => {
-  const response = await axiosCommonInstance.get(`/auth/nickname`, { params: { nickname: nickname } });
+  const response = await axiosCommonInstance.get(`/auth/nickname`, { params: { nickname } });
   return response.data;
 };
 
@@ -28,13 +28,13 @@ export const postSignUp = async (data: ISignUpReq): Promise<APIResponse<ISignUpR
 
 // 휴대폰 인증번호 전송
 export const sendPhoneVerificationCode = async (tel: string): Promise<APIResponse<{ ok: boolean }>> => {
-  const response = await axiosCommonInstance.post(`/auth/tel`, { params: { tel: tel } });
+  const response = await axiosCommonInstance.post(`/auth/tel`, null, { params: { tel } });
   return response.data;
 };
 
 // 휴대폰 중복 확인 요청
 export const checkPhoneDuplicate = async (tel: string): Promise<APIResponse<{ available: boolean }>> => {
-  const response = await axiosCommonInstance.get(`/auth/tel`, { params: { tel: tel } });
+  const response = await axiosCommonInstance.get(`/auth/tel`, { params: { tel } });
   return response.data;
 };
 
