@@ -10,9 +10,10 @@ export const fetchUserProfile = async (): Promise<APIResponse<IUserProfileRes>> 
 
 // 닉네임 수정 요청
 export const updateUserNickName = async (data: IUserNickNameUpdate): Promise<APIResponse<{ result: string }>> => {
-  const response = await axiosAuthInstance.post(`/mypage/profile/nickname?nickname=${data.nickname}`);
+  const response = await axiosAuthInstance.post('/mypage/profile/nickname', null, { params: { nickname: data.nickname } });
   return response.data;
 };
+
 
 // 비밀번호 수정 요청
 export const updateUserPassword = async (data: IUserPasswordUpdate): Promise<APIResponse<{ result: string }>> => {
@@ -22,6 +23,7 @@ export const updateUserPassword = async (data: IUserPasswordUpdate): Promise<API
 
 // 휴대폰 번호 수정 요청
 export const updateUserPhone = async (data: IUserPhoneUpdate): Promise<APIResponse<{ result: string }>> => {
-  const response = await axiosAuthInstance.post(`/mypage/profile/tel?tel=${data.tel}`);
+  const response = await axiosAuthInstance.post('/mypage/profile/tel', null, { params: { tel: data.tel } });
   return response.data;
 };
+
