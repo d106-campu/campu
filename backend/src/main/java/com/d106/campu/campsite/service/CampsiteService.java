@@ -3,8 +3,8 @@ package com.d106.campu.campsite.service;
 import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.CampsiteConstant;
-import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
-import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
+import com.d106.campu.campsite.constant.IndutyEnum;
+import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
@@ -64,14 +64,12 @@ public class CampsiteService {
      * @param startDate To check reservation availability.
      * @param endDate   To check reservation availability.
      * @param headCnt   To filter available room.
-     * @param induty    For campsites that has specific industry type.
-     * @param theme     For campsites that has specific theme.
+     * @param induty    For campsites that has specific industry type. See {@link IndutyEnum}.
+     * @param theme     For campsites that has specific theme. See {@link ThemeEnum}.
      * @param pageable
      * @return List of campsite.
      * @throws NotFoundException     If not login status.
      * @throws UnauthorizedException Only when `owner=true` option, if user does not have {@link RoleName#OWNER} role.
-     * @see Induty
-     * @see Theme
      */
     @Transactional(readOnly = true)
     public Response getCampsiteListResponse(
@@ -80,8 +78,8 @@ public class CampsiteService {
         LocalDate startDate,
         LocalDate endDate,
         int headCnt,
-        String induty,
-        String theme,
+        IndutyEnum induty,
+        ThemeEnum theme,
         Pageable pageable
     ) {
         User user = getUserByAccount();
@@ -92,12 +90,10 @@ public class CampsiteService {
         Page<Campsite> responsePage = null;
         if (induty == null && theme == null) {
             responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr);
-        } else if (induty != null && !induty.isBlank()) {
-            responsePage = campsiteRepository.findByIndutyListContaining(
-                pageable, doNmStr, sigunguNmStr, Induty.of(induty).getValue());
-        } else if (theme != null && !theme.isBlank()) {
-            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(
-                pageable, doNmStr, sigunguNmStr, Theme.of(theme).getValue());
+        } else if (induty != null) {
+            responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName());
+        } else if (theme != null) {
+            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName());
         }
 
         if (responsePage == null) {
