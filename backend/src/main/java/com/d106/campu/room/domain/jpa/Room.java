@@ -12,12 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -67,5 +69,9 @@ public class Room extends BaseTime {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Reservation> reservationList;
+
+    @Transient
+    @Setter
+    private boolean available;
 
 }
