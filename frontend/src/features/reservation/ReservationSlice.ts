@@ -8,6 +8,9 @@ interface IReservationState {
     campsite_tel: string; // 캠핑장 전화번호
     campsite_addr1: string; // 캠핑장 주소
     campsite_addr2: string; // 캠핑장 상세 주소
+    mapX: number; // 위도
+    mapY: number; // 경도
+    rating: number; // 별점
     roomName: string; // 캠핑장 방 이름
     roomInduty: string; // 캠핑 유형
     supplyList: string[];
@@ -29,6 +32,9 @@ const initialState: IReservationState = {
     campsite_tel: "",
     campsite_addr1: "",
     campsite_addr2: "",
+    mapX: 36.1071305028147,
+    mapY: 128.4169500162442,
+    rating: 0,
     roomName: "",
     roomInduty: "",
     supplyList: [],

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import InputField from "@/components/@common/Input/InputField";
-import { IMyPhoneValues } from '@/types/profile';
+import { IUserProfileUpdate } from '@/types/user';
 import ChangePhoneSuccessModal from "@/components/my/profile/ChangePhoneSuccessModal";
 import { PHONE_LENGTH, PHONE_VERIFY_LENGTH  } from "@/constants/constants";
 
@@ -10,10 +10,10 @@ interface IChangePhoneModalProps {
   isOpen: boolean;
   onClose: () => void;
   phoneVerified: boolean;
-  values: IMyPhoneValues;
-  errors: IMyPhoneValues;
-  setValues: React.Dispatch<React.SetStateAction<IMyPhoneValues>>;
-  setErrors: React.Dispatch<React.SetStateAction<IMyPhoneValues>>;
+  values: IUserProfileUpdate;
+  errors: IUserProfileUpdate;
+  setValues: React.Dispatch<React.SetStateAction<IUserProfileUpdate>>;
+  setErrors: React.Dispatch<React.SetStateAction<IUserProfileUpdate>>;
 }
 
 export const ChangePhoneModal = ({
@@ -28,11 +28,11 @@ export const ChangePhoneModal = ({
   const [successModalOpen, setSuccessModalOpen] = useState<boolean>(false); // 휴대폰 번호 변경 성공 모달 상태 관리
 
   // 새 폰 번호 유효성 검사 로직
-  const validateField = (field: keyof IMyPhoneValues, value: string) => {
+  const validateField = (field: keyof IUserProfileUpdate, value: string) => {
     let message = '';
     if (value) {
       switch (field) {
-        case 'phone':
+        case 'tel':
           if (!/^\d{11}$/.test(value)) {
             message = '휴대폰 번호는 11자리 숫자여야 합니다.';
           } else {
@@ -52,13 +52,13 @@ export const ChangePhoneModal = ({
   };
 
   // 휴대폰 번호 적는 input 추적
-  const handleChange = (field: keyof IMyPhoneValues, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof IUserProfileUpdate, event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     // 휴대폰 번호 적는 곳에는 숫자만 입력하도록 함
-    if (field === 'phone' && value === '' || /^\d+$/.test(value)) {
+    if (field === 'tel' && value === '' || /^\d+$/.test(value)) {
       setValues(prev => ({ ...prev, [field]: value }));
       validateField(field, value);
-    } else if (field !== 'phone') {
+    } else if (field !== 'tel') {
       setValues(prev => ({ ...prev, [field]: value }));
       validateField(field, value); 
     }
@@ -66,7 +66,7 @@ export const ChangePhoneModal = ({
 
   // "인증번호 전송" 버튼 클릭과 관련하여 세밀한 유효성 검사
   const handleCertificationClick = () => {
-    if (values.phone.length === PHONE_LENGTH) {
+    if (values.tel.length === PHONE_LENGTH) {
       setErrors(prevErrors => ({
         ...prevErrors,
         phone: '인증번호를 전송했습니다 !'
@@ -118,18 +118,23 @@ export const ChangePhoneModal = ({
   };
 
   // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
-  const fields: Array<{ label: string; name: keyof IMyPhoneValues; placeholder: string; maxLength: number; type: string }> = [
-    { label: '새로운 휴대폰 번호', name: 'phone', placeholder: '새로운 휴대폰 번호 입력', maxLength: PHONE_LENGTH, type: 'text'},
+  const fields: Array<{ label: string; name: keyof IUserProfileUpdate; placeholder: string; maxLength: number; type: string }> = [
+    { label: '새로운 휴대폰 번호', name: 'tel', placeholder: '새로운 휴대폰 번호 입력', maxLength: PHONE_LENGTH, type: 'text'},
     { label: '본인 인증을 위해 새 번호로 전송된 인증번호를 입력해주세요.', name: 'verifyNums', placeholder: '새 인증번호를 입력해주세요.', maxLength: PHONE_VERIFY_LENGTH, type: 'text'  },
   ];
 
   // phoneVerified 값 바뀔때마다 유효성 검사 작동
   useEffect(() => {
     Object.keys(values).forEach((field) => {
-      validateField(field as keyof IMyPhoneValues, values[field as keyof IMyPhoneValues]);
+      const key = field as keyof IUserProfileUpdate;
+      const value = values[key];
+
+      // undefined가 아닐 때만 유효성 검사를 수행
+      if (value !== undefined) { 
+        validateField(key, value);
+      }
     });
   }, [phoneVerified]);
-
   return (
     <>
       <Modal
@@ -146,13 +151,13 @@ export const ChangePhoneModal = ({
               label={field.label}
               type={field.type}
               name={field.name}
-              value={values[field.name]}
+              value={values[field.name] || ''}
               onChange={e => handleChange(field.name, e)}
               placeholder={field.placeholder}
               error=""
               changeError={errors[field.name]}
               maxLength={field.maxLength}
-              certificationButton={field.name === 'phone' ? phoneCertificationButton : undefined }
+              certificationButton={field.name === 'tel' ? phoneCertificationButton : undefined }
             />
           ))}
           <div className="flex justify-center">
@@ -166,7 +171,7 @@ export const ChangePhoneModal = ({
               <Button
                 text='인 증'
                 onClick={handleVerification}
-                disabled={!values.phone || !values.verifyNums}
+                disabled={!values.tel || !values.verifyNums}
               />
             </div>
           </div>

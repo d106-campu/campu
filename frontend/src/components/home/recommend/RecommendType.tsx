@@ -1,5 +1,4 @@
 import { useState } from "react";
-import dummy from "@/assets/images/dummyCamping2.png";
 import Camping from "@/assets/images/Camping.png";
 import AutoCamping from "@/assets/images/AutoCamping.png";
 import Glamping from "@/assets/images/Glamping.png";
@@ -9,10 +8,45 @@ import AutoCampingSelect from "@/assets/images/AutoCampingSelect.png";
 import GlampingSelect from "@/assets/images/GlampingSelect.png";
 import CaravaneSelect from "@/assets/images/CaravaneSelect.png";
 import RecommendItem from "@/components/home/recommend/RecommendItem";
+import { dayOfWeekend } from "@/utils/dayOfWeekend";
+import { useCampsite } from "@/hooks/search/useCampsite";
 
 const RecommendType = () => {
   const [selectedTab, setSelectedTab] = useState<string>("캠핑");
   const [showList, setShowList] = useState<boolean>(true);
+  const { useCampsiteList } = useCampsite();
+
+  // 주말 날짜
+  const weekendDates = dayOfWeekend();
+  const saturday = weekendDates.saturday;
+  const sunday = weekendDates.sunday;
+
+  // @TODO: 백엔드 완료되면 삭제
+  const tabToInduty = (tab: string) => {
+    switch (tab) {
+      case "캠핑":
+        return "camping";
+      case "오토캠핑":
+        return "autocamping";
+      case "글램핑":
+        return "glamping";
+      case "카라반":
+        return "caravan";
+      default:
+        throw new Error("Invalid tab name");
+    }
+  };
+  const indutyValue = tabToInduty(selectedTab);
+
+  // ( 주말 기준 ) 유형별 추천 캠핑장 리스트 조회
+  // @TODO: 백엔드 구현 끝나면 유형 이름 수정해야함
+  const { data: campsiteOfInduty } = useCampsiteList({
+    startDate: saturday,
+    endDate: sunday,
+    headCnt: 2,
+    induty: indutyValue,
+    pageable: { page: 0, size: 6 },
+  });
 
   const handleTabClick = (tab: string) => {
     if (["캠핑", "오토캠핑", "글램핑", "카라반"].includes(tab)) {
@@ -61,11 +95,9 @@ const RecommendType = () => {
       {showList && (
         <div className="flex justify-center py-8">
           <div className="flex flex-wrap justify-center w-[70%]">
-            {dummyData
-              .filter((item) => item.type === selectedTab)
-              .map((item) => (
-                <RecommendItem key={item.id} item={item} />
-              ))}
+            {campsiteOfInduty?.data.campsiteList.content.map((item) => (
+              <RecommendItem key={item.id} item={item} />
+            ))}
           </div>
         </div>
       )}
@@ -74,271 +106,3 @@ const RecommendType = () => {
 };
 
 export default RecommendType;
-
-// 더미데이터
-const dummyData = [
-  {
-    id: 1,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 2,
-    name: "오토캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.8,
-    price: "40,000",
-    description: "편안한 캠핑을 즐길 수 있는 곳",
-    location: "강원도 춘천시",
-    type: "오토캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 3,
-    name: "글램핑핑캠핑장",
-    image: dummy,
-    rating: 4.2,
-    price: "80,000",
-    description: "고급스러운 편안한 숙박이 가능한 글램핑장",
-    location: "경기도 양평군",
-    type: "글램핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 4,
-    name: "카라반핑캠핑장",
-    image: dummy,
-    rating: 4.0,
-    price: "60,000",
-    description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
-    location: "서울특별시 강남구",
-    type: "카라반",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 5,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 6,
-    name: "오토캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.8,
-    price: "40,000",
-    description: "편안한 캠핑을 즐길 수 있는 곳",
-    location: "강원도 춘천시",
-    type: "오토캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 7,
-    name: "글램핑핑캠핑장",
-    image: dummy,
-    rating: 4.2,
-    price: "80,000",
-    description: "고급스러운 편안한 숙박이 가능한 글램핑장",
-    location: "경기도 양평군",
-    type: "글램핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 8,
-    name: "카라반핑캠핑장",
-    image: dummy,
-    rating: 4.0,
-    price: "60,000",
-    description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
-    location: "서울특별시 강남구",
-    type: "카라반",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 9,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 10,
-    name: "오토캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.8,
-    price: "40,000",
-    description: "편안한 캠핑을 즐길 수 있는 곳",
-    location: "강원도 춘천시",
-    type: "오토캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 11,
-    name: "글램핑핑캠핑장",
-    image: dummy,
-    rating: 4.2,
-    price: "80,000",
-    description: "고급스러운 편안한 숙박이 가능한 글램핑장",
-    location: "경기도 양평군",
-    type: "글램핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 12,
-    name: "카라반핑캠핑장",
-    image: dummy,
-    rating: 4.0,
-    price: "60,000",
-    description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
-    location: "서울특별시 강남구",
-    type: "카라반",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 13,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 14,
-    name: "오토캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.8,
-    price: "40,000",
-    description: "편안한 캠핑을 즐길 수 있는 곳",
-    location: "강원도 춘천시",
-    type: "오토캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 15,
-    name: "글램핑핑캠핑장",
-    image: dummy,
-    rating: 4.2,
-    price: "80,000",
-    description: "고급스러운 편안한 숙박이 가능한 글램핑장",
-    location: "경기도 양평군",
-    type: "글램핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 16,
-    name: "카라반핑캠핑장",
-    image: dummy,
-    rating: 4.0,
-    price: "60,000",
-    description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
-    location: "서울특별시 강남구",
-    type: "카라반",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 17,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 18,
-    name: "오토캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.8,
-    price: "40,000",
-    description: "편안한 캠핑을 즐길 수 있는 곳",
-    location: "강원도 춘천시",
-    type: "오토캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 19,
-    name: "글램핑핑캠핑장",
-    image: dummy,
-    rating: 4.2,
-    price: "80,000",
-    description: "고급스러운 편안한 숙박이 가능한 글램핑장",
-    location: "경기도 양평군",
-    type: "글램핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 20,
-    name: "카라반핑캠핑장",
-    image: dummy,
-    rating: 4.0,
-    price: "60,000",
-    description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
-    location: "서울특별시 강남구",
-    type: "카라반",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 21,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 22,
-    name: "오토캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.8,
-    price: "40,000",
-    description: "편안한 캠핑을 즐길 수 있는 곳",
-    location: "강원도 춘천시",
-    type: "오토캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 23,
-    name: "글램핑핑캠핑장",
-    image: dummy,
-    rating: 4.2,
-    price: "80,000",
-    description: "고급스러운 편안한 숙박이 가능한 글램핑장",
-    location: "경기도 양평군",
-    type: "글램핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 24,
-    name: "카라반핑캠핑장",
-    image: dummy,
-    rating: 4.0,
-    price: "60,000",
-    description: "도심 속에서 편안한 카라반 캠핑을 즐길 수 있는 장소",
-    location: "서울특별시 강남구",
-    type: "카라반",
-    thema: ["물놀이", "애견동반"],
-  },
-];
