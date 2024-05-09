@@ -42,7 +42,7 @@ public class SecurityConfig {
         /* notification */
         "/notification/**",
         /* campsite */
-        "/campsite/**",
+        "/campsite/*/room",
         /* reservation */
         "/reservation/**",
         /* file */

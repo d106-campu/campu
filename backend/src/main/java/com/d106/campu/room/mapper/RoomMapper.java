@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface RoomMapper {
 
     @Mapping(target = "induty", expression = "java(room.getInduty().getInduty())")
-    RoomDto.ListResponse toRoomResponseDto(Room room);
+    RoomDto.Response toRoomResponseDto(Room room);
 
 }
