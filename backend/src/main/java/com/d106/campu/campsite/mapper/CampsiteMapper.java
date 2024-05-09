@@ -19,6 +19,7 @@ public interface CampsiteMapper {
     @Mapping(target = "campsiteThemeList", ignore = true)
     @Mapping(target = "campsiteLocation", ignore = true)
     @Mapping(target = "campsiteLikeList", ignore = true)
+    @Mapping(target = "campsiteImageList", ignore = true)
     @Mapping(target = "roomList", ignore = true)
     @Mapping(target = "like", ignore = true)
     @Mapping(target = "available", ignore = true)
