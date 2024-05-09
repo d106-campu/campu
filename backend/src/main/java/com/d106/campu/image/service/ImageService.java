@@ -2,7 +2,6 @@ package com.d106.campu.image.service;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
-import com.d106.campu.campsite.repository.jpa.CampsiteImageRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.NotFoundException;
@@ -11,6 +10,7 @@ import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.image.constant.ImageConstant;
 import com.d106.campu.image.exception.code.ImageExceptionCode;
 import com.d106.campu.image.mapper.ImageMapper;
+import com.d106.campu.image.repository.ImageRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -37,7 +37,7 @@ public class ImageService {
 
     private final UserRepository userRepository;
     private final CampsiteRepository campsiteRepository;
-    private final CampsiteImageRepository campsiteImageRepository;
+    private final ImageRepository imageRepository;
     private final ImageMapper imageMapper;
     private final SecurityHelper securityHelper;
 
@@ -103,8 +103,7 @@ public class ImageService {
             throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
         }
 
-        campsiteImageRepository.deleteAllByCampsite_Id(campsite.getId());
-        campsiteImageRepository.flush();
+        imageRepository.deleteAllByCampsite_Id(campsite.getId());
 
         Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
         createAndCleanDirectory(basePath);

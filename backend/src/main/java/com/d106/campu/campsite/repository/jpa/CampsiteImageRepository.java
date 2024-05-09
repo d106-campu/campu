@@ -5,6 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CampsiteImageRepository extends JpaRepository<CampsiteImage, Long> {
 
-    void deleteAllByCampsite_Id(Long campsiteId);
-
 }
