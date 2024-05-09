@@ -4,8 +4,9 @@ import {
   removeLike,
   setLoading,
 } from "@/features/like/campsiteLikeSlice";
-import { APISimpleResponse, ILikeRes } from "@/types/model";
+import { APIResponse } from "@/types/model";
 import { postLikes } from "@/services/reservation/api";
+import { ILikeRes } from "@/types/reservation";
 
 // Saga에서 사용하는 액션에 대한 타입 정의
 interface ILikeAction {
@@ -16,7 +17,7 @@ interface ILikeAction {
 function* handleToggleLike(action: ILikeAction) {
   try {
     yield put(setLoading(true)); // 로딩 시작
-    const response: APISimpleResponse<ILikeRes> = yield call(
+    const response: APIResponse<ILikeRes> = yield call(
       postLikes, // 실제 API 호출
       action.payload
     );
