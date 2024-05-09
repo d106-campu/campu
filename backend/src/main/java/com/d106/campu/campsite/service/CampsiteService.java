@@ -2,17 +2,23 @@ package com.d106.campu.campsite.service;
 
 import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
-import com.d106.campu.campsite.constant.GetCampsiteListEnum.Induty;
-import com.d106.campu.campsite.constant.GetCampsiteListEnum.Theme;
+import com.d106.campu.campsite.constant.CampsiteConstant;
+import com.d106.campu.campsite.constant.IndutyEnum;
+import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
+import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.common.constant.DoNmEnum;
+import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.common.response.Response;
+import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
@@ -20,10 +26,17 @@ import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.awt.geom.Point2D;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,60 +56,108 @@ public class CampsiteService {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
 
+    private final SecurityHelper securityHelper;
+
     /**
      * @param doNm      To limit location.
      * @param sigunguNm To limit location.
      * @param startDate To check reservation availability.
      * @param endDate   To check reservation availability.
      * @param headCnt   To filter available room.
-     * @param induty    For campsites that has specific industry type.
-     * @param theme     For campsites that has specific theme.
-     * @param owner     For campsites that the current user manages.
+     * @param induty    For campsites that has specific industry type. See {@link IndutyEnum}.
+     * @param theme     For campsites that has specific theme. See {@link ThemeEnum}.
      * @param pageable
      * @return List of campsite.
      * @throws NotFoundException     If not login status.
      * @throws UnauthorizedException Only when `owner=true` option, if user does not have {@link RoleName#OWNER} role.
-     * @see Induty
-     * @see Theme
      */
     @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getCampsiteList(
-        String doNm,
-        String sigunguNm,
+    public Response getCampsiteListResponse(
+        DoNmEnum doNm,
+        SigunguEnum sigunguNm,
         LocalDate startDate,
         LocalDate endDate,
         int headCnt,
-        String induty,
-        String theme,
-        boolean owner,
+        IndutyEnum induty,
+        ThemeEnum theme,
         Pageable pageable
     ) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(2L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
+
+        String doNmStr = (doNm == null) ? null : doNm.getName();
+        String sigunguNmStr = (sigunguNm == null) ? null : sigunguNm.getName();
 
         Page<Campsite> responsePage = null;
-        if (owner) {
-            checkUserRoleOwner(user);
-            responsePage = campsiteRepository.findByUser(pageable, user);
-        } else if (induty == null && theme == null) {
-            responsePage = campsiteRepository.findAll(pageable, doNm, sigunguNm);
-        } else if (induty != null && !induty.isBlank()) {
-            responsePage = campsiteRepository.findByIndutyListContaining(
-                pageable, doNm, sigunguNm, Induty.of(induty).getValue());
-        } else if (theme != null && !theme.isBlank()) {
-            responsePage = campsiteRepository.findByCampsiteThemeList_Theme_Theme(
-                pageable, doNm, sigunguNm, Theme.of(theme).getValue());
+        if (induty == null && theme == null) {
+            responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr);
+        } else if (induty != null) {
+            responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName());
+        } else if (theme != null) {
+            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName());
         }
 
-        return (responsePage == null) ? null : responsePage.map((campsite) -> {
+        if (responsePage == null) {
+            return null;
+        }
+
+        // TODO: Time-consuming tasks. Need to optimise.
+        List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
             // available at least one room can be reserved on the date range
             campsite.setAvailable(campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt))
                 .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
             // Did I like this campsite
             campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
-            return campsiteMapper.toCampsiteListResponseDto(campsite);
-        });
+            return campsite;
+        }).toList());
+
+        if (induty != null || theme != null) {
+            Collections.shuffle(responseList);
+            return new Response(CampsiteConstant.CAMPSITE_LIST, responseListToPage(pageable, responseList));
+        } else {
+            CampsiteLocation center = getCenterOfCampsites(responseList);
+            responseList.sort(Comparator.comparingDouble(
+                    c -> Point2D.distance(
+                        center.getMapX(), center.getMapY(),
+                        c.getCampsiteLocation().getMapX(), c.getCampsiteLocation().getMapY()
+                    )
+                )
+            );
+
+            Response response = new Response(CampsiteConstant.CAMPSITE_LIST, responseListToPage(pageable, responseList));
+            response.setDataIntoResponse(CampsiteConstant.MAP_COORDINATES, new HashMap<>() {{
+                put("center", center);
+            }});
+            return response;
+        }
+    }
+
+    private Page<CampsiteDto.Response> responseListToPage(Pageable pageable, List<Campsite> responseList) {
+        return new PageImpl<>(responseList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()),
+            responseList.size()).map(campsiteMapper::toCampsiteListResponseDto);
+    }
+
+    /**
+     * Get center coordination from the list of campsites.
+     *
+     * @param campsiteList List of campsites.
+     * @return Coordination instance that includes
+     */
+    public CampsiteLocation getCenterOfCampsites(List<Campsite> campsiteList) {
+        double xAvg = 0, yAvg = 0;
+
+        for (Campsite campsite : campsiteList) {
+            xAvg += campsite.getCampsiteLocation().getMapX();
+            yAvg += campsite.getCampsiteLocation().getMapY();
+        }
+
+        return CampsiteLocation.builder().mapX(xAvg / campsiteList.size()).mapY(yAvg / campsiteList.size()).build();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CampsiteDto.Response> getOwnerCampsiteList(Pageable pageable) {
+        User user = getUserByAccount();
+        checkUserRoleOwner(user);
+        return campsiteRepository.findByUser(pageable, user).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
     /**
@@ -109,11 +170,7 @@ public class CampsiteService {
      */
     @Transactional
     public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
-        /* TODO: Replace this with login user (using securityHelper)
-        User user = userRepository.findByAccount(securityHelper.getLoginUserAccount())
-            .orElseThrow(() -> new NotFoundException());*/
-        User user = userRepository.findById(2L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
         checkUserRoleOwner(user);
 
         Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
@@ -133,9 +190,7 @@ public class CampsiteService {
      */
     @Transactional
     public CampsiteDto.LikeResponse likeCampsite(long campsiteId) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(1L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
@@ -169,6 +224,11 @@ public class CampsiteService {
         if (!user.getRole().equals(RoleName.OWNER)) {
             throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
         }
+    }
+
+    private User getUserByAccount() {
+        return userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
     }
 
 }

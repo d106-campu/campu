@@ -322,3 +322,18 @@ CREATE TABLE `notification` (
   KEY `notification_user_FK` (`user_id`),
   CONSTRAINT `notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='알림';
+
+CREATE TABLE `empty_notification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
+  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+  `room_id` bigint(20) NOT NULL COMMENT '방 식별번호',
+  `start_date` date DEFAULT NULL COMMENT '숙박 시작날짜',
+  `end_date` date DEFAULT NULL COMMENT '숙박 종료날짜',
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
+  PRIMARY KEY (`id`),
+  KEY `empty_notification_user_FK` (`user_id`),
+  KEY `empty_notification_room_FK` (`room_id`),
+  CONSTRAINT `empty_notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `empty_notification_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='빈자리 알림';
