@@ -1,6 +1,7 @@
 import Button from "@/components/@common/Button/Button";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import { setReservationData } from "@/features/reservation/ReservationSlice";
 import { scrollToTop } from "@/utils/scrollToTop";
 
@@ -34,12 +35,13 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     checkOut: "11:00", // 캠핑장 퇴실 시간
     mapX: 36.1334375, // 위도
     mapY: 128.3710625, //경도
+    rating: 3, // 별점
   };
 
-  //  @TODO: 시작일과 종료일 및 인원수 리덕스로 상태 가져오기
-  const startDate = "2024-05-10"; // 캠핑 시작일
-  const endDate = "2024-05-14"; // 캠핑 종료일
-  const headCnt = 3; // 예약 인원
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.campingDate
+  );
+  const { headCount } = useSelector((state: RootState) => state.headCount);
 
   const makeReservation = () => {
     // 예약 정보 업데이트
@@ -50,16 +52,20 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
       campsite_tel: campsite.tel, // 캠핑장 전화번호
       campsite_addr1: campsite.addr1, // 캠핑장 주소
       campsite_addr2: campsite.addr2, // 캠핑장 상세 주소
+      mapX: campsite.mapX, // 위도
+      mapY: campsite.mapY, // 경도
+      rating: campsite.rating, // 별점
       roomName: room.name, // 캠핑장 방 이름
       roomInduty: room.induty, // 캠핑 유형
       supplyList: room.supplyList,
-      headCnt: headCnt, // 예약 인원
+      headCnt: headCount, // 예약 인원
       price: room.price, // 총 가격
       startDate: startDate, // 캠핑 시작일
       endDate: endDate, // 캠핑 종료일
       checkIn: campsite.checkIn, // 캠핑장 입실 시간
       checkOut: campsite.checkOut, // 캠핑장 퇴실 시간
     };
+
     dispatch(setReservationData(newReservationData));
     navigate(`/camps/${room.campsiteId}/payment`);
     scrollToTop();

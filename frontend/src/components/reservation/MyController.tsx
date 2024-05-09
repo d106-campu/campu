@@ -78,7 +78,7 @@ const MyController = () => {
         </div>
         <div className="border-l-2 border-[#C9C9C9] mx-2" />
         <div
-          onClick={() => toggleHeadCountModal()}
+          onClick={toggleHeadCountModal}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
         >
           인원 {headCount}명
