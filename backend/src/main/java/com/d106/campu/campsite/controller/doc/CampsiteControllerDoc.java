@@ -29,7 +29,7 @@ public interface CampsiteControllerDoc {
         @ApiResponse(responseCode = "200", description = "캠핑장 목록 조회 성공",
             content = @Content(schemaProperties = {
                 @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
-                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteListResponse.class)),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteDto.CampsiteListResponse.class)),
             })
         ),
         @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
@@ -80,10 +80,6 @@ public interface CampsiteControllerDoc {
         @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
     })
     Response getCampsiteRoomList(Pageable pageable, long campsiteId);
-
-    class CampsiteListResponse {
-        public Page<CampsiteDto.Response> campsiteList;
-    }
 
     class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;
