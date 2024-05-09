@@ -18,6 +18,7 @@ import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
@@ -55,6 +56,8 @@ public class CampsiteService {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
 
+    private final SecurityHelper securityHelper;
+
     /**
      * @param doNm      To limit location.
      * @param sigunguNm To limit location.
@@ -83,9 +86,7 @@ public class CampsiteService {
         boolean owner,
         Pageable pageable
     ) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(2L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         String doNmStr = (doNm == null) ? null : doNm.getName();
         String sigunguNmStr = (sigunguNm == null) ? null : sigunguNm.getName();
@@ -179,11 +180,7 @@ public class CampsiteService {
      */
     @Transactional
     public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
-        /* TODO: Replace this with login user (using securityHelper)
-        User user = userRepository.findByAccount(securityHelper.getLoginUserAccount())
-            .orElseThrow(() -> new NotFoundException());*/
-        User user = userRepository.findById(2L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
         checkUserRoleOwner(user);
 
         Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
@@ -203,9 +200,7 @@ public class CampsiteService {
      */
     @Transactional
     public CampsiteDto.LikeResponse likeCampsite(long campsiteId) {
-        /* TODO: Replace this with login user (using securityHelper) */
-        User user = userRepository.findById(1L)
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        User user = getUserByAccount();
 
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
@@ -239,6 +234,11 @@ public class CampsiteService {
         if (!user.getRole().equals(RoleName.OWNER)) {
             throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
         }
+    }
+
+    private User getUserByAccount() {
+        return userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
     }
 
 }
