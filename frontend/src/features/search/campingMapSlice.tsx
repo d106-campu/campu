@@ -1,23 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ICampingGround } from "@/types/search";
+import { ICampsiteSimpleRes } from "@/types/search";
 
-interface CampingState {
-  campingData: ICampingGround[];
+interface CampingMapState {
+  campsiteData: ICampsiteSimpleRes[] | null;
 }
 
-const initialState: CampingState = {
-  campingData: [],
+const initialState: CampingMapState = {
+  campsiteData: null,
 };
 
 const campingMapSlice = createSlice({
   name: "campingMap",
   initialState,
   reducers: {
-    addCampingData(state, action: PayloadAction<ICampingGround[]>) {
-      state.campingData = action.payload;
+    addCampingData(state, action: PayloadAction<ICampsiteSimpleRes[]>) {
+      state.campsiteData = action.payload;
+    },
+    clearCampingData(state) {
+      state.campsiteData = null;
     },
   },
 });
 
-export const { addCampingData } = campingMapSlice.actions;
+export const { addCampingData, clearCampingData } = campingMapSlice.actions;
 export const campingMapReducer = campingMapSlice.reducer;
