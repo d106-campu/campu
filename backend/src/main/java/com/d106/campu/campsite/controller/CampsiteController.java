@@ -8,7 +8,13 @@ import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.service.CampsiteService;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
+import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.common.security.JwtManager;
+import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.exception.code.UserExceptionCode;
+import com.d106.campu.user.repository.jpa.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CampsiteController implements CampsiteControllerDoc {
 
+    private final UserRepository userRepository;
+
     private final CampsiteService campsiteService;
+
+    private final JwtManager jwtManager;
 
     @Override
     @GetMapping
@@ -37,9 +47,16 @@ public class CampsiteController implements CampsiteControllerDoc {
         int headCnt,
         @RequestParam(required = false) IndutyEnum induty,
         @RequestParam(required = false) ThemeEnum theme,
-        Pageable pageable
+        Pageable pageable,
+        HttpServletRequest request
     ) {
-        return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, pageable);
+        User user = null;
+        if (request.getHeader("Authorization") != null) {
+            user = userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
+                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        }
+        return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, pageable,
+            user);
     }
 
     @Override
