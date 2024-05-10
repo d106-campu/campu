@@ -1,15 +1,43 @@
 import MyCampingItem from "@/components/home/myCamping/MyCampingItem";
 import dummyImage from "@/assets/images/dummyCamping.png";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 const MyCamping = () => {
   const navigate = useNavigate();
+
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+
   const goToMy = () => {
     navigate("/my");
   };
 
+  const goToLogin = () => {
+    navigate("/login");
+  };
+
   // @TODO: 추후 보여줄 개수 수정해야함
   const firstTwoCampingList = myCampingdummyList.slice(0, 5);
+
+  if (!isLogin) {
+    return (
+      <div className="h-auto pt-8 pb-4 w-[70%]">
+        <p className="font-extrabold text-xl pt-6">내가 찜한 캠핑장</p>
+        <div className="pt-4">
+          <div className="border rounded-md h-40 flex flex-col items-center justify-center">
+            <p className="pb-4">로그인이 필요한 서비스 입니다 😊</p>
+            <p
+              className="text-white text-sm px-4 py-2 rounded-full bg-MAIN_GREEN cursor-pointer"
+              onClick={goToLogin}
+            >
+              로그인하기
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
