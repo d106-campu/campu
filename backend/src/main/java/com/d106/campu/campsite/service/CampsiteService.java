@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +43,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CampsiteService {
@@ -103,11 +105,20 @@ public class CampsiteService {
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
+            List<Room> roomList = campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt)).toList();
+
             // available at least one room can be reserved on the date range
-            campsite.setAvailable(campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt))
-                .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
+            campsite.setAvailable(
+                roomList.stream()
+                    .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
+
+            // Cheapest room price of this campsite
+            campsite.setPrice(roomList.isEmpty() ? null
+                : roomList.stream().min(Comparator.comparingInt(room -> room.getPrice())).get().getPrice());
+
             // Did I like this campsite
             campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+
             return campsite;
         }).toList());
 

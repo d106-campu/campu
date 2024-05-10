@@ -121,6 +121,10 @@ public class Campsite extends BaseTime {
     @Setter
     private boolean available;
 
+    @Transient
+    @Setter
+    private Integer price;
+
     public void addCampsiteImage(CampsiteImage campsiteImage) {
         this.campsiteImageList.add(campsiteImage);
         campsiteImage.setCampsite(this);
