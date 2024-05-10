@@ -41,8 +41,8 @@ export interface IPageableSimpleReq {
 
 // 캠핑장 조회 Request
 export interface ICampsiteReq {
-  doNm: string | null;
-  sigunguNm: string | null;
+  doNm?: string | null;
+  sigunguNm?: string | null;
   startDate: string;
   endDate: string;
   headCnt: number;

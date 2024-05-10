@@ -1,4 +1,4 @@
-import MyCampingItem from "@/components/home/myCamping/MyCampingItem";
+// import MyCampingItem from "@/components/home/myCamping/MyCampingItem";
 import dummyImage from "@/assets/images/dummyCamping.png";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ const MyCamping = () => {
     navigate("/login");
   };
 
+  // @TODO: API 연동 필요 ( 더미데이터는 주석, 삭제 처리하였음 )
   // @TODO: 추후 보여줄 개수 수정해야함
   const firstTwoCampingList = myCampingdummyList.slice(0, 5);
 
@@ -56,9 +57,9 @@ const MyCamping = () => {
         {firstTwoCampingList.length > 0 ? (
           <div className="flex justify-center">
             <div className="flex flex-wrap w-full">
-              {firstTwoCampingList.map((camping) => (
+              {/* {firstTwoCampingList.map((camping) => (
                 <MyCampingItem key={camping.id} camping={camping} />
-              ))}
+              ))} */}
             </div>
           </div>
         ) : (
