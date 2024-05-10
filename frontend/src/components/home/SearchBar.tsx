@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "@/app/store";
 import { formatSimpleDate } from "@/utils/formatDateTime";
 
-const SearchBar = () => {
+const SearchBar = ({ state }: { state?: string }) => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [showCalendar, setShowCalendar] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -114,12 +114,14 @@ const SearchBar = () => {
           ></input>
         </div>
         {/* 검색버튼 */}
-        <button
-          onClick={goToSearchPage}
-          className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap"
-        >
-          검색하기
-        </button>
+        {state === "main" && (
+          <button
+            onClick={goToSearchPage}
+            className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap"
+          >
+            검색하기
+          </button>
+        )}
       </div>
     </>
   );
