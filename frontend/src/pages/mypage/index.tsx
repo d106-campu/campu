@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import Header from "@/components/@common/Header/Header";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 // import Footer from "@/components/@common/Footer/Footer";
 import MySideBar from "@/components/my/MySideBar";
@@ -9,18 +9,18 @@ import { RootState } from '@/app/store';
 
 const MyPage = (): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const selectedComponent = useSelector((state: RootState) => state.selectedComp.value);
 
-  // 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
+  // "로그인" 상태가 아니라면 리다이렉트 전 "경로 저장" 후 로그인 페이지로 이동
   useEffect(() => {
     if (!isLogin) {
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
     }
-  }, [isLogin, navigate]);
+  }, [isLogin, navigate, location]);
 
   return (
-    
     <div className='w-screen'>
       <Header />
       <div className="w-screen h-[calc(100vh-4rem)] flex items-center justify-center">
@@ -34,8 +34,6 @@ const MyPage = (): JSX.Element => {
         </div>
       </div>
     </div>
-
-
   )
 };
 
