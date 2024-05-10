@@ -12,7 +12,7 @@
   width: 200px;
   padding: 5px 10px !important;
   min-height: 45px !important;
-  height: 45px;
+  height: auto;
   font-size: 12.5px;
   font-family: 'Pretendard-Regular';
   z-index: 1000;
@@ -31,4 +31,7 @@
 
 .Toastify__toast--error {
   background-color: rgb(255, 114, 114) !important;
+  width: 280px;
+  color: white !important;
+  font-weight: bold;
 }
