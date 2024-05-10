@@ -1,15 +1,22 @@
 import { RootState } from "@/app/store";
-// import KakaoMap from "@/components/@common/Map/KakaoMap";
+import KakaoMap from "@/components/@common/Map/KakaoMap";
 import SearchSection from "@/components/search/searchSection/SearchSection";
 import { useSelector } from "react-redux";
 
 const SearchContainer = () => {
-  // 스토어에 저장된 캠핑장 목록 불러옴
   const locations = useSelector(
     (state: RootState) => state.campingMap.campsiteData
   );
 
   console.log(locations);
+
+  const mapLocations = locations?.map((campsite) => ({
+    facltNm: campsite.facltNm,
+    // @TODO: 백엔드 별점 추가되면 수정해야함
+    rate: campsite.id,
+    lat: campsite.campsiteLocation?.mapY || null,
+    lng: campsite.campsiteLocation?.mapX || null,
+  }));
 
   return (
     <>
@@ -20,7 +27,7 @@ const SearchContainer = () => {
           </div>
         </div>
         <div className="h-[calc(100vh-3rem)] w-[60%]">
-          {/* <KakaoMap locations={locations} /> */}
+          <KakaoMap locations={mapLocations!} />
         </div>
       </div>
     </>
