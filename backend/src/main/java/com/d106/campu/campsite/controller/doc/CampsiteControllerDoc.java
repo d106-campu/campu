@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import org.springframework.data.domain.Page;
@@ -43,7 +44,8 @@ public interface CampsiteControllerDoc {
         int headCnt,
         IndutyEnum induty,
         ThemeEnum theme,
-        Pageable pageable
+        Pageable pageable,
+        HttpServletRequest request
     );
 
     @Operation(summary = "사장님 캠핑장 목록 조회", description = "사장님이 관리하는 캠핑장 목록을 조회하는 API를 호출한다.")
