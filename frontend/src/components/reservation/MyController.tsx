@@ -5,7 +5,7 @@ import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import CalendarSubmit from "@/components/@common/Calendar/CalendarSubmit";
-import { formatSimpleDate } from "@/utils/formatDateTime";
+import { formatSimpleDate, dateStringToDate, dateToDateString } from "@/utils/formatDateTime";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
@@ -15,7 +15,6 @@ import {
   setStartDate,
   setEndDate,
 } from "@/features/reservation/campingDateSlice";
-import { parseISO, format } from "date-fns";
 
 const MyController = () => {
   // 모달 상태관리
@@ -31,8 +30,8 @@ const MyController = () => {
   const { headCount } = useSelector((state: RootState) => state.headCount);
 
   // 스토어에서 가져온 문자열 날짜를 Date 객체로 변환
-  const initialStartDate = startDate ? parseISO(startDate) : null;
-  const initialEndDate = endDate ? parseISO(endDate) : null;
+  const initialStartDate = dateStringToDate(startDate);
+  const initialEndDate = dateStringToDate(endDate);
 
   // 달력에서 선택한 일정
   const [localStartDate, setLocalStartDate] = useState<Date | null>(
@@ -43,12 +42,8 @@ const MyController = () => {
   // 일정 스토어에 저장
   const calendarSubmit = () => {
     // Date 객체를 'yyyy-MM-dd' 형식의 문자열로 변환
-    const formattedStartDate = localStartDate
-      ? format(localStartDate, "yyyy-MM-dd")
-      : null;
-    const formattedEndDate = localEndDate
-      ? format(localEndDate, "yyyy-MM-dd")
-      : null;
+    const formattedStartDate = dateToDateString(localStartDate);
+    const formattedEndDate = dateToDateString(localEndDate);
 
     // 변환된 문자열을 Redux 스토어에 저장
     dispatch(setStartDate(formattedStartDate));
@@ -75,8 +70,11 @@ const MyController = () => {
   };
 
   useEffect(() => {
+    // 확인용 로직
     console.log("시작일", localStartDate);
     console.log("종료일", localEndDate);
+    console.log("스토어 시작일", startDate);
+    console.log("스토어 종료일", endDate);
     console.log("인원수", localHeadCount);
   }, [localStartDate, localEndDate, localHeadCount]);
 
