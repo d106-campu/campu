@@ -8,9 +8,12 @@ const MyCamping = () => {
   return (
     <>
       <div className="h-auto py-8 w-[70%]">
-        <p className="font-extrabold text-xl pt-6">내가 찜한 캠핑장</p>
-        <div className="flex">
-          <div className="flex justify-center">
+        <div className="flex items-baseline justify-between">
+          <p className="font-extrabold text-xl pt-6">내가 찜한 캠핑장</p>
+          <p className="text-sm text-gray-500 px-4 cursor-pointer">더보기</p>
+        </div>
+        <div className="flex justify-center">
+          <div className="flex flex-wrap w-full">
             {firstTwoCampingList.map((camping) => (
               <MyCampingItem key={camping.id} camping={camping} />
             ))}
