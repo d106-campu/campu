@@ -13,7 +13,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,8 +23,8 @@ import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -98,10 +98,14 @@ public class QCampsiteRepository {
 
         Collections.shuffle(responseList);
 
-        long totalCnt = Objects.requireNonNull(jpaQueryFactory.select(Expressions.ONE)
-            .from(campsite)).fetchOne().longValue();
+        JPAQuery<Long> countQuery = jpaQueryFactory
+            .select(campsite.count())
+            .from(campsite)
+            .innerJoin(campsiteTheme).on(campsiteTheme.campsite.eq(campsite))
+            .innerJoin(theme).on(campsiteTheme.theme.eq(theme))
+            .where(predicates);
 
-        return new PageImpl<>(responseList, pageable, totalCnt);
+        return PageableExecutionUtils.getPage(responseList, pageable, countQuery::fetchOne);
     }
 
 }
