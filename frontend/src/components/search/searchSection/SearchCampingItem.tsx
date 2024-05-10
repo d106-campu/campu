@@ -1,8 +1,8 @@
-import { ICampingGround } from "@/types/search";
+import { ICampsiteSimpleRes } from "@/types/search";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 
-const SearchCampingItem = ({ camping }: { camping: ICampingGround }) => {
+const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
   const isAvailable = camping.available;
 
   return (
@@ -26,7 +26,7 @@ const SearchCampingItem = ({ camping }: { camping: ICampingGround }) => {
           <p className="text-xl font-semibold">{camping.facltNm}</p>
           <div className="flex items-center">
             <FaStar className="text-yellow-500 ml-2 mr-1" />
-            <p>{camping.rate}</p>
+            <p>4.5</p>
           </div>
         </div>
         <div>

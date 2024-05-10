@@ -4,7 +4,7 @@ import { MdOutlinePersonOutline } from "react-icons/md";
 import { LuSearch } from "react-icons/lu";
 import SearchRegion from "@/components/@common/Search/SearchRegion";
 import { RegionList } from "@/components/@common/Search/RegionList";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import Calendar from "@/components/@common/Calendar/Calendar";
@@ -24,12 +24,6 @@ const SearchBar = () => {
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
-
-  // 스토어 저장 확인용
-  // @TODO: API 호출 후, 스토어 비우는 로직 추가해야함
-  useEffect(() => {
-    console.log(searchBarState);
-  }, [searchBarState]);
 
   // 인원 증감 함수
   const handleDecrease = () => {

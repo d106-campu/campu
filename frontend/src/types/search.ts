@@ -1,4 +1,3 @@
-
 export interface IMapInfo {
   mapX: number;
   mapY: number;
@@ -12,7 +11,7 @@ export interface IMapCoordinates {
 export interface ICampsiteSimpleRes {
   id: number;
   facltNm: string;
-  lineIntro: string;
+  lineIntro: string | null;
   doNm: string;
   sigunguNm: string;
   addr1: string;
@@ -21,6 +20,7 @@ export interface ICampsiteSimpleRes {
   campsiteLocation: IMapInfo;
   like: boolean;
   available: boolean;
+  price: number;
 }
 
 export interface ICampsiteListRes {
@@ -40,8 +40,8 @@ export interface IPageableSimpleReq {
 
 // 캠핑장 조회 Request
 export interface ICampsiteReq {
-  doNm?: string;
-  sigunguNm?: string;
+  doNm: string | null;
+  sigunguNm: string | null;
   startDate: string;
   endDate: string;
   headCnt: number;

@@ -4,7 +4,7 @@ import Lottie from "react-lottie";
 const SearchNoResult = () => {
   return (
     <>
-      <div className="text-center text-sm text-MAIN_GREEN pt-24">
+      <div className="text-center text-sm text-MAIN_GREEN pt-20">
         <Lottie
           options={noResultOptions}
           height={120}
