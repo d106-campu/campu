@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store";
 import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
-import { formatSimpleDate } from "@/utils/formatDateTime";
+import Calendar from "@/components/@common/Calendar/Calendar";
+import CalendarSubmit from "@/components/@common/Calendar/CalendarSubmit";
+import {
+  formatSimpleDate,
+  dateStringToDate,
+  dateToDateString,
+} from "@/utils/formatDateTime";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { diffDays } from "@/utils/diffDays";
-import Calendar from "@/components/@common/Calendar/Calendar";
-import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/app/store";
 import { setHeadCount } from "@/features/reservation/HeadCountSlice";
 import {
   setStartDate,
@@ -17,52 +21,71 @@ import {
 } from "@/features/reservation/campingDateSlice";
 
 const MyController = () => {
+  // 모달 상태관리
+  const [scheduleModal, setScheduleModal] = useState<boolean>(false);
+  const [headCountModal, setHeadCountModal] = useState<boolean>(false);
+  const toggleScheduleModal = () => setScheduleModal(!scheduleModal);
+  const toggleHeadCountModal = () => setHeadCountModal(!headCountModal);
+
   const dispatch = useDispatch();
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
   const { headCount } = useSelector((state: RootState) => state.headCount);
 
-  const [localHeadCount, setLocalHeadCount] = useState<number>(headCount); // 인원수
+  // 스토어에서 가져온 문자열 날짜를 Date 객체로 변환
+  const initialStartDate = dateStringToDate(startDate);
+  const initialEndDate = dateStringToDate(endDate);
 
-  const [scheduleModal, setScheduleModal] = useState<boolean>(false); // 일정 모달 상태관리
-  const [headCountModal, setHeadCountModal] = useState<boolean>(false); // 인원수 모달 상태관리
+  // 달력에서 선택한 일정
+  const [localStartDate, setLocalStartDate] = useState<Date | null>(
+    initialStartDate
+  );
+  const [localEndDate, setLocalEndDate] = useState<Date | null>(initialEndDate);
 
-  const [initialStartDate, setInitialStartDate] = useState<Date | null>(
-    startDate
-  ); // 시작일 초기값
-  const [initialEndDate, setInitialEndDate] = useState<Date | null>(endDate); // 종료일 초기값
-  const initialHeadCount: number = headCount; // 인원수 초기값
+  // 일정 스토어에 저장
+  const calendarSubmit = () => {
+    // Date 객체를 'yyyy-MM-dd' 형식의 문자열로 변환
+    const formattedStartDate = dateToDateString(localStartDate);
+    const formattedEndDate = dateToDateString(localEndDate);
 
-  const toggleScheduleModal = () => setScheduleModal(!scheduleModal);
-  const toggleHeadCountModal = () => setHeadCountModal(!headCountModal);
+    // 변환된 문자열을 Redux 스토어에 저장
+    dispatch(setStartDate(formattedStartDate));
+    dispatch(setEndDate(formattedEndDate));
 
+    // @TODO: 백에 방 조회 API 요청 다시 보내기
+  };
+
+  // 인원수
+  const [localHeadCount, setLocalHeadCount] = useState<number>(headCount);
+
+  // 인원수 초기값
+  const initialHeadCount: number = headCount;
+
+  // 인원수 증감 함수
   const increasePeople = () => setLocalHeadCount(localHeadCount + 1);
   const decreasePeople = () =>
     localHeadCount > 1 && setLocalHeadCount(localHeadCount - 1);
 
-  useEffect(() => {
-    setInitialStartDate(startDate);
-    setInitialEndDate(endDate);
-  }, []);
-
+  // 인원수 스토어에 저장
   const headCountSubmit = () => {
     dispatch(setHeadCount(localHeadCount));
     // @TODO: 백에 방 조회 API 요청 다시 보내기
   };
 
-  const calendarSubmit = () => {
-    setInitialStartDate(startDate);
-    setInitialEndDate(endDate);
-    // @TODO: 백에 방 조회 API 요청 다시 보내기
-  };
+  useEffect(() => {
+    // 확인용 로직
+    console.log("시작일", localStartDate);
+    console.log("종료일", localEndDate);
+    console.log("스토어 시작일", startDate);
+    console.log("스토어 종료일", endDate);
+    console.log("인원수", localHeadCount);
+  }, [localStartDate, localEndDate, localHeadCount]);
 
   // 일정 초기화
   const resetCalendar = () => {
-    if (initialStartDate && initialEndDate) {
-      dispatch(setStartDate(initialStartDate));
-      dispatch(setEndDate(initialEndDate));
-    }
+    setLocalStartDate(dateStringToDate(startDate));
+    setLocalEndDate(dateStringToDate(endDate));
   };
 
   return (
@@ -72,9 +95,15 @@ const MyController = () => {
           onClick={() => toggleScheduleModal()}
           className="flex-1 my-auto py-3 rounded-xl cursor-pointer hover:bg-SUB_GREEN_01"
         >
-          {formatSimpleDate(initialStartDate)} -{" "}
-          {formatSimpleDate(initialEndDate)} ·&nbsp;
-          {diffDays(initialStartDate, initialEndDate)}박
+          {!initialStartDate || !initialEndDate ? (
+            <>날짜를 선택해주세요</>
+          ) : (
+            <>
+              {formatSimpleDate(initialStartDate)} -{" "}
+              {formatSimpleDate(initialEndDate)} ·&nbsp;
+              {diffDays(initialStartDate, initialEndDate)}박
+            </>
+          )}
         </div>
         <div className="border-l-2 border-[#C9C9C9] mx-2" />
         <div
@@ -90,7 +119,12 @@ const MyController = () => {
         <Modal width="w-[55%]" onClose={toggleScheduleModal} title="일정 선택">
           <div>
             <div className="w-[70%] h-[375px] mx-auto">
-              <Calendar />
+              <Calendar
+                startDate={localStartDate}
+                endDate={localEndDate}
+                setStartDate={setLocalStartDate}
+                setEndDate={setLocalEndDate}
+              />
             </div>
             <button
               onClick={resetCalendar}
@@ -100,6 +134,8 @@ const MyController = () => {
               <span className="text-GRAY">일정 초기화</span>
             </button>
             <CalendarSubmit
+              startDate={localStartDate}
+              endDate={localEndDate}
               onClick={() => {
                 calendarSubmit();
                 toggleScheduleModal();
