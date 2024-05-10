@@ -21,6 +21,7 @@ export interface ICampsiteSimpleRes {
   like: boolean;
   available: boolean;
   price: number;
+  score: number;
 }
 
 export interface ICampsiteListRes {

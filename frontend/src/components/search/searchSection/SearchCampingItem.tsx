@@ -22,11 +22,11 @@ const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
         )}
       </div>
       <div className="pl-4 w-[60%]">
-        <div className="flex py-1">
+        <div className="flex py-1 justify-between">
           <p className="text-xl font-semibold">{camping.facltNm}</p>
-          <div className="flex items-center">
+          <div className="flex items-center pr-6">
             <FaStar className="text-yellow-500 ml-2 mr-1" />
-            <p>4.5</p>
+            <p>{camping.score.toFixed(1)}</p>
           </div>
         </div>
         <div>
