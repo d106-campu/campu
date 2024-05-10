@@ -20,6 +20,7 @@ public enum AuthExceptionCode implements ExceptionCode {
     CONFLICT_ACCOUNT("AUTH401", "Tel already exists"),
     CONFLICT_NICKNAME("AUTH402", "Tel already exists"),
     CONFLICT_TEL("AUTH403", "Tel already exists"),
+    CONFLICT_PASSWORD("AUTH404", "Not match password and password check"),
 
     /* Too Many Request Exception */
     TOO_MANY_REQUEST_TEL_SEND("AUTH501", "Limits for tel authorization sending");
