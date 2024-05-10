@@ -28,13 +28,13 @@ const SearchBar = ({ state }: { state?: string }) => {
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
-      dispatch(setPeople(numberOfPeople));
+      dispatch(setPeople(numberOfPeople - 1));
     }
   };
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
-      dispatch(setPeople(numberOfPeople));
+      dispatch(setPeople(numberOfPeople + 1));
     }
   };
 
@@ -90,7 +90,7 @@ const SearchBar = ({ state }: { state?: string }) => {
                 onClick={handleDecrease}
                 className="text-MAIN_GREEN cursor-pointer"
               />
-              <p className="px-3">{numberOfPeople}</p>
+              <p className="px-3">{searchBarState.numberOfPeople}</p>
               <AiOutlinePlusCircle
                 onClick={handleIncrease}
                 className="text-MAIN_GREEN cursor-pointer"

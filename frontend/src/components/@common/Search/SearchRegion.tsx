@@ -69,7 +69,7 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
         )}
       </div>
       {/* 시군구 선택 */}
-      {searchBarState.region && (
+      {searchBarState.region && selectRegion && (
         <div>
           <button
             type="button"
