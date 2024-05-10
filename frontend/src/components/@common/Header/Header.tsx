@@ -74,30 +74,35 @@ const Header = ({ page }: { page?: string }) => {
         {/* @TODO: SSE 알림 여부 구분*/}
         <AlertLink hasAlert={true} page={page}/>
       </div>
-      <div className="p-1 pl-2 flex items-center cursor-pointer">
+      <div className="p-1 pl-2 flex items-center">
         {isLogin ? (
+          <>
             <span
-              className={`text-sm p-2 cursor-pointer rounded-md mr-5 hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN ${
-                page === "login" ? "hover:bg-white/10 hover:text-white/70" : "hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
-              }`}
+              className="text-sm p-2 cursor-pointer rounded-md mr-5 hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
               onClick={handleLogout}>
               로그아웃
             </span>
-          ) : (
+            <img
+              src={profileImage || profileDefaultImage}
+              alt="profile"
+              className="w-8 h-8 rounded-full cursor-pointer"
+            />
+          </>
+        ) : (
+          <>
             <span
-              className={`text-sm p-2 cursor-pointer rounded-md mr-5 hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN ${
-                page === "login" ? "hover:bg-white/10 hover:text-white/70" : "hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
-              }`}
+              className="text-sm p-2 cursor-pointer rounded-md mr-5 hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
               onClick={handleLoginRedirect}
             >
               로그인
             </span>
-          )}
-        <img
-          src={profileImage || profileDefaultImage}
-          alt="default profile"
-          className="w-8 h-8 rounded-full cursor-pointer"
-        />
+            <img
+              src={profileDefaultImage}
+              alt="default profile"
+              className="w-8 h-8 rounded-full cursor-pointer"
+            />
+          </>
+        )}
       </div>
     </div>
   );
