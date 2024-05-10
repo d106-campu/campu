@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,18 +42,20 @@ public class QCampsiteRepository {
     public Page<CampsiteDto.Response> findByTheme(String themeStr, User user, Pageable pageable) {
 
         // campsiteLike.id, campsiteLike.campsite, campsiteLike.user,
+        Expression[] projections = new Expression[]{
+            campsite.id, campsite.facltNm, campsite.lineIntro, campsite.doNm, campsite.sigunguNm, campsite.addr1,
+            campsite.addr2, campsite.thumbnailImageUrl, campsiteLocation.mapX, campsiteLocation.mapY
+        };
 
-        List<Tuple> tuples = jpaQueryFactory.select(new Expression[]{
-                campsite.id, campsite.facltNm, campsite.lineIntro, campsite.doNm, campsite.sigunguNm, campsite.addr1,
-                campsite.addr2, campsite.thumbnailImageUrl, campsiteLocation.mapX, campsiteLocation.mapY
-            })
+        BooleanBuilder predicates = new BooleanBuilder()
+            .and(theme.themeStr.eq(themeStr));
+
+        List<Tuple> tuples = jpaQueryFactory.select(projections)
             .from(campsite)
             .innerJoin(campsiteTheme).on(campsiteTheme.campsite.eq(campsite))
             .innerJoin(theme).on(campsiteTheme.theme.eq(theme))
             .innerJoin(campsite.campsiteLocation, campsiteLocation)
-            .where(new BooleanBuilder()
-                .and(theme.themeStr.eq(themeStr))
-            )
+            .where(predicates)
             .orderBy(new OrderSpecifier[]{
                 campsite.id.asc()
             })
