@@ -20,6 +20,7 @@ import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
+import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -42,11 +44,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CampsiteService {
-
-    private final ReservationRepository reservationRepository;
 
     private final UserRepository userRepository;
 
@@ -56,6 +57,10 @@ public class CampsiteService {
 
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
+
+    private final ReviewRepository reviewRepository;
+
+    private final ReservationRepository reservationRepository;
 
     private final SecurityHelper securityHelper;
 
@@ -81,10 +86,9 @@ public class CampsiteService {
         int headCnt,
         IndutyEnum induty,
         ThemeEnum theme,
-        Pageable pageable
+        Pageable pageable,
+        User user
     ) {
-        User user = getUserByAccount();
-
         String doNmStr = (doNm == null) ? null : doNm.getName();
         String sigunguNmStr = (sigunguNm == null) ? null : sigunguNm.getName();
 
@@ -103,11 +107,25 @@ public class CampsiteService {
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
+            List<Room> roomList = campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt)).toList();
+
             // available at least one room can be reserved on the date range
-            campsite.setAvailable(campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt))
-                .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
+            campsite.setAvailable(
+                roomList.stream()
+                    .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
+
+            // Cheapest room price of this campsite
+            campsite.setPrice(roomList.isEmpty() ? null
+                : roomList.stream().min(Comparator.comparingInt(room -> room.getPrice())).get().getPrice());
+
             // Did I like this campsite
-            campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+            if (user != null) {
+                campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+            }
+
+            // Avg review score
+            campsite.setScore(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0));
+
             return campsite;
         }).toList());
 

@@ -97,6 +97,7 @@ public class AuthService {
         checkExistedAccount(joinRequestDto.getAccount());
         checkExistedNickname(joinRequestDto.getNickname());
         checkExistedTel(joinRequestDto.getTel());
+        checkPassword(joinRequestDto.getPassword(), joinRequestDto.getPasswordCheck());
         checkAuthorization(joinRequestDto.getTel());
 
         User user = authMapper.toUser(joinRequestDto);
@@ -128,7 +129,7 @@ public class AuthService {
             .tel(tel)
             .build();
     }
-    
+
     private void checkAuthorization(String tel) {
         telVerifyHashRepository.findById(tel)
             .map(telVerifyHash -> {
@@ -137,6 +138,12 @@ public class AuthService {
                 }
                 return telVerifyHash;
             }).orElseThrow(() -> new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_TEL));
+    }
+
+    private void checkPassword(String password, String passwordCheck) {
+        if (!password.equals(passwordCheck)) {
+            throw new UnauthorizedException(AuthExceptionCode.CONFLICT_PASSWORD);
+        }
     }
 
     private void checkTelSendLimit(String tel) {
