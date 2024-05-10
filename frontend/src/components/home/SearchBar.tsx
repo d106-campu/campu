@@ -7,7 +7,7 @@ import { RegionList } from "@/components/@common/Search/RegionList";
 import { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import Calendar from "@/components/@common/Calendar/Calendar";
+// import Calendar from "@/components/@common/Calendar/Calendar";
 import { useDispatch, useSelector } from "react-redux";
 import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +83,7 @@ const SearchBar = () => {
           </div>
           {showCalendar && (
             <div className="absolute top-full left-0 bg-white rounded-md z-20 mt-1 w-[400px] border pb-8">
-              <Calendar />
+              {/* <Calendar /> */}
             </div>
           )}
         </div>

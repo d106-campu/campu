@@ -1,4 +1,4 @@
-import Calendar from "@/components/@common/Calendar/Calendar";
+import OwnerCalendar from "@/components/@common/Calendar/OwnerCalendar";
 import ReservationItem from "@/components/owner/ownerReservation/ReservationItem";
 
 const OwnerReservation = ({
@@ -17,7 +17,7 @@ const OwnerReservation = ({
           {/* 달력 */}
           <div className="flex justify-center w-full border rounded-md pt-4 pb-8">
             <div className="w-[80%]">
-              <Calendar />
+              <OwnerCalendar />
             </div>
           </div>
           {/* 예약 리스트 목록 */}
