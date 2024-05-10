@@ -103,9 +103,7 @@ const SignUpForm = ({
   };
 
   // 회원가입 클릭 시 유효성 검사 함수에 대해 분기 처리
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     // 모든 회원가입 필드가 올바른 상태 메시지를 포함하고 있는지 검사
     const allFieldsValid = Object.values(errors).every(
       error => [
@@ -159,7 +157,6 @@ const SignUpForm = ({
       validateField(field, value); 
     }
   };
-
 
   // 중복 코드 줄이기 위해 배열로 타입을 지정하고 map 메서드 사용
   const fields: Array<{ label: string; name: keyof ISignUpFormValues; placeholder: string; maxLength: number; type?: string }> = [
@@ -238,13 +235,39 @@ const SignUpForm = ({
     }
   }, [phoneVerified]);
 
-
   // 사용자가 페이지를 벗어났다가 돌아왔을 때 인증 상태를 초기화
   useEffect(() => {
     return () => {
       resetPhoneVerification();
     };
   }, []);
+
+  // 키보드 엔터 누르면 "회원가입" 버튼 작동시키기
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      const allFieldsValid = Object.values(errors).every(
+        error => [
+          '사용 가능한 아이디입니다.',
+          '사용 가능한 닉네임입니다.',
+          '올바른 비밀번호가 설정되었습니다.',
+          '비밀번호가 일치합니다.',
+          '인증 성공!'
+        ].includes(error)
+      );
+  
+      if (allFieldsValid && phoneVerified && values.confirmPassword === values.password) {
+        handleSubmit();
+      }
+    }
+  };
+
+  // form 태그를 사용하지않을 때 -> 키보드 "엔터" 감지
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [errors, phoneVerified, values.confirmPassword, values.password]);
 
   return (
     <>

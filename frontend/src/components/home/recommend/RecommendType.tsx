@@ -21,30 +21,12 @@ const RecommendType = () => {
   const saturday = weekendDates.saturday;
   const sunday = weekendDates.sunday;
 
-  // @TODO: 백엔드 완료되면 삭제
-  const tabToInduty = (tab: string) => {
-    switch (tab) {
-      case "캠핑":
-        return "camping";
-      case "오토캠핑":
-        return "autocamping";
-      case "글램핑":
-        return "glamping";
-      case "카라반":
-        return "caravan";
-      default:
-        throw new Error("Invalid tab name");
-    }
-  };
-  const indutyValue = tabToInduty(selectedTab);
-
   // ( 주말 기준 ) 유형별 추천 캠핑장 리스트 조회
-  // @TODO: 백엔드 구현 끝나면 유형 이름 수정해야함
   const { data: campsiteOfInduty } = useCampsiteList({
     startDate: saturday,
     endDate: sunday,
     headCnt: 2,
-    induty: indutyValue,
+    induty: selectedTab,
     pageable: { page: 0, size: 6 },
   });
 

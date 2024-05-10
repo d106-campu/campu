@@ -9,10 +9,11 @@ import {
   login
 } from '@/services/auth/api';
 import { ISignUpReq, IVerifyPhoneReq } from '@/types/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const useSignup = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 아이디 중복 검사
   const checkId = (account: string) => useQuery({
@@ -63,7 +64,10 @@ export const useSignup = () => {
     mutationFn: login,
     onSuccess: (res) => {
       console.log("로그인 성공!! :", res)
-      navigate('/');
+      const from = location.state?.from?.pathname || '/';
+      console.log('이전 페이지 확인 :', from)
+      // 이전 페이지로 이동 (저장된 이전페이지 경로가 없으면 메인페이지로)
+      navigate(from, { replace: true });
     },
     onError: (error) => {
       console.error('로그인 실패 :', error);

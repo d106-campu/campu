@@ -8,7 +8,7 @@ declare global {
 export interface IMapProps {
   facltNm?: string;
   rate?: number;
-  lat?: number | undefined;
-  lng?: number | undefined;
+  lat?: number | null;
+  lng?: number | null;
   level?: number;
 }

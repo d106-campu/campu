@@ -1,8 +1,9 @@
-import { ICampingGround } from "@/types/search";
+import LikeButton from "@/components/@common/Like/LikeButton";
+import { ICampsiteSimpleRes } from "@/types/search";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 
-const SearchCampingItem = ({ camping }: { camping: ICampingGround }) => {
+const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
   const isAvailable = camping.available;
 
   return (
@@ -22,11 +23,16 @@ const SearchCampingItem = ({ camping }: { camping: ICampingGround }) => {
         )}
       </div>
       <div className="pl-4 w-[60%]">
-        <div className="flex py-1">
-          <p className="text-xl font-semibold">{camping.facltNm}</p>
+        <div className="flex py-1 justify-between">
           <div className="flex items-center">
-            <FaStar className="text-yellow-500 ml-2 mr-1" />
-            <p>{camping.rate}</p>
+            <p className="text-xl font-semibold pr-2">{camping.facltNm}</p>
+            <div className="flex items-center">
+              <FaStar className="text-yellow-500 ml-2 mr-1" />
+              <p>{camping.score.toFixed(1)}</p>
+            </div>
+          </div>
+          <div className="pr-4">
+            <LikeButton campsiteId={camping.id} iconSize={20} />
           </div>
         </div>
         <div>

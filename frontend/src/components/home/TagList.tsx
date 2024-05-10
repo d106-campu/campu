@@ -6,13 +6,10 @@ interface TagListProps {
 }
 
 const TagList: React.FC<TagListProps> = ({ tags, onTagToggle }) => {
-  const [selectedTags, setSelectedTags] = useState<string[]>(["여름물놀이"]);
+  const [selectedTag, setSelectedTag] = useState<string>("여름물놀이");
 
   const toggleTag = (tag: string) => {
-    const updatedTags = selectedTags.includes(tag)
-      ? selectedTags.filter((selectedTag) => selectedTag !== tag)
-      : [...selectedTags, tag];
-    setSelectedTags(updatedTags);
+    setSelectedTag(tag);
     onTagToggle(tag);
   };
 
@@ -22,9 +19,7 @@ const TagList: React.FC<TagListProps> = ({ tags, onTagToggle }) => {
         <span
           key={index}
           className={`px-4 py-2 text-xs ${
-            selectedTags.includes(tag)
-              ? "bg-MAIN_GREEN text-white"
-              : "bg-[#E1F9E3]"
+            selectedTag === tag ? "bg-MAIN_GREEN text-white" : "bg-[#E1F9E3]"
           } rounded-3xl cursor-pointer`}
           onClick={() => toggleTag(tag)}
         >

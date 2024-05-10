@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ILoginFormValues } from "@/types/auth";
 import { useDispatch } from "react-redux";
 import { setIsLogin } from "@/features/login/authSlice";
@@ -68,13 +68,16 @@ const LoginForm = ({
 
   // 로그인 클릭 시 유효성 검사 함수에 대해 분기 처리
   const handleSubmit = () => {
-    // e.preventDefault();
     if (validateLoginForm()) {
       loginMutation.mutate({ account: values.id, password: values.password }, {
         onSuccess: () => {
           console.log("로그인 성공!");
           Toast.success('로그인 되었습니다 !');
           dispatch(setIsLogin(true));
+        },
+        onError: (error) => {
+          console.error('로그인 실패 :', error);
+          Toast.error('로그인에 실패했습니다.')
         }
       });
     }
@@ -111,6 +114,21 @@ const LoginForm = ({
       maxLength: MAX_PASSWORD_LENGTH,
     },
   ];
+
+  // 키보드 엔터 누르면 "로그인" 버튼 작동시키기
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && validateLoginForm()) {
+      handleSubmit();
+    }
+  };
+
+  // form 태그를 사용하지않을 때 -> 키보드 "엔터" 감지
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [values]);
 
   return (
     <>
