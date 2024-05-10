@@ -7,9 +7,7 @@ import { RegionList } from "@/components/@common/Search/RegionList";
 import { useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import Calendar from "@/components/@common/Calendar/Calendar";
-import { useDispatch, useSelector } from "react-redux";
-import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/app/store";
 import { formatSimpleDate } from "@/utils/formatDateTime";
@@ -18,7 +16,6 @@ const SearchBar = ({ state }: { state?: string }) => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [showCalendar, setShowCalendar] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
   const { startDate, endDate } = useSelector(
@@ -29,24 +26,26 @@ const SearchBar = ({ state }: { state?: string }) => {
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
-      dispatch(setPeople(numberOfPeople - 1));
     }
   };
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
-      dispatch(setPeople(numberOfPeople + 1));
     }
   };
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
-    dispatch(setKeyword(searchKeyword));
   };
 
   const goToSearchPage = () => {
     navigate("/search");
   };
+
+  console.log("지역", searchBarState.region, searchBarState.subRegion);
+  console.log(numberOfPeople);
+  console.log(startDate, endDate);
+  console.log(searchKeyword);
 
   return (
     <>
@@ -75,11 +74,6 @@ const SearchBar = ({ state }: { state?: string }) => {
               <IoIosArrowDown />
             </div>
           </div>
-          {showCalendar && (
-            <div className="absolute top-full left-0 bg-white rounded-md z-20 mt-1 w-[400px] border pb-8">
-              <Calendar />
-            </div>
-          )}
         </div>
 
         {/* 인원 선택 */}
@@ -92,7 +86,7 @@ const SearchBar = ({ state }: { state?: string }) => {
                 onClick={handleDecrease}
                 className="text-MAIN_GREEN cursor-pointer"
               />
-              <p className="px-3">{searchBarState.numberOfPeople}</p>
+              <p className="px-3">{numberOfPeople}</p>
               <AiOutlinePlusCircle
                 onClick={handleIncrease}
                 className="text-MAIN_GREEN cursor-pointer"

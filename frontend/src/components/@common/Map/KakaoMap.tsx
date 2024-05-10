@@ -13,7 +13,7 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
   const markerRefs = useRef<any[]>([]);
 
   useEffect(() => {
-    if (locations.length > 0) {
+    if (locations?.length > 0) {
       initMap();
     } else {
       // locations이 비어 있을 때 기본 위치로 지도 설정
