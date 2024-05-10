@@ -23,6 +23,6 @@ public class Theme {
     private Long id;
 
     @Column(name = "theme", length = 10)
-    private String theme;
+    private String themeStr;
 
 }
