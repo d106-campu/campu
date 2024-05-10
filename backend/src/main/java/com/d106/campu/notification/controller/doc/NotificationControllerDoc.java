@@ -37,16 +37,6 @@ public interface NotificationControllerDoc {
     })
     ResponseEntity<SseEmitter> connectSseV2(@NotNull(message = "not null") Long userId);
 
-    @Operation(summary = "알림 저장 테스트", description = "알림 저장 테스트를 위한 API를 호출한다.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "알림 저장 성공",
-            content = @Content(schemaProperties = {
-                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공"))
-            })),
-        @ApiResponse(responseCode = "400", description = "알림 저장 실패", content = @Content)
-    })
-    Response saveNotification(@Valid NotificationDto.SaveRequest saveRequestDto);
-
     @Operation(summary = "알림 삭제 테스트", description = "알림 삭제 테스트를 위한 API를 호출한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "알림 삭제 성공",

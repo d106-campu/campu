@@ -1,6 +1,8 @@
 package com.d106.campu.common.util;
 
 import com.d106.campu.auth.constant.AuthConstant;
+import com.d106.campu.notification.constant.NotificationConstant;
+import com.d106.campu.notification.dto.NotificationDto;
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -28,7 +30,7 @@ public class SmsUtil {
     private DefaultMessageService messageService;
 
     @PostConstruct
-    private void init(){
+    private void init() {
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, apiDomain);
     }
 
@@ -38,6 +40,16 @@ public class SmsUtil {
         message.setFrom(from);
         message.setTo(to);
         message.setText(AuthConstant.TEL_AUTH_SEND_MESSAGE + verificationCode);
+
+        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
+    }
+
+    public SingleMessageSentResponse sendEmptyRoomNotification(NotificationDto.SaveResponse saveResponseDto) {
+        Message message = new Message();
+
+        message.setFrom(from);
+        message.setTo(saveResponseDto.getTel());
+        message.setText(NotificationConstant.EMPTY_ROOM_SMS + saveResponseDto.getMessage() + "\n" + saveResponseDto.getUrl());
 
         return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }

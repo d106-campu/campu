@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS d106;
 CREATE DATABASE d106;
 USE d106;
 
+
 -- d106.campsite_original definition
 
 CREATE TABLE `campsite_original` (
@@ -219,6 +220,7 @@ CREATE TABLE `campsite_theme` (
   CONSTRAINT `campsite_theme_theme_FK` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 테마';
 
+
 -- d106.campsite_theme definition
 
 CREATE TABLE `campsite_like` (
@@ -233,6 +235,7 @@ CREATE TABLE `campsite_like` (
     CONSTRAINT `campsite_like_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
     CONSTRAINT `campsite_like_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 좋아요';
+
 
 -- d106.room definition
 
@@ -314,14 +317,20 @@ CREATE TABLE `review_image` (
 CREATE TABLE `notification` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
   `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
-  `content` varchar(100) NOT NULL COMMENT '알림 내용',
-  `redirect_url` varchar(1024) DEFAULT NULL COMMENT '리디렉션 주소',
+  `message` varchar(64) DEFAULT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `date` varchar(64) DEFAULT NULL,
+  `no` varchar(32) DEFAULT NULL,
+  `url` varchar(1024) DEFAULT NULL,
   `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
   `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
   PRIMARY KEY (`id`),
   KEY `notification_user_FK` (`user_id`),
   CONSTRAINT `notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='알림';
+
+
+-- d106.empty_notification definition
 
 CREATE TABLE `empty_notification` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',

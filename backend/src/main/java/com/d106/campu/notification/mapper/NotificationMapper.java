@@ -3,26 +3,42 @@ package com.d106.campu.notification.mapper;
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
-import com.d106.campu.notification.event.TestEvent;
+import com.d106.campu.notification.event.EmptyRoomEvent;
+import com.d106.campu.user.domain.jpa.User;
+import java.time.temporal.ChronoUnit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "redirectUrl", ignore = true)
-    Notification toNotification(NotificationDto.SaveRequest saveRequestDto);
+    NotificationDto.SendResponse toSendResponseDto(NotificationDto.SaveResponse saveResponseDto);
 
-    NotificationDto.SaveRequest fromTestEventToSaveRequestDto(TestEvent testEvent);
+    EmptyRoomEvent toTestEvent(PublishEventRequest publishEventRequestDto);
 
-    @Mapping(target = "notificationId", source = "id")
-    NotificationDto.SendResponse toSendResponseDto(Notification notification);
-
-    TestEvent toTestEvent(PublishEventRequest publishEventRequestDto);
+    @Mapping(target = "notificationId", source = "notification.id")
+    @Mapping(target = "tel", source = "user.tel")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "message", source = "notification.message")
+    @Mapping(target = "name", source = "notification.name")
+    @Mapping(target = "date", source = "notification.date")
+    @Mapping(target = "no", source = "notification.no")
+    @Mapping(target = "url", source = "notification.url")
+    @Mapping(target = "createTime", source = "notification.createTime")
+    NotificationDto.SaveResponse toSaveResponseDto(User user, Notification notification);
 
     @Mapping(target = "notificationId", source = "id")
     NotificationDto.ListResponse toListResponseDto(Notification notification);
+
+    default Notification fromEmptyRoomEventToNotification(String baseUrl, EmptyRoomEvent emptyRoomEvent) {
+        return Notification.builder()
+            .message(emptyRoomEvent.getMessage())
+            .name(String.format("%s - %s", emptyRoomEvent.getCampsiteName(), emptyRoomEvent.getRoomName()))
+            .date(String.format("%s ~ %s ꞏ %s박", emptyRoomEvent.getStartDate(), emptyRoomEvent.getEndDate(),
+                ChronoUnit.DAYS.between(emptyRoomEvent.getStartDate(), emptyRoomEvent.getEndDate())))
+            .no(String.format("기준 %d인 (최대 %d인)", emptyRoomEvent.getBaseNo(), emptyRoomEvent.getMaxNo()))
+            .url(String.join("/", baseUrl, "campsite", emptyRoomEvent.getCampsiteId()))
+            .build();
+    }
 
 }

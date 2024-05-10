@@ -1,7 +1,8 @@
 package com.d106.campu.common.event.listener;
 
-import com.d106.campu.notification.event.TestEvent;
-import com.d106.campu.notification.mapper.NotificationMapper;
+import com.d106.campu.common.util.SmsUtil;
+import com.d106.campu.notification.dto.NotificationDto;
+import com.d106.campu.notification.event.EmptyRoomEvent;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -14,25 +15,24 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class EventListener {
 
     private final NotificationService notificationService;
-    private final NotificationMapper notificationMapper;
+    private final SmsUtil smsUtil;
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = {TestEvent.class})
-    public void saveAndSendNotification(Object event) {
-        TestEvent testEvent = (TestEvent) event;
-        Long notificationId = notificationService.saveNotification(notificationMapper.fromTestEventToSaveRequestDto(testEvent));
-        notificationService.sendNotification(notificationId);
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = {EmptyRoomEvent.class})
+    public void saveAndSendNotification(EmptyRoomEvent emptyRoomEvent) {
+        NotificationDto.SaveResponse saveResponseDto = notificationService.saveNotification(emptyRoomEvent);
+        notificationService.sendNotification(saveResponseDto);
     }
 
     /**
      * 커밋이 없는 테스트 환경에서 사용한다.
      */
     @Async
-    @org.springframework.context.event.EventListener(classes = {TestEvent.class})
-    public void testSaveAndSendNotification(Object event) {
-        TestEvent testEvent = (TestEvent) event;
-        Long notificationId = notificationService.saveNotification(notificationMapper.fromTestEventToSaveRequestDto(testEvent));
-        notificationService.sendNotification(notificationId);
+    @org.springframework.context.event.EventListener(classes = {EmptyRoomEvent.class})
+    public void testSaveAndSendNotification(EmptyRoomEvent emptyRoomEvent) {
+        NotificationDto.SaveResponse saveResponseDto = notificationService.saveNotification(emptyRoomEvent);
+        notificationService.sendNotification(saveResponseDto);
+        smsUtil.sendEmptyRoomNotification(saveResponseDto);
     }
 
 }
