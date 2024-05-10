@@ -5,7 +5,11 @@ import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import CalendarSubmit from "@/components/@common/Calendar/CalendarSubmit";
-import { formatSimpleDate, dateStringToDate, dateToDateString } from "@/utils/formatDateTime";
+import {
+  formatSimpleDate,
+  dateStringToDate,
+  dateToDateString,
+} from "@/utils/formatDateTime";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
@@ -79,7 +83,10 @@ const MyController = () => {
   }, [localStartDate, localEndDate, localHeadCount]);
 
   // 일정 초기화
-  const resetCalendar = () => {};
+  const resetCalendar = () => {
+    setLocalStartDate(dateStringToDate(startDate));
+    setLocalEndDate(dateStringToDate(endDate));
+  };
 
   return (
     <>
