@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-  headCount: 1,
+  headCount: 2,
 };
 
 const HeadCountSlice = createSlice({

@@ -129,6 +129,8 @@ const MyController = () => {
               <span className="text-GRAY">일정 초기화</span>
             </button>
             <CalendarSubmit
+              startDate={localStartDate}
+              endDate={localEndDate}
               onClick={() => {
                 calendarSubmit();
                 toggleScheduleModal();
