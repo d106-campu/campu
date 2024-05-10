@@ -1,3 +1,4 @@
+import LikeButton from "@/components/@common/Like/LikeButton";
 import { ICampsiteSimpleRes } from "@/types/search";
 import { FaStar } from "react-icons/fa6";
 
@@ -5,12 +6,15 @@ const RecommendItem = ({ item }: { item: ICampsiteSimpleRes }) => {
   // @TODO: 백엔드 구현 끝나면 별점, 가격 추가해야함
   return (
     <>
-      <div key={item.id} className="px-2 py-4 w-[33%]">
+      <div key={item.id} className="px-2 py-4 w-[33%] relative">
         <img
           src={item.thumbnailImageUrl}
           alt={item.facltNm}
           className="w-full rounded-md h-40 object-cover object-center"
         />
+        <div className="absolute top-7 right-4">
+          <LikeButton campsiteId={item.id} iconSize={30} />
+        </div>
         <div className="p-2">
           <div className="flex justify-between">
             <h1 className="font-bold">{item.facltNm}</h1>

@@ -1,3 +1,4 @@
+import LikeButton from "@/components/@common/Like/LikeButton";
 import { FaStar } from "react-icons/fa6";
 
 interface IMyCamping {
@@ -12,12 +13,15 @@ interface IMyCamping {
 
 const MyCampingItem = ({ camping }: { camping: IMyCamping }) => {
   return (
-    <div key={camping.id} className="px-2 py-5 w-[25%]">
+    <div key={camping.id} className="px-2 py-5 w-[25%] relative">
       <img
         src={camping.image}
         alt={camping.name}
         className="w-full rounded-md h-32 object-cover object-center"
       />
+      <div className="absolute top-7 right-4">
+        <LikeButton campsiteId={camping.id} iconSize={30} />
+      </div>
       <div className="p-2">
         <div className="flex justify-between">
           <h1 className="font-bold">{camping.name}</h1>
