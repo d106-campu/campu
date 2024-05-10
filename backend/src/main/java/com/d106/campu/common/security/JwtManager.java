@@ -33,6 +33,10 @@ public class JwtManager {
     @Value("${jwt.access-token-validity-in-seconds}")
     private long accessTokenValidityInMilliseconds;
 
+    public String getAccount(String token) {
+        return getClaims(token).getSubject();
+    }
+
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
 

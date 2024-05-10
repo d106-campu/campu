@@ -83,10 +83,9 @@ public class CampsiteService {
         int headCnt,
         IndutyEnum induty,
         ThemeEnum theme,
-        Pageable pageable
+        Pageable pageable,
+        User user
     ) {
-        User user = getUserByAccount();
-
         String doNmStr = (doNm == null) ? null : doNm.getName();
         String sigunguNmStr = (sigunguNm == null) ? null : sigunguNm.getName();
 
@@ -117,7 +116,9 @@ public class CampsiteService {
                 : roomList.stream().min(Comparator.comparingInt(room -> room.getPrice())).get().getPrice());
 
             // Did I like this campsite
-            campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+            if (user != null) {
+                campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+            }
 
             return campsite;
         }).toList());
