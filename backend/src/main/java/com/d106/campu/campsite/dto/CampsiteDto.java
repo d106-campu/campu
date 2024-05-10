@@ -33,7 +33,7 @@ public class CampsiteDto {
         private boolean like;
         private boolean available;
         private Integer price;
-        private double score;
+        private Double score;
 
     }
 

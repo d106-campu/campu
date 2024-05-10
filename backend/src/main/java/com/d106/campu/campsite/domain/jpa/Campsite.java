@@ -127,7 +127,7 @@ public class Campsite extends BaseTime {
 
     @Transient
     @Setter
-    private double score;
+    private Double score;
 
     public void addCampsiteImage(CampsiteImage campsiteImage) {
         this.campsiteImageList.add(campsiteImage);
