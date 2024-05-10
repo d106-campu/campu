@@ -1,3 +1,4 @@
+import LikeButton from "@/components/@common/Like/LikeButton";
 import { ICampsiteSimpleRes } from "@/types/search";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
@@ -23,10 +24,15 @@ const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
       </div>
       <div className="pl-4 w-[60%]">
         <div className="flex py-1 justify-between">
-          <p className="text-xl font-semibold">{camping.facltNm}</p>
-          <div className="flex items-center pr-6">
-            <FaStar className="text-yellow-500 ml-2 mr-1" />
-            <p>{camping.score.toFixed(1)}</p>
+          <div className="flex items-center">
+            <p className="text-xl font-semibold pr-2">{camping.facltNm}</p>
+            <div className="flex items-center">
+              <FaStar className="text-yellow-500 ml-2 mr-1" />
+              <p>{camping.score.toFixed(1)}</p>
+            </div>
+          </div>
+          <div className="pr-4">
+            <LikeButton campsiteId={camping.id} iconSize={20} />
           </div>
         </div>
         <div>
