@@ -9,11 +9,10 @@ import { useDispatch } from "react-redux";
 const HomePage = () => {
   const dispatch = useDispatch();
 
+  // 메인페이지로 새로고침 시 스토어 데이터 초기화
   useEffect(() => {
-    return () => {
-      dispatch(clearCampingData());
-      dispatch(clearSearchData());
-    };
+    dispatch(clearCampingData());
+    dispatch(clearSearchData());
   }, [dispatch]);
 
   return (

@@ -7,16 +7,18 @@ import { RegionList } from "@/components/@common/Search/RegionList";
 import { useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/app/store";
 import { formatSimpleDate } from "@/utils/formatDateTime";
+import { setPeople } from "@/features/search/searchBarSlice";
 
 const SearchBar = ({ state }: { state?: string }) => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [showCalendar, setShowCalendar] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
@@ -26,11 +28,13 @@ const SearchBar = ({ state }: { state?: string }) => {
   const handleDecrease = () => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
+      dispatch(setPeople(numberOfPeople));
     }
   };
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
+      dispatch(setPeople(numberOfPeople));
     }
   };
 

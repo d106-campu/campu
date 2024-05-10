@@ -8,12 +8,9 @@ const SearchContainer = () => {
     (state: RootState) => state.campingMap.campsiteData
   );
 
-  console.log(locations);
-
   const mapLocations = locations?.map((campsite) => ({
     facltNm: campsite.facltNm,
-    // @TODO: 백엔드 별점 추가되면 수정해야함
-    rate: campsite.id,
+    rate: campsite.score,
     lat: campsite.campsiteLocation?.mapY || null,
     lng: campsite.campsiteLocation?.mapX || null,
   }));
