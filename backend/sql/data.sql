@@ -131,7 +131,25 @@ SET @room_3 = (SELECT id FROM `room` WHERE campsite_id = @campsite_4 AND name = 
 --
 -- ----------------------------------------
 
-INSERT INTO `reservation` (`user_id`, `room_id`, `head_cnt`, `price`, `start_date`, `end_date`)
-VALUES (@user_cheesecat47, @room_1, 3, 800000, '2024-05-10', '2024-05-14'),
-       (@user_cheesecat47, @room_2, 4, 500000, '2024-05-20', '2024-05-25'),
-       (@user_hoing97s, @room_3, 3, 250000, '2024-05-18', '2024-05-19');
+INSERT IGNORE INTO `reservation` (`user_id`, `room_id`, `head_cnt`, `price`, `start_date`, `end_date`) VALUES (@user_cheesecat47, @room_1, 3, 800000, '2024-05-10', '2024-05-14');
+INSERT IGNORE INTO `reservation` (`user_id`, `room_id`, `head_cnt`, `price`, `start_date`, `end_date`) VALUES (@user_cheesecat47, @room_2, 4, 500000, '2024-05-20', '2024-05-25');
+INSERT IGNORE INTO `reservation` (`user_id`, `room_id`, `head_cnt`, `price`, `start_date`, `end_date`) VALUES (@user_hoing97s, @room_3, 3, 250000, '2024-05-18', '2024-05-19');
+INSERT IGNORE INTO `reservation` (`user_id`, `room_id`, `head_cnt`, `price`, `start_date`, `end_date`) VALUES (@user_hoing97s, @room_1, 3, 800000, '2024-05-20', '2024-05-21');
+INSERT IGNORE INTO `reservation` (`user_id`, `room_id`, `head_cnt`, `price`, `start_date`, `end_date`) VALUES (@user_hoing97s, @room_2, 3, 500000, '2024-05-25', '2024-05-26');
+
+SET @reservation_1 = (SELECT id FROM `reservation` WHERE user_id = @user_cheesecat47 AND room_id = @room_1);
+SET @reservation_2 = (SELECT id FROM `reservation` WHERE user_id = @user_cheesecat47 AND room_id = @room_2);
+SET @reservation_3 = (SELECT id FROM `reservation` WHERE user_id = @user_hoing97s AND room_id = @room_3);
+SET @reservation_4 = (SELECT id FROM `reservation` WHERE user_id = @user_hoing97s AND room_id = @room_1);
+SET @reservation_5 = (SELECT id FROM `reservation` WHERE user_id = @user_hoing97s AND room_id = @room_2);
+
+-- ----------------------------------------
+--
+-- review
+--
+-- ----------------------------------------
+
+INSERT IGNORE INTO `review` (`campsite_id`, `reservation_id`, `score`, `content`) VALUES (@campsite_1, @reservation_1, 5, 'message');
+INSERT IGNORE INTO `review` (`campsite_id`, `reservation_id`, `score`, `content`) VALUES (@campsite_1, @reservation_4, 4, 'message');
+INSERT IGNORE INTO `review` (`campsite_id`, `reservation_id`, `score`, `content`) VALUES (@campsite_2, @reservation_2, 4, 'message');
+INSERT IGNORE INTO `review` (`campsite_id`, `reservation_id`, `score`, `content`) VALUES (@campsite_2, @reservation_5, 3, 'message');

@@ -33,9 +33,7 @@ public class CampsiteDto {
         private boolean like;
         private boolean available;
         private Integer price;
-        /* TODO: 추가할 정보
-         *  private float rate;         // 별점
-         */
+        private Double score;
 
     }
 

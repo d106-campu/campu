@@ -20,6 +20,7 @@ import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
+import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
@@ -48,8 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CampsiteService {
 
-    private final ReservationRepository reservationRepository;
-
     private final UserRepository userRepository;
 
     private final CampsiteRepository campsiteRepository;
@@ -58,6 +57,10 @@ public class CampsiteService {
 
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
+
+    private final ReviewRepository reviewRepository;
+
+    private final ReservationRepository reservationRepository;
 
     private final SecurityHelper securityHelper;
 
@@ -119,6 +122,9 @@ public class CampsiteService {
             if (user != null) {
                 campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
             }
+
+            // Avg review score
+            campsite.setScore(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0));
 
             return campsite;
         }).toList());
