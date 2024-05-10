@@ -4,7 +4,7 @@ import { formatSimpleDate } from "@/utils/formatDateTime";
 import { useRefs } from "@/context/RefContext";
 import CampingPhotos from "@/components/reservation/CampingPhotos";
 import CampSiteLayout from "@/components/reservation//CampSiteLayout";
-import Calendar from "@/components/@common/Calendar/Calendar";
+import ReadOnlyCalendar from "@/components/@common/Calendar/ReadOnlyCalendar";
 import LikeButton from "@/components/@common/Like/LikeButton";
 import { copyToClipboard } from "@/utils/copyToClipboard";
 import phoneIcon from "@/assets/svg/phone.svg";
@@ -159,7 +159,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
                 )}
               </div>
             </div>
-            <Calendar readOnly={true} />
+            <ReadOnlyCalendar />
           </div>
         </div>
       </div>

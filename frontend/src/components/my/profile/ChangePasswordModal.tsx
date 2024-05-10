@@ -5,7 +5,8 @@ import InputField from "@/components/@common/Input/InputField";
 import { IUserProfileUpdate } from '@/types/user';
 import ChangePasswordSuccessModal from '@/components/my/profile/ChangePasswordSuccessModal'
 import { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH  } from "@/constants/constants";
-
+import { useUser } from '@/hooks/user/useUser';
+import Toast from '@/components/@common/Toast/Toast';
 
 interface IOChangePasswordModalProps {
   isOpen: boolean;
@@ -25,6 +26,8 @@ export const ChangePasswordModal = ({
 }: IOChangePasswordModalProps): JSX.Element => {
   const [modalOpacity, setModalOpacity] = useState<string>('opacity-100'); // 모달 투명도 상태 관리
   const [successModalOpen, setSuccessModalOpen] = useState<boolean>(false); // 비밀번호 변경 성공 모달 상태 관리
+  const { updatePasswordMutation } = useUser();
+
   // 비밀번호 input 추적
   const handleChange = (field: keyof typeof values, value: string) => {
     setValues(prev => ({ ...prev, [field]: value }));
@@ -41,7 +44,7 @@ export const ChangePasswordModal = ({
         } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value)) {
           message = '비밀번호는 영문자, 숫자, 특수문자 조합입니다.';
         } else {
-          message = '알맞은 비밀번호를 입력했습니다.';
+          message = ''; // "알맞은 비밀번호입니다." 문구는 삭제 ->
         }
         break;
       case 'newPassword':
@@ -74,14 +77,29 @@ export const ChangePasswordModal = ({
   // "변경하기" 버튼 제출에 대한 검사
   const handleSubmit = () => {
     if (!values.currentPassword || !values.newPasswordCheck || !values.newPassword || values.newPassword !== values.newPasswordCheck) {
-      console.error("유효성 검사 통과못했어요!!");
+      console.error("유효성 검사 통과못함!! :");
+      Toast.error('안내 문구를 다시 확인해주세요.');
       return;
     }
-    console.log('새로운 비밀번호 설정 완료!!');
-    setModalOpacity('opacity-0'); // 이 모달은 투명하게 만들면서
-    setTimeout(() => {
-      setSuccessModalOpen(true); // 비밀번호 변경 성공 모달 호출하기
-    }, 10) // 0.01초정도로 부드럽게 처리
+
+    // 비밀번호 수정 API 연결
+    updatePasswordMutation.mutate({
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword,
+      newPasswordCheck: values.newPasswordCheck
+    }, {
+      onSuccess: () => {
+        console.log('새로운 비밀번호 설정 완료!!');
+        setModalOpacity('opacity-0'); // 모달 투명하게
+        setTimeout(() => {
+          setSuccessModalOpen(true); // 비밀번호 변경 성공 모달 호출
+        }, 10);
+      },
+      onError: (error) => {
+        console.error('비밀번호 변경 실패:', error);
+        Toast.error('비밀번호를 변경하지 못했습니다.');
+      }
+    });
   };
 
   // 비밀번호 변경 성공 모달이 닫힐 때 호출
@@ -96,7 +114,6 @@ export const ChangePasswordModal = ({
     { label: '새 비밀번호', name: 'newPassword', placeholder: '새 비밀번호 입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
     { label: '새 비밀번호 확인', name: 'newPasswordCheck', placeholder: '비밀번호 재입력', maxLength: MAX_PASSWORD_LENGTH, type: 'password' },
   ];
-
 
   return (
     <>

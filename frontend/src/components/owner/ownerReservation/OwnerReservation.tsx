@@ -1,11 +1,24 @@
-import Calendar from "@/components/@common/Calendar/Calendar";
+import OwnerCalendar from "@/components/@common/Calendar/OwnerCalendar";
 import ReservationItem from "@/components/owner/ownerReservation/ReservationItem";
+import { useEffect, useState } from "react";
+import { dateToDateString } from "@/utils/formatDateTime";
 
 const OwnerReservation = ({
   selectCampground,
 }: {
   selectCampground: string | null;
 }) => {
+  // 달력에서 선택된 날짜 (Date 객체)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // 확인용 - 아래 코드는 확인하시고 지워주세요
+  // 백으로 보낼 때는 YYYY-MM-DD 형식의 문자열로 보내야 함
+  const dateString = dateToDateString(selectedDate);
+  useEffect(() => {
+    console.log(selectedDate);  // Fri May 10 2024 00:00:00 GMT+0900 (한국 표준시)
+    console.log(dateString);    // 2024-05-10
+  }, [selectedDate]);
+
   return (
     <>
       <div className="py-5">
@@ -17,7 +30,10 @@ const OwnerReservation = ({
           {/* 달력 */}
           <div className="flex justify-center w-full border rounded-md pt-4 pb-8">
             <div className="w-[80%]">
-              <Calendar />
+              <OwnerCalendar
+                selectedDate={selectedDate}
+                onSelectDate={setSelectedDate}
+              />
             </div>
           </div>
           {/* 예약 리스트 목록 */}

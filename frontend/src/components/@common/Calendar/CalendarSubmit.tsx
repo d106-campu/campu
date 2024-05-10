@@ -1,18 +1,20 @@
-import { PropsWithChildren, useCallback } from "react";
+import { useCallback } from "react";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
 import { formatSimpleDate } from "@/utils/formatDateTime";
 import { diffDays } from "@/utils/diffDays";
 import Button from "@/components/@common/Button/Button";
 
-const CalendarSubmit = ({
-  onClick,
-}: PropsWithChildren<{ onClick: () => void }>) => {
-  const { startDate, endDate } = useSelector(
-    (state: RootState) => state.campingDate
-  );
+interface ICalendarSubmitProps {
+  startDate: Date | null;
+  endDate: Date | null;
+  onClick: () => void;
+}
 
+const CalendarSubmit = ({
+  startDate,
+  endDate,
+  onClick,
+}: ICalendarSubmitProps) => {
   const isDisabled = useMemo(() => {
     return !startDate || !endDate;
   }, [startDate, endDate]);

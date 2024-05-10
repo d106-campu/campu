@@ -53,16 +53,16 @@ const MyProfile = ({
   const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
 
   // 휴대폰 번호 보여줄 때 하이픈 추가 함수
-  function formatPhoneNumber(phoneNumber: string): string {
-    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-  }
+  // function formatPhoneNumber(phoneNumber: string): string {
+  //   return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+  // }
   
   // 프로필 조회 API 요청 진행
   useEffect(() => {
     if (userProfileQuery.isSuccess && userProfileQuery.data) {
       console.log("프로필 조회 성공")
       const { account = '', nickname = '', tel = '' } = userProfileQuery.data.data.myProfile;
-      setValues(v => ({ ...v, account, nickname, tel: formatPhoneNumber(tel) }));
+      setValues(v => ({ ...v, account, nickname, tel }));
       dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
     }
   }, [userProfileQuery.data, userProfileQuery.isSuccess]);
@@ -272,7 +272,7 @@ const MyProfile = ({
             // onClick={() => {document.getElementById('imageUpload')?.click();}}
           />
           <div className="pt-2 flex justify-center">
-            <div className="px-2 ">
+            <div className="px-2">
               <Button 
                 text="사진 변경"
                 width="w-full"
@@ -286,7 +286,7 @@ const MyProfile = ({
               />
             </div>
             {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
-            <div className="px-2 ">
+            <div>
               {profileImage !== profileDefaultImage && (
                 <Button 
                   text="기본 사진"
