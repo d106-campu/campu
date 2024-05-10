@@ -97,9 +97,8 @@ public class CampsiteService {
         } else if (induty != null) {
             responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName());
         } else if (theme != null) {
-//            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName());
-            return new Response(CampsiteConstant.CAMPSITE_LIST,
-                qCampsiteRepository.findByTheme(theme.getName(), user, pageable));
+            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName());
+//            responsePage = qCampsiteRepository.findByTheme(theme.getName(), pageable);
         }
 
         if (responsePage == null) {

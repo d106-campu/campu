@@ -39,12 +39,15 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
     @Query("""
         SELECT c
         FROM campsite c
-            LEFT JOIN FETCH c.campsiteThemeList ct
-            LEFT JOIN FETCH ct.theme t
-            LEFT JOIN FETCH c.campsiteLocation loc
+            LEFT JOIN c.campsiteLocation loc
             LEFT JOIN FETCH c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
-            AND t.themeStr = :theme
+            AND c IN (
+                SELECT ct.campsite
+                FROM Theme t
+                    INNER JOIN t.campsiteThemeList ct
+                WHERE t.themeStr = :theme
+            )
         """)
     Page<Campsite> findByTheme(
         Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("theme") String theme
