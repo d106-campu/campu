@@ -7,18 +7,28 @@ const MyCamping = () => {
 
   return (
     <>
-      <div className="h-auto py-8 w-[70%]">
+      <div className="h-auto pt-8 pb-4 w-[70%]">
         <div className="flex items-baseline justify-between">
           <p className="font-extrabold text-xl pt-6">내가 찜한 캠핑장</p>
-          <p className="text-sm text-gray-500 px-4 cursor-pointer">더보기</p>
+          {firstTwoCampingList.length > 0 && (
+            <p className="text-sm text-gray-500 px-4 cursor-pointer">더보기</p>
+          )}
         </div>
-        <div className="flex justify-center">
-          <div className="flex flex-wrap w-full">
-            {firstTwoCampingList.map((camping) => (
-              <MyCampingItem key={camping.id} camping={camping} />
-            ))}
+        {firstTwoCampingList.length > 0 ? (
+          <div className="flex justify-center">
+            <div className="flex flex-wrap w-full">
+              {firstTwoCampingList.map((camping) => (
+                <MyCampingItem key={camping.id} camping={camping} />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="pt-4">
+            <div className="border rounded-md h-40 flex items-center justify-center">
+              <p className="text-MAIN_GREEN">아직 찜한 캠핑장이 없습니다 💖</p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
