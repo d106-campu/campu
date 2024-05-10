@@ -1,7 +1,13 @@
 import MyCampingItem from "@/components/home/myCamping/MyCampingItem";
 import dummyImage from "@/assets/images/dummyCamping.png";
+import { useNavigate } from "react-router-dom";
 
 const MyCamping = () => {
+  const navigate = useNavigate();
+  const goToMy = () => {
+    navigate("/my");
+  };
+
   // @TODO: 추후 보여줄 개수 수정해야함
   const firstTwoCampingList = myCampingdummyList.slice(0, 5);
 
@@ -11,7 +17,12 @@ const MyCamping = () => {
         <div className="flex items-baseline justify-between">
           <p className="font-extrabold text-xl pt-6">내가 찜한 캠핑장</p>
           {firstTwoCampingList.length > 0 && (
-            <p className="text-sm text-gray-500 px-4 cursor-pointer">더보기</p>
+            <p
+              className="text-sm text-gray-500 px-4 cursor-pointer"
+              onClick={goToMy}
+            >
+              더보기
+            </p>
           )}
         </div>
         {firstTwoCampingList.length > 0 ? (
