@@ -11,12 +11,19 @@ import {
 import { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
-const OwnerCalendar = () => {
+interface IOwnerCalendarProps {
+  selectedDate: Date | null;
+  onSelectDate: (date: Date | null) => void;
+}
+
+const OwnerCalendar = ({
+  selectedDate,
+  onSelectDate,
+}: IOwnerCalendarProps) => {
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(
     format(today, "yyyy년 MM월")
   ); // 현재 달 상태관리
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 선택된 날짜 상태관리
 
   // 실제 날짜 연산을 수행할 때 필요한 Date 객체 생성
   const firstDayCurrentMonth = parse(currentMonth, "yyyy년 MM월", today);
@@ -52,7 +59,7 @@ const OwnerCalendar = () => {
   const handleSelectDate = (day: Date) => {
     // 선택된 날짜가 이전에 선택된 날짜와 다른 경우에만 상태 업데이트
     if (!selectedDate || selectedDate.getTime() !== day.getTime()) {
-      setSelectedDate(day);
+      onSelectDate(day);
     }
   };
 
