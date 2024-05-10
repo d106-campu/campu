@@ -16,7 +16,6 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
     public double getCampsiteScore(Long campsiteId) {
         Double score = queryFactory.select(review.score.avg())
             .from(review)
-            .groupBy(review.campsite)
             .where(review.campsite.id.eq(campsiteId))
             .fetchOne();
 
