@@ -40,7 +40,7 @@ public class SecurityConfig {
         /* health */
         "/health/**",
         /* notification */
-        "/notification/**",
+        "/notification/test/**",
         /* campsite */
         "/campsite",
         "/campsite/*/room",

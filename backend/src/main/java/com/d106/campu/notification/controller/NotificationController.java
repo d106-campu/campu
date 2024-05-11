@@ -3,7 +3,6 @@ package com.d106.campu.notification.controller;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.controller.doc.NotificationControllerDoc;
-import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -39,19 +38,12 @@ public class NotificationController implements NotificationControllerDoc {
     }
 
     @Override
-    @GetMapping(value = "/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/test/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connectSseV2(@RequestParam("id") Long userId) {
         return ResponseEntity.ok()
             .header("X-Accel-Buffering", "no")
             .header("Transfer-Encoding", "chunked")
             .body(notificationService.connectSseV2(userId));
-    }
-
-    @Override
-    @PostMapping
-    public Response saveNotification(@RequestBody NotificationDto.SaveRequest saveRequestDto) {
-        notificationService.saveNotification(saveRequestDto);
-        return new Response();
     }
 
     @Override
@@ -62,7 +54,7 @@ public class NotificationController implements NotificationControllerDoc {
     }
 
     @Override
-    @PostMapping("/publish")
+    @PostMapping("/test/publish")
     public Response publishEvent(@RequestBody PublishEventRequest publishEventRequestDto) {
         notificationService.publishEvent(publishEventRequestDto);
         return new Response();
