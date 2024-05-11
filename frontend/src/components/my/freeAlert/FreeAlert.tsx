@@ -12,8 +12,7 @@ const FreeAlert = (): JSX.Element => {
   const [visibleAlerts, setVisibleAlerts] = useState<IEmptyNotification[]>([]);
   const [viewCount, setIsViewCount] = useState<number>(2); // 처음 보여줄 빈자리 알림 개수 관리
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [selectedAlertId, setSelectedAlertId] = useState<number | null>(null); // 빈자리 알림 식별번호
-  const [selectedCampsiteId, setSelectedCampsiteId] = useState<number | null>(null); // campsiteId
+  const [selectedCampsiteId, setSelectedCampsiteId] = useState<number | null>(null); // campsiteId 식별번호 (삭제 시 사용)
 
   // 데이터가 로드되었을 때 초기 목록 설정 (2개씩 잘라서 보여줌)
   useEffect(() => {
@@ -58,17 +57,14 @@ const FreeAlert = (): JSX.Element => {
     )
   }
 
-
   // 빈자리 알림 취소 모달 관리
-  const handleCancelAlert = (alertName: number, campsiteId: number) => {
+  const handleCancelAlert = (campsiteId: number) => {
     setShowConfirmModal(true);
-    setSelectedAlertId(alertName);
     setSelectedCampsiteId(campsiteId); 
   };
 
   // 빈자리 알림 취소 확정 시 리스트에서 정보 제거 
   const confirmCancelAlert = () => {
-    console.log(selectedAlertId)
     if (selectedCampsiteId !== null) {
       // 빈자리 알림 DELETE 요청 API 연결
       console.log("선택한 Id 확인 :", selectedCampsiteId)
@@ -78,7 +74,6 @@ const FreeAlert = (): JSX.Element => {
           setVisibleAlerts(prev => prev.filter(alert => alert.room.campsite.campsiteId !== selectedCampsiteId));
           console.log('빈자리알림 하나 삭제함!');
           setShowConfirmModal(false); // 모달 닫기
-          setSelectedAlertId(null); // AlertId는 다시 초기화
           setSelectedCampsiteId(null);
           
         },
@@ -118,7 +113,7 @@ const FreeAlert = (): JSX.Element => {
       {/* 빈자리 알림 설정한 더미데이터 리스트 */}
       <FreeAlertList
         alerts={visibleAlerts}
-        handleCancelAlert={(alertId, campsiteId) => handleCancelAlert(alertId, campsiteId)}
+        handleCancelAlert={(campsiteId) => handleCancelAlert(campsiteId)}
         viewCount={viewCount}
         handleShowMoreAlerts={handleShowMoreAlerts}
         handleShowLessAlerts={handleShowLessAlerts}

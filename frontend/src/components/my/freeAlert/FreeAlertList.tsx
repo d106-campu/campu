@@ -3,7 +3,7 @@ import { IEmptyNotification } from "@/types/myFreeAlert";
 
 interface IFreeAlertListProps {
   alerts: IEmptyNotification[];
-  handleCancelAlert: (alertId: number, campsiteId: number) => void;
+  handleCancelAlert: (campsiteId: number) => void;
   viewCount: number;
   handleShowMoreAlerts: () => void;
   handleShowLessAlerts: () => void;
@@ -55,7 +55,7 @@ const FreeAlertList = ({
               <div>
                 <button
                   className="flex items-center bg-SUB_YELLOW hover:bg-yellow-200 rounded-lg px-2 py-1"
-                  onClick={() => handleCancelAlert(alert.emptyNotificationId, alert.room.campsite.campsiteId)}
+                  onClick={() => handleCancelAlert(alert.room.campsite.campsiteId)}
                 >
                   <FaBell className="text-yellow-500"/>
                   <span className="text-gray-600 hover:text-MAIN_GREEN pl-2">빈자리 알림 취소</span>
