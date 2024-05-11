@@ -5,7 +5,7 @@ import FreeAlert from '@/components/my/freeAlert/FreeAlert';
 import MyProfile from '@/components/my/profile/MyProfile';
 import GetReservations from '@/components/my/consumer/MyReservationItem'; // 예약내역 더미데이터
 import GetMyReviews from '@/components/my/consumer/MyReviewItem'; // 내가쓴리뷰 더미데이터
-import GetMyAlerts from '@/components/my/freeAlert/FreeAlertItem'; // 빈자리알림 더미데이터
+// import { GetMyAlerts } from '@/components/my/freeAlert/FreeAlertItem'; // 빈자리알림 더미데이터 확인 필요할 경우 주석 해제
 
 interface IConsumerContainerProps {
   selectedComponent: string;
@@ -14,8 +14,9 @@ interface IConsumerContainerProps {
 const ConsumerContainer = ({
   selectedComponent
 }: IConsumerContainerProps): JSX.Element => {
-  // 더미 데이터 로드 및 첫 번째 예약 데이터 사용
-  const reservations = GetReservations();
+  
+  const reservations = GetReservations(); // 내 예약내역 더미데이터
+  // const myAlerts = GetMyAlerts(); // 더미데이터 확인 필요할 경우 주석 해제
   const firstReservation = reservations[0];
 
   const renderComponent = () => {
@@ -27,7 +28,7 @@ const ConsumerContainer = ({
       case 'MyFavoriteCamp':
         return <MyFavoriteCamp />;
       case 'FreeAlert':
-        return <FreeAlert alerts={GetMyAlerts.alerts} totalMyAlerts={GetMyAlerts.totalMyAlerts}/>;
+        return <FreeAlert />;
       case 'MyProfile':
         return <MyProfile phoneVerified={false}/>;
       default:
