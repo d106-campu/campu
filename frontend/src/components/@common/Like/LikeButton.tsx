@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { addLike, removeLike } from "@/features/like/campsiteLikeSlice";
+import { toggleLikeRequest } from "@/features/like/campsiteLikeSlice";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 
 interface ILikeButtonProps {
@@ -22,11 +22,7 @@ const LikeButton = ({
 
   const handleToggleLike = () => {
     if (isLogin) {
-      if (isLiked) {
-        dispatch(removeLike(campsiteId));
-      } else {
-        dispatch(addLike(campsiteId));
-      }
+      dispatch(toggleLikeRequest(campsiteId)); // 좋아요 버튼 클릭 시 액션 디스패치
     }
     return;
   };

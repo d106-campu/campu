@@ -1,8 +1,6 @@
 import { call, put, takeLeading } from "redux-saga/effects";
 import {
-  addLike,
-  removeLike,
-  setLoading,
+  toggleLikeRequest, addLike, removeLike, setLikes, setLoading
 } from "@/features/like/campsiteLikeSlice";
 import { APIResponse } from "@/types/model";
 import { postLikes } from "@/services/reservation/api";
@@ -22,7 +20,8 @@ function* handleToggleLike(action: ILikeAction) {
       action.payload
     );
     if (response.result === "ok") {
-      if (response.data.likeResponse.like) {
+      if (response.data.like.like) {
+        // if (response.data.likeResponse.like) {
         yield put(addLike(action.payload)); // 좋아요 추가
       } else {
         yield put(removeLike(action.payload)); // 좋아요 제거
@@ -35,7 +34,8 @@ function* handleToggleLike(action: ILikeAction) {
   }
 }
 
+// 사가 리스너
 export function* watchToggleLikes() {
-  yield takeLeading("likes/addLike", handleToggleLike);
-  yield takeLeading("likes/removeLike", handleToggleLike);
+  // "sliceName/reducerName"
+  yield takeLeading("campsiteLike/toggleLikeRequest", handleToggleLike);
 }
