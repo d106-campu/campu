@@ -15,8 +15,11 @@ const markersSlice = createSlice({
     toggleMarker(state, action: PayloadAction<string | null>) {
       state.facltNm = action.payload;
     },
+    clearMarker(state) {
+      state.facltNm = null;
+    },
   },
 });
 
-export const { toggleMarker } = markersSlice.actions;
+export const { toggleMarker, clearMarker } = markersSlice.actions;
 export const markersReducer = markersSlice.reducer;
