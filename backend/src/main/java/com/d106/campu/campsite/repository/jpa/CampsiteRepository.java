@@ -19,8 +19,10 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
             LEFT JOIN FETCH c.campsiteLocation loc
             LEFT JOIN FETCH c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
+            AND r.maxNo >= :headCnt
         """)
-    Page<Campsite> findAll(Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm);
+    Page<Campsite> findAll(Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm,
+        @Param("headCnt") int headCnt);
 
     Page<Campsite> findByUser(Pageable pageable, User user);
 
@@ -31,23 +33,30 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
             LEFT JOIN FETCH c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
             AND (c.indutyList IS NOT NULL) AND (c.indutyList LIKE %:induty%)
+            AND r.maxNo >= :headCnt
         """)
     Page<Campsite> findByInduty(
-        Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("induty") String induty
+        Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("induty") String induty,
+        @Param("headCnt") int headCnt
     );
 
     @Query("""
         SELECT c
         FROM campsite c
-            LEFT JOIN FETCH c.campsiteThemeList ct
-            LEFT JOIN FETCH ct.theme t
-            LEFT JOIN FETCH c.campsiteLocation loc
+            LEFT JOIN c.campsiteLocation loc
             LEFT JOIN FETCH c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
-            AND t.theme = :theme
+            AND c IN (
+                SELECT ct.campsite
+                FROM Theme t
+                    INNER JOIN t.campsiteThemeList ct
+                WHERE t.themeStr = :theme
+            )
+            AND r.maxNo >= :headCnt
         """)
     Page<Campsite> findByTheme(
-        Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("theme") String theme
+        Pageable pageable, @Param("doNm") String doNm, @Param("sigunguNm") String sigunguNm, @Param("theme") String theme,
+        @Param("headCnt") int headCnt
     );
 
 }
