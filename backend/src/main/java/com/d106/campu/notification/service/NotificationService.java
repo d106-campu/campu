@@ -2,6 +2,7 @@ package com.d106.campu.notification.service;
 
 import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.NotFoundException;
+import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.notification.constant.NotificationConstant;
@@ -15,10 +16,13 @@ import com.d106.campu.notification.repository.jpa.NotificationRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -29,6 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class NotificationService {
 
     @Value("${app.base-url}")
@@ -75,40 +80,56 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public void sendNotification(NotificationDto.SaveResponse saveResponseDto) {
-        Optional.ofNullable(sseEmitterMap.get(saveResponseDto.getUserId())).ifPresent(emitter -> {
-            try {
-                emitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
-                    .data(
-                        new Response(NotificationConstant.NOTIFICATION,
-                            notificationMapper.toSendResponseDto(saveResponseDto))));
-            } catch (Exception e) {
-                throw new InvalidException(NotificationExceptionCode.FAIL_SEND);
-            }
+    public void sendNotification(List<NotificationDto.SaveResponse> saveResponseDtoList) {
+        if (saveResponseDtoList.isEmpty()) {
+            return;
+        }
+        log.info("Send SSE notification for empty room");
+        saveResponseDtoList.forEach(saveResponseDto -> {
+            Optional.ofNullable(sseEmitterMap.get(saveResponseDto.getUserId())).ifPresent(emitter -> {
+                try {
+                    emitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
+                        .data(
+                            new Response(NotificationConstant.NOTIFICATION,
+                                notificationMapper.toSendResponseDto(saveResponseDto))));
+                } catch (Exception e) {
+                    throw new InvalidException(NotificationExceptionCode.FAIL_SEND);
+                }
+            });
         });
     }
 
     @Transactional
-    public NotificationDto.SaveResponse saveNotification(EmptyRoomEvent emptyRoomEvent) {
-        User user = userRepository.findById(emptyRoomEvent.getUserId())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        Notification notification = notificationMapper.fromEmptyRoomEventToNotification(baseUrl, emptyRoomEvent);
-        notification.setUser(user);
-        notificationRepository.save(notification);
-        return notificationMapper.toSaveResponseDto(user, notification);
+    public List<NotificationDto.SaveResponse> saveNotification(List<EmptyRoomEvent.Data> emptyRoomEventDataList) {
+        List<Notification> notificationList = notificationMapper.fromEmptyRoomEventDataListToNotificationList(baseUrl,
+            emptyRoomEventDataList);
+        AtomicInteger count = new AtomicInteger(0);
+        notificationList.forEach(notification -> {
+            User user = userRepository.findById(emptyRoomEventDataList.get(count.getAndIncrement()).getUserId())
+                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+            notification.setUser(user);
+        });
+
+        return notificationMapper.toSaveResponseDtoList(notificationRepository.saveAll(notificationList));
     }
 
     @Transactional
     public void deleteNotification(Long notificationId) {
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        if (!notificationRepository.existsByIdAndUser_Id(notificationId, user.getId())) {
+            throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
+        }
+
         notificationRepository.deleteById(notificationId);
     }
 
     public void publishEvent(PublishEventRequest publishEventRequestDto) {
-        EmptyRoomEvent emptyRoomEvent = notificationMapper.toTestEvent(publishEventRequestDto);
+        EmptyRoomEvent emptyRoomEvent = notificationMapper.toEmptyRoomEventForTest(publishEventRequestDto);
         applicationEventPublisher.publishEvent(emptyRoomEvent);
     }
 
-    // TODO: 본인 알림만 조회 가능하도록 수정 필요
+    // TODO: 본인 알림만 조회 가능하도록 수정
     @Transactional(readOnly = true)
     public Page<NotificationDto.ListResponse> getNotificationList(Pageable pageable) {
         User user = userRepository.findByAccount(securityHelper.getLoginAccount())
