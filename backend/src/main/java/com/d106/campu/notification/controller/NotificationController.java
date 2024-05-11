@@ -3,7 +3,6 @@ package com.d106.campu.notification.controller;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.controller.doc.NotificationControllerDoc;
-import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
 import com.d106.campu.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -45,13 +44,6 @@ public class NotificationController implements NotificationControllerDoc {
             .header("X-Accel-Buffering", "no")
             .header("Transfer-Encoding", "chunked")
             .body(notificationService.connectSseV2(userId));
-    }
-
-    @Override
-    @PostMapping
-    public Response saveNotification(@RequestBody NotificationDto.SaveRequest saveRequestDto) {
-        notificationService.saveNotification(saveRequestDto);
-        return new Response();
     }
 
     @Override

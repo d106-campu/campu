@@ -8,7 +8,7 @@ import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
-import com.d106.campu.notification.event.TestEvent;
+import com.d106.campu.notification.event.EmptyRoomEvent;
 import com.d106.campu.notification.exception.code.NotificationExceptionCode;
 import com.d106.campu.notification.mapper.NotificationMapper;
 import com.d106.campu.notification.repository.jpa.NotificationRepository;
@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 @Service
 public class NotificationService {
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     private static final Map<Long, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
     private final NotificationRepository notificationRepository;
@@ -71,15 +75,13 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public void sendNotification(Long notificationId) {
-        Notification notification = notificationRepository.findById(notificationId)
-            .orElseThrow(() -> new NotFoundException(NotificationExceptionCode.NOT_FOUND_NOTIFICATION));
-
-        Optional.ofNullable(sseEmitterMap.get(notification.getUser().getId())).ifPresent(emitter -> {
+    public void sendNotification(NotificationDto.SaveResponse saveResponseDto) {
+        Optional.ofNullable(sseEmitterMap.get(saveResponseDto.getUserId())).ifPresent(emitter -> {
             try {
                 emitter.send(SseEmitter.event().name(NotificationConstant.SSE_EVENT)
                     .data(
-                        new Response(NotificationConstant.NOTIFICATION, notificationMapper.toSendResponseDto(notification))));
+                        new Response(NotificationConstant.NOTIFICATION,
+                            notificationMapper.toSendResponseDto(saveResponseDto))));
             } catch (Exception e) {
                 throw new InvalidException(NotificationExceptionCode.FAIL_SEND);
             }
@@ -87,13 +89,13 @@ public class NotificationService {
     }
 
     @Transactional
-    public Long saveNotification(NotificationDto.SaveRequest saveRequestDto) {
-        Notification notification = notificationMapper.toNotification(saveRequestDto);
-        notification.setUser(
-            userRepository.findById(saveRequestDto.getUserId())
-                .orElseThrow(() -> new InvalidException(UserExceptionCode.USER_NOT_FOUND)));
+    public NotificationDto.SaveResponse saveNotification(EmptyRoomEvent emptyRoomEvent) {
+        User user = userRepository.findById(emptyRoomEvent.getUserId())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        Notification notification = notificationMapper.fromEmptyRoomEventToNotification(baseUrl, emptyRoomEvent);
+        notification.setUser(user);
         notificationRepository.save(notification);
-        return notificationRepository.save(notification).getId();
+        return notificationMapper.toSaveResponseDto(user, notification);
     }
 
     @Transactional
@@ -102,8 +104,8 @@ public class NotificationService {
     }
 
     public void publishEvent(PublishEventRequest publishEventRequestDto) {
-        TestEvent testEvent = notificationMapper.toTestEvent(publishEventRequestDto);
-        applicationEventPublisher.publishEvent(testEvent);
+        EmptyRoomEvent emptyRoomEvent = notificationMapper.toTestEvent(publishEventRequestDto);
+        applicationEventPublisher.publishEvent(emptyRoomEvent);
     }
 
     @Transactional(readOnly = true)
