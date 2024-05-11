@@ -8,9 +8,9 @@ import { RootState } from "@/app/store";
 const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
   // Redux 상태 불러오기
   const { headCount } = useSelector((state: RootState) => state.headCount);
-  // const { startDate, endDate } = useSelector(
-  //   (state: RootState) => state.campingDate
-  // );
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.campingDate
+  );
 
   const { useGetRoomListInfinite } = useReservation();
   const {
@@ -21,15 +21,15 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
   } = useGetRoomListInfinite({
     campsiteId: campsiteId,
     size: 5,
-    headCnt: headCount ? headCount : 2,
-    startDate: "2024-12-25",
-    endDate: "2024-12-30",
+    headCnt: headCount,
+    startDate: startDate,
+    endDate: endDate,
   });
 
   const { setTarget } = useIntersectionObserver({ fetchNextPage, hasNextPage });
 
   const totalElements =
-    roomListData?.pages[0]?.data.roomList.totalElements || "";
+    roomListData?.pages[0]?.data.roomList.totalElements || 0;
 
   return (
     <>

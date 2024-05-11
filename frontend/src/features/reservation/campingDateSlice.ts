@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { dayOfWeekend } from "@/utils/dayOfWeekend";
 
 interface CampingDateState {
-  startDate: string | null;
-  endDate: string | null;
+  startDate: string;
+  endDate: string;
 }
 
 // 초기 날짜를 계산
@@ -18,10 +18,10 @@ const campingDateSlice = createSlice({
   name: "campingDate",
   initialState,
   reducers: {
-    setStartDate: (state, action: PayloadAction<string | null>) => {
+    setStartDate: (state, action: PayloadAction<string>) => {
       state.startDate = action.payload;
     },
-    setEndDate: (state, action: PayloadAction<string | null>) => {
+    setEndDate: (state, action: PayloadAction<string>) => {
       state.endDate = action.payload;
     },
     resetDate: (state) => {
