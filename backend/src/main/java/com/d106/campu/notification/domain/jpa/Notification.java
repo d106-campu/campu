@@ -30,11 +30,20 @@ public class Notification extends BaseTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "content", length = 100, nullable = false)
-    private String content;
+    @Column(name = "message", length = 64)
+    private String message;
 
-    @Column(name = "redirect_url", length = 1024)
-    private String redirectUrl;
+    @Column(name = "name", length = 256)
+    private String name;
+
+    @Column(name = "date", length = 64)
+    private String date;
+
+    @Column(name = "no", length = 32)
+    private String no;
+
+    @Column(name = "url", length = 1024)
+    private String url;
 
     public void setUser(User user) {
         if (this.user != null) {

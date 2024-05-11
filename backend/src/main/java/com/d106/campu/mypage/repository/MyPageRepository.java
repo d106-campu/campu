@@ -132,6 +132,9 @@ public class MyPageRepository {
                 .build());
         }
 
+        if (myReservationResponseList.isEmpty()) {
+            return null;
+        }
         return new PageImpl<>(myReservationResponseList, pageable, getReservationCountByAccount(account));
     }
 
@@ -188,6 +191,9 @@ public class MyPageRepository {
                 .build());
         }
 
+        if (myReviewResponseList.isEmpty()) {
+            return null;
+        }
         return new PageImpl<>(myReviewResponseList, pageable, getReviewCountByAccount(account));
     }
 
@@ -232,6 +238,9 @@ public class MyPageRepository {
                 .build());
         }
 
+        if (myCampsiteResponseList.isEmpty()) {
+            return null;
+        }
         return new PageImpl<>(myCampsiteResponseList, pageable, getCampsiteCountByAccount(account));
     }
 

@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByTelAndDeleteTimeIsNull(String tel);
 
+    boolean existsByAccount(String account);
+
 }

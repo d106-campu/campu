@@ -99,6 +99,7 @@ public class ImageService {
     public List<String> uploadCampsiteGeneralImageList(Long campsiteId, List<MultipartFile> generalImageList) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+        // TODO: existsBy... 메서드를 사용하도록 수정
         if (!StringUtils.equals(campsite.getUser().getAccount(), securityHelper.getLoginAccount())) {
             throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
         }
