@@ -7,6 +7,8 @@ const SearchContainer = () => {
   const locations = useSelector(
     (state: RootState) => state.campingMap.campsiteData
   );
+  const mapX = useSelector((state: RootState) => state.campingMap.mapX);
+  const mapY = useSelector((state: RootState) => state.campingMap.mapY);
 
   const mapLocations = locations?.map((campsite) => ({
     facltNm: campsite.facltNm,
@@ -14,6 +16,7 @@ const SearchContainer = () => {
     lat: campsite.campsiteLocation?.mapY || null,
     lng: campsite.campsiteLocation?.mapX || null,
   }));
+  console.log(mapX, mapY);
 
   return (
     <>
@@ -24,7 +27,7 @@ const SearchContainer = () => {
           </div>
         </div>
         <div className="h-[calc(100vh-3rem)] w-[60%]">
-          <KakaoMap locations={mapLocations!} />
+          <KakaoMap locations={mapLocations!} mapX={mapX} mapY={mapY} />
         </div>
       </div>
     </>

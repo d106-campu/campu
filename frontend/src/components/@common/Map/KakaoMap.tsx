@@ -3,9 +3,13 @@ import { useEffect, useRef } from "react";
 import MarkerImage from "@/assets/images/Marker.png";
 import Star from "@/assets/images/Star.png";
 
-type LocationsList = IMapProps[];
+interface KakaoMapProps {
+  locations: IMapProps[];
+  mapX: number | null;
+  mapY: number | null;
+}
 
-const KakaoMap = ({ locations }: { locations: LocationsList }) => {
+const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overlayRef = useRef<any>(null);
@@ -37,7 +41,7 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
     if (!container) return;
 
     const options = {
-      center: new window.kakao.maps.LatLng(locations[0].lat, locations[0].lng),
+      center: new window.kakao.maps.LatLng(mapY, mapX),
       level: locations[0].level || 5,
     };
 
