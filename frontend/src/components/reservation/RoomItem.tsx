@@ -7,12 +7,13 @@ import { scrollToTop } from "@/utils/scrollToTop";
 import { IRoomItem } from "@/types/reservation";
 import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
+import { useReservation } from "@/hooks/reservation/useReservation";
+import axios from "axios";
+import Toast from "../@common/Toast/Toast";
+import { useState } from "react";
 
-interface IRoomItemProps extends IRoomItem {
-  // campsiteId: number;
-}
-
-const RoomItem = ({ room }: { room: IRoomItemProps }) => {
+const RoomItem = ({ room }: { room: IRoomItem }) => {
+  const [isAlertActive, setIsAlertActive] = useState(!room.emptyNotification); // 빈자리 알림 상태관리
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -34,6 +35,46 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     (state: RootState) => state.campingDate
   );
   const { headCount } = useSelector((state: RootState) => state.headCount);
+
+  const { usePostAlert } = useReservation();
+  const { mutate: postAlert } = usePostAlert({
+    roomId: room.id,
+    startDate,
+    endDate,
+  });
+
+  // 빈자리 알림 버튼 클릭 핸들러
+  const handlePostAlert = () => {
+    // 빈자리 알림 등록 API 호출
+    postAlert(
+      { roomId: room.id, startDate, endDate },
+      {
+        onSuccess: () => {
+          setIsAlertActive(!isAlertActive);
+          Toast.success("빈자리 알림이 등록되었습니다 😊");
+        },
+        onError: (err) => {
+          if (axios.isAxiosError(err)) {
+            const res = err.response;
+
+            if (res && res.status === 429) {
+              if (res.data.code === "EMPTY_NOTIFICATION501") {
+                Toast.error(
+                  "빈자리 알림 등록 횟수를 초과하였습니다 😥 최대 5개까지 등록 가능합니다."
+                );
+                return;
+              }
+            }
+
+            if (res && res.status === 409) {
+              Toast.error("이미 등록한 빈자리 알림입니다 😥");
+              return;
+            }
+          }
+        },
+      }
+    );
+  };
 
   const makeReservation = () => {
     // 예약 정보 업데이트
@@ -176,21 +217,22 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
           {/* 버튼 - 예약 가능시 : 예약하기 / 예약 불가능시 : 알림 받기 및 취소하기  */}
           {room.available ? (
             <Button width="w-40" text="예약하기" onClick={makeReservation} />
-          ) : room.emptyNotification ? (
+          ) : !isAlertActive ? (
             <Button
               width="w-40"
               text="빈자리 알림 취소"
-              textColor="text-MAIN_GREEN"
-              backgroundColor="bg-SUB_GREEN_02"
-              hoverBackgroundColor="hover:bg-[#d0e2d3]"
+              textColor="text-[#ffffff]"
+              backgroundColor="bg-SUB_RED"
+              hoverBackgroundColor="hover:bg-HOVER_PINK"
             />
           ) : (
             <Button
+              onClick={handlePostAlert}
               width="w-40"
               text="빈자리 알림 받기"
               textColor="text-MAIN_GREEN"
               backgroundColor="bg-SUB_GREEN_02"
-              hoverBackgroundColor="hover:bg-[#d0e2d3]"
+              hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
             />
           )}
         </div>
