@@ -5,11 +5,6 @@ import Modal from "@/components/@common/Modal/Modal";
 import Button from "@/components/@common/Button/Button";
 import Calendar from "@/components/@common/Calendar/Calendar";
 import CalendarSubmit from "@/components/@common/Calendar/CalendarSubmit";
-import {
-  formatSimpleDate,
-  dateStringToDate,
-  dateToDateString,
-} from "@/utils/formatDateTime";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import { PiInfo } from "react-icons/pi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
@@ -19,13 +14,25 @@ import {
   setStartDate,
   setEndDate,
 } from "@/features/reservation/campingDateSlice";
+import {
+  formatSimpleDate,
+  dateStringToDate,
+  dateToDateString,
+} from "@/utils/formatDateTime";
 
 const MyController = () => {
   // 모달 상태관리
   const [scheduleModal, setScheduleModal] = useState<boolean>(false);
   const [headCountModal, setHeadCountModal] = useState<boolean>(false);
-  const toggleScheduleModal = () => setScheduleModal(!scheduleModal);
-  const toggleHeadCountModal = () => setHeadCountModal(!headCountModal);
+  const toggleScheduleModal = () => {
+    setScheduleModal(!scheduleModal); // 모달 토글
+    setLocalStartDate(dateStringToDate(startDate)); // 저장 안하고 닫으면 초기화
+    setLocalEndDate(dateStringToDate(endDate));
+  };
+  const toggleHeadCountModal = () => {
+    setHeadCountModal(!headCountModal); // 모달 토글
+    setLocalHeadCount(headCount); // 저장 안하고 닫으면 초기화
+  };
 
   const dispatch = useDispatch();
   const { startDate, endDate } = useSelector(
@@ -43,24 +50,27 @@ const MyController = () => {
   );
   const [localEndDate, setLocalEndDate] = useState<Date | null>(initialEndDate);
 
+  // 일정 초기화
+  const resetCalendar = () => {
+    setLocalStartDate(dateStringToDate(startDate));
+    setLocalEndDate(dateStringToDate(endDate));
+  };
+
   // 일정 스토어에 저장
   const calendarSubmit = () => {
     // Date 객체를 'yyyy-MM-dd' 형식의 문자열로 변환
     const formattedStartDate = dateToDateString(localStartDate);
     const formattedEndDate = dateToDateString(localEndDate);
 
-    // 변환된 문자열을 Redux 스토어에 저장
-    dispatch(setStartDate(formattedStartDate));
-    dispatch(setEndDate(formattedEndDate));
-
-    // @TODO: 백에 방 조회 API 요청 다시 보내기
+    if (formattedStartDate !== null && formattedEndDate !== null) {
+      // 변환된 문자열을 Redux 스토어에 저장
+      dispatch(setStartDate(formattedStartDate));
+      dispatch(setEndDate(formattedEndDate));
+    }
   };
 
   // 인원수
   const [localHeadCount, setLocalHeadCount] = useState<number>(headCount);
-
-  // 인원수 초기값
-  const initialHeadCount: number = headCount;
 
   // 인원수 증감 함수
   const increasePeople = () => setLocalHeadCount(localHeadCount + 1);
@@ -70,23 +80,11 @@ const MyController = () => {
   // 인원수 스토어에 저장
   const headCountSubmit = () => {
     dispatch(setHeadCount(localHeadCount));
-    // @TODO: 백에 방 조회 API 요청 다시 보내기
   };
 
   useEffect(() => {
-    // 확인용 로직
-    console.log("시작일", localStartDate);
-    console.log("종료일", localEndDate);
-    console.log("스토어 시작일", startDate);
-    console.log("스토어 종료일", endDate);
-    console.log("인원수", localHeadCount);
-  }, [localStartDate, localEndDate, localHeadCount]);
-
-  // 일정 초기화
-  const resetCalendar = () => {
-    setLocalStartDate(dateStringToDate(startDate));
-    setLocalEndDate(dateStringToDate(endDate));
-  };
+    // @TODO: 백에 방 조회 API 요청 다시 보내기
+  }, [startDate, endDate, headCount]);
 
   return (
     <>
@@ -137,8 +135,8 @@ const MyController = () => {
               startDate={localStartDate}
               endDate={localEndDate}
               onClick={() => {
-                calendarSubmit();
                 toggleScheduleModal();
+                calendarSubmit();
               }}
             />
           </div>
@@ -184,7 +182,7 @@ const MyController = () => {
             </div>
 
             <button
-              onClick={() => setLocalHeadCount(initialHeadCount)}
+              onClick={() => setLocalHeadCount(headCount)}
               className="flex items-center gap-2 cursor-pointer p-2"
             >
               <FaArrowRotateRight color="C9C9C9" />
