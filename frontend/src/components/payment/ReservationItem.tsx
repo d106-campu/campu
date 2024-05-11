@@ -10,6 +10,8 @@ import stamp from "@/assets/images/stamp.png";
 import { FiMapPin } from "react-icons/fi";
 import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
 import { useState } from "react";
+import Lottie from "react-lottie";
+import { tentOptions } from "@/assets/lotties/lottieOptions";
 
 const ReservationItem = () => {
   const dispatch = useDispatch();
@@ -86,11 +88,25 @@ const ReservationItem = () => {
           <p className="pb-[12px] font-bold text-BLACK">
             {campsite_addr1} {campsite_addr2}
           </p>
-          <img
-            src={image}
-            alt={`${campsite_faclt_nm} ${roomName}`}
-            className="w-full h-52 object-cover object-center rounded-xl"
-          />
+          {image ? (
+            <img
+              src={image}
+              alt={`${campsite_faclt_nm} ${roomName}`}
+              className="w-full h-52 object-cover object-center rounded-xl"
+            />
+          ) : (
+            <>
+              <Lottie
+                options={tentOptions}
+                height={200}
+                width={270}
+                speed={0.5}
+              />
+              <p className="text-center text-UNIMPORTANT_TEXT_02">
+                등록된 캠핑 사이트 사진이 없어요
+              </p>
+            </>
+          )}
         </div>
 
         {/* 구분선 */}
@@ -126,7 +142,7 @@ const ReservationItem = () => {
               <p className="pb-[15px] font-bold text-BLACK">{campsite_tel}</p>
             </div>
           </div>
-          {supplyList.length > 0 && (
+          {supplyList && supplyList.length > 0 && (
             <div className="pb-[15px]">
               <h3>기타 정보</h3>
               {supplyList.map((item: string, index: number) => (

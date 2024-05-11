@@ -6,3 +6,18 @@ export interface APIResponse<T> {
   message?: string; // 실패 시 백에서 보내는 에러 메시지
 }
 
+// 페이지 정보 타입
+export interface IPageable {
+  pageNumber: number;
+  pageSize: number;
+  sort: ISort;
+  offset: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+export interface ISort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}

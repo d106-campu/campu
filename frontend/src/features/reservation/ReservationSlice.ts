@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 interface IReservationState {
   data: {
     reservationId: number; // 예약 아이디
-    image: string; // 방 사진
+    image: string | null; // 방 사진
     campsite_faclt_nm: string; // 캠핑장 이름
     campsite_tel: string; // 캠핑장 전화번호
     campsite_addr1: string; // 캠핑장 주소
@@ -13,7 +13,7 @@ interface IReservationState {
     rating: number; // 별점
     roomName: string; // 캠핑장 방 이름
     roomInduty: string; // 캠핑 유형
-    supplyList: string[];
+    supplyList: string[] | null;
     headCnt: number; // 예약 인원
     price: number; // 총 가격
     startDate: string; // 캠핑 시작일

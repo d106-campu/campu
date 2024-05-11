@@ -12,7 +12,7 @@ const ReservationPage = () => {
       <Header />
       <div className="max-w-[70%] mx-auto py-2">
         <CampsiteIntro data={data} />
-        <ReservationContainer />
+        <ReservationContainer campsiteId={data.id} />
         <InfoDetail data={data} reviewsData={reviews} />
       </div>
       <Footer />
