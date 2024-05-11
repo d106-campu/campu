@@ -1,6 +1,8 @@
 import { useState } from "react";
 import TagList from "@/components/home/TagList";
-import dummy from "@/assets/images/dummyCamping3.png";
+import { dayOfWeekend } from "@/utils/dayOfWeekend";
+import { useCampsite } from "@/hooks/search/useCampsite";
+import RecommendItem from "./RecommendItem";
 
 const RecommendThema = () => {
   const tags = [
@@ -18,15 +20,28 @@ const RecommendThema = () => {
     "스키",
   ];
 
-  const [selectedTags, setSelectedTags] = useState<string[]>(["여름물놀이"]);
+  const [selectedTags, setSelectedTags] = useState<string>("여름물놀이");
+  const { useCampsiteList } = useCampsite();
+
+  // 주말 날짜
+  const weekendDates = dayOfWeekend();
+  const saturday = weekendDates.saturday;
+  const sunday = weekendDates.sunday;
+
+  // ( 주말 기준 ) 테마별 추천 캠핑장 리스트 조회
+  const { data: campsiteOfThema } = useCampsiteList({
+    startDate: saturday,
+    endDate: sunday,
+    headCnt: 2,
+    theme: selectedTags,
+    pageable: { page: 0, size: 6 },
+  });
 
   const toggleTag = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(
-        selectedTags.filter((selectedTag) => selectedTag !== tag)
-      );
+    if (selectedTags === tag) {
+      setSelectedTags("");
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setSelectedTags(tag);
     }
   };
 
@@ -42,15 +57,9 @@ const RecommendThema = () => {
       </div>
       <div className="flex justify-center py-8">
         <div className="flex flex-wrap justify-center w-[70%]">
-          {dummyData.map((campground) => {
-            const matchesSelectedTags = campground.thema.some((theme) =>
-              selectedTags.includes(theme)
-            );
-            if (matchesSelectedTags) {
-              return 
-            }
-            return null;
-          })}
+          {campsiteOfThema?.data.campsiteList.content.map((item) => (
+            <RecommendItem key={item.id} item={item} />
+          ))}
         </div>
       </div>
     </>
@@ -58,106 +67,3 @@ const RecommendThema = () => {
 };
 
 export default RecommendThema;
-
-// 더미데이터
-const dummyData = [
-  {
-    id: 1,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 2,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["야경명소", "애견동반"],
-  },
-  {
-    id: 3,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["야경명소", "장비대여"],
-  },
-  {
-    id: 4,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 5,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["야경명소", "애견동반"],
-  },
-  {
-    id: 6,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["야경명소", "장비대여"],
-  },
-  {
-    id: 7,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["물놀이", "애견동반"],
-  },
-  {
-    id: 8,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["야경명소", "애견동반"],
-  },
-  {
-    id: 9,
-    name: "캠핑핑캠핑장",
-    image: dummy,
-    rating: 4.5,
-    price: "50,000",
-    description: "깔끔하고 분위기 좋은 신상 캠핑 숙소",
-    location: "경상북도 구미시",
-    type: "캠핑",
-    thema: ["야경명소", "장비대여"],
-  },
-];
