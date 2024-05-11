@@ -68,6 +68,7 @@ const FreeAlert = (): JSX.Element => {
 
   // 빈자리 알림 취소 확정 시 리스트에서 정보 제거 
   const confirmCancelAlert = () => {
+    console.log(selectedAlertId)
     if (selectedCampsiteId !== null) {
       // 빈자리 알림 DELETE 요청 API 연결
       console.log("선택한 Id 확인 :", selectedCampsiteId)
