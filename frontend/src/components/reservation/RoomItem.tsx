@@ -5,6 +5,8 @@ import { RootState } from "@/app/store";
 import { setReservationData } from "@/features/reservation/ReservationSlice";
 import { scrollToTop } from "@/utils/scrollToTop";
 import { IRoomItem } from "@/types/reservation";
+import Lottie from "react-lottie";
+import { tentOptions } from "@/assets/lotties/lottieOptions";
 
 interface IRoomItemProps extends IRoomItem {
   // campsiteId: number;
@@ -38,22 +40,22 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     const newReservationData = {
       id: room.id,
       image: room.image_url,
+      roomName: room.name, // 캠핑장 방 이름
+      roomInduty: room.induty, // 캠핑 유형
+      price: room.price, // 총 가격
+      supplyList: room.supplyList,
       campsite_faclt_nm: campsite.facltNm, // 캠핑장 이름
       campsite_tel: campsite.tel, // 캠핑장 전화번호
       campsite_addr1: campsite.addr1, // 캠핑장 주소
       campsite_addr2: campsite.addr2, // 캠핑장 상세 주소
       mapX: campsite.mapX, // 위도
       mapY: campsite.mapY, // 경도
-      rating: campsite.rating, // 별점
-      roomName: room.name, // 캠핑장 방 이름
-      roomInduty: room.induty, // 캠핑 유형
-      supplyList: room.supplyList,
-      headCnt: headCount, // 예약 인원
-      price: room.price, // 총 가격
-      startDate: startDate, // 캠핑 시작일
-      endDate: endDate, // 캠핑 종료일
       checkIn: campsite.checkIn, // 캠핑장 입실 시간
       checkOut: campsite.checkOut, // 캠핑장 퇴실 시간
+      rating: campsite.rating, // 별점
+      headCnt: headCount, // 예약 인원
+      startDate: startDate, // 캠핑 시작일
+      endDate: endDate, // 캠핑 종료일
     };
 
     dispatch(setReservationData(newReservationData));
@@ -67,14 +69,37 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
         room.available ? "text-BLACK" : "text-UNIMPORTANT_TEXT_02"
       }`}
     >
+      {/* 캠핑존 사진 */}
       <div key={room.id} className="w-[50%] relative">
-        <img
-          src={room.image_url}
-          alt={room.name}
-          className={`w-full h-40 rounded-lg h-30 object-cover object-center ${
-            room.available ? "" : "opacity-30"
-          }`}
-        />
+        {room.image_url ? (
+          <img
+            src={room.image_url}
+            alt={room.name}
+            className={`w-full h-40 rounded-lg h-30 object-cover object-center ${
+              room.available ? "" : "opacity-30"
+            }`}
+          />
+        ) : (
+          <>
+            {/* 등록된 캠핑존 사진이 없을 때 UI */}
+            <div
+              className={`flex flex-col justify-center w-full h-40 rounded-lg h-30 object-cover object-center ${
+                room.available ? "" : "opacity-30"
+              }`}
+            >
+              <Lottie
+                options={tentOptions}
+                height={200}
+                width={270}
+                speed={0.5}
+              />
+              <p className="text-UNIMPORTANT_TEXT_02 text-center mr-3">
+                등록된 캠핑존 사진이 없어요
+              </p>
+            </div>
+          </>
+        )}
+        {/* 예약이 불가능할 경우 추가 UI */}
         {!room.available && (
           <span className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center text-white text-2xl bg-black bg-opacity-30 rounded-lg">
             예약 마감
@@ -82,6 +107,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
         )}
       </div>
       <div className="flex justify-between h-40 w-full pl-7">
+        {/* 캠핑존 정보 */}
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-bold pb-3">{room.name}</h1>
           <div
@@ -91,6 +117,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
                 : "gap-14"
             } text-sm`}
           >
+            {/* 기본 정보 */}
             <div>
               <p className="pb-[10px]">{room.induty}</p>
               <p className="pb-[10px]">
@@ -101,6 +128,8 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
               </p>
               <p className="pb-[10px]">화장실 개수: {room.toiletCnt}</p>
             </div>
+
+            {/* 추가 정보 (부대 시설 목록) */}
             {room.supplyList && room.supplyList.length > 0 && (
               <>
                 <div className="border-r" />
@@ -128,6 +157,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
           </div>
         </div>
         <div className="flex flex-col justify-between items-end">
+          {/* 가격 및 예약 마감 텍스트*/}
           <div>
             <p
               className={`text-xl font-extrabold ${
@@ -142,6 +172,8 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
               </p>
             )}
           </div>
+
+          {/* 버튼 - 예약 가능시 : 예약하기 / 예약 불가능시 : 알림 받기 및 취소하기  */}
           {room.available ? (
             <Button width="w-40" text="예약하기" onClick={makeReservation} />
           ) : room.emptyNotification ? (
