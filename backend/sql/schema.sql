@@ -130,7 +130,7 @@ CREATE TABLE `user` (
   `gender` char(1) DEFAULT NULL COMMENT '성별',
   `birth_year` char(4) DEFAULT NULL COMMENT '출생년도',
   `profile_image_url` varchar(1024) DEFAULT NULL COMMENT '프로필 이미지 주소',
-  `tel` char(11) NOT NULL UNIQUE COMMENT '전화번호',
+  `tel` char(11) NOT NULL COMMENT '전화번호',
   `delete_time` datetime DEFAULT NULL COMMENT '회원탈퇴 시간',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '회원가입 시간',
   `update_time` datetime DEFAULT NULL COMMENT '정보수정 시간',

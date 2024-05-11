@@ -38,7 +38,7 @@ public class NotificationController implements NotificationControllerDoc {
     }
 
     @Override
-    @GetMapping(value = "/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/test/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connectSseV2(@RequestParam("id") Long userId) {
         return ResponseEntity.ok()
             .header("X-Accel-Buffering", "no")
@@ -54,7 +54,7 @@ public class NotificationController implements NotificationControllerDoc {
     }
 
     @Override
-    @PostMapping("/publish")
+    @PostMapping("/test/publish")
     public Response publishEvent(@RequestBody PublishEventRequest publishEventRequestDto) {
         notificationService.publishEvent(publishEventRequestDto);
         return new Response();

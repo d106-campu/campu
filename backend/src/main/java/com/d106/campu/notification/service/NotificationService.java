@@ -43,7 +43,7 @@ public class NotificationService {
 
     public SseEmitter connectSseV1() {
         User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new InvalidException(UserExceptionCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         SseEmitter sseEmitter = new SseEmitter(NotificationConstant.SSE_TIMEOUT_MILLIS);
         sseEmitterMap.put(user.getId(), sseEmitter);
@@ -108,9 +108,12 @@ public class NotificationService {
         applicationEventPublisher.publishEvent(emptyRoomEvent);
     }
 
+    // TODO: 본인 알림만 조회 가능하도록 수정 필요
     @Transactional(readOnly = true)
     public Page<NotificationDto.ListResponse> getNotificationList(Pageable pageable) {
-        return notificationRepository.findAllByUser_Id(pageable, 1L).map(notificationMapper::toListResponseDto);
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        return notificationRepository.findAllByUser_Id(pageable, user.getId()).map(notificationMapper::toListResponseDto);
     }
 
 }
