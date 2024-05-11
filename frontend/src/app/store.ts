@@ -15,6 +15,7 @@ import { campingDateReducer } from "@/features/reservation/campingDateSlice";
 import { searchBarReducer } from "@/features/search/searchBarSlice";
 import { headCountReducer } from "@/features/reservation/HeadCountSlice";
 import { campsiteLikeReducer } from "@/features/like/campsiteLikeSlice";
+import { markersReducer } from "@/features/search/markersSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -35,6 +36,7 @@ const persistConfig = {
     "headCount",
     "searchBar",
     "campsiteLike",
+    "markers",
   ],
 };
 
@@ -51,6 +53,7 @@ const rootReducer = combineReducers({
   searchBar: searchBarReducer,
   headCount: headCountReducer,
   campsiteLike: campsiteLikeReducer,
+  markers: markersReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
