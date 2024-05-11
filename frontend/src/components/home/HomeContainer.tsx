@@ -15,7 +15,7 @@ const HomeContainer = () => {
             어디로 떠나볼까요?
           </p>
           <div className="px-12 py-6">
-            <SearchBar />
+            <SearchBar state="main" />
           </div>
         </div>
         <MyCamping />

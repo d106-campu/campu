@@ -5,8 +5,7 @@ interface ISearchState {
   subRegion: string | null;
   startDate: string | null;
   endDate: string | null;
-  numberOfPeople: number | null;
-  keyword: string | null;
+  numberOfPeople: number;
 }
 
 const initialState: ISearchState = {
@@ -14,8 +13,7 @@ const initialState: ISearchState = {
   subRegion: null,
   startDate: null,
   endDate: null,
-  numberOfPeople: null,
-  keyword: null,
+  numberOfPeople: 2,
 };
 
 const searchBarSlice = createSlice({
@@ -34,16 +32,17 @@ const searchBarSlice = createSlice({
     setEndDate(state, action: PayloadAction<string | null>) {
       state.endDate = action.payload;
     },
-    setPeople(state, action: PayloadAction<number | null>) {
+    setPeople(state, action: PayloadAction<number>) {
       state.numberOfPeople = action.payload;
     },
-    setKeyword(state, action: PayloadAction<string | null>) {
-      state.keyword = action.payload;
-    },
+
     // 검색바를 초기화
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    resetState(_state) {
-      return initialState;
+    clearSearchData(state) {
+      state.region = null;
+      state.subRegion = null;
+      state.numberOfPeople = 2;
+      state.startDate = null;
+      state.endDate = null;
     },
   },
 });
@@ -54,8 +53,7 @@ export const {
   setStartDate,
   setEndDate,
   setPeople,
-  setKeyword,
-  resetState,
+  clearSearchData,
 } = searchBarSlice.actions;
 
 export const searchBarReducer = searchBarSlice.reducer;

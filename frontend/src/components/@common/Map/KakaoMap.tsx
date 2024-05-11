@@ -13,7 +13,7 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
   const markerRefs = useRef<any[]>([]);
 
   useEffect(() => {
-    if (locations.length > 0) {
+    if (locations?.length > 0) {
       initMap();
     } else {
       // locations이 비어 있을 때 기본 위치로 지도 설정
@@ -66,7 +66,9 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
       <div style="background-color: #fff; padding: 10px; border-radius: 10px; position: relative; top: -100px;">
         <div>
           <div class="font-bold">${location.facltNm}</div>
-          <div class="text-MAIN_RED font-bold flex text-[14px]"><img src=${Star} style="height: 20px; margin-right: 4px;" /> ${location.rate}</div>
+          <div class="text-MAIN_RED font-bold flex text-[14px]"><img src=${Star} style="height: 20px; margin-right: 4px;" /> ${location.rate?.toFixed(
+        1
+      )}</div>
         </div>
       </div>`;
 

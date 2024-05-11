@@ -4,32 +4,25 @@ import { MdOutlinePersonOutline } from "react-icons/md";
 import { LuSearch } from "react-icons/lu";
 import SearchRegion from "@/components/@common/Search/SearchRegion";
 import { RegionList } from "@/components/@common/Search/RegionList";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import Calendar from "@/components/@common/Calendar/Calendar";
 import { useDispatch, useSelector } from "react-redux";
-import { setKeyword, setPeople } from "@/features/search/searchBarSlice";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/app/store";
 import { formatSimpleDate } from "@/utils/formatDateTime";
+import { setPeople } from "@/features/search/searchBarSlice";
 
-const SearchBar = () => {
+const SearchBar = ({ state }: { state?: string }) => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [showCalendar, setShowCalendar] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
-
-  // 스토어 저장 확인용
-  // @TODO: API 호출 후, 스토어 비우는 로직 추가해야함
-  useEffect(() => {
-    console.log(searchBarState);
-  }, [searchBarState]);
 
   // 인원 증감 함수
   const handleDecrease = () => {
@@ -47,12 +40,16 @@ const SearchBar = () => {
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
-    dispatch(setKeyword(searchKeyword));
   };
 
   const goToSearchPage = () => {
     navigate("/search");
   };
+
+  console.log("지역", searchBarState.region, searchBarState.subRegion);
+  console.log(numberOfPeople);
+  console.log(startDate, endDate);
+  console.log(searchKeyword);
 
   return (
     <>
@@ -81,11 +78,6 @@ const SearchBar = () => {
               <IoIosArrowDown />
             </div>
           </div>
-          {showCalendar && (
-            <div className="absolute top-full left-0 bg-white rounded-md z-20 mt-1 w-[400px] border pb-8">
-              <Calendar />
-            </div>
-          )}
         </div>
 
         {/* 인원 선택 */}
@@ -120,12 +112,14 @@ const SearchBar = () => {
           ></input>
         </div>
         {/* 검색버튼 */}
-        <button
-          onClick={goToSearchPage}
-          className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap"
-        >
-          검색하기
-        </button>
+        {state === "main" && (
+          <button
+            onClick={goToSearchPage}
+            className="ml-2 px-6 py-3 bg-[#186D41] text-white rounded-md text-sm whitespace-nowrap"
+          >
+            검색하기
+          </button>
+        )}
       </div>
     </>
   );

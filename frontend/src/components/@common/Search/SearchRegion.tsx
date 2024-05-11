@@ -19,6 +19,7 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
     if (selectRegion === region) {
       setIsRegionListOpen(!isRegionListOpen);
       dispatch(setRegion(region.name)); // 리덕스 스토어에 저장
+      dispatch(setSubRegion(region.subArea[0])); // 기본 첫번째 서브지역 저장
     } else {
       setSelectRegion(region);
       setSelectSubRegion(null);
@@ -68,7 +69,7 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
         )}
       </div>
       {/* 시군구 선택 */}
-      {searchBarState.subRegion && (
+      {searchBarState.region && selectRegion && (
         <div>
           <button
             type="button"

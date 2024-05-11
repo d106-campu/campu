@@ -1,10 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/app/store";
-import {
-  setStartDate,
-  setEndDate,
-} from "@/features/reservation/campingDateSlice";
 import {
   add,
   eachDayOfInterval,
@@ -21,18 +15,20 @@ import {
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 interface ICalendarProps {
-  readOnly?: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  setEndDate: (date: Date | null) => void;
 }
 
 // @TODO: 윤년 추가하기
 // @TODO: 예약 불가능한 날짜 처리
-// @TODO: 컴포넌트 분리하기
-const Calendar = ({ readOnly = false }: ICalendarProps) => {
-  const dispatch = useDispatch();
-  const { startDate, endDate } = useSelector(
-    (state: RootState) => state.campingDate
-  );
-
+const Calendar = ({
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+}: ICalendarProps) => {
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(
     format(startDate ?? today, "yyyy년 MM월")
@@ -74,8 +70,6 @@ const Calendar = ({ readOnly = false }: ICalendarProps) => {
 
   // 날짜 선택 함수
   const handleSelectDate = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (readOnly) return; // 읽기 전용이면 return
-
     // button 선택 시 근처(감싸고 있는) li tag 설정
     const dateElement = event.currentTarget.closest("li");
 
@@ -91,8 +85,8 @@ const Calendar = ({ readOnly = false }: ICalendarProps) => {
 
     // 1. startDate와 endDate가 둘 다 있을 경우 또는 endDate와 selectedDate가 같은 경우
     if ((startDate && endDate) || (endDate && isEqual(endDate, selectedDate))) {
-      dispatch(setStartDate(selectedDate));
-      dispatch(setEndDate(null));
+      setStartDate(selectedDate);
+      setEndDate(null);
       return;
     }
 
@@ -104,16 +98,16 @@ const Calendar = ({ readOnly = false }: ICalendarProps) => {
       }
       // 선택한 날짜가 시작 날짜보다 이전인 경우
       if (startDate > selectedDate) {
-        dispatch(setStartDate(selectedDate));
-        dispatch(setEndDate(startDate));
+        setStartDate(selectedDate);
+        setEndDate(startDate);
         return;
       }
-      dispatch(setEndDate(selectedDate));
+      setEndDate(selectedDate);
       return;
     }
 
     // 3. startDate와 endDate가 둘 다 없는 경우
-    dispatch(setStartDate(selectedDate));
+    setStartDate(selectedDate);
   };
 
   const isDateInBetweenStartAndEnd = (
@@ -140,8 +134,7 @@ const Calendar = ({ readOnly = false }: ICalendarProps) => {
     return [
       isToday(day) && "text-[#46A14F] font",
       isBeforeToday && "text-GRAY", // 오늘 날짜 이전은 회색으로 표시
-      !readOnly &&
-        startDate &&
+      startDate &&
         !isEqual(day, startDate) &&
         endDate &&
         !isEqual(day, endDate) &&
@@ -160,7 +153,6 @@ const Calendar = ({ readOnly = false }: ICalendarProps) => {
           : isStart || isEnd
           ? "text-BLACK"
           : "text-blue-400"),
-      readOnly && "cursor-default",
       "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
     ]
       .filter(Boolean)
