@@ -1,6 +1,6 @@
 // 프로필 조회 요청
 export interface IUserProfile {
-  account?: string;
+  account: string;
   nickname: string;
   tel: string;
 }
