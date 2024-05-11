@@ -14,7 +14,6 @@ export const updateUserNickName = async (data: IUserNickNameUpdate): Promise<API
   return response.data;
 };
 
-
 // 비밀번호 수정 요청
 export const updateUserPassword = async (data: IUserPasswordUpdate): Promise<APIResponse<{ result: string }>> => {
   const response = await axiosAuthInstance.post('/mypage/profile/password', data);
