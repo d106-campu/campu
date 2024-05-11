@@ -112,6 +112,7 @@ public class CampsiteService {
         Map<Long, Integer> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
         Map<Long, Boolean> campsiteLikeByUserMap =
             (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
+        Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
@@ -131,7 +132,7 @@ public class CampsiteService {
             }
 
             // Avg review score
-            campsite.setScore(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0));
+            campsite.setScore(avgScoreByCampsiteMap.getOrDefault(campsite.getId(), 0.0));
 
             return campsite;
         }).toList());

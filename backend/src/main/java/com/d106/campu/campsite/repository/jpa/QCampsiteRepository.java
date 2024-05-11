@@ -7,6 +7,7 @@ import com.d106.campu.campsite.domain.jpa.QCampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.QCampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.QTheme;
 import com.d106.campu.campsite.dto.CampsiteDto;
+import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.room.domain.jpa.QRoom;
 import com.d106.campu.user.domain.jpa.User;
 import com.querydsl.core.BooleanBuilder;
@@ -20,13 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class QCampsiteRepository {
@@ -38,10 +37,10 @@ public class QCampsiteRepository {
     private final QCampsiteLocation campsiteLocation = QCampsiteLocation.campsiteLocation;
     private final QCampsiteLike campsiteLike = QCampsiteLike.campsiteLike;
     private final QRoom room = QRoom.room;
+    private final QReview review = QReview.review;
 
     public Page<CampsiteDto.Response> findByTheme(String themeStr, int headCnt, Pageable pageable) {
 
-        // campsiteLike.id, campsiteLike.campsite, campsiteLike.user,
         Expression[] projections = new Expression[]{
             campsite.id, campsite.facltNm, campsite.lineIntro, campsite.doNm, campsite.sigunguNm, campsite.addr1,
             campsite.addr2, campsite.thumbnailImageUrl, campsiteLocation.mapX, campsiteLocation.mapY, campsite.roomList
@@ -128,6 +127,26 @@ public class QCampsiteRepository {
         Map<Long, Boolean> responseMap = new TreeMap<>();
         tuples.forEach(tuple -> {
             responseMap.put(tuple.get(campsiteLike.campsite.id), true);
+        });
+        return responseMap;
+    }
+
+    public Map<Long, Double> findAvgScoreByCampsite(List<Long> campsiteIds) {
+        List<Tuple> tuples = jpaQueryFactory
+            .select(new Expression[]{
+                review.campsite.id, review.score.avg()
+            })
+            .from(review)
+            .where(new BooleanBuilder()
+                .and(review.campsite.id.in(campsiteIds))
+            )
+            .groupBy(review.campsite.id)
+            .orderBy(new OrderSpecifier[]{review.campsite.id.asc()})
+            .fetch();
+
+        Map<Long, Double> responseMap = new TreeMap<>();
+        tuples.forEach(tuple -> {
+            responseMap.put(tuple.get(review.campsite.id), tuple.get(review.score.avg()));
         });
         return responseMap;
     }
