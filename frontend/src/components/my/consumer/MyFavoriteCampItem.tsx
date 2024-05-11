@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaStar, FaHeart } from "react-icons/fa6";
-import { IMyFavoritCampRes } from '@/types/myFavorite'
+import { IMyFavoritCampRes } from '@/types/my'
 import Modal from '@/components/@common/Modal/Modal';
 
 interface MyFavoriteCampItemProps {

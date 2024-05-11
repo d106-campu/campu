@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Button from '@/components/@common/Button/Button';
 import GetReservations from '@/components/my/consumer/MyReservationItem';
 import ReservationAccordion from '@/components/my/consumer/ReservationAccordion';
-import { IReservationProps } from '@/types/myReservation';
+import { IReservationProps } from '@/types/my';
 
 const MyReservation = ({
   campName,

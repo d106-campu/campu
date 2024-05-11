@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { setNickname } from "@/features/login/authSlice";
-import { setIsProfileImage } from '@/features/mypage/myProfile';
+import { setIsProfileImage } from '@/features/mypage/myProfileSlice';
 import profileDefaultImage from "@/assets/images/profile.png";
 import Button from "@/components/@common/Button/Button";
 import { IUserProfileUpdate } from '@/types/user';
@@ -21,13 +21,14 @@ const MyProfile = ({
 }: IMyProfileProps): JSX.Element => {
   const dispatch = useDispatch();
   const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
-  const { userProfileQuery, updateNickNameMutation } = useUser();
+  const { userProfileQuery, updateNickNameMutation, updateProfileImageMutation } = useUser();
 
   // 폼 입력 값 상태 관리
   const [values, setValues] = useState<IUserProfileUpdate>({
     account: '',
     nickname: '',
     tel: '',
+    profileImageUrl: '',
     newPassword: '',
     currentPassword: '',
     newPasswordCheck: '',
@@ -51,17 +52,12 @@ const MyProfile = ({
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false); // 닉네임 수정 가능 상태 관리
   const [nicknameMessage, setNicknameMessage] = useState<string>(''); // 닉네임 유효성 통과 상태 관리
   const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
-
-  // 휴대폰 번호 보여줄 때 하이픈 추가 함수
-  // function formatPhoneNumber(phoneNumber: string): string {
-  //   return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-  // }
   
   // 프로필 조회 API 요청 진행
   useEffect(() => {
     if (userProfileQuery.isSuccess && userProfileQuery.data) {
       console.log("프로필 조회 성공")
-      const { account = '', nickname = '', tel = '' } = userProfileQuery.data.data.myProfile;
+      const { account = '', nickname = '', tel = '', } = userProfileQuery.data.data.myProfile;
       setValues(v => ({ ...v, account, nickname, tel }));
       dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
     }
@@ -178,23 +174,25 @@ const MyProfile = ({
   // 이미지 업로드 핸들러
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0]; // 선택된 파일
-    const reader = new FileReader(); // 파일을 읽기 위한 FileReader 객체 생성
-
-    // FileReader로 파일을 읽고, 읽은 URL을 프로필 이미지 상태에 설정
-    reader.onloadend = () => {
-      const imageDataUrl = reader.result as string;
-      hasCustomImageRef.current = true; // 사용자가 이미지를 바꿨다면 true로 추적
-      dispatch(setIsProfileImage(imageDataUrl)); // 스토어에 전역 관리해주기
-    };
 
     if (file) {
-      reader.readAsDataURL(file); // 파일을 읽어 데이터 URL로 변환
+      updateProfileImageMutation.mutate(file, {
+        onSuccess: (data) => {
+          // 서버로부터 반환된 이미지 URL을 리덕스 스토어에 저장
+          dispatch(setIsProfileImage(data.data.profileImage));
+          console.log("프로필이미지 수정한거 전달!!")
+        },
+        onError: (error) => {
+          console.error('프로필 이미지 업데이트 실패:', error.message);
+        }
+      });
     }
   };
 
   // "기본 사진" 버튼 클릭 시
   const handleSetDefaultImage = () => {
     hasCustomImageRef.current = false; // 사용자가 이미지를 기본으로 변경했음을 추적
+    // @TODO: 기본사진은 따로 delete 요청 추가할 예정
     dispatch(setIsProfileImage(profileDefaultImage)); // 기본 이미지로 설정
   };
 
@@ -269,7 +267,6 @@ const MyProfile = ({
             src={profileImage || profileDefaultImage}
             alt="프로필 이미지" 
             className="w-[150px] h-[150px] object-cover object-center rounded-full"
-            // onClick={() => {document.getElementById('imageUpload')?.click();}}
           />
           <div className="pt-2 flex justify-center">
             <div className="px-2">

@@ -1,5 +1,5 @@
 import { FaBell } from "react-icons/fa";
-import { IEmptyNotification } from "@/types/myFreeAlert";
+import { IEmptyNotification } from "@/types/my";
 
 interface IFreeAlertListProps {
   alerts: IEmptyNotification[];

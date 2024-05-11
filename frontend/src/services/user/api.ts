@@ -1,6 +1,6 @@
 import { axiosAuthInstance } from '@/apis/axiosInstance';
 import { APIResponse } from '@/types/model';
-import { IUserProfileRes, IUserNickNameUpdate, IUserPhoneUpdate, IUserPasswordUpdate } from '@/types/user';
+import { IUserProfileRes, IUserNickNameUpdate, IUserPhoneUpdate, IUserPasswordUpdate, IUserProfileImageRes} from '@/types/user';
 
 // 내 프로필 조회
 export const fetchUserProfile = async (): Promise<APIResponse<IUserProfileRes>> => {
@@ -26,3 +26,17 @@ export const updateUserPhone = async (data: IUserPhoneUpdate): Promise<APIRespon
   return response.data;
 };
 
+// 프로필 이미지 업로드 요청
+export const updateProfileImage = async (imageFile: File): Promise<APIResponse<IUserProfileImageRes>> => {
+  // 이미지는 폼데이터로 만들어서 보내기
+  const formData = new FormData();
+  formData.append('profileImage', imageFile);
+
+  // 이미지 파일은 Content-Type을 따로 설정하여 파일이 올바르게 전송하도록 함
+  const response = await axiosAuthInstance.post('/image/user/profile', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+  return response.data;
+};

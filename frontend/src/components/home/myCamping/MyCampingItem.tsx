@@ -1,5 +1,5 @@
 import LikeButton from "@/components/@common/Like/LikeButton";
-import { IMyFavoritCampRes } from "@/types/myFavorite";
+import { IMyFavoritCampRes } from "@/types/my";
 import { FaStar } from "react-icons/fa6";
 
 const MyCampingItem = ({ camping }: { camping: IMyFavoritCampRes }) => {

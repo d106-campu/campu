@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import profileDefaultImage from "@/assets/images/profile.png";
 
 interface IProfileImageState {
   isProfileImage: string;
 }
 
 const initialState: IProfileImageState = {
-  isProfileImage : profileDefaultImage,
+  isProfileImage : '',
 };
 
 const profileImageSlice = createSlice({
