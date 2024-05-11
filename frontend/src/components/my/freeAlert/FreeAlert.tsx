@@ -1,49 +1,101 @@
-import { useState } from "react";
-import { IMyFreeAlert } from "@/types/myFreeAlert";
+import { useState, useEffect } from "react";
+import { IEmptyNotification } from "@/types/my";
 import FreeAlertList from "@/components/my/freeAlert/FreeAlertList";
 import Modal from '@/components/@common/Modal/Modal';
+import { useSelector } from "react-redux";
+import { RootState } from '@/app/store';
+import { useMy } from '@/hooks/my/useMy';
 
-interface IFreeAlertProps {
-  alerts: IMyFreeAlert[];
-  totalMyAlerts: number;
-}
-
-const FreeAlert = ({
-  alerts,
-  totalMyAlerts,
-}: IFreeAlertProps): JSX.Element => {
-  const [visibleAlerts, setVisibleAlerts] = useState<IMyFreeAlert[]>(alerts.slice(0, 2)); // 2개씩 잘라서 보여줌
+const FreeAlert = (): JSX.Element => {
+  const { useMyAlertsQuery, useDeleteAlert  } = useMy();
+  const nickname = useSelector((state: RootState) => state.auth.nickname); // 닉네임
+  const [visibleAlerts, setVisibleAlerts] = useState<IEmptyNotification[]>([]);
   const [viewCount, setIsViewCount] = useState<number>(2); // 처음 보여줄 빈자리 알림 개수 관리
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
+  const [selectedCampsiteId, setSelectedCampsiteId] = useState<number | null>(null); // campsiteId 식별번호 (삭제 시 사용)
+
+  // 데이터가 로드되었을 때 초기 목록 설정 (2개씩 잘라서 보여줌)
+  useEffect(() => {
+    if (useMyAlertsQuery.data) {
+      setVisibleAlerts(useMyAlertsQuery.data.data.emptyNotificationList.slice(0, viewCount));
+    }
+  }, [useMyAlertsQuery.data, viewCount]);
+
+  // "나의 빈자리알림" 목록 조회 API 요청 -> myAlertsQuery 호출하여 데이터 접근
+  // "??" 기준으로 좌측 피연산자가 null(undefined)일 경우 우측의 빈 배열을 반환하도록 설정
+  const emptyNotificationList = useMyAlertsQuery.data?.data.emptyNotificationList ?? [];
+
+  // 로딩 중일 때 처리
+  if (useMyAlertsQuery.isLoading) {
+    return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
+  }
+
+  // 데이터 에러 발생 시 처리
+  if (useMyAlertsQuery.isError) {
+    return <div>빈자리 알림을 가져오지 못했습니다. 😭</div>;
+  }
+
+  // 빈자리 알림이 아직 하나도 없을 때 처리
+  if (!emptyNotificationList || emptyNotificationList.length === 0) {
+    console.error("빈자리알림 리스트가 비어있음 !");
+    return (
+      <>
+        <div>
+          <div className='flex flex-col pb-10'>
+            <h1 className='text-lg font-bold'>
+              빈자리 알림
+              <span className="text-MAIN_GREEN font-thin pl-1">0</span>
+            </h1>
+            <h1 className="text-sm text-gray-400">{nickname}님이 빈자리 알림은 설정한 캠핑장입니다.</h1>
+          </div>
+          <div className="text-center">
+            <h1 className="">빈자리 알림을 신청한 <span className="text-MAIN_GREEN">캠핑장</span>이 없어요 😃</h1>
+            <h1 className="text-sm text-GRAY pt-2">원하는 캠핑장 정보에 알림을 신청해보세요 !</h1>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   // 빈자리 알림 취소 모달 관리
-  const handleCancelAlert = (alertName: string) => {
+  const handleCancelAlert = (campsiteId: number) => {
     setShowConfirmModal(true);
-    setSelectedAlertId(alertName);
+    setSelectedCampsiteId(campsiteId); 
   };
 
   // 빈자리 알림 취소 확정 시 리스트에서 정보 제거 
   const confirmCancelAlert = () => {
-    if (selectedAlertId !== null) {
-      setVisibleAlerts(prev => prev.filter(alert => alert.campsiteName !== selectedAlertId));
-      setShowConfirmModal(false); // 모달 닫기
-      setSelectedAlertId(null); // AlertId는 다시 초기화
+    if (selectedCampsiteId !== null) {
+      // 빈자리 알림 DELETE 요청 API 연결
+      console.log("선택한 Id 확인 :", selectedCampsiteId)
+      useDeleteAlert.mutate(selectedCampsiteId, {
+        onSuccess: () => {
+          // 성공적으로 삭제 처리 후 상태 업데이트
+          setVisibleAlerts(prev => prev.filter(alert => alert.room.campsite.campsiteId !== selectedCampsiteId));
+          console.log('빈자리알림 하나 삭제함!');
+          setShowConfirmModal(false); // 모달 닫기
+          setSelectedCampsiteId(null);
+          
+        },
+        onError: (error) => {
+          console.error('빈자리 알림 삭제 실패:', error);
+        }
+      });
     }
   };
 
   // 더보기
   const handleShowMoreAlerts = () => {
-    const newCount = Math.min(viewCount + 2, alerts.length);
+    const newCount = Math.min(viewCount + 2, emptyNotificationList.length);
     setIsViewCount(newCount);
-    setVisibleAlerts(alerts.slice(0, newCount));
+    setVisibleAlerts(emptyNotificationList.slice(0, newCount));
   };
 
   // 줄이기
   const handleShowLessAlerts = () => {
     const newCount = Math.max(viewCount - 2, 2);
     setIsViewCount(newCount);
-    setVisibleAlerts(alerts.slice(0, newCount));
+    setVisibleAlerts(emptyNotificationList.slice(0, newCount));
   };
 
   return (
@@ -52,20 +104,20 @@ const FreeAlert = ({
     <div className='flex flex-col pb-4'>
       <h1 className='text-lg font-bold'>
         빈자리 알림
-        <span className="text-MAIN_GREEN font-thin pl-1">{totalMyAlerts}</span>
+        <span className="text-MAIN_GREEN font-thin pl-1">{emptyNotificationList.length}</span>
       </h1>
-      <h1 className="text-sm text-gray-400">"유저 닉네임"님이 빈자리 알림은 설정한 캠핑장입니다.</h1>
+      <h1 className="text-sm text-gray-400">{nickname}님이 빈자리 알림은 설정한 캠핑장입니다.</h1>
     </div>
 
     <div className='max-h-[500px] overflow-y-auto relative'>
       {/* 빈자리 알림 설정한 더미데이터 리스트 */}
       <FreeAlertList
         alerts={visibleAlerts}
-        handleCancelAlert={handleCancelAlert}
+        handleCancelAlert={(campsiteId) => handleCancelAlert(campsiteId)}
         viewCount={viewCount}
         handleShowMoreAlerts={handleShowMoreAlerts}
         handleShowLessAlerts={handleShowLessAlerts}
-        totalMyAlerts={totalMyAlerts}
+        totalMyAlerts={emptyNotificationList.length}
       />
     </div>
 

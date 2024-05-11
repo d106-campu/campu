@@ -8,7 +8,7 @@ import DummyImage from '@/assets/images/dummyCamping2.png';
 import { FiMapPin } from "react-icons/fi";
 import ReservationSection from '@/components/@common/Reservation/ReservationSection';
 import Button from '@/components/@common/Button/Button'
-import { IReservationProps } from '@/types/myReservation';
+import { IReservationProps } from '@/types/my';
 
 interface IReservationAccordionProps {
   reservation: IReservationProps;

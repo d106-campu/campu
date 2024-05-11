@@ -1,13 +1,28 @@
+import { RootState } from "@/app/store";
 import LikeButton from "@/components/@common/Like/LikeButton";
 import { ICampsiteSimpleRes } from "@/types/search";
+import { useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const markers = useSelector((state: RootState) => state.markers.facltNm);
+  console.log(markers);
+
   const isAvailable = camping.available;
+  const facltNmColor = markers === camping.facltNm ? " bg-SUB_GREEN_01" : "";
+
+  // @TODO: 선택 시 스트롤 조정 추가 테스트 해야함
+  useEffect(() => {
+    if (facltNmColor && divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [facltNmColor]);
 
   return (
-    <div className="flex py-2 text-sm items-center border-b">
+    <div className={`flex py-2 text-sm items-center border-b ${facltNmColor}`}>
       <div className="w-[40%] relative">
         {!isAvailable && (
           <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
@@ -25,7 +40,7 @@ const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
       <div className="pl-4 w-[60%]">
         <div className="flex py-1 justify-between">
           <div className="flex items-center">
-            <p className="text-xl font-semibold pr-2">{camping.facltNm}</p>
+            <p className="text-lg font-semibold pr-2">{camping.facltNm}</p>
             <div className="flex items-center">
               <FaStar className="text-yellow-500 ml-2 mr-1" />
               <p>{camping.score.toFixed(1)}</p>
@@ -55,7 +70,7 @@ const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
           >
             {camping.price.toLocaleString("ko-KR")} ~
           </p>
-          <button className="border border-MAIN_GREEN px-4 rounded-md text-MAIN_GREEN text-xs">
+          <button className="bg-white border border-MAIN_GREEN px-4 rounded-md text-MAIN_GREEN text-xs">
             상세보기
           </button>
         </div>

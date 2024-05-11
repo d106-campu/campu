@@ -4,6 +4,7 @@ import {
   updateUserNickName,
   updateUserPassword,
   updateUserPhone,
+  updateProfileImage,
 } from '@/services/user/api';
 import { IUserNickNameUpdate, IUserPasswordUpdate, IUserPhoneUpdate } from '@/types/user';
 
@@ -48,10 +49,22 @@ export const useUser = () => {
     }
   });
 
+  // 프로필 이미지 업데이트
+  const updateProfileImageMutation = useMutation({
+    mutationFn: (file: File) => updateProfileImage(file),
+    onSuccess: () => {
+      console.log('프로필 이미지 바꿨음!!');
+    },
+    onError: (error) => {
+      console.error('프로필 이미지 못바꿨음:', error);
+    }
+  });
+
   return {
     userProfileQuery,
     updateNickNameMutation,
     updatePasswordMutation,
-    updatePhoneMutation
+    updatePhoneMutation,
+    updateProfileImageMutation
   };
 };

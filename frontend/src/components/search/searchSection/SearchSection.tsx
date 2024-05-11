@@ -2,7 +2,11 @@ import SearchBar from "@/components/home/SearchBar";
 import { ICampsiteSimpleRes } from "@/types/search";
 import SearchCampingItem from "./SearchCampingItem";
 import { useDispatch, useSelector } from "react-redux";
-import { addCampingData } from "@/features/search/campingMapSlice";
+import {
+  addCampingData,
+  addMapXData,
+  addMapYData,
+} from "@/features/search/campingMapSlice";
 import { useEffect } from "react";
 import SearchNoResult from "./SearchNoResult";
 import { useCampsite } from "@/hooks/search/useCampsite";
@@ -30,11 +34,11 @@ const SearchSection = () => {
     pageable: { page: 0, size: 1000 },
   });
 
-  console.log(campsiteOfSearch?.data.campsiteList);
-
   useEffect(() => {
     if (campsiteOfSearch) {
       dispatch(addCampingData(campsiteOfSearch.data.campsiteList.content));
+      dispatch(addMapXData(campsiteOfSearch.data.mapCoordinates.center.mapX));
+      dispatch(addMapYData(campsiteOfSearch.data.mapCoordinates.center.mapY));
     }
   }, [campsiteOfSearch]);
 
@@ -59,4 +63,3 @@ const SearchSection = () => {
 };
 
 export default SearchSection;
-

@@ -10,11 +10,12 @@ import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
 import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
 import { reservationReducer } from "@/features/reservation/ReservationSlice";
-import { profileImageReducer } from "@/features/mypage/myProfile";
+import { profileImageReducer } from "@/features/mypage/myProfileSlice";
 import { campingDateReducer } from "@/features/reservation/campingDateSlice";
 import { searchBarReducer } from "@/features/search/searchBarSlice";
 import { headCountReducer } from "@/features/reservation/HeadCountSlice";
 import { campsiteLikeReducer } from "@/features/like/campsiteLikeSlice";
+import { markersReducer } from "@/features/search/markersSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -35,6 +36,7 @@ const persistConfig = {
     "headCount",
     "searchBar",
     "campsiteLike",
+    "markers",
   ],
 };
 
@@ -51,6 +53,7 @@ const rootReducer = combineReducers({
   searchBar: searchBarReducer,
   headCount: headCountReducer,
   campsiteLike: campsiteLikeReducer,
+  markers: markersReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
