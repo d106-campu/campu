@@ -96,12 +96,11 @@ public class CampsiteService {
 
         Page<Campsite> responsePage = null;
         if (induty == null && theme == null) {
-            responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr);
+            responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr, headCnt);
         } else if (induty != null) {
-            responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName());
+            responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName(), headCnt);
         } else if (theme != null) {
-            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName());
-//            responsePage = qCampsiteRepository.findByTheme(theme.getName(), pageable);
+            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName(), headCnt);
         }
 
         if (responsePage == null) {
@@ -110,7 +109,7 @@ public class CampsiteService {
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
-            List<Room> roomList = campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt)).toList();
+            List<Room> roomList = campsite.getRoomList();
 
             // available at least one room can be reserved on the date range
             campsite.setAvailable(
