@@ -19,13 +19,13 @@ public class ReviewController implements ReviewControllerDoc {
     private final ReviewService reviewService;
 
     @Override
-    @GetMapping("/campsite/{campsiteId}")
+    @GetMapping("/campsite/score/{campsiteId}")
     public Response getCampsiteScore(@PathVariable Long campsiteId) {
         return new Response(ReviewConstant.CAMPSITE_SCORE, reviewService.getCampsiteScore(campsiteId));
     }
 
     @Override
-    @GetMapping("/campsite/review/{campsiteId}")
+    @GetMapping("/campsite/{campsiteId}")
     public Response getReviewList(@PathVariable Long campsiteId, Pageable pageable) {
         return new Response(ReviewConstant.REVIEW_LIST, reviewService.getReviewList(campsiteId, pageable));
     }
