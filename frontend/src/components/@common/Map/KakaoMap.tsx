@@ -2,9 +2,8 @@ import { IMapProps } from "@/types/map";
 import { useEffect, useRef } from "react";
 import MarkerImage from "@/assets/images/Marker.png";
 import Star from "@/assets/images/Star.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toggleMarker } from "@/features/search/markersSlice";
-import { RootState } from "@/app/store";
 
 interface KakaoMapProps {
   locations: IMapProps[];
@@ -19,10 +18,6 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markerRefs = useRef<any[]>([]);
   const dispatch = useDispatch();
-
-  // @TODO: 추후 지우기 (스토어 저장된 마커 확인)
-  const markers = useSelector((state: RootState) => state.markers.facltNm);
-  console.log(markers);
 
   useEffect(() => {
     if (locations?.length > 0) {
