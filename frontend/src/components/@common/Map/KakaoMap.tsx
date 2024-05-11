@@ -2,6 +2,9 @@ import { IMapProps } from "@/types/map";
 import { useEffect, useRef } from "react";
 import MarkerImage from "@/assets/images/Marker.png";
 import Star from "@/assets/images/Star.png";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleMarker } from "@/features/search/markersSlice";
+import { RootState } from "@/app/store";
 
 interface KakaoMapProps {
   locations: IMapProps[];
@@ -15,6 +18,11 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
   const overlayRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markerRefs = useRef<any[]>([]);
+  const dispatch = useDispatch();
+
+  // @TODO: 추후 지우기 (스토어 저장된 마커 확인)
+  const markers = useSelector((state: RootState) => state.markers.facltNm);
+  console.log(markers);
 
   useEffect(() => {
     if (locations?.length > 0) {
@@ -93,6 +101,11 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
       window.kakao.maps.event.addListener(marker, "mouseout", function () {
         if (!overlay.getMap()) return;
         overlay.setMap(null); // 오버레이 닫기
+      });
+
+      // 마커 클릭 이벤트 처리
+      window.kakao.maps.event.addListener(marker, "click", function () {
+        dispatch(toggleMarker(location.facltNm!));
       });
 
       markerRefs.current.push(marker);
