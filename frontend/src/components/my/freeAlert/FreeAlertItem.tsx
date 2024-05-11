@@ -1,4 +1,4 @@
-import { IEmptyNotificationList } from '@/types/myFreeAlert';
+import { IEmptyNotificationList } from '@/types/my';
 import photo1 from "@/assets/images/dummy/camping_spot_2.png";
 
 // 더미데이터 1개

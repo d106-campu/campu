@@ -2,11 +2,11 @@ import MyCampingItem from "@/components/home/myCamping/MyCampingItem";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { useMyFavorites } from "@/hooks/myFavorites/useMyFavorites";
+import { useMy } from "@/hooks/my/useMy";
 
 const MyCamping = () => {
   const navigate = useNavigate();
-  const { useFavoriteCampsList } = useMyFavorites();
+  const { useFavoriteCampsList } = useMy();
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
 
   const { data: myCampsiteList } = useFavoriteCampsList({

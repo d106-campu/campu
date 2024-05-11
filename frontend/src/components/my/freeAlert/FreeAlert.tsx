@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { IEmptyNotification } from "@/types/myFreeAlert";
+import { IEmptyNotification } from "@/types/my";
 import FreeAlertList from "@/components/my/freeAlert/FreeAlertList";
 import Modal from '@/components/@common/Modal/Modal';
 import { useSelector } from "react-redux";
 import { RootState } from '@/app/store';
-import { useMyAlerts } from '@/hooks/myAlerts/useMyAlerts';
+import { useMy } from '@/hooks/my/useMy';
 
 const FreeAlert = (): JSX.Element => {
-  const { myAlertsQuery, deleteAlertMutation  } = useMyAlerts();
+  const { useMyAlertsQuery, useDeleteAlert  } = useMy();
   const nickname = useSelector((state: RootState) => state.auth.nickname); // 닉네임
   const [visibleAlerts, setVisibleAlerts] = useState<IEmptyNotification[]>([]);
   const [viewCount, setIsViewCount] = useState<number>(2); // 처음 보여줄 빈자리 알림 개수 관리
@@ -16,22 +16,22 @@ const FreeAlert = (): JSX.Element => {
 
   // 데이터가 로드되었을 때 초기 목록 설정 (2개씩 잘라서 보여줌)
   useEffect(() => {
-    if (myAlertsQuery.data) {
-      setVisibleAlerts(myAlertsQuery.data.data.emptyNotificationList.slice(0, viewCount));
+    if (useMyAlertsQuery.data) {
+      setVisibleAlerts(useMyAlertsQuery.data.data.emptyNotificationList.slice(0, viewCount));
     }
-  }, [myAlertsQuery.data, viewCount]);
+  }, [useMyAlertsQuery.data, viewCount]);
 
   // "나의 빈자리알림" 목록 조회 API 요청 -> myAlertsQuery 호출하여 데이터 접근
   // "??" 기준으로 좌측 피연산자가 null(undefined)일 경우 우측의 빈 배열을 반환하도록 설정
-  const emptyNotificationList = myAlertsQuery.data?.data.emptyNotificationList ?? [];
+  const emptyNotificationList = useMyAlertsQuery.data?.data.emptyNotificationList ?? [];
 
   // 로딩 중일 때 처리
-  if (myAlertsQuery.isLoading) {
+  if (useMyAlertsQuery.isLoading) {
     return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
   }
 
   // 데이터 에러 발생 시 처리
-  if (myAlertsQuery.isError) {
+  if (useMyAlertsQuery.isError) {
     return <div>빈자리 알림을 가져오지 못했습니다. 😭</div>;
   }
 
@@ -68,7 +68,7 @@ const FreeAlert = (): JSX.Element => {
     if (selectedCampsiteId !== null) {
       // 빈자리 알림 DELETE 요청 API 연결
       console.log("선택한 Id 확인 :", selectedCampsiteId)
-      deleteAlertMutation.mutate(selectedCampsiteId, {
+      useDeleteAlert.mutate(selectedCampsiteId, {
         onSuccess: () => {
           // 성공적으로 삭제 처리 후 상태 업데이트
           setVisibleAlerts(prev => prev.filter(alert => alert.room.campsite.campsiteId !== selectedCampsiteId));

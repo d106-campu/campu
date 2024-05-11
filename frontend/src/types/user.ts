@@ -3,6 +3,7 @@ export interface IUserProfile {
   account: string;
   nickname: string;
   tel: string;
+  profileImageUrl?: string;
 }
 
 // 프로필 조회에 대한 API 응답
@@ -33,4 +34,14 @@ export interface IUserPasswordUpdate {
   currentPassword: string;
   newPassword: string;
   newPasswordCheck: string;
+}
+
+// 프로필 업데이트 API 요청
+export interface IUserProfileImageUpdate {
+  profileImageUrl: string;
+}
+
+// 프로필 이미지 업로드에 대한 API 응답
+export interface IUserProfileImageRes {
+  profileImage: string;
 }

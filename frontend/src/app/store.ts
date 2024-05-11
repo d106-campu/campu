@@ -10,7 +10,7 @@ import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
 import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
 import { reservationReducer } from "@/features/reservation/ReservationSlice";
-import { profileImageReducer } from "@/features/mypage/myProfile";
+import { profileImageReducer } from "@/features/mypage/myProfileSlice";
 import { campingDateReducer } from "@/features/reservation/campingDateSlice";
 import { searchBarReducer } from "@/features/search/searchBarSlice";
 import { headCountReducer } from "@/features/reservation/HeadCountSlice";

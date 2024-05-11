@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { IDetailProps } from "@/types/myReservation";
+import { IDetailProps } from "@/types/my";
   
 const ReservationSection = ({
   titleLeft,
