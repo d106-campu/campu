@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,6 +108,9 @@ public class CampsiteService {
             return null;
         }
 
+        List<Long> campsiteIds = responsePage.stream().mapToLong(Campsite::getId).boxed().toList();
+        Map<Long, Integer> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
+
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
             List<Room> roomList = campsite.getRoomList();
@@ -117,8 +121,7 @@ public class CampsiteService {
                     .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
 
             // Cheapest room price of this campsite
-            campsite.setPrice(roomList.isEmpty() ? null
-                : roomList.stream().min(Comparator.comparingInt(room -> room.getPrice())).get().getPrice());
+            campsite.setPrice(minPriceByCampsiteMap.getOrDefault(campsite.getId(), null));
 
             // Did I like this campsite
             if (user != null) {

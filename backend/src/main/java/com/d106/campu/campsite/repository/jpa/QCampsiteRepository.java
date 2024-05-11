@@ -7,8 +7,7 @@ import com.d106.campu.campsite.domain.jpa.QCampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.QCampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.QTheme;
 import com.d106.campu.campsite.dto.CampsiteDto;
-import com.d106.campu.campsite.dto.CampsiteDto.Response;
-import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.room.domain.jpa.QRoom;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -16,7 +15,6 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,13 +36,14 @@ public class QCampsiteRepository {
     private final QTheme theme = QTheme.theme;
     private final QCampsiteLocation campsiteLocation = QCampsiteLocation.campsiteLocation;
     private final QCampsiteLike campsiteLike = QCampsiteLike.campsiteLike;
+    private final QRoom room = QRoom.room;
 
-    public Page<CampsiteDto.Response> findByTheme(String themeStr, User user, Pageable pageable) {
+    public Page<CampsiteDto.Response> findByTheme(String themeStr, int headCnt, Pageable pageable) {
 
         // campsiteLike.id, campsiteLike.campsite, campsiteLike.user,
         Expression[] projections = new Expression[]{
             campsite.id, campsite.facltNm, campsite.lineIntro, campsite.doNm, campsite.sigunguNm, campsite.addr1,
-            campsite.addr2, campsite.thumbnailImageUrl, campsiteLocation.mapX, campsiteLocation.mapY
+            campsite.addr2, campsite.thumbnailImageUrl, campsiteLocation.mapX, campsiteLocation.mapY, campsite.roomList
         };
 
         BooleanBuilder predicates = new BooleanBuilder()
@@ -52,9 +51,10 @@ public class QCampsiteRepository {
 
         List<Tuple> tuples = jpaQueryFactory.select(projections)
             .from(campsite)
-            .innerJoin(campsiteTheme).on(campsiteTheme.campsite.eq(campsite))
-            .innerJoin(theme).on(campsiteTheme.theme.eq(theme))
+            .innerJoin(campsite.campsiteThemeList, campsiteTheme)
+            .innerJoin(campsiteTheme.theme, theme)
             .innerJoin(campsite.campsiteLocation, campsiteLocation)
+            .leftJoin(campsite.roomList, room)
             .where(predicates)
             .orderBy(new OrderSpecifier[]{
                 campsite.id.asc()
@@ -63,23 +63,9 @@ public class QCampsiteRepository {
             .limit(pageable.getPageSize())
             .fetch();
 
-        Map<Long, Boolean> myLikeMap = new TreeMap<>();
-        log.debug("user: {}", user);
-        if (user != null) {
-            List<Tuple> myLikeList = jpaQueryFactory.select(new Expression[]{campsiteLike.campsite})
-                .from(campsiteLike)
-                .where(campsiteLike.user.eq(user))
-                .fetch();
-            log.debug("myLikeList: {}", myLikeList);
-
-            for (Tuple tuple : myLikeList) {
-                myLikeMap.put(tuple.get(campsiteLike.campsite).getId(), true);
-            }
-        }
-
         List<CampsiteDto.Response> responseList = new ArrayList<>(tuples.size());
         for (Tuple tuple : tuples) {
-            responseList.add(Response.builder()
+            responseList.add(CampsiteDto.Response.builder()
                 .id(tuple.get(campsite.id))
                 .facltNm(tuple.get(campsite.facltNm))
                 .lineIntro(tuple.get(campsite.lineIntro))
@@ -92,11 +78,8 @@ public class QCampsiteRepository {
                     .mapX(tuple.get(campsiteLocation.mapX))
                     .mapY(tuple.get(campsiteLocation.mapY))
                     .build())
-                .like((user == null) ? false : myLikeMap.getOrDefault(tuple.get(campsite.id), false))
                 .build());
         }
-
-        Collections.shuffle(responseList);
 
         JPAQuery<Long> countQuery = jpaQueryFactory
             .select(campsite.count())
@@ -106,6 +89,26 @@ public class QCampsiteRepository {
             .where(predicates);
 
         return PageableExecutionUtils.getPage(responseList, pageable, countQuery::fetchOne);
+    }
+
+    public Map<Long, Integer> findCheapestRoomPriceByCampsite(List<Long> campsiteIds, int headCnt) {
+        List<Tuple> tuples = jpaQueryFactory.select(new Expression[]{
+                campsite.id, room.id, room.maxNo, room.price.min()
+            })
+            .from(campsite)
+            .leftJoin(campsite.roomList, room)
+            .where(new BooleanBuilder()
+                .and(campsite.id.in(campsiteIds))
+            )
+            .groupBy(campsite.id)
+            .orderBy(new OrderSpecifier[]{campsite.id.asc()})
+            .fetch();
+
+        Map<Long, Integer> responseMap = new TreeMap<>();
+        tuples.forEach(tuple -> {
+            responseMap.put(tuple.get(campsite.id), tuple.get(room.price.min()));
+        });
+        return responseMap;
     }
 
 }
