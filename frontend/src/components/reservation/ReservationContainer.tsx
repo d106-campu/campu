@@ -52,7 +52,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
           {isLoading ? (
             <div className="pt-10 text-center">
               <p className="text-MAIN_GREEN text-lg font-semibold">로딩 중</p>
-              <p className="text-xs text-SUB_BLACK">잠시만 기다려 주세요</p>
+              <p className="text-sm text-SUB_BLACK">잠시만 기다려 주세요</p>
               <Lottie options={roomsLoadingOptions} height={90} width={200} />
             </div>
           ) : roomListData?.pages ? (
@@ -75,7 +75,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
                   <p className="text-lg text-MAIN_GREEN font-semibold">
                     조건에 맞는 캠핑존이 없습니다 😥
                   </p>
-                  <p className="text-xs text-SUB_BLACK">
+                  <p className="text-sm text-SUB_BLACK">
                     다른 조건으로 검색해 보세요
                   </p>
                 </div>

@@ -144,6 +144,14 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
           </div>
           {room.available ? (
             <Button width="w-40" text="예약하기" onClick={makeReservation} />
+          ) : room.emptyNotification ? (
+            <Button
+              width="w-40"
+              text="빈자리 알림 취소"
+              textColor="text-MAIN_GREEN"
+              backgroundColor="bg-SUB_GREEN_02"
+              hoverBackgroundColor="hover:bg-[#d0e2d3]"
+            />
           ) : (
             <Button
               width="w-40"

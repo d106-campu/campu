@@ -20,9 +20,8 @@ export const getRoomList = async (params: {
   endDate: string;
 }): Promise<APIResponse<IRoomListRes>> => {
   const { campsiteId, page, size, headCnt, startDate, endDate } = params;
-  const res = await axiosCommonInstance.get(
-    `/api/campsite/${campsiteId}/room`,
-    { params: { page, size, headCnt, startDate, endDate } }
-  );
+  const res = await axiosCommonInstance.get(`/campsite/${campsiteId}/room`, {
+    params: { page, size, headCnt, startDate, endDate },
+  });
   return res.data;
 };

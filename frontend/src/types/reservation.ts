@@ -23,6 +23,7 @@ export interface IRoomItem {
   supplyList: string[] | null;
   available: boolean;
   image_url: string;
+  emptyNotification: boolean;
 }
 
 // 방 목록
