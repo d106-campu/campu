@@ -39,6 +39,18 @@ public interface ReviewControllerDoc {
     })
     Response getReviewList(Long campsiteId, Pageable pageable);
 
+    @Operation(summary = "리뷰 삭제", description = "리뷰를 삭제하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "리뷰 삭제 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        ),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰", content = @Content)
+    })
+    Response delete(Long reviewId);
+
     class CampsiteScoreResponse {
         public double campsiteScore;
     }

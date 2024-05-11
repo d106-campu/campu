@@ -6,6 +6,7 @@ import com.d106.campu.review.controller.doc.ReviewControllerDoc;
 import com.d106.campu.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,13 @@ public class ReviewController implements ReviewControllerDoc {
     @GetMapping("/campsite/{campsiteId}")
     public Response getReviewList(@PathVariable Long campsiteId, Pageable pageable) {
         return new Response(ReviewConstant.REVIEW_LIST, reviewService.getReviewList(campsiteId, pageable));
+    }
+
+    @Override
+    @DeleteMapping("/{reviewId}")
+    public Response delete(@PathVariable Long reviewId) {
+        reviewService.delete(reviewId);
+        return new Response();
     }
 
 }

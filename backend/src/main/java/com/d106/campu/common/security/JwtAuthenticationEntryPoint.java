@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -27,9 +28,12 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (exception instanceof BadCredentialsException) {
             responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
-        } else {
+        } else if (exception instanceof UsernameNotFoundException) {
             responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
+        } else {
+            responseFail = new ResponseFail(CommonExceptionCode.INACCESSIBLE_DATA.getCode(),
+                CommonExceptionCode.INACCESSIBLE_DATA.getMessage());
         }
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

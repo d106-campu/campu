@@ -16,4 +16,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewCus
 
     Page<Review> findByCampsite_IdOrderByCreateTimeDesc(Long campsiteId, Pageable pageable);
 
+    void deleteByIdAndReservation_User_Account(Long reviewId, String account);
+
 }
