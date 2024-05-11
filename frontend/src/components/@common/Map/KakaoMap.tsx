@@ -2,15 +2,22 @@ import { IMapProps } from "@/types/map";
 import { useEffect, useRef } from "react";
 import MarkerImage from "@/assets/images/Marker.png";
 import Star from "@/assets/images/Star.png";
+import { useDispatch } from "react-redux";
+import { toggleMarker } from "@/features/search/markersSlice";
 
-type LocationsList = IMapProps[];
+interface KakaoMapProps {
+  locations: IMapProps[];
+  mapX?: number | null;
+  mapY?: number | null;
+}
 
-const KakaoMap = ({ locations }: { locations: LocationsList }) => {
+const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overlayRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markerRefs = useRef<any[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (locations?.length > 0) {
@@ -21,11 +28,8 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
       if (!container) return;
 
       const options = {
-        center: new window.kakao.maps.LatLng(
-          36.1071305028147,
-          128.4169500162442
-        ),
-        level: 5,
+        center: new window.kakao.maps.LatLng(37.5642135, 127.0016985),
+        level: 12,
       };
 
       new window.kakao.maps.Map(container, options);
@@ -37,7 +41,7 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
     if (!container) return;
 
     const options = {
-      center: new window.kakao.maps.LatLng(locations[0].lat, locations[0].lng),
+      center: new window.kakao.maps.LatLng(mapY, mapX),
       level: locations[0].level || 5,
     };
 
@@ -92,6 +96,11 @@ const KakaoMap = ({ locations }: { locations: LocationsList }) => {
       window.kakao.maps.event.addListener(marker, "mouseout", function () {
         if (!overlay.getMap()) return;
         overlay.setMap(null); // 오버레이 닫기
+      });
+
+      // 마커 클릭 이벤트 처리
+      window.kakao.maps.event.addListener(marker, "click", function () {
+        dispatch(toggleMarker(location.facltNm!));
       });
 
       markerRefs.current.push(marker);
