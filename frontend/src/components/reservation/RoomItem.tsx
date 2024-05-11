@@ -39,7 +39,7 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     // 예약 정보 업데이트
     const newReservationData = {
       id: room.id,
-      image: room.image_url,
+      image: room.imageUrl,
       roomName: room.name, // 캠핑장 방 이름
       roomInduty: room.induty, // 캠핑 유형
       price: room.price, // 총 가격
@@ -71,9 +71,9 @@ const RoomItem = ({ room }: { room: IRoomItemProps }) => {
     >
       {/* 캠핑존 사진 */}
       <div key={room.id} className="w-[50%] relative">
-        {room.image_url ? (
+        {room.imageUrl ? (
           <img
-            src={room.image_url}
+            src={room.imageUrl}
             alt={room.name}
             className={`w-full h-40 rounded-lg h-30 object-cover object-center ${
               room.available ? "" : "opacity-30"
