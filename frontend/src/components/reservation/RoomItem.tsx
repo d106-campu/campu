@@ -13,9 +13,10 @@ import Toast from "../@common/Toast/Toast";
 import { useState } from "react";
 
 const RoomItem = ({ room }: { room: IRoomItem }) => {
-  const [isAlertActive, setIsAlertActive] = useState(!room.emptyNotification); // 빈자리 알림 상태관리
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [isAlertActive, setIsAlertActive] = useState(!room.emptyNotification); // 빈자리 알림 상태관리
 
   // @TODO: 캠프장 정보는 리액트 쿼리로 가져오기
   const campsite = {
@@ -36,14 +37,15 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
   );
   const { headCount } = useSelector((state: RootState) => state.headCount);
 
-  const { usePostAlert } = useReservation();
+  const { usePostAlert, useDeleteAlert } = useReservation();
   const { mutate: postAlert } = usePostAlert({
     roomId: room.id,
     startDate,
     endDate,
   });
+  const { mutate: deleteRoomAlert } = useDeleteAlert();
 
-  // 빈자리 알림 버튼 클릭 핸들러
+  // 빈자리 알림 등록 핸들러
   const handlePostAlert = () => {
     // 빈자리 알림 등록 API 호출
     postAlert(
@@ -71,9 +73,24 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
               return;
             }
           }
+          Toast.error("빈자리 알림 등록에 실패했습니다. 다시 시도해주세요.");
         },
       }
     );
+  };
+
+  // 빈자리 알림 취소 핸들러
+  const handleDeleteAlert = (roomId: number) => {
+    deleteRoomAlert(roomId, {
+      onSuccess: () => {
+        setIsAlertActive(!isAlertActive);
+        Toast.success("빈자리 알림이 취소되었습니다 😊");
+      },
+      onError: () => {
+        Toast.error("빈자리 알림 취소에 실패했습니다. 다시 시도해주세요.");
+        return;
+      },
+    });
   };
 
   const makeReservation = () => {
@@ -219,6 +236,7 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
             <Button width="w-40" text="예약하기" onClick={makeReservation} />
           ) : !isAlertActive ? (
             <Button
+              onClick={() => handleDeleteAlert(room.id)}
               width="w-40"
               text="빈자리 알림 취소"
               textColor="text-[#ffffff]"

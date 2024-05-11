@@ -1,6 +1,6 @@
 import { axiosAuthInstance, axiosCommonInstance } from "@/apis/axiosInstance";
 import { APIResponse, APISimpleResponse } from "@/types/model";
-import { IAlertReq, ILikeRes, IRoomListRes } from "@/types/reservation";
+import { IAlertPostReq, ILikeRes, IRoomListRes } from "@/types/reservation";
 // import axios from "axios"; // msw 할 때는 axios
 
 // 좋아요 요청
@@ -32,7 +32,7 @@ export const postAlert = async ({
   roomId,
   startDate,
   endDate,
-}: IAlertReq): Promise<APISimpleResponse> => {
+}: IAlertPostReq): Promise<APISimpleResponse> => {
   const response = await axiosAuthInstance.post(`/empty-notification`, {
     roomId: roomId,
     startDate: startDate,
