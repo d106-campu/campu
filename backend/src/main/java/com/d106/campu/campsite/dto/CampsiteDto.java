@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 public class CampsiteDto {
 
     @Data
+    @Builder
     public static class Response {
 
         private Long id;

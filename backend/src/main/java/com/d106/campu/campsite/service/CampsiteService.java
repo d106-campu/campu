@@ -13,6 +13,7 @@ import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
@@ -34,6 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,7 @@ public class CampsiteService {
     private final UserRepository userRepository;
 
     private final CampsiteRepository campsiteRepository;
+    private final QCampsiteRepository qCampsiteRepository;
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
 
@@ -94,20 +97,26 @@ public class CampsiteService {
 
         Page<Campsite> responsePage = null;
         if (induty == null && theme == null) {
-            responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr);
+            responsePage = campsiteRepository.findAll(pageable, doNmStr, sigunguNmStr, headCnt);
         } else if (induty != null) {
-            responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName());
+            responsePage = campsiteRepository.findByInduty(pageable, doNmStr, sigunguNmStr, induty.getName(), headCnt);
         } else if (theme != null) {
-            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName());
+            responsePage = campsiteRepository.findByTheme(pageable, doNmStr, sigunguNmStr, theme.getName(), headCnt);
         }
 
         if (responsePage == null) {
             return null;
         }
 
+        List<Long> campsiteIds = responsePage.stream().mapToLong(Campsite::getId).boxed().toList();
+        Map<Long, Integer> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
+        Map<Long, Boolean> campsiteLikeByUserMap =
+            (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
+        Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
+
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
-            List<Room> roomList = campsite.getRoomList().stream().filter(room -> (room.getMaxNo() >= headCnt)).toList();
+            List<Room> roomList = campsite.getRoomList();
 
             // available at least one room can be reserved on the date range
             campsite.setAvailable(
@@ -115,16 +124,15 @@ public class CampsiteService {
                     .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
 
             // Cheapest room price of this campsite
-            campsite.setPrice(roomList.isEmpty() ? null
-                : roomList.stream().min(Comparator.comparingInt(room -> room.getPrice())).get().getPrice());
+            campsite.setPrice(minPriceByCampsiteMap.getOrDefault(campsite.getId(), null));
 
             // Did I like this campsite
             if (user != null) {
-                campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+                campsite.setLike(campsiteLikeByUserMap.getOrDefault(campsite.getId(), false));
             }
 
             // Avg review score
-            campsite.setScore(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0));
+            campsite.setScore(avgScoreByCampsiteMap.getOrDefault(campsite.getId(), 0.0));
 
             return campsite;
         }).toList());
