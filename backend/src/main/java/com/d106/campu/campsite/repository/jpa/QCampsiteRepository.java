@@ -8,6 +8,7 @@ import com.d106.campu.campsite.domain.jpa.QCampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.QTheme;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.room.domain.jpa.QRoom;
+import com.d106.campu.user.domain.jpa.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -49,7 +50,8 @@ public class QCampsiteRepository {
         BooleanBuilder predicates = new BooleanBuilder()
             .and(theme.themeStr.eq(themeStr));
 
-        List<Tuple> tuples = jpaQueryFactory.select(projections)
+        List<Tuple> tuples = jpaQueryFactory
+            .select(projections)
             .from(campsite)
             .innerJoin(campsite.campsiteThemeList, campsiteTheme)
             .innerJoin(campsiteTheme.theme, theme)
@@ -92,7 +94,8 @@ public class QCampsiteRepository {
     }
 
     public Map<Long, Integer> findCheapestRoomPriceByCampsite(List<Long> campsiteIds, int headCnt) {
-        List<Tuple> tuples = jpaQueryFactory.select(new Expression[]{
+        List<Tuple> tuples = jpaQueryFactory
+            .select(new Expression[]{
                 campsite.id, room.id, room.maxNo, room.price.min()
             })
             .from(campsite)
@@ -107,6 +110,24 @@ public class QCampsiteRepository {
         Map<Long, Integer> responseMap = new TreeMap<>();
         tuples.forEach(tuple -> {
             responseMap.put(tuple.get(campsite.id), tuple.get(room.price.min()));
+        });
+        return responseMap;
+    }
+
+    public Map<Long, Boolean> findCampsiteLikeByUser(List<Long> campsiteIds, User user) {
+        List<Tuple> tuples = jpaQueryFactory
+            .select(new Expression[]{campsiteLike.id, campsiteLike.campsite.id})
+            .from(campsiteLike)
+            .where(new BooleanBuilder()
+                .and(campsiteLike.campsite.id.in(campsiteIds))
+                .and(campsiteLike.user.eq(user))
+            )
+            .orderBy(new OrderSpecifier[]{campsiteLike.id.asc()})
+            .fetch();
+
+        Map<Long, Boolean> responseMap = new TreeMap<>();
+        tuples.forEach(tuple -> {
+            responseMap.put(tuple.get(campsiteLike.campsite.id), true);
         });
         return responseMap;
     }

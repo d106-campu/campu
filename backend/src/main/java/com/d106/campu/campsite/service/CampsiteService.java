@@ -110,6 +110,8 @@ public class CampsiteService {
 
         List<Long> campsiteIds = responsePage.stream().mapToLong(Campsite::getId).boxed().toList();
         Map<Long, Integer> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
+        Map<Long, Boolean> campsiteLikeByUserMap =
+            (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
@@ -125,7 +127,7 @@ public class CampsiteService {
 
             // Did I like this campsite
             if (user != null) {
-                campsite.setLike(campsiteLikeRepository.existsByCampsiteAndUser(campsite, user));
+                campsite.setLike(campsiteLikeByUserMap.getOrDefault(campsite.getId(), false));
             }
 
             // Avg review score
