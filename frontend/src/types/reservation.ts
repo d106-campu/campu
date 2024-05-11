@@ -42,3 +42,10 @@ export interface IRoomListRes {
     empty: boolean;
   };
 }
+
+// 빈자리 알림 등록
+export interface IAlertReq {
+  roomId: number;
+  startDate: string;
+  endDate: string;
+}
