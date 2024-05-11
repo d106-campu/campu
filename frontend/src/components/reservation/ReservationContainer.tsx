@@ -4,6 +4,11 @@ import { useReservation } from "@/hooks/reservation/useReservation";
 import useIntersectionObserver from "@/hooks/@common/useIntersectionObserver";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import Lottie from "react-lottie";
+import {
+  roomsLoadingOptions,
+  tentOptions,
+} from "@/assets/lotties/lottieOptions";
 
 const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
   // Redux 상태 불러오기
@@ -43,17 +48,38 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
         </h3>
         <MyController />
         <div className="w-[95%] mx-auto">
-          {/* @TODO: 로딩중 및 검색 결과가 없을 때 UI 추가*/}
+          {/* 로딩중 UI */}
           {isLoading ? (
-            <div>로딩 중</div>
-          ) : (
+            <div className="pt-10 text-center">
+              <p className="text-MAIN_GREEN text-lg font-semibold">로딩 중</p>
+              <p className="text-xs text-SUB_BLACK">잠시만 기다려 주세요</p>
+              <Lottie options={roomsLoadingOptions} height={90} width={200} />
+            </div>
+          ) : roomListData?.pages ? (
             <>
               {/* 각 방에 대한 RoomItem 렌더링 */}
-              {roomListData?.pages?.map((item) =>
+              {roomListData.pages.map((item) =>
                 item.data.roomList.content.map((room) => (
                   <RoomItem key={room.id} room={{ ...room }} />
                 ))
               )}
+            </>
+          ) : (
+            <>
+              {/* 검색결과가 없을 때 UI */}
+              <div className="pt-10 flex items-center justify-center gap-10">
+                <div>
+                  <Lottie options={tentOptions} height={200} width={300} />
+                </div>
+                <div className="text-center">
+                  <p className="text-lg text-MAIN_GREEN font-semibold">
+                    조건에 맞는 캠핑존이 없습니다 😥
+                  </p>
+                  <p className="text-xs text-SUB_BLACK">
+                    다른 조건으로 검색해 보세요
+                  </p>
+                </div>
+              </div>
             </>
           )}
         </div>
