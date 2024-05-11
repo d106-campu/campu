@@ -31,6 +31,8 @@ const SearchSection = () => {
   });
 
   console.log(campsiteOfSearch?.data.campsiteList);
+  console.log("기준 지도 x", campsiteOfSearch?.data.mapCoordinates.center.mapX);
+  console.log("기준 지도 y", campsiteOfSearch?.data.mapCoordinates.center.mapY);
 
   useEffect(() => {
     if (campsiteOfSearch) {
@@ -59,4 +61,3 @@ const SearchSection = () => {
 };
 
 export default SearchSection;
-
