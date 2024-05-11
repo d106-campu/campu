@@ -1,16 +1,25 @@
 import { RootState } from "@/app/store";
 import LikeButton from "@/components/@common/Like/LikeButton";
 import { ICampsiteSimpleRes } from "@/types/search";
+import { useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
 const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
+  const divRef = useRef<HTMLDivElement>(null);
   const markers = useSelector((state: RootState) => state.markers.facltNm);
   console.log(markers);
 
   const isAvailable = camping.available;
   const facltNmColor = markers === camping.facltNm ? " bg-SUB_GREEN_01" : "";
+
+  // @TODO: 선택 시 스트롤 조정 추가 테스트 해야함
+  useEffect(() => {
+    if (facltNmColor && divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [facltNmColor]);
 
   return (
     <div className={`flex py-2 text-sm items-center border-b ${facltNmColor}`}>
