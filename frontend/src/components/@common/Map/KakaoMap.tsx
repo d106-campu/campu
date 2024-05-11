@@ -7,8 +7,8 @@ import { toggleMarker } from "@/features/search/markersSlice";
 
 interface KakaoMapProps {
   locations: IMapProps[];
-  mapX: number | null;
-  mapY: number | null;
+  mapX?: number | null;
+  mapY?: number | null;
 }
 
 const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
