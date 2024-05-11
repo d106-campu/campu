@@ -42,7 +42,7 @@ public class NotificationController implements NotificationControllerDoc {
     public ResponseEntity<SseEmitter> connectSseV2(@RequestParam("id") Long userId) {
         return ResponseEntity.ok()
             .header("X-Accel-Buffering", "no")
-            .header("Transfer-Encoding", "chunked")
+//            .header("Transfer-Encoding", "chunked")
             .body(notificationService.connectSseV2(userId));
     }
 
