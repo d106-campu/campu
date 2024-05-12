@@ -2,19 +2,23 @@ import { useState } from 'react';
 import { FaStar, FaHeart } from "react-icons/fa6";
 import { IMyFavoritCampRes } from '@/types/my'
 import Modal from '@/components/@common/Modal/Modal';
+import { useMy } from '@/hooks/my/useMy';
 
 interface MyFavoriteCampItemProps {
   camp: IMyFavoritCampRes;
   onRemove: (campId: number) => void;
+  refetchCamps: () => void;
 }
 
 const MyFavoriteCampItem = ({
   camp,
-  onRemove
+  onRemove,
+  refetchCamps,
 }:MyFavoriteCampItemProps) => {
   // 좋아요 상태 관리, 처음에는 항상 좋아요 상태(true)
   const [isLiked, setIsLiked] = useState<boolean>(true);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false); // 좋아요 취소 확인 모달 상태 관리
+  const { useDeleteLike } = useMy();
 
   const handleToggleLike = () => {
     if (isLiked) {
@@ -25,10 +29,18 @@ const MyFavoriteCampItem = ({
   };
 
   const confirmUnLike = () => {
-    setIsLiked(false);  // 좋아요 상태를 비활성화로 변경
-    onRemove(camp.campsiteId); // 관심 캠핑장에서 제거한다.
-    setShowConfirmModal(false); // 모달은 닫아준다.
-    // @TODO : 추후에 백엔드와의 통신을 통해 좋아요 취소했다는 정보를 다시 알려줘야함
+    useDeleteLike.mutate(camp.campsiteId, {
+      onSuccess: () => {
+        console.log("취소합니다 누름@")
+        setIsLiked(false);  // 좋아요 상태를 비활성화로 변경
+        onRemove(camp.campsiteId); // 관심 캠핑장에서 제거한다.
+        setShowConfirmModal(false); // 모달 닫기
+        refetchCamps();  // 성공 후 캠핑장 리스트 재조회
+      },
+      onError: (error) => {
+        console.error('좋아요 취소 실패함!!', error)
+      }
+    });
   };
 
   return (

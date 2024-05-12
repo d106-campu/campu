@@ -18,14 +18,30 @@ export interface IMyFavoritCampListRes {
   content: IMyFavoritCampRes[];
 }
 
+// 내가 찜한 캠핑장 전체 응답
+export interface IMyFavoritCampListResq {
+  campsiteList: IMyFavoritCampListRes;
+}
+
 // 내가 찜한 캠핑장 요청
 export interface IPageableSimpleReq {
   page: number;
   size: number;
 }
+
 // 내가 찜한 캠핑장 요청 pageable
 export interface IPageableReq {
   pageable: IPageableSimpleReq
+}
+
+// 내가 찜한 캠핑장 "좋아요 취소"
+export interface ILike {
+  like: boolean;
+}
+
+// "좋아요 취소" 응답
+export interface ILikeRes {
+  like: ILike;
 }
 
 // 캠핑장 정보 (식별번호, 이름, 주소, 사진URL)
@@ -38,6 +54,7 @@ export interface ICampsite {
 
 // 캠핑장 정보 내에 방 정보 (방 이름)
 export interface IRoom {
+  roomId: number;
   roomName: string;
   campsite: ICampsite;
 }
