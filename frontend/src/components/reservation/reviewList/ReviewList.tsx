@@ -58,7 +58,7 @@ const ReviewList = ({ campsiteId }: IReviewListProps) => {
         {/* 로딩중 UI */}
         {isLoading && (
           <>
-            <div className="pt-10 text-center">
+            <div className="pt-10 text-center mx-auto">
               <p className="text-MAIN_GREEN text-lg font-semibold">로딩 중</p>
               <p className="text-sm text-SUB_BLACK">잠시만 기다려 주세요</p>
               <Lottie options={roomsLoadingOptions} height={90} width={200} />
