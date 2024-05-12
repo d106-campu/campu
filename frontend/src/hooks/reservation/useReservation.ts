@@ -1,23 +1,16 @@
-import { getRoomList } from "@/services/reservation/api";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  deleteAlert,
+  getRoomList,
+  postAlert,
+} from "@/services/reservation/api";
+import { IAlertPostReq, IRoomListReq } from "@/types/reservation";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 export const useReservation = () => {
-  const useGetRoomListInfinite = (props: {
-    campsiteId: number;
-    size: number;
-    headCnt: number;
-    startDate: string;
-    endDate: string;
-  }) => {
+  // 방 목록 조회 (무한 스크롤)
+  const useGetRoomListInfinite = (props: IRoomListReq) => {
     return useInfiniteQuery({
-      queryKey: [
-        "rooms",
-        props.campsiteId,
-        props.size,
-        props.headCnt,
-        props.startDate,
-        props.endDate,
-      ],
+      queryKey: ["rooms", props],
       queryFn: ({ pageParam }) => {
         return getRoomList({ ...props, page: pageParam });
       },
@@ -33,5 +26,21 @@ export const useReservation = () => {
     });
   };
 
-  return { useGetRoomListInfinite };
+  // 빈자리 알림 등록
+  const usePostAlert = (props: IAlertPostReq) => {
+    return useMutation({
+      mutationKey: [`room alert`, props],
+      mutationFn: (props: IAlertPostReq) => postAlert(props),
+    });
+  };
+
+  // 빈자리 알림 취소
+  const useDeleteAlert = () => {
+    return useMutation({
+      mutationKey: [`room alert delete`],
+      mutationFn: (roomId: number) => deleteAlert(roomId)
+    });
+  };
+
+  return { useGetRoomListInfinite, usePostAlert, useDeleteAlert };
 };

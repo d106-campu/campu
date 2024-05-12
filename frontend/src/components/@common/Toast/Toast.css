@@ -14,17 +14,19 @@
   min-height: 45px !important;
   height: auto;
   font-size: 12.5px;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
   z-index: 1000;
   color: white;
 }
 
 .Toastify__toast--info {
+  width: 280px;
   background-color: rgb(73, 73, 73);
 }
 
 .Toastify__toast--success {
-  background-color: #186D41 !important;
+  background-color: #186d41 !important;
+  width: 280px;
   color: white !important;
   font-weight: bold;
 }

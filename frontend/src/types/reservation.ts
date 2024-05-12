@@ -26,7 +26,7 @@ export interface IRoomItem {
   emptyNotification: boolean;
 }
 
-// 방 목록
+// 방 목록 조회 Response
 export interface IRoomListRes {
   roomList: {
     content: IRoomItem[];
@@ -41,4 +41,20 @@ export interface IRoomListRes {
     numberOfElements: number;
     empty: boolean;
   };
+}
+
+// 방 목록 조회 Request
+export interface IRoomListReq {
+  campsiteId: number;
+  size: number;
+  headCnt: number;
+  startDate: string;
+  endDate: string;
+}
+
+// 빈자리 알림 등록
+export interface IAlertPostReq {
+  roomId: number;
+  startDate: string;
+  endDate: string;
 }
