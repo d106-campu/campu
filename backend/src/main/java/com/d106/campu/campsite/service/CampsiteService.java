@@ -113,15 +113,15 @@ public class CampsiteService {
         Map<Long, Boolean> campsiteLikeByUserMap =
             (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
         Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
+        Map<Long, Boolean> campsiteAvailabilityMap = qCampsiteRepository.availableOnDateRangeByCampsite(campsiteIds, headCnt,
+            startDate, endDate);
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
             List<Room> roomList = campsite.getRoomList();
 
             // available at least one room can be reserved on the date range
-            campsite.setAvailable(
-                roomList.stream()
-                    .anyMatch(room -> !reservationRepository.existsReservationOnDateRange(room, startDate, endDate)));
+            campsite.setAvailable(campsiteAvailabilityMap.getOrDefault(campsite.getId(), false));
 
             // Cheapest room price of this campsite
             campsite.setPrice(minPriceByCampsiteMap.getOrDefault(campsite.getId(), null));
