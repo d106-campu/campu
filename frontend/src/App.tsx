@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import MyPage from "@/pages/mypage";
@@ -12,10 +12,12 @@ import ReviewListPage from "@/pages/reservation/reviewList";
 import ReviewPage from "@/pages/reservation/reviewList/review";
 import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import '@/components/@common/Toast/Toast.css'
-import { Provider } from "react-redux";
-import { store } from "./app/store";
+import "react-toastify/dist/ReactToastify.css";
+import "@/components/@common/Toast/Toast.css";
+import { Provider, useSelector } from "react-redux";
+import { RootState, store } from "./app/store";
+import { useEffect } from "react";
+import { EventSourcePolyfill } from "event-source-polyfill";
 
 const router = createBrowserRouter([
   {
@@ -67,11 +69,44 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 function App() {
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const accessToken = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (isLogin) {
+      // eventSource 객체 생성
+      const eventSource = new EventSourcePolyfill(
+        import.meta.env.VITE_SSE_URL,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+          heartbeatTimeout: 1000000,
+        }
+      );
+
+      // eventSource 연결
+      eventSource.onopen = () => {
+        console.log("eventSource 연결");
+      };
+
+      // eventSource 에러
+      eventSource.onerror = async (event) => {
+        console.log("eventSource 에러", event);
+        eventSource.close();
+      };
+
+      return () => {
+        eventSource.close();
+      };
+    }
+  }, [isLogin]);
+
   return (
     <>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <ToastContainer position="top-center"/>
+          <ToastContainer position="top-center" />
           <RouterProvider router={router} />
         </QueryClientProvider>
       </Provider>
