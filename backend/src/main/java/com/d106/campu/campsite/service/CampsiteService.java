@@ -25,6 +25,7 @@ import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
+import com.d106.campu.room.repository.jpa.QRoomRepository;
 import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
@@ -59,6 +60,7 @@ public class CampsiteService {
     private final CampsiteMapper campsiteMapper;
 
     private final RoomRepository roomRepository;
+    private final QRoomRepository qRoomRepository;
     private final RoomMapper roomMapper;
 
     private final ReviewRepository reviewRepository;
@@ -245,15 +247,14 @@ public class CampsiteService {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
-        List<Room> roomList = roomRepository.findByCampsite(campsite, pageable)
-            .filter(room -> room.getMaxNo() >= headCnt)
-            .map(room -> {
-                room.setAvailable(!reservationRepository.existsReservationOnDateRange(room, startDate, endDate));
-                return room;
-            }).toList();
+        Map<Long, Boolean> campsiteAvailabilityMap = qRoomRepository.availableByRoomAndDateRange(campsite, headCnt, startDate,
+            endDate);
 
-        return new PageImpl<>(roomList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()),
-            roomList.size()).map(roomMapper::toRoomResponseDto);
+        Page<RoomDto.Response> roomPage = qRoomRepository.findByCampsite(campsite, headCnt, pageable);
+        return roomPage.map(room -> {
+            room.setAvailable(campsiteAvailabilityMap.getOrDefault(room.getId(), false));
+            return room;
+        });
     }
 
     /**

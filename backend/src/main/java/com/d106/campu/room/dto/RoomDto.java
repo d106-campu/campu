@@ -1,11 +1,13 @@
 package com.d106.campu.room.dto;
 
 import com.d106.campu.campsite.dto.CampsiteDto;
+import lombok.Builder;
 import lombok.Data;
 
 public class RoomDto {
 
     @Data
+    @Builder
     public static class Response {
 
         private Long id;
