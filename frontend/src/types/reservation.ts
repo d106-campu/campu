@@ -22,7 +22,7 @@ export interface IRoomItem {
   toiletCnt: number;
   supplyList: string[] | null;
   available: boolean;
-  image_url: string;
+  imageUrl: string | null;
   emptyNotification: boolean;
 }
 
