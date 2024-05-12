@@ -1,17 +1,26 @@
 import { axiosAuthInstance } from '@/apis/axiosInstance';
 import { APIResponse } from '@/types/model';
-import { IPageableReq, IMyFavoritCampListRes, IEmptyNotificationList } from '@/types/my';
+import { IPageableReq, IMyFavoritCampListResq, IEmptyNotificationList } from '@/types/my';
+import { ILikeRes } from "@/types/reservation";
 
 // 내가 찜한 캠핑장 조회
 export const fetchFavoriteCamps = async ({
   pageable
-}: IPageableReq): Promise<IMyFavoritCampListRes> => {
-  const response = await axiosAuthInstance.get<APIResponse<IMyFavoritCampListRes>>(`/mypage/campsite`, {
+}: IPageableReq): Promise<IMyFavoritCampListResq> => {
+  const response = await axiosAuthInstance.get<APIResponse<IMyFavoritCampListResq>>(`/mypage/campsite`, {
     params: {
       ...pageable
     },
   });
   return response.data.data;
+};
+
+// 내찜캠 "좋아요 취소" 요청
+export const deleteLikes = async (
+  campsiteId: number
+): Promise<APIResponse<ILikeRes>> => {
+  const res = await axiosAuthInstance.post(`/campsite/like/${campsiteId}`);
+  return res.data;
 };
 
 // 빈자리 알림 조회 API 요청

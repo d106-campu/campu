@@ -12,6 +12,7 @@ export function GetMyAlerts(): IEmptyNotificationList {
           startDate: "2024-05-11",
           endDate: "2024-05-12",
           room: {
+            roomId: 1,
             roomName: "A구역 (벚꽃 캠핑존)",
             campsite: {
               campsiteId: 1,
