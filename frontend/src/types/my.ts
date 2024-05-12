@@ -75,23 +75,49 @@ export interface IEmptyNotificationList {
   }
 }
 
-// 내 예약내역 -> api 연결시 수정
-export interface IDetailProps {
-  titleLeft: string;
-  contentLeft: string;
-  titleRight: string;
-  contentRight: string;
+// 내 리뷰 요청
+export interface IPageableMyReview {
+  page: number;
+  size: number;
 }
 
-// 내 예약내역 -> api 연결시 수정
-export interface IReservationProps {
-  campName: string;
-  area: string;
-  date: string;
-  nights: number;
-  details: IDetailProps[];
-  people: number;
-  camInduty: string;
-  price: number;
-  address: string;
+// 내 리뷰 요청 pageable
+export interface IPageableMyReivewReq {
+  pageable: IPageableSimpleReq
+}
+
+
+// 내 리뷰에 대한 정보 응답
+export interface IMyReviewRes {
+  reviewId: number;
+  score: number;
+  content: string;
+  createTime: string;
+  imageUrl: string;
+}
+
+// 나의 예약 정보 응답
+export interface IMyReservationRes {
+  campsiteId: number;
+  campsiteName: string;
+  roomName: string;
+}
+
+// 리뷰와 예약 정보를 결합한 타입 응답
+export interface IMyReivewMyReservationRes {
+  review: IMyReviewRes;
+  reservation: IMyReservationRes;
+}
+
+// 리뷰 목록 페이지 정보 응답
+export interface IMyReviewContentRes {
+  content: IMyReivewMyReservationRes[];
+}
+
+// 리뷰 목록 응답 
+export interface IMyReviewListRes {
+  result: string;
+  data: {
+    reviewList: IMyReviewContentRes;
+  }
 }

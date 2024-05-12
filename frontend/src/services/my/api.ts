@@ -1,6 +1,6 @@
 import { axiosAuthInstance } from '@/apis/axiosInstance';
 import { APIResponse } from '@/types/model';
-import { IPageableReq, IMyFavoritCampListResq, IEmptyNotificationList } from '@/types/my';
+import { IPageableReq, IPageableMyReivewReq, IMyFavoritCampListResq, IEmptyNotificationList, IMyReviewListRes } from '@/types/my';
 import { ILikeRes } from "@/types/reservation";
 
 // 내가 찜한 캠핑장 조회
@@ -34,3 +34,15 @@ export const deleteMyAlert = async (roomId: number): Promise<{ result: string }>
   const response = await axiosAuthInstance.delete(`/empty-notification/${roomId}`);
   return response.data;
 }
+
+// 내 리뷰 조회 API 요청
+export const fetchMyReviews = async ({
+  pageable
+}: IPageableMyReivewReq): Promise<IMyReviewListRes> => {
+  const response = await axiosAuthInstance.get<IMyReviewListRes>(`/mypage/profile`, {
+    params: {
+      ...pageable
+    },
+  });
+  return response.data;
+};

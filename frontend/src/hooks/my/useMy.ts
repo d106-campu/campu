@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { IEmptyNotificationList, IPageableReq, IMyFavoritCampListResq } from '@/types/my';
-import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes  } from '@/services/my/api';
+import { IEmptyNotificationList, IPageableReq, IPageableMyReivewReq, IMyFavoritCampListResq, IMyReviewListRes } from '@/types/my';
+import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes, fetchMyReviews  } from '@/services/my/api';
 
 export const useMy = () => {
 
@@ -43,10 +43,19 @@ export const useMy = () => {
     }
   });
 
+  // 내 리뷰 조회
+  const useMyReviews = (props: IPageableMyReivewReq) => {
+    return useQuery<IMyReviewListRes>({
+      queryKey: ['myReviews', props],
+      queryFn: () => fetchMyReviews(props),
+    });
+  };
+
   return {
     useMyAlertsQuery,
     useDeleteAlert,
     useFavoriteCampsList,
     useDeleteLike,
+    useMyReviews,
   };
 };
