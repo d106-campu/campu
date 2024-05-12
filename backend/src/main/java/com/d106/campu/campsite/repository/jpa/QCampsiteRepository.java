@@ -168,7 +168,7 @@ public class QCampsiteRepository {
      * <pre>{@code
      * select
      *     c.id campsite_id,
-     *     count(DISTINCT room.id) numRooms,
+     *     room.id room_id,
      *     sum(case
      *         when (
      *             (reservation.start_date = @start_date)
@@ -182,15 +182,17 @@ public class QCampsiteRepository {
      *     left outer join reservation on room.id = reservation.room_id
      * where c.id in :campsiteIds
      *     and room.max_no >= :headCnt
-     * GROUP BY c.id
-     * ORDER BY c.id;
+     * GROUP BY c.id, room.id
+     * ORDER BY c.id, room.id;
      * }</pre>
      *
      * <pre>{@code
-     * campsite.id	numRooms	numRoomResrv
-     *          1         1               2     // false, cannot reserve.
-     *          2         2               1     // true, there is an empty room.
-     *          4         1               0     // true, same as above.
+     * campsite_id	room_id	num_room_resrv
+     *           1        1              2      // Campsite 1 cannot be reserved.
+     *           2        2              2      // Campsite 2 can be reserved
+     *           2        4              0      // because room #4 has no reservation.
+     *           3        5              0
+     *           4        7              0
      * }</pre>
      */
     public Map<Long, Boolean> availableOnDateRangeByCampsite(
@@ -199,7 +201,7 @@ public class QCampsiteRepository {
         List<Tuple> tuples = jpaQueryFactory
             .select(new Expression[]{
                 campsite.id,
-                room.id.countDistinct().as("numRooms"),
+                room.id,
                 new CaseBuilder()
                     .when(
                         reservation.startDate.eq(startDate)
@@ -217,13 +219,14 @@ public class QCampsiteRepository {
                 .and(campsite.id.in(campsiteIds))
                 .and(room.maxNo.goe(headCnt))
             )
-            .groupBy(campsite.id)
-            .orderBy(new OrderSpecifier[]{campsite.id.asc()})
+            .groupBy(campsite.id, room.id)
+            .orderBy(new OrderSpecifier[]{campsite.id.asc(), room.id.asc()})
             .fetch();
 
         Map<Long, Boolean> responseMap = new TreeMap<>();
         tuples.forEach(tuple -> {
-            responseMap.put(tuple.get(campsite.id), tuple.get(1, Long.class) > tuple.get(2, Integer.class));
+            long cid = tuple.get(campsite.id);
+            responseMap.put(cid, (tuple.get(2, Integer.class) == 0) || responseMap.getOrDefault(cid, false));
         });
         return responseMap;
     }
