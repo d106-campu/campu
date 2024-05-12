@@ -247,7 +247,8 @@ public class CampsiteService {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
-        Map<Long, Boolean> campsiteAvailabilityMap = qRoomRepository.availableByRoomAndDateRange(campsite, headCnt, startDate,
+        Map<Long, Boolean> campsiteAvailabilityMap = qRoomRepository.availableByCampsiteAndDateRange(campsite, headCnt,
+            startDate,
             endDate);
 
         Page<RoomDto.Response> roomPage = qRoomRepository.findByCampsite(campsite, headCnt, pageable);

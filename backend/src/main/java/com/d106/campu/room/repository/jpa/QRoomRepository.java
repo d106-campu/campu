@@ -76,7 +76,7 @@ public class QRoomRepository {
         return PageableExecutionUtils.getPage(responseList, pageable, countQuery::fetchOne);
     }
 
-    public Map<Long, Boolean> availableByRoomAndDateRange(Campsite campsite, int headCnt, LocalDate startDate,
+    public Map<Long, Boolean> availableByCampsiteAndDateRange(Campsite campsite, int headCnt, LocalDate startDate,
         LocalDate endDate) {
         Expression[] projections = new Expression[]{
             room.id,
