@@ -15,18 +15,18 @@ const ReviewItem = ({ review }: { review: IReview }) => {
   return (
     <div className="w-[17rem] rounded-lg overflow-hidden shadow-lg bg-white cursor-pointer">
       {/* 리뷰 사진 최대 5개 */}
-      {review.images && review.images.length > 0 ? (
+      {review.reviewImageList && review.reviewImageList.length > 0 ? (
         <div className="relative">
           <img
             className="w-full h-60 object-cover object-center"
-            src={review.images[activeImage]}
+            src={review.reviewImageList[activeImage]}
             alt="리뷰 사진"
           />
           {/* 하단의 점 슬라이더 - 이미지가 2개 이상때만 렌더링 */}
-          {review.images.length > 1 && (
+          {review.reviewImageList.length > 1 && (
             <div className="absolute bottom-4 left-0 w-full flex justify-center">
               <div className=" bg-black/30 rounded-3xl px-1">
-                {review.images.map((_, index) => (
+                {review.reviewImageList.map((_, index) => (
                   <span
                     key={index}
                     className={`inline-block h-2 w-2 rounded-full mx-1 cursor-pointer ${
@@ -60,17 +60,21 @@ const ReviewItem = ({ review }: { review: IReview }) => {
         <div className="flex justify-between items-center gap-2 text-sm">
           <div className="flex items-center gap-2">
             <img
-              src={review.profile || profile}
+              src={review.user.profileImageUrl || profile}
               alt="프로필 이미지"
               className="rounded-full overflow-hidden w-7 h-7"
             />
-            <p className="text-BLACK font-bold text-base">{review.nickname}</p>
+            <p className="text-BLACK font-bold text-base">
+              {review.user.nickname}
+            </p>
           </div>
-          <Rating rating={review.rating} size={15} gap="gap-[0.7px]" />
+          <Rating rating={review.score} size={15} gap="gap-[0.7px]" />
         </div>
 
         <div className="line-clamp-3">{review.content}</div>
-        <p className="text-[#A0A0A0] text-sm text-end">{review.date} 작성</p>
+        <p className="text-[#A0A0A0] text-sm text-end">
+          {review.createTime} 작성
+        </p>
       </div>
     </div>
   );

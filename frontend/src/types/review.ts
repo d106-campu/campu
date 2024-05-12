@@ -1,3 +1,5 @@
+import { IPageable, ISort } from "./model";
+
 export interface ISimpleReview {
   id: number;
   nickname: string;
@@ -10,23 +12,45 @@ export interface ISimpleReviewList {
   reviews: ISimpleReview[];
 }
 
-export interface IReview {
-  id: number;
+// 사용자 정보 타입
+export interface IUser {
   nickname: string;
-  profile: string;
-  content: string;
-  date: string;
-  rating: number;
-  images: string[];
+  profileImageUrl: string;
 }
 
-export interface IReviewList {
+// 리뷰 정보 타입
+export interface IReview {
   id: number;
-  campsite_faclt_nm: string;
-  rating: number;
-  types: string[];
-  totalReview: number;
-  reviews: IReview[];
+  createTime: string;
+  user: IUser;
+  score: number;
+  content: string;
+  reviewImageList: string[];
+}
+
+// 페이지에 대한 리뷰 목록 타입
+export interface IReviewList {
+  content: IReview[];
+  pageable: IPageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  size: number;
+  number: number;
+  sort: ISort;
+  numberOfElements: number;
+  empty: boolean;
+}
+
+// 리뷰 목록 조회 Response
+export interface IReviewListRes {
+  reviewList: IReviewList;
+}
+
+// 캠핑장 평점 조회 Response
+export interface ICampScoreRes {
+  campsiteScore: number;
 }
 
 export interface IMyReview {
