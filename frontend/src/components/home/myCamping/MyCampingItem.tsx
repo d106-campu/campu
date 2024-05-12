@@ -11,7 +11,7 @@ const MyCampingItem = ({ camping }: { camping: IMyFavoritCampRes }) => {
         className="w-full rounded-md h-32 object-cover object-center"
       />
       <div className="absolute top-7 right-4">
-        <LikeButton campsiteId={camping.campsiteId} iconSize={25} />
+        <LikeButton like={true} campsiteId={camping.campsiteId} iconSize={25} />
       </div>
       <div className="p-2">
         <div className="flex justify-between">

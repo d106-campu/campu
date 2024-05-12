@@ -1,6 +1,7 @@
 import { axiosAuthInstance, axiosCommonInstance } from "@/apis/axiosInstance";
-import { APIResponse } from "@/types/model";
-import { ILikeRes, IRoomListRes } from "@/types/reservation";
+import { APIResponse, APISimpleResponse } from "@/types/model";
+import { IAlertPostReq, ILikeRes, IRoomListRes } from "@/types/reservation";
+// import axios from "axios"; // msw 할 때는 axios
 
 // 좋아요 요청
 export const postLikes = async (
@@ -24,4 +25,28 @@ export const getRoomList = async (params: {
     params: { page, size, headCnt, startDate, endDate },
   });
   return res.data;
+};
+
+// 빈자리 알림 등록
+export const postAlert = async ({
+  roomId,
+  startDate,
+  endDate,
+}: IAlertPostReq): Promise<APISimpleResponse> => {
+  const response = await axiosAuthInstance.post(`/empty-notification`, {
+    roomId: roomId,
+    startDate: startDate,
+    endDate: endDate,
+  });
+  return response.data;
+};
+
+// 빈자리 알림 취소
+export const deleteAlert = async (
+  roomId: number
+): Promise<APISimpleResponse> => {
+  const response = await axiosAuthInstance.delete(
+    `/empty-notification/${roomId}`
+  );
+  return response.data;
 };

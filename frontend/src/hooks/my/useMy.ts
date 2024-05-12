@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { IEmptyNotificationList, IPageableReq, IMyFavoritCampListRes } from '@/types/my';
-import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert  } from '@/services/my/api';
+import { IEmptyNotificationList, IPageableReq, IMyFavoritCampListResq } from '@/types/my';
+import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes  } from '@/services/my/api';
 
 export const useMy = () => {
 
@@ -25,15 +25,28 @@ export const useMy = () => {
 
   // 내가 찜한 캠핑장 조회
   const useFavoriteCampsList = (props: IPageableReq) => {
-    return useQuery<IMyFavoritCampListRes>({
+    return useQuery<IMyFavoritCampListResq>({
       queryKey: ['favoriteCamps', props],
       queryFn: () => fetchFavoriteCamps(props),
     });
   };
 
+  // 내가 찜한 캠핑장 "좋아요 취소"
+  const useDeleteLike = useMutation({
+    mutationKey: ['deleteLikes'],
+    mutationFn: (campsiteId: number) => deleteLikes(campsiteId),
+    onSuccess: () => {
+      console.log('좋아요 취소 성공!!')
+    },
+    onError: (error) => {
+      console.error('좋아요 취소 실패:', error);
+    }
+  });
+
   return {
     useMyAlertsQuery,
     useDeleteAlert,
     useFavoriteCampsList,
+    useDeleteLike,
   };
 };

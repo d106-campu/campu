@@ -5,6 +5,7 @@ import Modal from '@/components/@common/Modal/Modal';
 import { useSelector } from "react-redux";
 import { RootState } from '@/app/store';
 import { useMy } from '@/hooks/my/useMy';
+import Toast from "@/components/@common/Toast/Toast";
 
 const FreeAlert = (): JSX.Element => {
   const { useMyAlertsQuery, useDeleteAlert  } = useMy();
@@ -12,11 +13,15 @@ const FreeAlert = (): JSX.Element => {
   const [visibleAlerts, setVisibleAlerts] = useState<IEmptyNotification[]>([]);
   const [viewCount, setIsViewCount] = useState<number>(2); // 처음 보여줄 빈자리 알림 개수 관리
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [selectedCampsiteId, setSelectedCampsiteId] = useState<number | null>(null); // campsiteId 식별번호 (삭제 시 사용)
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null); // roomId 식별번호 (삭제 시 사용)
 
   // 데이터가 로드되었을 때 초기 목록 설정 (2개씩 잘라서 보여줌)
   useEffect(() => {
     if (useMyAlertsQuery.data) {
+      console.log("빈자리 알림 데이터 :", useMyAlertsQuery.data.data.emptyNotificationList)
+      useMyAlertsQuery.data.data.emptyNotificationList.forEach((arr, index) => {
+        console.log(`항목 ${index}의 roomId 값 :`, arr.room.roomId);
+      });
       setVisibleAlerts(useMyAlertsQuery.data.data.emptyNotificationList.slice(0, viewCount));
     }
   }, [useMyAlertsQuery.data, viewCount]);
@@ -58,27 +63,29 @@ const FreeAlert = (): JSX.Element => {
   }
 
   // 빈자리 알림 취소 모달 관리
-  const handleCancelAlert = (campsiteId: number) => {
+  const handleCancelAlert = (roomId: number) => {
     setShowConfirmModal(true);
-    setSelectedCampsiteId(campsiteId); 
+    console.log("룸아이디", roomId)
+    setSelectedRoomId(roomId)
   };
 
   // 빈자리 알림 취소 확정 시 리스트에서 정보 제거 
   const confirmCancelAlert = () => {
-    if (selectedCampsiteId !== null) {
+    if (selectedRoomId !== null) {
       // 빈자리 알림 DELETE 요청 API 연결
-      console.log("선택한 Id 확인 :", selectedCampsiteId)
-      useDeleteAlert.mutate(selectedCampsiteId, {
+      console.log("선택한 roomId 확인 :", selectedRoomId)
+      useDeleteAlert.mutate(selectedRoomId, {
         onSuccess: () => {
           // 성공적으로 삭제 처리 후 상태 업데이트
-          setVisibleAlerts(prev => prev.filter(alert => alert.room.campsite.campsiteId !== selectedCampsiteId));
+          setVisibleAlerts(prev => prev.filter(alert => alert.room.roomId !== selectedRoomId));
           console.log('빈자리알림 하나 삭제함!');
           setShowConfirmModal(false); // 모달 닫기
-          setSelectedCampsiteId(null);
-          
+          setSelectedRoomId(null);
+          Toast.success("성공적으로 알림을 취소했습니다.")
         },
         onError: (error) => {
           console.error('빈자리 알림 삭제 실패:', error);
+          Toast.error("일시적 오류로 취소하지 못했습니다.")
         }
       });
     }
@@ -113,7 +120,7 @@ const FreeAlert = (): JSX.Element => {
       {/* 빈자리 알림 설정한 더미데이터 리스트 */}
       <FreeAlertList
         alerts={visibleAlerts}
-        handleCancelAlert={(campsiteId) => handleCancelAlert(campsiteId)}
+        handleCancelAlert={(roomId) => handleCancelAlert(roomId)}
         viewCount={viewCount}
         handleShowMoreAlerts={handleShowMoreAlerts}
         handleShowLessAlerts={handleShowLessAlerts}

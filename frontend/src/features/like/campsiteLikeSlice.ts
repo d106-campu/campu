@@ -14,6 +14,9 @@ const campsiteLikeSlice = createSlice({
   name: "campsiteLike",
   initialState,
   reducers: {
+    toggleLikeRequest(_, __: PayloadAction<number>) {
+      // 좋아요 토글 요청, 사가에서 처리됨
+    },
     addLike(state, action: PayloadAction<number>) {
       const campsiteId = action.payload;
       state.likes[campsiteId] = { id: campsiteId }; // 좋아요 추가
@@ -22,7 +25,7 @@ const campsiteLikeSlice = createSlice({
       delete state.likes[action.payload]; // 좋아요 제거
     },
     setLikes(state, action: PayloadAction<Record<number, { id: number }>>) {
-      state.likes = action.payload; // 좋아요 상태 서버로부터 설정
+      state.likes = action.payload; // 서버에서 받은 좋아요 상태로 설정
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload; // 로딩 상태 설정
@@ -30,6 +33,6 @@ const campsiteLikeSlice = createSlice({
   },
 });
 
-export const { addLike, removeLike, setLikes, setLoading } =
+export const { toggleLikeRequest, addLike, removeLike, setLikes, setLoading } =
   campsiteLikeSlice.actions;
 export const campsiteLikeReducer = campsiteLikeSlice.reducer;

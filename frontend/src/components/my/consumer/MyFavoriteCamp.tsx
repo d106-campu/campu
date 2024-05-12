@@ -9,18 +9,18 @@ const MyFavoriteCamp = (): JSX.Element => {
   const initialCampsToShow = 4; // 초기에 보여줄 관심 캠핑장 카드 수
   const [visibleCamps, setVisibleCamps] = useState<IMyFavoritCampRes[]>([]); // 현재 화면에 보여줄 캠핑장 개수 상태 관리
   const { useFavoriteCampsList } = useMy();
-  const { data, isLoading, isError } = useFavoriteCampsList({ pageable: { page: 1, size: 10 } });
+  const { data, isLoading, isError, refetch  } = useFavoriteCampsList({ pageable: { page: 0, size: 100 } });
   const nickname = useSelector((state: RootState) => state.auth.nickname);
 
   useEffect(() => {
-    if (data?.content) {
-      setVisibleCamps(data.content.slice(0, initialCampsToShow)); // 4개씩 잘라서 보여주기
+    if (data?.campsiteList?.content) {
+      setVisibleCamps(data.campsiteList.content.slice(0, initialCampsToShow)); // 4개씩 잘라서 보여주기
     }
   }, [data]);
 
   if (isLoading) return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
   if (isError) return <div>내가 찜한 캠핑장 목록에 접근하지 못했습니다. 😭</div>;
-  if (!data?.content?.length) {
+  if (!data?.campsiteList?.content?.length) {
     console.error("내가 찜한 캠핑장 리스트가 비어있음 !");
     return (
       <>
@@ -40,8 +40,8 @@ const MyFavoriteCamp = (): JSX.Element => {
 
   // "더보기" 버튼 클릭 핸들러
   const handleShowMoreCamps = () => {
-    if (data?.content) {
-      setVisibleCamps(prev => [...prev, ...data.content.slice(prev.length, prev.length + 2)]);
+    if (data?.campsiteList.content) {
+      setVisibleCamps(prev => [...prev, ...data.campsiteList.content.slice(prev.length, prev.length + 2)]);
     }
   };
 
@@ -72,6 +72,7 @@ const MyFavoriteCamp = (): JSX.Element => {
               key={camp.campsiteId}
               camp={camp}
               onRemove={removeCamp} // 캠프 제거 함수 전달
+              refetchCamps={refetch}
             />
           ))}
         </div>
@@ -79,7 +80,7 @@ const MyFavoriteCamp = (): JSX.Element => {
         {/* 더보기, 줄이기 버튼 */}
         <div className='flex justify-center pt-2'>
           <div>
-            {visibleCamps.length < data.content.length && (
+            {visibleCamps.length < data.campsiteList.content.length && (
               <button onClick={handleShowMoreCamps}>더보기</button>
             )}
           </div>

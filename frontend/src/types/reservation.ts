@@ -6,7 +6,8 @@ export interface ILike {
 }
 
 export interface ILikeRes {
-  likeResponse: ILike;
+  like: ILike;
+  // likeResponse: ILike;
 }
 
 // 방 목록 아이템
@@ -22,11 +23,11 @@ export interface IRoomItem {
   toiletCnt: number;
   supplyList: string[] | null;
   available: boolean;
-  image_url: string;
+  imageUrl: string | null;
   emptyNotification: boolean;
 }
 
-// 방 목록
+// 방 목록 조회 Response
 export interface IRoomListRes {
   roomList: {
     content: IRoomItem[];
@@ -41,4 +42,20 @@ export interface IRoomListRes {
     numberOfElements: number;
     empty: boolean;
   };
+}
+
+// 방 목록 조회 Request
+export interface IRoomListReq {
+  campsiteId: number;
+  size: number;
+  headCnt: number;
+  startDate: string;
+  endDate: string;
+}
+
+// 빈자리 알림 등록
+export interface IAlertPostReq {
+  roomId: number;
+  startDate: string;
+  endDate: string;
 }
