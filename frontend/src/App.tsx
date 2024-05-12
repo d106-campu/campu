@@ -14,10 +14,8 @@ import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "@/components/@common/Toast/Toast.css";
-import { Provider, useSelector } from "react-redux";
-import { RootState, store } from "./app/store";
-import { useEffect } from "react";
-import { EventSourcePolyfill } from "event-source-polyfill";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const router = createBrowserRouter([
   {
@@ -69,38 +67,38 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 function App() {
-  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
-  const accessToken = localStorage.getItem("accessToken");
+  // const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  // const accessToken = localStorage.getItem("accessToken");
 
-  useEffect(() => {
-    if (isLogin) {
-      // eventSource 객체 생성
-      const eventSource = new EventSourcePolyfill(
-        import.meta.env.VITE_SSE_URL,
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
-          heartbeatTimeout: 1000000,
-        }
-      );
+  // useEffect(() => {
+  //   if (isLogin) {
+  //     // eventSource 객체 생성
+  //     const eventSource = new EventSourcePolyfill(
+  //       import.meta.env.VITE_SSE_URL,
+  //       {
+  //         headers: {
+  //           Authorization: "Bearer " + accessToken,
+  //         },
+  //         heartbeatTimeout: 1000000,
+  //       }
+  //     );
 
-      // eventSource 연결
-      eventSource.onopen = () => {
-        console.log("eventSource 연결");
-      };
+  //     // eventSource 연결
+  //     eventSource.onopen = () => {
+  //       console.log("eventSource 연결");
+  //     };
 
-      // eventSource 에러
-      eventSource.onerror = async (event) => {
-        console.log("eventSource 에러", event);
-        eventSource.close();
-      };
+  //     // eventSource 에러
+  //     eventSource.onerror = async (event) => {
+  //       console.log("eventSource 에러", event);
+  //       eventSource.close();
+  //     };
 
-      return () => {
-        eventSource.close();
-      };
-    }
-  }, [isLogin]);
+  //     return () => {
+  //       eventSource.close();
+  //     };
+  //   }
+  // }, [isLogin]);
 
   return (
     <>
