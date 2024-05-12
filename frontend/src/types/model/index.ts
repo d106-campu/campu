@@ -32,3 +32,10 @@ export interface IPageableSimpleReq {
   page: number;
   size: number;
 }
+
+// useParams로 받을 id
+export interface RouteParams {
+  [key: string]: string | undefined;
+  campId?: string;
+  reviewId?: string;
+}

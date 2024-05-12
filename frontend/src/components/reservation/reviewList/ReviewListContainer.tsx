@@ -2,12 +2,16 @@ import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
 import CampSiteRating from "@/components/reservation/reviewList/CampSiteRating";
 import ReviewList from "@/components/reservation/reviewList/ReviewList";
 import { useReview } from "@/hooks/review/useReview";
+import { useParams } from "react-router-dom";
+import { RouteParams } from "@/types/model";
 
 const ReviewListContainer = () => {
   const { useGetCampScore } = useReview();
+  const { campId } = useParams<RouteParams>();
+  const campsiteId = campId ? parseInt(campId, 10) : 0;
 
   // 캠핑장 평점 조회
-  const { data: campScore } = useGetCampScore(dummydata.id);
+  const { data: campScore } = useGetCampScore(campsiteId);
   const score = campScore?.data.campsiteScore || 0;
 
   return (
@@ -17,9 +21,7 @@ const ReviewListContainer = () => {
         campsiteName={dummydata.campsite_faclt_nm}
       />
       <CampSiteRating rating={score} />
-      <ReviewList
-        campsiteId={dummydata.id}
-      />
+      <ReviewList campsiteId={campsiteId} />
     </div>
   );
 };
@@ -38,7 +40,7 @@ import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 
 // 더미 데이터
 const dummydata = {
-  id: 1,
+  id: 5,
   campsite_faclt_nm: "캠프유캠푸 캠핑장",
   rating: 3.5,
   types: ["오토캠핑", "글램핑", "카라반"],

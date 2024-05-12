@@ -32,6 +32,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
     endDate: endDate,
   });
 
+  // 무한스크롤 감지
   const { setTarget } = useIntersectionObserver({ fetchNextPage, hasNextPage });
 
   const totalElements =
