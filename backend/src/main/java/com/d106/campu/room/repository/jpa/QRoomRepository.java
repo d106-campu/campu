@@ -5,6 +5,7 @@ import com.d106.campu.emptynotification.domain.jpa.QEmptyNotification;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.room.domain.jpa.QRoom;
 import com.d106.campu.room.dto.RoomDto;
+import com.d106.campu.user.domain.jpa.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -110,6 +111,43 @@ public class QRoomRepository {
         tuples.forEach(tuple -> {
             long rid = tuple.get(room.id);
             responseMap.put(rid, (tuple.get(1, Integer.class) == 0) || responseMap.getOrDefault(rid, false));
+        });
+        return responseMap;
+    }
+
+    public Map<Long, Boolean> emptyNotificationByCampsiteAndDateRange(User user, Campsite campsite, int headCnt,
+        LocalDate startDate,
+        LocalDate endDate) {
+        Expression[] projections = new Expression[]{
+            room.id,
+            new CaseBuilder()
+                .when(
+                    emptyNotification.startDate.eq(startDate)
+                        .or(emptyNotification.startDate.gt(startDate).and(emptyNotification.startDate.lt(endDate)))
+                        .or(emptyNotification.startDate.lt(startDate).and(emptyNotification.endDate.gt(startDate))))
+                .then(true)
+                .otherwise(false)
+        };
+
+        BooleanBuilder predicates = new BooleanBuilder()
+            .and(emptyNotification.user.eq(user))
+            .and(room.in(campsite.getRoomList()))
+            .and(room.maxNo.goe(headCnt));
+
+        List<Tuple> tuples = jpaQueryFactory
+            .select(projections)
+            .from(room)
+            .leftJoin(emptyNotification).on(room.eq(emptyNotification.room))
+            .where(predicates)
+            .groupBy(room.id)
+            .orderBy(new OrderSpecifier[]{
+                room.id.asc()
+            })
+            .fetch();
+
+        Map<Long, Boolean> responseMap = new TreeMap<>();
+        tuples.forEach(tuple -> {
+            responseMap.put(tuple.get(room.id), tuple.get(1, Boolean.class));
         });
         return responseMap;
     }

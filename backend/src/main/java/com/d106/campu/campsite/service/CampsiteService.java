@@ -243,17 +243,21 @@ public class CampsiteService {
      */
     @Transactional(readOnly = true)
     public Page<RoomDto.Response> getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
-        Pageable pageable) {
+        User user, Pageable pageable) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
         Map<Long, Boolean> campsiteAvailabilityMap = qRoomRepository.availableByCampsiteAndDateRange(campsite, headCnt,
             startDate,
             endDate);
+        Map<Long, Boolean> emptyNotificationMap =
+            (user == null) ? null : qRoomRepository.emptyNotificationByCampsiteAndDateRange(user, campsite,
+                headCnt, startDate, endDate);
 
         Page<RoomDto.Response> roomPage = qRoomRepository.findByCampsite(campsite, headCnt, pageable);
         return roomPage.map(room -> {
             room.setAvailable(campsiteAvailabilityMap.getOrDefault(room.getId(), false));
+            room.setEmptyNotification(user != null && emptyNotificationMap.getOrDefault(room.getId(), false));
             return room;
         });
     }

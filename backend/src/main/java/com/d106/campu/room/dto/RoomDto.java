@@ -22,6 +22,7 @@ public class RoomDto {
         private String supplyList;
         private boolean available;
         private String imageUrl;
+        private boolean emptyNotification;
 
     }
 
