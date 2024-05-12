@@ -113,7 +113,7 @@ public class CampsiteService {
         Map<Long, Boolean> campsiteLikeByUserMap =
             (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
         Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
-        Map<Long, Boolean> campsiteAvailabilityMap = qCampsiteRepository.availableOnDateRangeByCampsite(campsiteIds, headCnt,
+        Map<Long, Boolean> campsiteAvailabilityMap = qCampsiteRepository.availableByCampsiteAndDateRange(campsiteIds, headCnt,
             startDate, endDate);
 
         // TODO: Time-consuming tasks. Need to optimise.
