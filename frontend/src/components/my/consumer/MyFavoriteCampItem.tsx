@@ -3,6 +3,7 @@ import { FaStar, FaHeart } from "react-icons/fa6";
 import { IMyFavoritCampRes } from '@/types/my'
 import Modal from '@/components/@common/Modal/Modal';
 import { useMy } from '@/hooks/my/useMy';
+import Toast from '@/components/@common/Toast/Toast';
 
 interface MyFavoriteCampItemProps {
   camp: IMyFavoritCampRes;
@@ -36,9 +37,11 @@ const MyFavoriteCampItem = ({
         onRemove(camp.campsiteId); // 관심 캠핑장에서 제거한다.
         setShowConfirmModal(false); // 모달 닫기
         refetchCamps();  // 성공 후 캠핑장 리스트 재조회
+        Toast.success('성공적으로 찜을 취소했습니다.')
       },
       onError: (error) => {
         console.error('좋아요 취소 실패함!!', error)
+        Toast.error('일시적 오류로 찜을 취소하지 못했습니다.')
       }
     });
   };
