@@ -27,3 +27,8 @@ export interface ISort {
   sorted: boolean;
   unsorted: boolean;
 }
+
+export interface IPageableSimpleReq {
+  page: number;
+  size: number;
+}

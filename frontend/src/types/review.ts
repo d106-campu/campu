@@ -1,4 +1,4 @@
-import { IPageable, ISort } from "./model";
+import { ISort, IPageable } from "./model";
 
 export interface ISimpleReview {
   id: number;
@@ -46,6 +46,13 @@ export interface IReviewList {
 // 리뷰 목록 조회 Response
 export interface IReviewListRes {
   reviewList: IReviewList;
+}
+
+// 리뷰 목록 조회 Request
+export interface IReviewListReq {
+  campsiteId: number;
+  size: number;
+  page?: number;
 }
 
 // 캠핑장 평점 조회 Response

@@ -1,12 +1,20 @@
 import { axiosCommonInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
-import { IReviewListRes, ICampScoreRes } from "@/types/review";
+import { IReviewListRes, ICampScoreRes, IReviewListReq } from "@/types/review";
 
 // 리뷰 목록 조회
 export const getReviewList = async (
-  campsiteId: number
+  params: IReviewListReq
 ): Promise<APIResponse<IReviewListRes>> => {
-  const res = await axiosCommonInstance.get(`/review/campsite/${campsiteId}`);
+  const res = await axiosCommonInstance.get(
+    `/review/campsite/${params.campsiteId}`,
+    {
+      params: {
+        size: params.size,
+        page: params.page, // 페이지 정보 추가
+      },
+    }
+  );
   return res.data;
 };
 
