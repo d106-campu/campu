@@ -13,7 +13,7 @@ const MyCamping = () => {
     pageable: { page: 0, size: 4 },
   });
 
-  console.log(myCampsiteList?.content);
+  console.log(myCampsiteList?.campsiteList.content);
   const goToMy = () => {
     navigate("/my");
   };
@@ -57,10 +57,10 @@ const MyCamping = () => {
                 </p>
               )}
         </div>
-        {myCampsiteList?.content ? (
+        {myCampsiteList?.campsiteList.content ? (
           <div className="flex justify-center">
             <div className="flex flex-wrap w-full">
-              {myCampsiteList.content.map((camping) => (
+              {myCampsiteList.campsiteList.content.map((camping) => (
                 <MyCampingItem key={camping.campsiteId} camping={camping} />
               ))}
             </div>

@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { IEmptyNotificationList, IPageableReq, IMyFavoritCampListResq, ILikeRes } from '@/types/my';
+import { IEmptyNotificationList, IPageableReq, IMyFavoritCampListResq } from '@/types/my';
 import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes  } from '@/services/my/api';
 
 export const useMy = () => {
