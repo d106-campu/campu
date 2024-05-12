@@ -65,7 +65,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
         <div className="flex justify-between items-end">
           <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
           {/* 좋아요 */}
-          <LikeButton campsiteId={data.id} />
+          <LikeButton like={data.isLiked} campsiteId={data.id} />
         </div>
 
         {/* 캠핑장 필수 정보 */}

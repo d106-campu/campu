@@ -12,7 +12,7 @@ const RecommendItem = ({ item }: { item: ICampsiteSimpleRes }) => {
           className="w-full rounded-md h-40 object-cover object-center"
         />
         <div className="absolute top-7 right-4">
-          <LikeButton campsiteId={item.id} iconSize={25} />
+          <LikeButton like={item.like} campsiteId={item.id} iconSize={25} />
         </div>
         <div className="p-2">
           <div className="flex justify-between">

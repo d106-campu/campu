@@ -6,7 +6,8 @@ export interface ILike {
 }
 
 export interface ILikeRes {
-  likeResponse: ILike;
+  like: ILike;
+  // likeResponse: ILike;
 }
 
 // 방 목록 아이템
