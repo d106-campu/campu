@@ -1,6 +1,8 @@
 import { call, put, takeLeading } from "redux-saga/effects";
 import {
-  toggleLikeRequest, addLike, removeLike, setLikes, setLoading
+  addLike,
+  removeLike,
+  setLoading,
 } from "@/features/like/campsiteLikeSlice";
 import { APIResponse } from "@/types/model";
 import { postLikes } from "@/services/reservation/api";

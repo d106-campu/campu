@@ -14,8 +14,8 @@ const campsiteLikeSlice = createSlice({
   name: "campsiteLike",
   initialState,
   reducers: {
-    toggleLikeRequest(state, action: PayloadAction<number>) {
-      // 좋아요 토글 요청, 사가에서 처리
+    toggleLikeRequest(_, __: PayloadAction<number>) {
+      // 좋아요 토글 요청, 사가에서 처리됨
     },
     addLike(state, action: PayloadAction<number>) {
       const campsiteId = action.payload;
@@ -33,5 +33,6 @@ const campsiteLikeSlice = createSlice({
   },
 });
 
-export const { toggleLikeRequest, addLike, removeLike, setLikes, setLoading } = campsiteLikeSlice.actions;
+export const { toggleLikeRequest, addLike, removeLike, setLikes, setLoading } =
+  campsiteLikeSlice.actions;
 export const campsiteLikeReducer = campsiteLikeSlice.reducer;

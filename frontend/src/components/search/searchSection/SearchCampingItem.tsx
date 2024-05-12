@@ -47,7 +47,11 @@ const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
             </div>
           </div>
           <div className="pr-4">
-            <LikeButton campsiteId={camping.id} iconSize={20} />
+            <LikeButton
+              like={camping.like}
+              campsiteId={camping.id}
+              iconSize={20}
+            />
           </div>
         </div>
         <div>
