@@ -100,7 +100,7 @@ public interface CampsiteControllerDoc {
     }
 
     class CampsiteLikeResponse {
-        public CampsiteDto.LikeResponse likeResponse;
+        public CampsiteDto.LikeResponse like;
     }
 
     class CampsiteRoomListResponse {
