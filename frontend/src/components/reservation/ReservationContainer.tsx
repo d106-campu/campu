@@ -17,6 +17,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
     (state: RootState) => state.campingDate
   );
 
+  // 방 목록 조회 (무한 스크롤)
   const { useGetRoomListInfinite } = useReservation();
   const {
     data: roomListData,

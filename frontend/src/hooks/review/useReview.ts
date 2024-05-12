@@ -4,7 +4,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useReview = () => {
   // 캠핑장 평점 조회 (무한 스크롤)
-  const useGetReviewList = (props: IReviewListReq) => {
+  const useGetReviewListInfinite = (props: IReviewListReq) => {
     return useInfiniteQuery({
       queryKey: ["reviews", props.campsiteId, props.size],
       queryFn: ({ pageParam }) => getReviewList({ ...props, page: pageParam }),
@@ -24,5 +24,5 @@ export const useReview = () => {
     });
   };
 
-  return { useGetReviewList, useGetCampScore };
+  return { useGetReviewListInfinite, useGetCampScore };
 };

@@ -1,17 +1,24 @@
 import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
 import CampSiteRating from "@/components/reservation/reviewList/CampSiteRating";
 import ReviewList from "@/components/reservation/reviewList/ReviewList";
+import { useReview } from "@/hooks/review/useReview";
 
 const ReviewListContainer = () => {
-  const reviewList = data.reviewList;
+  const { useGetCampScore } = useReview();
+
+  // 캠핑장 평점 조회
+  const { data: campScore } = useGetCampScore(dummydata.id);
+  const score = campScore?.data.campsiteScore || 0;
+
   return (
     <div className="max-w-[75%] mx-auto py-2">
-      <CampSiteTitle types={data.types} campsiteName={data.campsite_faclt_nm} />
-      <CampSiteRating rating={data.rating} />
+      <CampSiteTitle
+        types={dummydata.types}
+        campsiteName={dummydata.campsite_faclt_nm}
+      />
+      <CampSiteRating rating={score} />
       <ReviewList
-        campsiteId={data.id}
-        totalReview={reviewList.totalElements}
-        reviews={reviewList.content}
+        campsiteId={dummydata.id}
       />
     </div>
   );
@@ -30,7 +37,7 @@ import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
 import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 
 // 더미 데이터
-const data = {
+const dummydata = {
   id: 1,
   campsite_faclt_nm: "캠프유캠푸 캠핑장",
   rating: 3.5,
