@@ -128,6 +128,47 @@ VALUES (@campsite_1, @theme_summer),
 
 -- ----------------------------------------
 --
+-- fclty
+--
+-- ----------------------------------------
+
+INSERT INTO `fclty` (`fclty`)
+VALUES ('TV'), ('난방기구'), ('내부샤워실'), ('내부화장실'), ('냉장고'), ('에어컨'), ('유무선인터넷'), ('취사도구'), ('침대');
+
+SET @fclty_tv = (SELECT id from `fclty` where fclty = 'TV');
+SET @fclty_heater = (SELECT id from `fclty` where fclty = '난방기구');
+SET @fclty_shower = (SELECT id from `fclty` where fclty = '내부샤워실');
+SET @fclty_toilet = (SELECT id from `fclty` where fclty = '내부화장실');
+SET @fclty_fridge = (SELECT id from `fclty` where fclty = '냉장고');
+SET @fclty_airconditioner = (SELECT id from `fclty` where fclty = '에어컨');
+SET @fclty_internet = (SELECT id from `fclty` where fclty = '유무선인터넷');
+SET @fclty_cookingware = (SELECT id from `fclty` where fclty = '취사도구');
+SET @fclty_bed = (SELECT id from `fclty` where fclty = '침대');
+
+INSERT INTO `campsite_fclty` (`campsite_id`, `theme_id`)
+VALUES (@campsite_1, @fclty_tv),
+       (@campsite_1, @fclty_toilet),
+       (@campsite_1, @fclty_airconditioner),
+       (@campsite_2, @fclty_heater),
+       (@campsite_2, @fclty_shower),
+       (@campsite_2, @fclty_tv),
+       (@campsite_2, @fclty_toilet),
+       (@campsite_3, @fclty_shower),
+       (@campsite_3, @fclty_toilet),
+       (@campsite_3, @fclty_cookingware),
+       (@campsite_3, @fclty_tv),
+       (@campsite_4, @fclty_bed),
+       (@campsite_4, @fclty_heater),
+       (@campsite_4, @fclty_tv),
+       (@campsite_4, @fclty_airconditioner),
+       (@campsite_5, @fclty_tv),
+       (@campsite_5, @fclty_shower),
+       (@campsite_5, @fclty_fridge),
+       (@campsite_5, @fclty_airconditioner),
+       (@campsite_5, @fclty_internet);
+
+-- ----------------------------------------
+--
 -- room
 --
 -- ----------------------------------------
