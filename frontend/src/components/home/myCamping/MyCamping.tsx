@@ -13,6 +13,8 @@ const MyCamping = () => {
     pageable: { page: 0, size: 4 },
   });
 
+  console.log(myCampsiteList?.campsiteList);
+
   const goToMy = () => {
     navigate("/my");
   };
@@ -45,21 +47,19 @@ const MyCamping = () => {
       <div className="h-auto pt-8 pb-4 w-[70%]">
         <div className="flex items-baseline justify-between">
           <p className="font-extrabold text-xl pt-6">내가 찜한 캠핑장</p>
-          {myCampsiteList &&
-            
-              (
-                <p
-                  className="text-sm text-gray-500 px-4 cursor-pointer"
-                  onClick={goToMy}
-                >
-                  더보기
-                </p>
-              )}
+          {myCampsiteList && (
+            <p
+              className="text-sm text-gray-500 px-4 cursor-pointer"
+              onClick={goToMy}
+            >
+              더보기
+            </p>
+          )}
         </div>
         {myCampsiteList?.campsiteList.content ? (
           <div className="flex justify-center">
             <div className="flex flex-wrap w-full">
-              {myCampsiteList.campsiteList.content.map((camping) => (
+              {myCampsiteList?.campsiteList.content.map((camping) => (
                 <MyCampingItem key={camping.campsiteId} camping={camping} />
               ))}
             </div>

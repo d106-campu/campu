@@ -8,6 +8,7 @@ const isUserLoggedIn = () => {
   return accessToken ? true : false;
 };
 
+// 전체 알람 조회
 export const getNotifyList = async ({
   pageable,
 }: INotifyReq): Promise<APIResponse<INotifyListRes>> => {
