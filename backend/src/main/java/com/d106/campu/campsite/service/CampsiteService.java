@@ -216,7 +216,7 @@ public class CampsiteService {
     }
 
     @Transactional(readOnly = true)
-    public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId) {
+    public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId, User user) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
@@ -244,6 +244,7 @@ public class CampsiteService {
             .campsiteLocation(campsite.getCampsiteLocation())
             .sitedStnc(campsite.getSitedStnc())
             .animalCmgCl(campsite.getAnimalCmgCl())
+            .like(user != null && campsiteLikeRepository.existsByCampsiteAndUser(campsite, user))
             .homepage(campsite.getHomepage())
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())

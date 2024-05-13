@@ -81,7 +81,7 @@ public interface CampsiteControllerDoc {
             })),
         @ApiResponse(responseCode = "400", description = "유효하지 않은 캠핑장 ID", content = @Content)
     })
-    Response getCampsiteById(Long campsiteId);
+    Response getCampsiteById(Long campsiteId, HttpServletRequest request);
 
     @Operation(summary = "캠핑장 좋아요", description = "특정 캠핑장에 대해 좋아요 여부를 설정/제거하는 API를 호출한다.")
     @ApiResponses({

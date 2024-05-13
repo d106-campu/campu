@@ -50,13 +50,8 @@ public class CampsiteController implements CampsiteControllerDoc {
         Pageable pageable,
         HttpServletRequest request
     ) {
-        User user = null;
-        if (request.getHeader("Authorization") != null) {
-            user = userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
-                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        }
         return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, pageable,
-            user);
+            getUserFromToken(request));
     }
 
     @Override
@@ -73,8 +68,9 @@ public class CampsiteController implements CampsiteControllerDoc {
 
     @Override
     @GetMapping("/{campsiteId}")
-    public Response getCampsiteById(@PathVariable Long campsiteId) {
-        return new Response(CampsiteConstant.CAMPSITE, campsiteService.getCampsiteDetailById(campsiteId));
+    public Response getCampsiteById(@PathVariable Long campsiteId, HttpServletRequest request) {
+        return new Response(CampsiteConstant.CAMPSITE,
+            campsiteService.getCampsiteDetailById(campsiteId, getUserFromToken(request)));
     }
 
     @Override
@@ -87,13 +83,21 @@ public class CampsiteController implements CampsiteControllerDoc {
     @GetMapping("/{campsiteId}/room")
     public Response getCampsiteRoomList(@PathVariable long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
         Pageable pageable, HttpServletRequest request) {
-        User user = null;
+        return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST,
+            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, getUserFromToken(request), pageable));
+    }
+
+    /**
+     * @param request
+     * @return `null` if there is no token in the request header. `user` if the token is valid(login status).
+     * @throws NotFoundException If there is a token in the header but it is not valid.
+     */
+    private User getUserFromToken(HttpServletRequest request) {
         if (request.getHeader("Authorization") != null) {
-            user = userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
+            return userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
                 .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
         }
-        return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST,
-            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, user, pageable));
+        return null;
     }
 
 }
