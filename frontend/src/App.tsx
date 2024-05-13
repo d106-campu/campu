@@ -81,7 +81,7 @@ function App() {
           headers: {
             Authorization: "Bearer " + accessToken,
           },
-          heartbeatTimeout: 100000000,
+          heartbeatTimeout: 86400000,
         }
       );
 
@@ -99,7 +99,6 @@ function App() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       eventSource.addEventListener("campu", async function (event: any) {
         const data = JSON.parse(event.data);
-
         console.log(data);
       });
 
