@@ -10,6 +10,8 @@ public enum ReservationExceptionCode implements ExceptionCode {
 
     /* UnAuthorized exception */
     USER_NOT_MATCH("RESERVATION101", "Not match reservation user and login user"),
+    RESERVATION_FAIL_EX("RESERVATION102", "Reservation preparation fail by exception"),
+    RESERVATION_FAIL_CODE("RESERVATION103", "Reservation preparation fail by code"),
 
     /* Not found exception */
     RESERVATION_NOT_FOUND("RESERVATION401", "Not found reservation");
