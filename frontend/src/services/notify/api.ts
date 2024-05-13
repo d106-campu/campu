@@ -22,3 +22,13 @@ export const getNotifyList = async ({
   });
   return data.data;
 };
+
+// 빈자리 알림 삭제
+export const deleteNotify = async (
+  notificationId: number
+): Promise<{ result: string }> => {
+  const data = await axiosAuthInstance.delete(
+    `/notification/${notificationId}`
+  );
+  return data.data;
+};
