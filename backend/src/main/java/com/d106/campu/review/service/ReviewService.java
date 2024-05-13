@@ -13,9 +13,11 @@ import com.d106.campu.review.constant.ReviewConstant;
 import com.d106.campu.review.domain.jpa.Review;
 import com.d106.campu.review.dto.ReviewDto;
 import com.d106.campu.review.dto.ReviewDto.CreateRequest;
+import com.d106.campu.review.dto.ReviewDto.DetailResponse;
 import com.d106.campu.review.exception.code.ReviewExceptionCode;
 import com.d106.campu.review.mapper.ReviewMapper;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
+import com.d106.campu.user.domain.jpa.User;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -57,19 +59,20 @@ public class ReviewService {
         }
     }
 
-    private void checkFileCount(List<MultipartFile> files) {
-        if (files == null) {
-            return;
-        }
-
-        if (files.size() > ReviewConstant.FILE_COUNT_LIMIT) {
-            throw new InvalidException(ReviewExceptionCode.FILE_COUNT_LIMIT);
-        }
-    }
-
     @Transactional(readOnly = true)
     public ReviewDto.ScoreResponse getCampsiteScore(Long campsiteId) {
         return reviewRepository.getCampsiteScore(campsiteId);
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewDto.DetailResponse getReviewDetail(Long reviewId, User user) {
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(() -> new NotFoundException(ReviewExceptionCode.REVIEW_NOT_FOUND));
+
+        DetailResponse detailReviewDto = reviewMapper.toDetailReviewDto(review);
+        detailReviewDto.setIndutyList(reviewRepository.getIndutyList(review.getCampsite().getId()));
+        
+        return null;
     }
 
     @Transactional(readOnly = true)
@@ -80,6 +83,16 @@ public class ReviewService {
     @Transactional
     public void delete(Long reviewId) {
         reviewRepository.deleteByIdAndReservation_User_Account(reviewId, securityHelper.getLoginAccount());
+    }
+
+    private void checkFileCount(List<MultipartFile> files) {
+        if (files == null) {
+            return;
+        }
+
+        if (files.size() > ReviewConstant.FILE_COUNT_LIMIT) {
+            throw new InvalidException(ReviewExceptionCode.FILE_COUNT_LIMIT);
+        }
     }
 
     private void checkExistedReview(Reservation reservation) {
