@@ -8,24 +8,26 @@ import { useOwner } from "@/hooks/owner/useOwner";
 const OwnerPage = () => {
   const { useGetOwnerCampsiteList } = useOwner();
 
-  // 전체 캠핑장 리스트 조회
+  // 전체  리스트 조회
   const { data: OwnerCampsiteList } = useGetOwnerCampsiteList({
     pageable: { size: 100, page: 0 },
   });
 
   console.log(OwnerCampsiteList?.data.campsiteList.content);
 
-  const campground: string[] | undefined =
-    OwnerCampsiteList?.data.campsiteList.content.map((item) => item.facltNm);
+  const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map((item) => ({
+    id: item.id,
+    name: item.facltNm,
+  }));
 
-  console.log(campground);
+  console.log(campsiteData);
   return (
     <div>
       <Header page={"owner"} />
 
-      {campground?.length ? (
+      {campsiteData?.length ? (
         <>
-          <SideTabbar campgrounds={campground} />
+          <SideTabbar campData={campsiteData} />
           <OwnerContainer />
         </>
       ) : (

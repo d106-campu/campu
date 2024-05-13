@@ -1,18 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  selectedCampground: null,
+interface CampgroundState {
+  campsiteName: string | null;
+  campsiteId: number | null;
+}
+
+const initialState: CampgroundState = {
+  campsiteName: null,
+  campsiteId: null,
 };
 
-const campgroundSlice = createSlice({
+const campsiteSlice = createSlice({
   name: "ownerSide",
   initialState,
   reducers: {
-    setSelectedCampground: (state, action) => {
-      state.selectedCampground = action.payload;
+    setSelectCampsite: (state, action) => {
+      state.campsiteName = action.payload;
+      state.campsiteId = action.payload?.id || null;
     },
   },
 });
 
-export const { setSelectedCampground } = campgroundSlice.actions;
-export const ownerSideReducer = campgroundSlice.reducer;
+export const { setSelectCampsite } = campsiteSlice.actions;
+export const ownerSideReducer = campsiteSlice.reducer;

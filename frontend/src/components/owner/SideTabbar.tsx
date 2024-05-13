@@ -1,33 +1,37 @@
 import { RootState } from "@/app/store";
-import { setSelectedCampground } from "@/features/owner/OwnerSideSlice";
+import { setSelectCampsite } from "@/features/owner/OwnerSideSlice";
 import { useEffect, useState } from "react";
 import { GoPlus } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "@/components/@common/Modal/Modal";
 
-interface ISideTabbarProps {
-  campgrounds: string[];
+interface ICampData {
+  id: number;
+  name: string;
 }
 
-const SideTabbar: React.FC<ISideTabbarProps> = ({ campgrounds }) => {
+interface ISideTabbarProps {
+  campData: ICampData[];
+}
+
+const SideTabbar = ({ campData }: ISideTabbarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isHover, setIsHover] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const [defaultCampground, setDefaultCampground] = useState<string>(
-    campgrounds[0]
-  );
 
-  const selectCampground = useSelector(
-    (state: RootState) => state.ownerSide.selectedCampground
-  );
-
-  console.log(setDefaultCampground);
+  const selectCampsite = useSelector((state: RootState) => ({
+    name: state.ownerSide.campsiteName,
+    id: state.ownerSide.campsiteId,
+  }));
   useEffect(() => {
-    dispatch(setSelectedCampground(defaultCampground));
+    if (campData.length > 0) {
+      const defaultCampground = campData[0];
+      dispatch(setSelectCampsite(defaultCampground));
+    }
   }, []);
 
-  const handleSelect = (campground: string) => {
-    dispatch(setSelectedCampground(campground));
+  const handleSelect = (campground: ICampData) => {
+    dispatch(setSelectCampsite(campground));
   };
 
   const toggleModal = () => {
@@ -38,17 +42,17 @@ const SideTabbar: React.FC<ISideTabbarProps> = ({ campgrounds }) => {
     <>
       <div className="fixed left-12 top-1/3 transform -translate-y-1/3">
         <div className="flex flex-col">
-          {campgrounds.map((campground, index) => (
+          {campData.map((campground, index) => (
             <button
               key={index}
               onClick={() => handleSelect(campground)}
               className={`${
-                selectCampground === campground
+                selectCampsite.id === campground.id
                   ? "bg-MAIN_GREEN text-white border border-MAIN_GREEN"
                   : "text-gray-400 border border-gray-400"
               }  text-sm py-2 px-4 rounded-lg mb-2`}
             >
-              {campground}
+              {campground.name}
             </button>
           ))}
         </div>
