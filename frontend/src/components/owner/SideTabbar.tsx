@@ -23,12 +23,14 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
     name: state.ownerSide.campsiteName,
     id: state.ownerSide.campsiteId,
   }));
+
+  console.log(selectCampsite);
   useEffect(() => {
     if (campData.length > 0) {
       const defaultCampground = campData[0];
       dispatch(setSelectCampsite(defaultCampground));
     }
-  }, []);
+  }, [campData, dispatch]);
 
   const handleSelect = (campground: ICampData) => {
     dispatch(setSelectCampsite(campground));
