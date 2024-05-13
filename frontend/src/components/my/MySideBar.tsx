@@ -19,13 +19,14 @@ const MySideBar = ({
   const profileData = userProfileQuery.data?.data.myProfile;
   // const isProduction = process.env.NODE_ENV === 'production'; // 환경 감지
   const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
-  const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
+  const [profileImageUrl, setProfileImageUrl] = useState('');
 
   useEffect(() => {
     if (profileData?.profileImageUrl) {
+      console.log("src 확인 : ", profileData.profileImageUrl)
       const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
       setProfileImageUrl(fullImageUrl);
-      // console.log("이미지 주소 확인:", fullImageUrl);
+      console.log("이미지 주소 확인:", fullImageUrl);
     }
   }, [profileData, imageBaseURL]);
 
