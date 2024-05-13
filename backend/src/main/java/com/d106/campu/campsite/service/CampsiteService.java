@@ -30,6 +30,7 @@ import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
 import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.dto.UserDto.NameAndTel;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.awt.geom.Point2D;
@@ -216,12 +217,36 @@ public class CampsiteService {
 
     @Transactional(readOnly = true)
     public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId) {
-        CampsiteDto.DetailResponse campsiteDetailDto = qCampsiteRepository.findById(campsiteId)
+        Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
-        campsiteDetailDto.setThemeList(
-            themeRepository.findByCampsiteThemeList_Campsite_Id(campsiteId).stream().map(Theme::getThemeStr)
-                .toList());
+        CampsiteDto.DetailResponse campsiteDetailDto = CampsiteDto.DetailResponse.builder()
+            .id(campsite.getId())
+            .owner(NameAndTel.builder()
+                .nickName(campsite.getUser().getNickname())
+                .tel(campsite.getUser().getNickname())
+                .build())
+            .facltNm(campsite.getFacltNm())
+            .tel(campsite.getTel())
+            .lineIntro(campsite.getLineIntro())
+            .intro(campsite.getIntro())
+            .allar(campsite.getAllar())
+            .bizrno(campsite.getBizrno())
+            .trsagntNo(campsite.getTrsagntNo())
+            .doNm(campsite.getDoNm())
+            .sigunguNm(campsite.getSigunguNm())
+            .addr1(campsite.getAddr1())
+            .addr2(campsite.getAddr2())
+            .indutyList(List.of(campsite.getIndutyList().split(",")))
+            .themeList(themeRepository.findByCampsiteThemeList_Campsite_Id(campsiteId).stream().map(Theme::getThemeStr)
+                .toList())
+            .campsiteLocation(campsite.getCampsiteLocation())
+            .sitedStnc(campsite.getSitedStnc())
+            .animalCmgCl(campsite.getAnimalCmgCl())
+            .homepage(campsite.getHomepage())
+            .thumbnailImageUrl(campsite.getThumbnailImageUrl())
+            .mapImageUrl(campsite.getMapImageUrl())
+            .build();
 
         return campsiteDetailDto;
     }
