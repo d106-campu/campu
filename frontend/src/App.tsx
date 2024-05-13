@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import MyPage from "@/pages/mypage";
@@ -12,8 +12,8 @@ import ReviewListPage from "@/pages/reservation/reviewList";
 import ReviewPage from "@/pages/reservation/reviewList/review";
 import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import '@/components/@common/Toast/Toast.css'
+import "react-toastify/dist/ReactToastify.css";
+import "@/components/@common/Toast/Toast.css";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     element: <ReviewListPage />,
   },
   {
-    path: "/camps/:campId/reviews/write",
+    path: "/camps/review-write",
     element: <WriteReviewPage />,
   },
   {
@@ -71,7 +71,7 @@ function App() {
     <>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <ToastContainer position="top-center"/>
+          <ToastContainer position="top-center" />
           <RouterProvider router={router} />
         </QueryClientProvider>
       </Provider>
