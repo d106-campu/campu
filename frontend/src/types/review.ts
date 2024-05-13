@@ -66,6 +66,14 @@ export interface IScoreDate {
   score: number;
 }
 
+// 리뷰 등록 Request
+export interface IPostReviewReq {
+  reservationId: number;
+  content: string;
+  score: number;
+}
+
+// 내 리뷰 (마이페이지)
 export interface IMyReview {
   campsiteName: string;
   content: string;
