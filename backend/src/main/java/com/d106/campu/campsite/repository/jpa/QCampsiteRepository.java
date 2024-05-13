@@ -7,10 +7,13 @@ import com.d106.campu.campsite.domain.jpa.QCampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.QCampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.QTheme;
 import com.d106.campu.campsite.dto.CampsiteDto;
+import com.d106.campu.campsite.dto.CampsiteDto.DetailResponse;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.room.domain.jpa.QRoom;
+import com.d106.campu.user.domain.jpa.QUser;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.dto.UserDto.NameAndTel;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -43,27 +46,58 @@ public class QCampsiteRepository {
     private final QRoom room = QRoom.room;
     private final QReview review = QReview.review;
     private final QReservation reservation = QReservation.reservation;
+    private final QUser user = QUser.user;
 
     public Optional<CampsiteDto.DetailResponse> findById(Long campsiteId) {
         Expression[] projections = new Expression[]{
-            campsite.id
+            campsite.id, user.nickname, user.tel, campsite.facltNm, campsite.tel, campsite.lineIntro, campsite.intro,
+            campsite.allar, campsite.bizrno, campsite.trsagntNo, campsite.doNm, campsite.sigunguNm, campsite.addr1,
+            campsite.addr2, campsite.indutyList, campsite.campsiteThemeList, campsite.sitedStnc, campsite.animalCmgCl,
+            campsite.hit, campsite.homepage, campsite.thumbnailImageUrl, campsite.mapImageUrl
         };
 
         BooleanBuilder predicates = new BooleanBuilder();
 
         List<Tuple> tuples = jpaQueryFactory.select(projections)
             .from(campsite)
+            .innerJoin(user).on(campsite.user.eq(user))
             .limit(1L)
             .fetch();
 
         if (tuples.size() == 0) {
             return Optional.empty();
         }
-        
+
         Tuple tuple = tuples.getFirst();
 
-        return Optional.of(CampsiteDto.DetailResponse.builder()
+        return Optional.of(DetailResponse.builder()
             .id(tuple.get(campsite.id))
+            .owner(NameAndTel.builder()
+                .nickName(tuple.get(user.nickname))
+                .tel(tuple.get(user.tel))
+                .build())
+            .facltNm(tuple.get(campsite.facltNm))
+            .tel(tuple.get(campsite.tel))
+            .lineIntro(tuple.get(campsite.lineIntro))
+            .intro(tuple.get(campsite.intro))
+            .allar(tuple.get(campsite.allar))
+            .bizrno(tuple.get(campsite.bizrno))
+            .trsagntNo(tuple.get(campsite.trsagntNo))
+            .doNm(tuple.get(campsite.doNm))
+            .sigunguNm(tuple.get(campsite.sigunguNm))
+            .addr1(tuple.get(campsite.addr1))
+            .addr2(tuple.get(campsite.addr2))
+            .indutyList(List.of(tuple.get(campsite.indutyList).split(",")))
+            .themeList(List.of())
+            .campsiteLocation(CampsiteLocation.builder()
+                .mapX(tuple.get(campsiteLocation.mapX))
+                .mapY(tuple.get(campsiteLocation.mapY))
+                .build())
+            .sitedStnc(tuple.get(campsite.sitedStnc))
+            .animalCmgCl(tuple.get(campsite.animalCmgCl))
+            .homepage(tuple.get(campsite.homepage))
+            .thumbnailImageUrl(tuple.get(campsite.thumbnailImageUrl))
+            .mapImageUrl(tuple.get(campsite.mapImageUrl))
             .build());
     }
 
@@ -141,13 +175,13 @@ public class QCampsiteRepository {
         return responseMap;
     }
 
-    public Map<Long, Boolean> findCampsiteLikeByUser(List<Long> campsiteIds, User user) {
+    public Map<Long, Boolean> findCampsiteLikeByUser(List<Long> campsiteIds, User loginUser) {
         List<Tuple> tuples = jpaQueryFactory
             .select(new Expression[]{campsiteLike.id, campsiteLike.campsite.id})
             .from(campsiteLike)
             .where(new BooleanBuilder()
                 .and(campsiteLike.campsite.id.in(campsiteIds))
-                .and(campsiteLike.user.eq(user))
+                .and(campsiteLike.user.eq(loginUser))
             )
             .orderBy(new OrderSpecifier[]{campsiteLike.id.asc()})
             .fetch();
