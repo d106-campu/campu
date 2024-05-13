@@ -1,14 +1,13 @@
 import { axiosAuthInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
-import { INotifyReq, INotifyListRes } from "@/types/notify";
+import { INotifyListRes, INotifyReq } from "@/types/notify";
 
-export const getNotifyList = async (
-  params: INotifyReq
-): Promise<APIResponse<INotifyListRes>> => {
+export const getNotifyList = async ({
+  pageable,
+}: INotifyReq): Promise<APIResponse<INotifyListRes>> => {
   const data = await axiosAuthInstance.get(`/notification/list`, {
     params: {
-      size: params.size,
-      page: params.page,
+      ...pageable,
     },
   });
   return data.data;

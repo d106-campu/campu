@@ -1,7 +1,10 @@
+import { IPageableSimpleReq } from "./model";
+
 export interface INotifySInfo {
   notificationId: number;
   message: string;
   name: string;
+  date: string;
   no: string;
   url: string;
   createTime: string;
@@ -18,6 +21,5 @@ export interface INotifyListRes {
 
 // 전체 알림 조회 Request
 export interface INotifyReq {
-  size: number;
-  page: number;
+  pageable: IPageableSimpleReq;
 }

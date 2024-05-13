@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useNotify = () => {
   // 전체 알림 조회
-  const useNotify = (props: INotifyReq) => {
+  const useGetNotifyList = (props: INotifyReq) => {
     return useQuery({
       queryKey: ["notify", props],
       queryFn: () => getNotifyList(props),
     });
   };
-  return { useNotify };
+  return { useGetNotifyList };
 };
