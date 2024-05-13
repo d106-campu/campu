@@ -107,7 +107,7 @@ CREATE TABLE `induty` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
   `induty` varchar(10) DEFAULT NULL COMMENT '유형 (카라반, 자동차야영장, 일반야영장, 글램핑)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='유형';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='유형';
 
 
 -- d106.theme definition
@@ -116,7 +116,7 @@ CREATE TABLE `theme` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
   `theme` varchar(10) DEFAULT NULL COMMENT '테마 (여름물놀이, 걷기길, 액티비티, 봄꽃여행, 가을단풍명소, 겨울눈꽃명소, 일몰명소, 일출명소, 수상레저, 낚시, 항공레저, 스키)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='테마';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='테마';
 
 
 -- d106.`user` definition
@@ -137,7 +137,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `account` (`account`),
   UNIQUE KEY `nickname` (`nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원';
 
 
 -- d106.reservation_cancel definition
@@ -185,7 +185,7 @@ CREATE TABLE `campsite` (
   PRIMARY KEY (`id`),
   KEY `campsite_user_FK` (`user_id`),
   CONSTRAINT `campsite_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장';
 
 
 -- d106.campsite_fclty definition
@@ -227,7 +227,7 @@ CREATE TABLE `campsite_like` (
   KEY `campsite_like_user_FK` (`user_id`),
   CONSTRAINT `campsite_like_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
   CONSTRAINT `campsite_like_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 좋아요';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 좋아요';
 
 
 -- d106.campsite_location definition
@@ -252,7 +252,7 @@ CREATE TABLE `campsite_theme` (
   KEY `campsite_theme_theme_FK` (`theme_id`),
   CONSTRAINT `campsite_theme_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
   CONSTRAINT `campsite_theme_theme_FK` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 테마';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 테마';
 
 
 -- d106.notification definition
@@ -295,7 +295,7 @@ CREATE TABLE `room` (
   KEY `room_induty_FK` (`induty_id`),
   CONSTRAINT `room_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
   CONSTRAINT `room_induty_FK` FOREIGN KEY (`induty_id`) REFERENCES `induty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방';
 
 
 -- d106.empty_notification definition
@@ -313,7 +313,7 @@ CREATE TABLE `empty_notification` (
   KEY `empty_notification_room_FK` (`room_id`),
   CONSTRAINT `empty_notification_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`),
   CONSTRAINT `empty_notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='빈자리 알림';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='빈자리 알림';
 
 
 -- d106.reservation definition
@@ -337,7 +337,7 @@ CREATE TABLE `reservation` (
   CONSTRAINT `reservation_reservation_cancel_FK` FOREIGN KEY (`reservation_cancel_id`) REFERENCES `reservation_cancel` (`id`),
   CONSTRAINT `reservation_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`),
   CONSTRAINT `reservation_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 예약';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 예약';
 
 
 -- d106.review definition
@@ -355,7 +355,7 @@ CREATE TABLE `review` (
   KEY `review_reservation_FK` (`reservation_id`),
   CONSTRAINT `review_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
   CONSTRAINT `review_reservation_FK` FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 리뷰';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 리뷰';
 
 
 -- d106.review_image definition
