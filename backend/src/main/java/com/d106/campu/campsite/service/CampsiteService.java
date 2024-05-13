@@ -24,6 +24,8 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
+import com.d106.campu.image.mapper.ImageMapper;
+import com.d106.campu.image.repository.ImageRepository;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.domain.jpa.Room;
@@ -45,6 +47,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -65,7 +68,6 @@ public class CampsiteService {
     private final CampsiteMapper campsiteMapper;
 
     private final FcltyRepository fcltyRepository;
-
     private final ThemeRepository themeRepository;
 
     private final RoomRepository roomRepository;
@@ -75,6 +77,11 @@ public class CampsiteService {
     private final ReviewRepository reviewRepository;
 
     private final ReservationRepository reservationRepository;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
+    private final ImageRepository imageRepository;
+    private final ImageMapper imageMapper;
 
     private final SecurityHelper securityHelper;
 
@@ -253,6 +260,8 @@ public class CampsiteService {
             .homepage(campsite.getHomepage())
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
+            .campsiteImageUrlList(campsite.getCampsiteImageList().stream()
+                .map(campsiteImage -> imageMapper.toUrl(baseUrl, campsiteImage.getUrl())).toList())
             .build();
         /* TODO: campsiteImageUrlList */
 
