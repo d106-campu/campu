@@ -12,7 +12,6 @@ const ConsumerContainer = ({
   selectedComponent
 }: IConsumerContainerProps): JSX.Element => {
 
-
   const renderComponent = () => {
     switch (selectedComponent) {
       case 'MyReservation':

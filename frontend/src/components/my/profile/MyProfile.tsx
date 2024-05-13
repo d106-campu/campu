@@ -18,7 +18,6 @@ const MyProfile = ({
   const { userProfileQuery, updateNickNameMutation, updateProfileImageMutation } = useUser();
   const profileData = userProfileQuery.data?.data.myProfile;
   const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
-  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
 
   // 폼 입력 값 상태 관리
   const [values, setValues] = useState<IUserProfileUpdate>({
@@ -63,11 +62,13 @@ const MyProfile = ({
   // 프로필이미지 추출
   useEffect(() => {
     if (profileData?.profileImageUrl) {
-      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
+      console.log('프로필페이지 환경변수 주소 :', import.meta.env.VITE_IMAGE_BASE_URL_PROD);
+      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;;
       setProfileImageUrl(fullImageUrl);
       // console.log("이미지 주소 확인:", fullImageUrl);
     }
-  }, [profileData, imageBaseURL]);
+  }, [profileData]);
 
 
   // "닉네임"에서 수정 버튼을 클릭해야 수정이 가능하도록
