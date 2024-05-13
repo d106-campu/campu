@@ -17,4 +17,12 @@ public class UserDto {
         private String tel;
     }
 
+    @Data
+    public static class NameAndTel {
+
+        private String nickName;
+        private String tel;
+
+    }
+
 }
