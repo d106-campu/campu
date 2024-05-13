@@ -65,10 +65,10 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
 
   return (
     <>
-      <div className="ml-16 w-[900px]">
+      <div className="ml-16  w-[765px]">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold py-3">캠핑장 사진</h3>
-          <p className="text-[#a7a7a7] text-sm mr-36">
+          <p className="text-[#a7a7a7] text-sm">
             {message && (
               <span className="text-MAIN_RED text-sm mr-3">{message}</span>
             )}
@@ -77,9 +77,9 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
         </div>
         <div className="w-full">
           {/* 대표 사진 */}
-          <div className="text-center w-[85%]">
+          <div className="text-center w-full cursor-pointer">
             <label
-              className="flex border border-gray-300 items-center justify-center h-80 rounded-lg"
+              className="flex border border-gray-300 items-center justify-center h-80 rounded-lg cursor-pointer"
               htmlFor="mainPhoto"
             >
               {photos.length !== 0 ? (
@@ -90,7 +90,7 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
                 />
               ) : (
                 <>
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center cursor-pointer">
                     <CiCamera
                       className="flex justify-center"
                       size="50"
@@ -117,11 +117,11 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
 
           {/* 캠핑장 추가 사진들 */}
           {photos.length !== 0 && (
-            <div className="w-full h-full py-4">
+            <div className="w-full h-full py-4 cursor-pointer">
               <ul className="flex gap-4">
                 <li>
                   <label
-                    className="flex border border-gray-300 items-center justify-center w-20 h-20 rounded-lg"
+                    className="flex border border-gray-300 items-center justify-center w-20 h-20 rounded-lg cursor-pointer"
                     htmlFor="photos"
                   >
                     <input

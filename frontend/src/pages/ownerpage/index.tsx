@@ -3,27 +3,31 @@ import Header from "@/components/@common/Header/Header";
 import OwnerContainer from "@/components/owner/OwnerContainer";
 import SideTabbar from "@/components/owner/SideTabbar";
 import AddCamping from "@/components/owner/AddCamping";
-
-// @TODO: 임의 타입
-type ICampgroundType = {
-  campgrounds: string[] | null;
-};
+import { useOwner } from "@/hooks/owner/useOwner";
 
 const OwnerPage = () => {
-  const campgrounds: ICampgroundType["campgrounds"] = [
-    "캠핑장1",
-    "캠핑장2",
-    "캠핑장3",
-  ];
-  // const campgrounds: ICampgroundType["campgrounds"] = [];
+  const { useGetOwnerCampsiteList } = useOwner();
 
+  // 전체  리스트 조회
+  const { data: OwnerCampsiteList } = useGetOwnerCampsiteList({
+    pageable: { size: 100, page: 0 },
+  });
+
+  console.log(OwnerCampsiteList?.data.campsiteList.content);
+
+  const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map((item) => ({
+    id: item.id,
+    name: item.facltNm,
+  }));
+
+  console.log(campsiteData);
   return (
     <div>
       <Header page={"owner"} />
 
-      {campgrounds.length > 0 ? (
+      {campsiteData?.length ? (
         <>
-          <SideTabbar campgrounds={campgrounds} />
+          <SideTabbar campData={campsiteData} />
           <OwnerContainer />
         </>
       ) : (

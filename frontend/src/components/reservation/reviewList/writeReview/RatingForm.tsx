@@ -1,18 +1,18 @@
 import Rating from "@/components/@common/Review/Rating";
 
 interface IRatingFormProps {
-  rate: number;
-  setRate: (rate: number) => void;
+  score: number;
+  setScore: (rate: number) => void;
 }
 
-const RatingForm = ({ rate, setRate }: IRatingFormProps) => {
+const RatingForm = ({ score, setScore }: IRatingFormProps) => {
   const handleRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRate = parseFloat(event.target.value);
     if (newRate >= 0 && newRate <= 5) {
-      setRate(newRate);
+      setScore(newRate);
     } else {
       // 범위를 벗어난 값이 입력될 경우, 최대/최소 값으로 조정
-      setRate(newRate < 0 ? 0 : 5);
+      setScore(newRate < 0 ? 0 : 5);
     }
   };
 
@@ -29,12 +29,12 @@ const RatingForm = ({ rate, setRate }: IRatingFormProps) => {
             min="0"
             max="5"
             step="0.5"
-            value={rate}
+            value={score}
             onChange={handleRatingChange}
             className="form-input text-center border-none focus:outline-none px-1 w-16"
           />
         </div>
-        <Rating rating={rate} size={25} gap={"gap-1"} />
+        <Rating rating={score} size={25} gap={"gap-1"} />
       </div>
     </div>
   );

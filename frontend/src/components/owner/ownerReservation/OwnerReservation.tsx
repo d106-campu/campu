@@ -6,7 +6,7 @@ import { dateToDateString } from "@/utils/formatDateTime";
 const OwnerReservation = ({
   selectCampground,
 }: {
-  selectCampground: string | null;
+  selectCampground: number | null;
 }) => {
   // 달력에서 선택된 날짜 (Date 객체)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);

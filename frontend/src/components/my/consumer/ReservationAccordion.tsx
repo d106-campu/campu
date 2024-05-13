@@ -1,17 +1,12 @@
-// import { useState } from 'react';
-// import { useSelector, useDispatch } from "react-redux";
-// import { RootState } from "@/app/store";
-// import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
-// import { diffDays } from "@/utils/diffDays";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import DummyImage from '@/assets/images/dummyCamping2.png';
 import { FiMapPin } from "react-icons/fi";
 import ReservationSection from '@/components/@common/Reservation/ReservationSection';
 import Button from '@/components/@common/Button/Button'
-import { IReservationProps } from '@/types/my';
+import { IMyReservationAllRes  } from '@/types/my';
 
 interface IReservationAccordionProps {
-  reservation: IReservationProps;
+  reservation: IMyReservationAllRes;
   expanded: boolean;
   toggleDetails: (index: number) => void;
   index: number;
@@ -23,18 +18,26 @@ const ReservationAccordion = ({
   toggleDetails,
   index
 }: IReservationAccordionProps): JSX.Element => {
+   // 입실일과 퇴실일로부터 숙박일 계산
+   const calculateNights = (() => {
+    const startDate = new Date(reservation.reservation.startDate);
+    const endDate = new Date(reservation.reservation.endDate);
+    return Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
+  });
+  const nights = calculateNights();
+  
   return ( 
     <div className={`bg-MAIN_GREEN text-white mb-10 rounded-2xl ${expanded ? '' : ' shadow-xl'}`}>
       {/* 헤더 */}
       <div className="flex justify-between items-center px-5 py-1">
         <div className='flex justify-center items-center py-1'>
           {/* 캠핑장 이름, 구역 */}
-          <h1 className='text-lg font-bold'>{reservation.campName}</h1>
-          {!expanded && <span className='pl-2 text-sm'>&nbsp;{reservation.area}</span>}
+          <h1 className='text-lg font-bold'>{reservation.campsite.campsiteName}</h1>
+          {!expanded && <span className='pl-2 text-sm'>&nbsp;{reservation.campsite.address}</span>}
         </div>
         <div className='flex py-2 items-center'>
           {/* 날짜 + 더보기 */}
-          {!expanded && <span className='text-sm'>{reservation.date} · {reservation.nights}박</span>}
+          {!expanded && <span className='text-sm'>{reservation.reservation.startDate} ~ {reservation.reservation.endDate} · {nights}박</span>}
           <button className="flex pl-5" onClick={() => toggleDetails(index)}>
             {expanded ? <IoIosArrowUp size="20" /> : <IoIosArrowDown size="20" />}
             {expanded ? <span></span> : <span className="pl-1 text-sm outline-none">더보기</span>}
@@ -52,7 +55,7 @@ const ReservationAccordion = ({
                   <FiMapPin />
                   캠핑장 위치
                 </h3>
-                <p className="pb-[12px] font-bold text-BLACK">{reservation.address}</p>
+                <p className="pb-[12px] font-bold text-BLACK">{reservation.campsite.address}</p>
                 <img 
                   src={DummyImage}
                   alt="캠핑장 사진"
@@ -63,16 +66,25 @@ const ReservationAccordion = ({
               <div className="w-[2.5%] border-r-[1px] mr-6" />
 
               {/* 우측 섹션 세부내용 */}
-              <div className='w-[45%] h-auto p-4'>
-                {reservation.details.map((detail, idx) => (
-                  <ReservationSection
-                    key={idx}
-                    titleLeft={detail.titleLeft}
-                    contentLeft={detail.contentLeft}
-                    titleRight={detail.titleRight}
-                    contentRight={detail.contentRight}
-                  />
-                ))}
+              <div className='w-[45%] h-auto p-4 pt-10'>
+                <ReservationSection
+                  titleLeft="입실 날짜"
+                  contentLeft={reservation.reservation.startDate}
+                  titleRight="퇴실 날짜"
+                  contentRight={reservation.reservation.endDate}
+                />
+                <ReservationSection
+                  titleLeft="가격"
+                  contentLeft={reservation.reservation.price.toString()}
+                  titleRight="인원"
+                  contentRight={reservation.reservation.headCnt.toString()}
+                />
+                <ReservationSection
+                  titleLeft="기타정보"
+                  contentLeft={reservation.room.supplyList || "기타정보가 없습니다."}
+                  titleRight=""
+                  contentRight=""
+                />
               </div>
             </div>
 
@@ -103,5 +115,4 @@ const ReservationAccordion = ({
     </div>
   );
 };
-
 export default ReservationAccordion;

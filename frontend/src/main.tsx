@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 async function enableMocking() {
   if (import.meta.env.VITE_NODE_ENV !== "development") {
@@ -19,10 +21,12 @@ const client = new QueryClient();
 
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
-    <QueryClientProvider client={client}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={client}>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </QueryClientProvider>
+    </Provider>
   );
 });

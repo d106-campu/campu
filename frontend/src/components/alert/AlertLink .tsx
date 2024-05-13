@@ -1,15 +1,32 @@
 import { useState, useEffect, useRef } from "react";
 import AlertMessage from "@/components/alert/AlertMessage";
+import { useNotify } from "@/hooks/notify/useNotify";
+import { useDispatch, useSelector } from "react-redux";
+import { resetNewNotifyCnt } from "@/features/notify/notifyCnt";
+import { RootState } from "@/app/store";
 
-const AlertLink = ({ hasAlert, page }: { hasAlert: boolean, page?: string }) => {
+const AlertLink = ({ page }: { page?: string }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const ref = useRef<HTMLDivElement>(null);
+  const { useGetNotifyList } = useNotify();
+  const dispatch = useDispatch();
+  const newNotifyCnt = useSelector(
+    (state: RootState) => state.notify.newNotifyCnt
+  );
+
+  // 전체 알림 리스트 조회
+  const { data: notifyList } = useGetNotifyList({
+    pageable: { size: 100, page: 0 },
+  });
 
   const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
+    dispatch(resetNewNotifyCnt());
     setOpenAlert(!openAlert);
   };
 
+  console.log(newNotifyCnt);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -24,19 +41,21 @@ const AlertLink = ({ hasAlert, page }: { hasAlert: boolean, page?: string }) => 
 
   return (
     <div ref={ref} onClick={toggleOpen} className="relative">
-      <div className={`flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md  ${
-        page === "login" ? "hover:bg-white/10 hover:text-white/70" : "hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
-      }`}>
-        <div className="flex items-center justify-center text-sm">
-          알림
-        </div>
-        {hasAlert && (
+      <div
+        className={`flex justify-center flex-grow relative cursor-pointer mx-1 px-4 py-2  hover:bg-SUB_GREEN_01 rounded-md  ${
+          page === "login"
+            ? "hover:bg-white/10 hover:text-white/70"
+            : "hover:bg-SUB_GREEN_01 hover:text-MAIN_GREEN"
+        }`}
+      >
+        <div className="flex items-center justify-center text-sm">알림</div>
+        {isLogin && newNotifyCnt > 1 && (
           <span className="absolute top-1 right-9 block h-2 w-2 rounded-full bg-MAIN_GREEN border-1 border-white"></span>
         )}
       </div>
 
       {/* 알림 목록 부분 */}
-      {openAlert && (
+      {isLogin && openAlert && (
         <div
           onClick={(event) => event.stopPropagation()}
           className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp"
@@ -49,21 +68,12 @@ const AlertLink = ({ hasAlert, page }: { hasAlert: boolean, page?: string }) => 
               <div className="px-3 max-h-80 overflow-auto">
                 <h5 className="px-2 pb-2 text-sm">
                   <span className="text-MAIN_GREEN font-bold">
-                    {data.alertCnt}
-                  </span>{" "}
-                  개의 새로운 알림이 있습니다.
+                    {notifyList?.data.notificationList.content.length}
+                  </span>
+                  개의 알림이 있습니다.
                 </h5>
-                {data.alertList.map((alert) => (
-                  <AlertMessage
-                    key={alert.id}
-                    time={alert.time}
-                    campId={alert.campId}
-                    campingSite={alert.campsite_faclt_nm}
-                    roomName={alert.roomName}
-                    headCnt={alert.headCnt}
-                    startDate={alert.startDate}
-                    endDate={alert.endDate}
-                  />
+                {notifyList?.data.notificationList.content.map((alert) => (
+                  <AlertMessage key={alert.notificationId} item={alert} />
                 ))}
               </div>
             </div>
@@ -74,40 +84,3 @@ const AlertLink = ({ hasAlert, page }: { hasAlert: boolean, page?: string }) => 
   );
 };
 export default AlertLink;
-
-// 더미 데이터
-const data = {
-  alertCnt: 3,
-  alertList: [
-    {
-      id: 1, // 알림 아이디
-      time: 1,
-      campId: 1,
-      campsite_faclt_nm: "캠프유캠푸 캠핑장",
-      roomName: "A구역(벚꽃 캠핑존) 10",
-      headCnt: 3,
-      startDate: "2024-05-05",
-      endDate: "2024-05-10",
-    },
-    {
-      id: 2, // 알림 아이디
-      time: 2,
-      campId: 1,
-      campsite_faclt_nm: "캠프유캠푸 캠핑장",
-      roomName: "C구역 (별자리 명소) 5",
-      headCnt: 3,
-      startDate: "2024-05-05",
-      endDate: "2024-05-10",
-    },
-    {
-      id: 3, // 알림 아이디
-      time: 2,
-      campId: 5,
-      campsite_faclt_nm: "노을숲 캠핑장",
-      roomName: "Z(편백숲) 구역 1",
-      headCnt: 3,
-      startDate: "2024-05-05",
-      endDate: "2024-05-10",
-    },
-  ],
-};
