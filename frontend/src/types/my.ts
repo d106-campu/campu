@@ -119,3 +119,24 @@ export interface IMyReviewContentRes {
 export interface IMyReviewListRes {
   reviewList: IMyReviewContentRes;
 }
+
+// 내 예약내역 -> api 연결시 수정
+export interface IDetailProps {
+  titleLeft: string;
+  contentLeft: string;
+  titleRight: string;
+  contentRight: string;
+}
+
+// 내 예약내역 -> api 연결시 수정
+export interface IReservationProps {
+  campName: string;
+  area: string;
+  date: string;
+  nights: number;
+  details: IDetailProps[];
+  people: number;
+  camInduty: string;
+  price: number;
+  address: string;
+}
