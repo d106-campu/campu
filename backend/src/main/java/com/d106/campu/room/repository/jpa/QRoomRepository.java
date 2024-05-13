@@ -29,13 +29,13 @@ import org.springframework.stereotype.Repository;
 public class QRoomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
-    private QRoom room = QRoom.room;
-    private QReservation reservation = QReservation.reservation;
-    private QEmptyNotification emptyNotification = QEmptyNotification.emptyNotification;
+    private final QRoom room = QRoom.room;
+    private final QReservation reservation = QReservation.reservation;
+    private final QEmptyNotification emptyNotification = QEmptyNotification.emptyNotification;
 
-    public Page findByCampsite(Campsite campsite, int headCnt, Pageable pageable) {
+    public Page<RoomDto.Response> findByCampsite(Campsite campsite, int headCnt, Pageable pageable) {
 
-        Expression[] projections = new Expression[]{
+        Expression<?>[] projections = new Expression[]{
             room.id, room.name, room.induty.indutyStr, room.baseNo, room.maxNo, room.price, room.extraPrice, room.roomCnt,
             room.toiletCnt, room.supplyList, room.imageUrl
         };
@@ -55,22 +55,20 @@ public class QRoomRepository {
             .limit(pageable.getPageSize())
             .fetch();
 
-        List responseList = new ArrayList(tuples.size());
-        tuples.forEach(tuple -> {
-            responseList.add(RoomDto.Response.builder()
-                .id(tuple.get(room.id))
-                .name(tuple.get(room.name))
-                .induty(tuple.get(room.induty.indutyStr))
-                .baseNo(tuple.get(room.baseNo))
-                .maxNo(tuple.get(room.maxNo))
-                .price(tuple.get(room.price))
-                .extraPrice(tuple.get(room.extraPrice))
-                .roomCnt(tuple.get(room.roomCnt))
-                .toiletCnt(tuple.get(room.toiletCnt))
-                .supplyList(tuple.get(room.supplyList))
-                .imageUrl(tuple.get(room.imageUrl))
-                .build());
-        });
+        List<RoomDto.Response> responseList = new ArrayList<>(tuples.size());
+        tuples.forEach(tuple -> responseList.add(RoomDto.Response.builder()
+            .id(tuple.get(room.id))
+            .name(tuple.get(room.name))
+            .induty(tuple.get(room.induty.indutyStr))
+            .baseNo(tuple.get(room.baseNo))
+            .maxNo(tuple.get(room.maxNo))
+            .price(tuple.get(room.price))
+            .extraPrice(tuple.get(room.extraPrice))
+            .roomCnt(tuple.get(room.roomCnt))
+            .toiletCnt(tuple.get(room.toiletCnt))
+            .supplyList(tuple.get(room.supplyList))
+            .imageUrl(tuple.get(room.imageUrl))
+            .build()));
 
         JPAQuery<Long> countQuery = jpaQueryFactory.select(room.count()).from(room).where(predicates);
 
@@ -79,7 +77,7 @@ public class QRoomRepository {
 
     public Map<Long, Boolean> availableByCampsiteAndDateRange(Campsite campsite, int headCnt, LocalDate startDate,
         LocalDate endDate) {
-        Expression[] projections = new Expression[]{
+        Expression<?>[] projections = new Expression[]{
             room.id,
             new CaseBuilder()
                 .when(
@@ -118,7 +116,7 @@ public class QRoomRepository {
     public Map<Long, Boolean> emptyNotificationByCampsiteAndDateRange(User user, Campsite campsite, int headCnt,
         LocalDate startDate,
         LocalDate endDate) {
-        Expression[] projections = new Expression[]{
+        Expression<?>[] projections = new Expression[]{
             room.id,
             new CaseBuilder()
                 .when(
@@ -146,9 +144,7 @@ public class QRoomRepository {
             .fetch();
 
         Map<Long, Boolean> responseMap = new TreeMap<>();
-        tuples.forEach(tuple -> {
-            responseMap.put(tuple.get(room.id), tuple.get(1, Boolean.class));
-        });
+        tuples.forEach(tuple -> responseMap.put(tuple.get(room.id), tuple.get(1, Boolean.class)));
         return responseMap;
     }
 
