@@ -15,10 +15,10 @@ const AlertLink = ({
 
   // 전체 알림 리스트 조회
   const { data: notifyList } = useGetNotifyList({
-    pageable: { size: 0, page: 100 },
+    pageable: { size: 100, page: 0 },
   });
 
-  console.log(notifyList?.data.notificationList);
+  console.log(notifyList?.data);
 
   const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -71,10 +71,7 @@ const AlertLink = ({
                   개의 새로운 알림이 있습니다.
                 </h5>
                 {notifyList?.data.notificationList.content.map((alert) => (
-                  <AlertMessage
-                    key={alert.notificationId}
-                    item={alert}
-                  />
+                  <AlertMessage key={alert.notificationId} item={alert} />
                 ))}
               </div>
             </div>

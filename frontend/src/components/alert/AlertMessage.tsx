@@ -3,9 +3,6 @@ import { scrollToTop } from "@/utils/scrollToTop";
 import { useNavigate } from "react-router-dom";
 
 const AlertMessage = ({ item }: { item: INotifySInfo }) => {
-  // @TODO: 스토어에서 유저 닉네임 가져오기
-  const nickname = "캐치캠핑핑핑";
-
   const navigate = useNavigate();
   const goToRevservation = (campId: number) => {
     navigate(`/camps/${campId}`);
@@ -23,7 +20,7 @@ const AlertMessage = ({ item }: { item: INotifySInfo }) => {
             {item.createTime}
           </p>
           <p>
-            {nickname}님이 기다리신
+            기다리신
             <span className="text-MAIN_GREEN font-bold"> {item.name}</span>의
             빈자리가 나왔어요! 지금 바로 예약 해보세요 😊
           </p>
