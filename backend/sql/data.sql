@@ -69,6 +69,13 @@ VALUES (@campsite_1, @user_cheesecat47),
        (@campsite_5, @user_choihojo),
        (@campsite_3, @user_manager);
 
+INSERT INTO `campsite_image` (`id`, `campsite_id`, `url`)
+VALUES ('1', '1', '/file/campsite/1/general/27c0370e-125a-45cc-865d-ccd3b2cdc5af_anna-philine-VAf6-e22Ono-unsplash.jpg'),
+       ('2', '1', '/file/campsite/1/general/7b22d1b3-3b86-4f39-8597-3d9b3d8d8686_joshua-sukoff-wXzuPjvTZf8-unsplash.jpg'),
+       ('3', '1', '/file/campsite/1/general/3b6c8f1a-ce28-43f2-8088-6d5343672625_hugues-de-buyer-mimeure-hGuGRayJrv0-unsplash.jpg'),
+       ('4', '1', '/file/campsite/1/general/a75df483-661f-4649-8ad5-5f716e00a745_scott-goodwill-y8Ngwq34_Ak-unsplash.jpg'),
+       ('5', '1', '/file/campsite/1/general/ec6c8fc7-8e89-4cf1-8391-fd9f1f1a536a_paul-hermann-XJuhZqEE4Go-unsplash.jpg');
+
 -- ----------------------------------------
 --
 -- induty
