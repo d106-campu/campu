@@ -1,8 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
-import { setNickname } from "@/features/login/authSlice";
-import { setIsProfileImage } from '@/features/mypage/myProfileSlice';
 import profileDefaultImage from "@/assets/images/profile.png";
 import Button from "@/components/@common/Button/Button";
 import { IUserProfileUpdate } from '@/types/user';
@@ -19,9 +15,10 @@ interface IMyProfileProps {
 const MyProfile = ({
   phoneVerified
 }: IMyProfileProps): JSX.Element => {
-  const dispatch = useDispatch();
-  const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
   const { userProfileQuery, updateNickNameMutation, updateProfileImageMutation } = useUser();
+  const profileData = userProfileQuery.data?.data.myProfile;
+  const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
+  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
 
   // 폼 입력 값 상태 관리
   const [values, setValues] = useState<IUserProfileUpdate>({
@@ -59,9 +56,19 @@ const MyProfile = ({
       console.log("프로필 조회 성공")
       const { account = '', nickname = '', tel = '', } = userProfileQuery.data.data.myProfile;
       setValues(v => ({ ...v, account, nickname, tel }));
-      dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
+      // dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
     }
   }, [userProfileQuery.data, userProfileQuery.isSuccess]);
+
+  // 프로필이미지 추출
+  useEffect(() => {
+    if (profileData?.profileImageUrl) {
+      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      setProfileImageUrl(fullImageUrl);
+      // console.log("이미지 주소 확인:", fullImageUrl);
+    }
+  }, [profileData, imageBaseURL]);
+
 
   // "닉네임"에서 수정 버튼을 클릭해야 수정이 가능하도록
   const handleEditNicknameClick = async () => {
@@ -77,7 +84,7 @@ const MyProfile = ({
           }, {
             onSuccess: () => {
               console.log('닉네임 변경 성공@@');
-              dispatch(setNickname(values.nickname));
+              // dispatch(setNickname(values.nickname));
               setIsEditingNickname(false);  // 편집 상태 해제
               setNicknameMessage(''); 
               setErrors(prev => ({ ...prev, nickname: '닉네임이 변경되었습니다 !' }))
@@ -179,8 +186,8 @@ const MyProfile = ({
       updateProfileImageMutation.mutate(file, {
         onSuccess: (data) => {
           // 서버로부터 반환된 이미지 URL을 리덕스 스토어에 저장
-          dispatch(setIsProfileImage(data.data.profileImage));
-          console.log("프로필이미지 수정한거 전달!!")
+          // dispatch(setIsProfileImage(data.data.profileImage));
+          console.log("프로필이미지 수정한거 전달!!", data)
         },
         onError: (error) => {
           console.error('프로필 이미지 업데이트 실패:', error.message);
@@ -193,7 +200,7 @@ const MyProfile = ({
   const handleSetDefaultImage = () => {
     hasCustomImageRef.current = false; // 사용자가 이미지를 기본으로 변경했음을 추적
     // @TODO: 기본사진은 따로 delete 요청 추가할 예정
-    dispatch(setIsProfileImage(profileDefaultImage)); // 기본 이미지로 설정
+    // dispatch(setIsProfileImage(profileDefaultImage)); // 기본 이미지로 설정
   };
 
   // 유효성 검사 Field에 대해 값들을 처리
@@ -264,7 +271,7 @@ const MyProfile = ({
         {/* 프로필 이미지 */}
         <div className="w-[50%] flex flex-col items-center justify-center pr-10 pt-1">
           <img 
-            src={profileImage || profileDefaultImage}
+            src={profileImageUrl || profileDefaultImage}
             alt="프로필 이미지" 
             className="w-[150px] h-[150px] object-cover object-center rounded-full"
           />
@@ -284,7 +291,7 @@ const MyProfile = ({
             </div>
             {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
             <div>
-              {profileImage !== profileDefaultImage && (
+              {profileData?.profileImageUrl !== profileDefaultImage && (
                 <Button 
                   text="기본 사진"
                   width="w-full"
@@ -296,7 +303,7 @@ const MyProfile = ({
                   fontWeight="none"
                   onClick={() => {
                     handleSetDefaultImage(); // 사용자가 이미지를 기본으로 변경했음을 추적
-                    dispatch(setIsProfileImage(profileDefaultImage));
+                    // dispatch(setIsProfileImage(profileDefaultImage));
                   }}
                 />
               )}

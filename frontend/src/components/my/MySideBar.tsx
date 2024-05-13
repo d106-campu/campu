@@ -1,8 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import profileDefaultImage  from "@/assets/images/profile.png";
 import Button from "../@common/Button/Button";;
 import { setSelectedComp } from '@/features/mypage/componentSlice';
+import { useUser } from '@/hooks/user/useUser';
 
 interface IMySideBarProps {
   // onComponentChange: (componentName: string) => void;
@@ -14,8 +15,19 @@ const MySideBar = ({
   selectedComponent
 }:IMySideBarProps): JSX.Element => {
   const dispatch = useDispatch();
-  const profileImage = useSelector((state: RootState) => state.profileImage.isProfileImage); // 프로필이미지 스토어에서 꺼내오기
-  const nickname = useSelector((state: RootState) => state.auth.nickname);  // 닉네임 스토어에서 꺼내오기
+  const { userProfileQuery } = useUser();
+  const profileData = userProfileQuery.data?.data.myProfile;
+  // const isProduction = process.env.NODE_ENV === 'production'; // 환경 감지
+  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
+  const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
+
+  useEffect(() => {
+    if (profileData?.profileImageUrl) {
+      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      setProfileImageUrl(fullImageUrl);
+      // console.log("이미지 주소 확인:", fullImageUrl);
+    }
+  }, [profileData, imageBaseURL]);
 
   const handleComponentChange = (componentName: string) => {
     dispatch(setSelectedComp(componentName));
@@ -33,11 +45,11 @@ const MySideBar = ({
     <div>
       <div className="h-[200px] flex flex-col items-center py-5">
         <img
-          src={profileImage || profileDefaultImage}
-          alt="프사"
+          src={profileImageUrl || profileDefaultImage}
+          alt="프로필 사진"
           className="border-2 w-[125px] h-[125px] object-cover object-center rounded-full"
         />
-        <h1 className="text-lg pt-2">{nickname}</h1>
+        <h1 className="text-lg pt-2">{profileData?.nickname || "닉네임 없음"}</h1>
       </div>
       <div className="flex flex-col py-5 text-GRAY ">
         {sideItem.map(item => (
