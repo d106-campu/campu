@@ -64,6 +64,18 @@ const data = {
     businessNumber: "425-45-00307 -'bizrno'",
     industryNumber: "대구시 2024-11호 - 'trsagntNo",
   },
+  facltList: [
+    "TV",
+    // "난방기구",
+    "내부샤워실",
+    // "내부화장실",
+    "냉장고",
+    // "에어컨",
+    "유무선인터넷",
+    "취사도구",
+    "침대",
+  ],
+  animalCmgCl: true,
   policy: `[알립니다]
   ※ 입실시간 안내
   입실시간 : 13:00 ~ 22:00

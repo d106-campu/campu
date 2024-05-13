@@ -30,9 +30,9 @@ const FacilityList = ({
   const getSelectedImage = (item: string) => {
     const isSelected = selectedFacility.includes(item);
     switch (item) {
-      case "화장실":
+      case "내부화장실":
         return isSelected ? ToiletSelect : Toilet;
-      case "샤워실":
+      case "내부샤워실":
         return isSelected ? ShowerSelect : Shower;
       case "냉장고":
         return isSelected ? RefrigeratorSelect : Refrigerator;
@@ -42,7 +42,7 @@ const FacilityList = ({
         return isSelected ? HeaterSelect : Heater;
       case "TV":
         return isSelected ? TvSelect : Tv;
-      case "와이파이":
+      case "유무선인터넷":
         return isSelected ? WifiSelect : Wifi;
       case "취사도구":
         return isSelected ? CookerSelect : Cooker;
@@ -56,13 +56,13 @@ const FacilityList = ({
     <>
       <div className="flex justify-evenly items-end w-full">
         {[
-          "화장실",
-          "샤워실",
+          "내부화장실",
+          "내부샤워실",
           "냉장고",
           "에어컨",
           "난방기구",
           "TV",
-          "와이파이",
+          "유무선인터넷",
           "취사도구",
           "침대",
         ].map((item) => (
