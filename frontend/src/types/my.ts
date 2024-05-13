@@ -83,7 +83,8 @@ export interface IPageableMyReview {
 
 // 내 리뷰 요청 pageable
 export interface IPageableMyReivewReq {
-  pageable: IPageableSimpleReq
+  pageable: IPageableMyReview;
+  dateType: 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL';
 }
 
 
@@ -116,8 +117,5 @@ export interface IMyReviewContentRes {
 
 // 리뷰 목록 응답 
 export interface IMyReviewListRes {
-  result: string;
-  data: {
-    reviewList: IMyReviewContentRes;
-  }
+  reviewList: IMyReviewContentRes;
 }

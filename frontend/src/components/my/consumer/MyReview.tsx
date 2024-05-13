@@ -5,27 +5,60 @@ import { noImageOptions } from "@/assets/lotties/lottieOptions";
 import Rating from "@/components/@common/Review/Rating";
 import { IMyReivewMyReservationRes, } from '@/types/my';
 import { useMy } from '@/hooks/my/useMy';
+import Toast from '@/components/@common/Toast/Toast';
 
 const MyReview = (): JSX.Element => {
-  const { useMyReviews } = useMy();
-  const [selectedFilter, setSelectedFilter] = useState<string>('전체'); // 날짜 선택 상태 관리
+  const { useMyReviews, useDeleteReview } = useMy();
+  const [selectedFilter, setSelectedFilter] = useState<'TOTAL' | 'YEAR' | 'MONTH6' | 'MONTH'>('TOTAL');  // 날짜 선택 상태 관리
   const [reviews, setReviews] = useState<IMyReivewMyReservationRes[]>([]); // 리뷰 데이터 상태 관리
   const [viewCount, setViewCount] = useState<number>(2); // 처음 보여줄 리뷰 개수 관리
-  const filters = ['1년', '6개월', '한달', '전체']; // 날짜 관련 필터 목록
+  // const filters = ['YEAR', 'MONTH6', 'MONTH', 'TOTAL']; // 날짜 관련 필터 목록
 
-  const { data, isLoading, isError } = useMyReviews({ pageable: { page: 0, size: 100 } });
-
+  // console.log("선택한 필터 확인 : ", selectedFilter)
+  const { data, isLoading, isError, refetch } = useMyReviews({
+    pageable: { page: 0, size: 100 },
+    dateType: selectedFilter,
+  });
+  
   // 내가쓴리뷰 데이터 API 조회
   useEffect(() => {
-    if (data?.data?.reviewList?.content) {
-      setReviews(data.data.reviewList.content);
+    if (data?.reviewList?.content) {
+      console.log("내가 쓴 리뷰 데이터 가져옴")
+      setReviews(data.reviewList.content);
+    } else {
+      console.log('데이터에 접근 못하는중')
     }
   }, [data]);
+  
+  const dateFilterLabels: { [key in 'TOTAL' | 'YEAR' | 'MONTH6' | 'MONTH']: string } = {
+    TOTAL: "전체",
+    YEAR: "1년",
+    MONTH6: "6개월",
+    MONTH: "한달"
+  };
 
   // 날짜 선택에 따른 필터 체인지
-  const handleFilterChange = (filter: string) => {
+  const handleFilterChange = (filter: 'TOTAL' | 'YEAR' | 'MONTH6' | 'MONTH') => {
     setSelectedFilter(filter);
-    // @TODO : 여기서 필터에 따른 데이터 로드 로직을 추가 예정
+    // 필터에 따른 데이터 로드 로직을 추가
+    console.log("선택한 필터 :", filter)
+    refetch(); // 필터 변경할때마다 다시 리스트 불러오기
+  };
+
+  // 내가 쓴 리뷰 삭제
+  const handleDeleteReview = (reviewId: number) => {
+    console.log("리뷰 삭제 클릭")
+    useDeleteReview.mutate(reviewId, {
+      onSuccess: () => {
+        console.log("삭제하는 reviewId 값 :", reviewId)
+        setReviews(prev => prev.filter(review => review.review.reviewId !== reviewId));
+        Toast.success('리뷰를 삭제했습니다.')
+      },
+      onError: (error) => {
+        console.error("삭제 실패 :", error)
+        Toast.success('일시적 오류로 삭제를 실패했습니다.')
+      }
+    });
   };
 
   // 과거 리뷰 더보기 버튼
@@ -78,13 +111,13 @@ const MyReview = (): JSX.Element => {
 
       {/* 날짜 선택 */}
       <div className="flex space-x-2 pb-2">
-        {filters.map(filter => (
+        {(['YEAR', 'MONTH6', 'MONTH', 'TOTAL'] as const).map(filter => (
           <button
             key={filter}
             onClick={() => handleFilterChange(filter)}
             className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${filter === selectedFilter ? 'bg-MAIN_GREEN text-white' : 'bg-gray-100 text-black'}`}
           >
-            {filter}
+            {dateFilterLabels[filter]}
           </button>
         ))}
       </div>
@@ -112,7 +145,10 @@ const MyReview = (): JSX.Element => {
             {/* 우측 사진 */}
             <div className='w-[50%] pr-4'>
               <div className='flex flex-col items-end justify-center'>             
-              <button className='flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2'>
+              <button
+                onClick={() => handleDeleteReview(review.review.reviewId)}
+                className='flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2'
+              >
                 <p className='text-xs p-1'>삭 제</p>
               </button>
               {review.review.imageUrl ? (

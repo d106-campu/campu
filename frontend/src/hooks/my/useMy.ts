@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { IEmptyNotificationList, IPageableReq, IPageableMyReivewReq, IMyFavoritCampListResq, IMyReviewListRes } from '@/types/my';
-import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes, fetchMyReviews  } from '@/services/my/api';
+import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes, fetchMyReviews, deleteReview  } from '@/services/my/api';
 
 export const useMy = () => {
 
@@ -51,11 +51,25 @@ export const useMy = () => {
     });
   };
 
+   // 내 리뷰 삭제
+   const useDeleteReview = useMutation({
+    mutationKey: ['deleteReview'],
+    mutationFn: deleteReview,
+    onSuccess: () => {
+      console.log('리뷰 삭제 성공!!');
+    },
+    onError: (error) => {
+      console.error('리뷰 삭제 실패:', error);
+    }
+  });
+
+
   return {
     useMyAlertsQuery,
     useDeleteAlert,
     useFavoriteCampsList,
     useDeleteLike,
     useMyReviews,
+    useDeleteReview,
   };
 };

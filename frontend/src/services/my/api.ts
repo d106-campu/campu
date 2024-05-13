@@ -1,5 +1,5 @@
 import { axiosAuthInstance } from '@/apis/axiosInstance';
-import { APIResponse } from '@/types/model';
+import { APIResponse, APISimpleResponse } from '@/types/model';
 import { IPageableReq, IPageableMyReivewReq, IMyFavoritCampListResq, IEmptyNotificationList, IMyReviewListRes } from '@/types/my';
 import { ILikeRes } from "@/types/reservation";
 
@@ -37,12 +37,23 @@ export const deleteMyAlert = async (roomId: number): Promise<{ result: string }>
 
 // 내 리뷰 조회 API 요청
 export const fetchMyReviews = async ({
-  pageable
+  pageable,
+  dateType,
 }: IPageableMyReivewReq): Promise<IMyReviewListRes> => {
-  const response = await axiosAuthInstance.get<IMyReviewListRes>(`/mypage/profile`, {
+  // console.log("페이지 확인:", pageable.page)
+  // console.log("사이즈 확인:", pageable.size)
+  // console.log("날짜 필터 확인:", dateType)
+  const response = await axiosAuthInstance.get<APIResponse<IMyReviewListRes>>(`/mypage/review`, {
     params: {
-      ...pageable
+      ...pageable,
+      dateType
     },
   });
+  return response.data.data;
+};
+
+// 내 리뷰 삭제 API 요청
+export const deleteReview = async (reviewId: number): Promise<APISimpleResponse> => {
+  const response = await axiosAuthInstance.delete<APISimpleResponse>(`/review/${reviewId}`);
   return response.data;
 };
