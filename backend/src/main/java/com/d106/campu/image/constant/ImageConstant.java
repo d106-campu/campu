@@ -25,5 +25,6 @@ public class ImageConstant {
     public static final String THUMBNAIL = "thumbnail";
     public static final String MAP = "map";
     public static final String GENERAL = "general";
+    public static final String REVIEW = "review";
 
 }

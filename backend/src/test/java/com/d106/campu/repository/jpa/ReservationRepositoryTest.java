@@ -44,7 +44,7 @@ class ReservationRepositoryTest {
     User owner = User.builder().role(RoleName.OWNER).account("o").password("p").nickname("o").tel("01012312310").build();
     User tester = User.builder().role(RoleName.USER).account("t").password("p").nickname("t").tel("01012312311").build();
     Campsite campsite = Campsite.builder().user(owner).facltNm("캠프유캠푸 캠핑장").tel("01012312310").build();
-    Induty induty = Induty.builder().induty("카라반").build();
+    Induty induty = Induty.builder().indutyStr("카라반").build();
     Room room1 = Room.builder().campsite(campsite).induty(induty).name("r").baseNo(4).maxNo(6).price(100000).roomCnt(1)
         .toiletCnt(1).build();
 

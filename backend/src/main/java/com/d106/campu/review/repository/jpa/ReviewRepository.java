@@ -1,6 +1,7 @@
 package com.d106.campu.review.repository.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
+import com.d106.campu.reservation.domain.jpa.Reservation;
 import com.d106.campu.review.domain.jpa.Review;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewCus
 
     @Query("SELECT AVG(r.score) as avgScore FROM Review r WHERE r.campsite = :campsite")
     Optional<Double> avgScoreByCampsite(@Param("campsite") Campsite campsite);
+
+    boolean existsByReservation(Reservation reservation);
 
     Page<Review> findByCampsite_IdOrderByCreateTimeDesc(Long campsiteId, Pageable pageable);
 
