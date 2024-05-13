@@ -102,9 +102,11 @@ public interface CampsiteControllerDoc {
                 @SchemaProperty(name = "data", schema = @Schema(implementation = CampsiteRoomListResponse.class)),
             })
         ),
-        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content)
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
-    Response getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt, Pageable pageable);
+    Response getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt, Pageable pageable,
+        HttpServletRequest request);
 
     class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;

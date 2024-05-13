@@ -23,6 +23,6 @@ public class Induty {
     private Long id;
 
     @Column(name = "induty", nullable = false)
-    private String induty;
+    private String indutyStr;
 
 }

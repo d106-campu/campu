@@ -86,9 +86,14 @@ public class CampsiteController implements CampsiteControllerDoc {
     @Override
     @GetMapping("/{campsiteId}/room")
     public Response getCampsiteRoomList(@PathVariable long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
-        Pageable pageable) {
+        Pageable pageable, HttpServletRequest request) {
+        User user = null;
+        if (request.getHeader("Authorization") != null) {
+            user = userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
+                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        }
         return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST,
-            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, pageable));
+            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, user, pageable));
     }
 
 }

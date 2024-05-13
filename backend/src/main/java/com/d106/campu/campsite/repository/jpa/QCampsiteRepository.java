@@ -219,7 +219,7 @@ public class QCampsiteRepository {
      *           4        7              0
      * }</pre>
      */
-    public Map<Long, Boolean> availableOnDateRangeByCampsite(
+    public Map<Long, Boolean> availableByCampsiteAndDateRange(
         List<Long> campsiteIds, int headCnt, LocalDate startDate, LocalDate endDate
     ) {
         List<Tuple> tuples = jpaQueryFactory

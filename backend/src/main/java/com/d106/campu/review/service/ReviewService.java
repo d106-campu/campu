@@ -21,7 +21,7 @@ public class ReviewService {
     private final SecurityHelper securityHelper;
 
     @Transactional(readOnly = true)
-    public double getCampsiteScore(Long campsiteId) {
+    public ReviewDto.ScoreResponse getCampsiteScore(Long campsiteId) {
         return reviewRepository.getCampsiteScore(campsiteId);
     }
 
