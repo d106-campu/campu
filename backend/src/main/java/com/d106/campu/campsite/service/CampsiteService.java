@@ -25,6 +25,7 @@ import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.mapper.RoomMapper;
+import com.d106.campu.room.repository.jpa.QRoomRepository;
 import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
@@ -59,6 +60,7 @@ public class CampsiteService {
     private final CampsiteMapper campsiteMapper;
 
     private final RoomRepository roomRepository;
+    private final QRoomRepository qRoomRepository;
     private final RoomMapper roomMapper;
 
     private final ReviewRepository reviewRepository;
@@ -113,7 +115,7 @@ public class CampsiteService {
         Map<Long, Boolean> campsiteLikeByUserMap =
             (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
         Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
-        Map<Long, Boolean> campsiteAvailabilityMap = qCampsiteRepository.availableOnDateRangeByCampsite(campsiteIds, headCnt,
+        Map<Long, Boolean> campsiteAvailabilityMap = qCampsiteRepository.availableByCampsiteAndDateRange(campsiteIds, headCnt,
             startDate, endDate);
 
         // TODO: Time-consuming tasks. Need to optimise.
@@ -241,19 +243,23 @@ public class CampsiteService {
      */
     @Transactional(readOnly = true)
     public Page<RoomDto.Response> getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
-        Pageable pageable) {
+        User user, Pageable pageable) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
-        List<Room> roomList = roomRepository.findByCampsite(campsite, pageable)
-            .filter(room -> room.getMaxNo() >= headCnt)
-            .map(room -> {
-                room.setAvailable(!reservationRepository.existsReservationOnDateRange(room, startDate, endDate));
-                return room;
-            }).toList();
+        Map<Long, Boolean> campsiteAvailabilityMap = qRoomRepository.availableByCampsiteAndDateRange(campsite, headCnt,
+            startDate,
+            endDate);
+        Map<Long, Boolean> emptyNotificationMap =
+            (user == null) ? null : qRoomRepository.emptyNotificationByCampsiteAndDateRange(user, campsite,
+                headCnt, startDate, endDate);
 
-        return new PageImpl<>(roomList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()),
-            roomList.size()).map(roomMapper::toRoomResponseDto);
+        Page<RoomDto.Response> roomPage = qRoomRepository.findByCampsite(campsite, headCnt, pageable);
+        return roomPage.map(room -> {
+            room.setAvailable(campsiteAvailabilityMap.getOrDefault(room.getId(), false));
+            room.setEmptyNotification(user != null && emptyNotificationMap.getOrDefault(room.getId(), false));
+            return room;
+        });
     }
 
     /**
