@@ -71,8 +71,12 @@ public class ReviewService {
 
         DetailResponse detailReviewDto = reviewMapper.toDetailReviewDto(review);
         detailReviewDto.setIndutyList(reviewRepository.getIndutyList(review.getCampsite().getId()));
-        
-        return null;
+
+        if (user != null && user.getAccount().equals(review.getReservation().getUser().getAccount())) {
+            detailReviewDto.setMine(true);
+        }
+
+        return detailReviewDto;
     }
 
     @Transactional(readOnly = true)

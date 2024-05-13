@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
-
+    
     String TO_CAMPSITE_ID = "java(review.getCampsite().getId())";
     String TO_CAMPSITE_NAME = "java(review.getCampsite().getFacltNm())";
     String TO_USER = "java(toUserResponse(review.getReservation().getUser()))";
