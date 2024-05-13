@@ -240,6 +240,7 @@ public class CampsiteService {
             .indutyList(List.of(campsite.getIndutyList().split(",")))
             .themeList(themeRepository.findByCampsiteThemeList_Campsite_Id(campsiteId).stream().map(Theme::getThemeStr)
                 .toList())
+            .score(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0))
             .campsiteLocation(campsite.getCampsiteLocation())
             .sitedStnc(campsite.getSitedStnc())
             .animalCmgCl(campsite.getAnimalCmgCl())
