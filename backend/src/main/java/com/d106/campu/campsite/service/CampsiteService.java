@@ -8,12 +8,14 @@ import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
+import com.d106.campu.campsite.domain.jpa.Fclty;
 import com.d106.campu.campsite.domain.jpa.Theme;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.FcltyRepository;
 import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
 import com.d106.campu.campsite.repository.jpa.ThemeRepository;
 import com.d106.campu.common.constant.DoNmEnum;
@@ -61,6 +63,8 @@ public class CampsiteService {
     private final QCampsiteRepository qCampsiteRepository;
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
+
+    private final FcltyRepository fcltyRepository;
 
     private final ThemeRepository themeRepository;
 
@@ -240,6 +244,7 @@ public class CampsiteService {
             .indutyList(List.of(campsite.getIndutyList().split(",")))
             .themeList(themeRepository.findByCampsiteThemeList_Campsite_Id(campsiteId).stream().map(Theme::getThemeStr)
                 .toList())
+            .facltList(fcltyRepository.findByCampsiteFcltyList_Campsite(campsite).stream().map(Fclty::getFcltyStr).toList())
             .score(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0))
             .campsiteLocation(campsite.getCampsiteLocation())
             .sitedStnc(campsite.getSitedStnc())
@@ -249,6 +254,7 @@ public class CampsiteService {
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
             .build();
+        /* TODO: campsiteImageUrlList */
 
         return campsiteDetailDto;
     }

@@ -59,6 +59,7 @@ public class CampsiteDto {
         private String addr2;
         private List<String> indutyList;
         private List<String> themeList;
+        private List<String> facltList;
         private double score;
         private CampsiteLocation campsiteLocation;
         private double sitedStnc;
