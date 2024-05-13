@@ -6,6 +6,7 @@ import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.IndutyEnum;
 import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
+import com.d106.campu.campsite.domain.jpa.CampsiteImage;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.Fclty;
@@ -260,8 +261,7 @@ public class CampsiteService {
             .homepage(campsite.getHomepage())
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
-            .campsiteImageUrlList(campsite.getCampsiteImageList().stream()
-                .map(campsiteImage -> imageMapper.toUrl(baseUrl, campsiteImage.getUrl())).toList())
+            .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(CampsiteImage::getUrl).toList())
             .build();
         /* TODO: campsiteImageUrlList */
 
