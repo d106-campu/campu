@@ -48,7 +48,7 @@ const AlertLink = ({ page }: { page?: string }) => {
         }`}
       >
         <div className="flex items-center justify-center text-sm">알림</div>
-        {newNotifyCnt > 0 && (
+        {newNotifyCnt > 1 && (
           <span className="absolute top-1 right-9 block h-2 w-2 rounded-full bg-MAIN_GREEN border-1 border-white"></span>
         )}
       </div>
