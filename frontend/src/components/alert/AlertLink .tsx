@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import AlertMessage from "@/components/alert/AlertMessage";
 import { useNotify } from "@/hooks/notify/useNotify";
+import { useDispatch } from "react-redux";
+import { resetNewNotifyCnt } from "@/features/notify/notifyCnt";
 
 const AlertLink = ({
   hasAlert,
@@ -12,6 +14,7 @@ const AlertLink = ({
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const { useGetNotifyList } = useNotify();
+  const dispatch = useDispatch();
 
   // 전체 알림 리스트 조회
   const { data: notifyList } = useGetNotifyList({
@@ -20,6 +23,7 @@ const AlertLink = ({
 
   const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
+    dispatch(resetNewNotifyCnt());
     setOpenAlert(!openAlert);
   };
 
