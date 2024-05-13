@@ -18,6 +18,7 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { useEffect } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
+import Toast from "./components/@common/Toast/Toast";
 
 const router = createBrowserRouter([
   {
@@ -100,6 +101,7 @@ function App() {
       eventSource.addEventListener("campu", async function (event: any) {
         const data = JSON.parse(event.data);
         console.log(data);
+        Toast.info("새로운 알림이 있습니다 !");
       });
 
       return () => {
