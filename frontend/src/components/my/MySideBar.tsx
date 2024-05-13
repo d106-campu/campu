@@ -18,17 +18,17 @@ const MySideBar = ({
   const { userProfileQuery } = useUser();
   const profileData = userProfileQuery.data?.data.myProfile;
   // const isProduction = process.env.NODE_ENV === 'production'; // 환경 감지
-  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
-  const [profileImageUrl, setProfileImageUrl] = useState('');
-
+  const [profileImage, setProfileImage] = useState('');
+  
   useEffect(() => {
     if (profileData?.profileImageUrl) {
-      console.log("src 확인 : ", profileData.profileImageUrl)
+      const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
+      console.log('사이드바 환경변수 주소 ::', import.meta.env.VITE_IMAGE_BASE_URL_PROD);
       const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
-      setProfileImageUrl(fullImageUrl);
+      setProfileImage(fullImageUrl);
       console.log("이미지 주소 확인:", fullImageUrl);
     }
-  }, [profileData, imageBaseURL]);
+  }, [profileData]);
 
   const handleComponentChange = (componentName: string) => {
     dispatch(setSelectedComp(componentName));
@@ -46,7 +46,7 @@ const MySideBar = ({
     <div>
       <div className="h-[200px] flex flex-col items-center py-5">
         <img
-          src={profileImageUrl || profileDefaultImage}
+          src={profileImage || profileDefaultImage}
           alt="프로필 사진"
           className="border-2 w-[125px] h-[125px] object-cover object-center rounded-full"
         />
