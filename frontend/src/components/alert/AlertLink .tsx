@@ -18,8 +18,6 @@ const AlertLink = ({
     pageable: { size: 100, page: 0 },
   });
 
-  console.log(notifyList?.data);
-
   const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     setOpenAlert(!openAlert);
