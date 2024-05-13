@@ -74,7 +74,7 @@ const Header = ({ page }: { page?: string }) => {
 
         {/* 알림 */}
         {/* @TODO: SSE 알림 여부 구분*/}
-        <AlertLink hasAlert={true} page={page} />
+        <AlertLink page={page} />
       </div>
       <div className="p-1 pl-2 flex items-center">
         {isLogin ? (

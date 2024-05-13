@@ -1,20 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import AlertMessage from "@/components/alert/AlertMessage";
 import { useNotify } from "@/hooks/notify/useNotify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resetNewNotifyCnt } from "@/features/notify/notifyCnt";
+import { RootState } from "@/app/store";
 
-const AlertLink = ({
-  hasAlert,
-  page,
-}: {
-  hasAlert: boolean;
-  page?: string;
-}) => {
+const AlertLink = ({ page }: { page?: string }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const { useGetNotifyList } = useNotify();
   const dispatch = useDispatch();
+  const newNotifyCnt = useSelector(
+    (state: RootState) => state.notify.newNotifyCnt
+  );
 
   // 전체 알림 리스트 조회
   const { data: notifyList } = useGetNotifyList({
@@ -27,6 +25,7 @@ const AlertLink = ({
     setOpenAlert(!openAlert);
   };
 
+  console.log(newNotifyCnt);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -49,7 +48,7 @@ const AlertLink = ({
         }`}
       >
         <div className="flex items-center justify-center text-sm">알림</div>
-        {hasAlert && (
+        {newNotifyCnt > 0 && (
           <span className="absolute top-1 right-9 block h-2 w-2 rounded-full bg-MAIN_GREEN border-1 border-white"></span>
         )}
       </div>
@@ -70,7 +69,7 @@ const AlertLink = ({
                   <span className="text-MAIN_GREEN font-bold">
                     {notifyList?.data.notificationList.content.length}
                   </span>
-                  개의 새로운 알림이 있습니다.
+                  개의 알림이 있습니다.
                 </h5>
                 {notifyList?.data.notificationList.content.map((alert) => (
                   <AlertMessage key={alert.notificationId} item={alert} />
