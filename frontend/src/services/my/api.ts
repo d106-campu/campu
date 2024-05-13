@@ -1,12 +1,14 @@
-import { axiosAuthInstance } from "@/apis/axiosInstance";
-import { APIResponse, APISimpleResponse } from "@/types/model";
+import { axiosAuthInstance } from '@/apis/axiosInstance';
+import { APIResponse, APISimpleResponse } from '@/types/model';
 import {
   IPageableReq,
   IPageableMyReivewReq,
   IMyFavoritCampListResq,
   IEmptyNotificationList,
   IMyReviewListRes,
-} from "@/types/my";
+  IPageableMyReservationReq,
+  IMyReservationListRes
+} from '@/types/my';
 import { ILikeRes } from "@/types/reservation";
 
 // 로그인 상태 확인 함수
@@ -88,4 +90,21 @@ export const deleteReview = async (
     `/review/${reviewId}`
   );
   return response.data;
+};
+
+// 내 예약내역 조회 API 요청
+export const fetchMyReservations = async ({
+  pageable,
+  dateType,
+  useType
+}: IPageableMyReservationReq): Promise<IMyReservationListRes> => {
+  const response = await axiosAuthInstance.get<APIResponse<IMyReservationListRes>>(`/mypage/reservation`, {
+    params: {
+      ...pageable,
+      dateType,
+      useType,
+    },
+  });
+
+  return response.data.data;
 };

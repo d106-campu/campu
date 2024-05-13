@@ -3,7 +3,6 @@ import MyReview from '@/components/my/consumer/MyReview';
 import MyFavoriteCamp from '@/components/my/consumer/MyFavoriteCamp';
 import FreeAlert from '@/components/my/freeAlert/FreeAlert';
 import MyProfile from '@/components/my/profile/MyProfile';
-import GetReservations from '@/components/my/consumer/MyReservationItem'; // 예약내역 더미데이터
 
 interface IConsumerContainerProps {
   selectedComponent: string;
@@ -12,14 +11,11 @@ interface IConsumerContainerProps {
 const ConsumerContainer = ({
   selectedComponent
 }: IConsumerContainerProps): JSX.Element => {
-  
-  const reservations = GetReservations();
-  const firstReservation = reservations[0];
 
   const renderComponent = () => {
     switch (selectedComponent) {
       case 'MyReservation':
-        return <MyReservation {...firstReservation}/>;
+        return <MyReservation />;
       case 'MyReview':
         return <MyReview />;
       case 'MyFavoriteCamp':
@@ -29,7 +25,7 @@ const ConsumerContainer = ({
       case 'MyProfile':
         return <MyProfile phoneVerified={false}/>;
       default:
-        return <MyReservation {...firstReservation}/>;
+        return <MyReservation />;
     }
   };
   return (

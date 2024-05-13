@@ -1,12 +1,14 @@
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/app/store";
-import { setIsLogin } from "@/features/login/authSlice";
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/app/store';
+import { setIsLogin } from '@/features/login/authSlice';
 import logo from "@/assets/images/temp_log2.png";
 import profileDefaultImage from "@/assets/images/profile.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
 import AlertLink from "@/components/alert/AlertLink ";
-import Toast from "@/components/@common/Toast/Toast";
+import { useUser } from '@/hooks/user/useUser';
+import Toast from '@/components/@common/Toast/Toast';
 
 // @TODO: 로그인 여부 구분
 // @TODO: 알림 열기
@@ -15,11 +17,20 @@ const Header = ({ page }: { page?: string }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
-  const profileImage = useSelector(
-    (state: RootState) => state.profileImage.isProfileImage
-  ); // 프로필이미지 스토어에서 꺼내오기
+  const { userProfileQuery } = useUser();
+  const profileData = userProfileQuery.data?.data.myProfile;
+  const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
+  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
 
-
+  // 프로필이미지 추출
+  useEffect(() => {
+    if (profileData?.profileImageUrl) {
+      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      setProfileImageUrl(fullImageUrl);
+      // console.log("이미지 주소 확인:", fullImageUrl);
+    }
+  }, [profileData, imageBaseURL]);
+  
   const handleLogout = () => {
     console.log("로그아웃 딸깍!!");
     localStorage.removeItem("accessToken");
@@ -86,7 +97,7 @@ const Header = ({ page }: { page?: string }) => {
               로그아웃
             </span>
             <img
-              src={profileImage || profileDefaultImage}
+              src={profileImageUrl || profileDefaultImage}
               alt="profile"
               className="w-8 h-8 rounded-full cursor-pointer"
             />
