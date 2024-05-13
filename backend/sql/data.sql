@@ -13,7 +13,8 @@ VALUES ('ADMIN', 'hoing97s', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1Sj
        ('USER', 'Agwii', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'Agwii', 'M', '2000', 'https://avatars.githubusercontent.com/u/139833245', '00000000000'),
        ('USER', 'minnnnnk0', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'minnnnnk', 'F', '2000', 'https://avatars.githubusercontent.com/u/139419164', '00000000000'),
        ('USER', 'choihojo', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'choihojo', 'M', '2000', 'https://avatars.githubusercontent.com/u/87483951?', '00000000000'),
-       ('OWNER', 'sajangnim', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'sajang1', 'F', '2000', null, '00000000000');
+       ('OWNER', 'sajangnim', '$2a$10$uDjXQSDlHCWIXkO4SzfY7OVgs1aPBedacmj/8wHt1SjahOcEOY08y', 'sajang1', 'F', '2000', null, '00000000000'),
+       ('USER', 'testd106', '$2a$12$5z6Bhj5BYHSw5XgYcFkwcu.p1GDdv/gHSTKr67LpdkJTqghM39LMe', 'test계정', 'F', '2000', null, '00000000004');
 
 SET @user_hoing97s = (SELECT id FROM `user` WHERE account = 'hoing97s');
 SET @user_danbeeS2 = (SELECT id FROM `user` WHERE account = 'danbeeS2');

@@ -32,8 +32,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
         } else {
-            responseFail = new ResponseFail(CommonExceptionCode.INACCESSIBLE_DATA.getCode(),
-                CommonExceptionCode.INACCESSIBLE_DATA.getMessage());
+            responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
+                CommonExceptionCode.UNAUTHORIZED.getMessage());
         }
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

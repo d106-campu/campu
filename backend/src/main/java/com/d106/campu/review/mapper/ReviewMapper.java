@@ -26,4 +26,10 @@ public interface ReviewMapper {
 
     ReviewDto.ReviewImageResponse toReviewImageDto(ReviewImage reviewImage);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "campsite", ignore = true)
+    @Mapping(target = "reservation", ignore = true)
+    @Mapping(target = "reviewImageList", ignore = true)
+    Review toReview(ReviewDto.CreateRequest createRequestDto);
+
 }

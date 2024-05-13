@@ -3,14 +3,20 @@ package com.d106.campu.review.controller;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.review.constant.ReviewConstant;
 import com.d106.campu.review.controller.doc.ReviewControllerDoc;
+import com.d106.campu.review.dto.ReviewDto;
 import com.d106.campu.review.service.ReviewService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/review")
 @RequiredArgsConstructor
@@ -18,6 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewController implements ReviewControllerDoc {
 
     private final ReviewService reviewService;
+
+    @Override
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response create(@RequestPart(required = false) List<MultipartFile> files,
+        @RequestPart ReviewDto.CreateRequest createRequestDto) {
+        reviewService.create(files, createRequestDto);
+        return new Response();
+    }
 
     @Override
     @GetMapping("/campsite/score/{campsiteId}")
