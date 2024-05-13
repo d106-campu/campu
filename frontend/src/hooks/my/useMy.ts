@@ -1,6 +1,22 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { IEmptyNotificationList, IPageableReq, IPageableMyReivewReq, IMyFavoritCampListResq, IMyReviewListRes } from '@/types/my';
-import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes, fetchMyReviews, deleteReview  } from '@/services/my/api';
+import {
+  IEmptyNotificationList,
+  IPageableReq,
+  IPageableMyReivewReq,
+  IMyFavoritCampListResq,
+  IMyReviewListRes,
+  IPageableMyReservationReq,
+  IMyReservationListRes,
+} from '@/types/my';
+import {
+  fetchFavoriteCamps,
+  fetchMyAlerts,
+  deleteMyAlert,
+  deleteLikes,
+  fetchMyReviews,
+  deleteReview,
+  fetchMyReservations,
+} from '@/services/my/api';
 
 export const useMy = () => {
 
@@ -63,6 +79,13 @@ export const useMy = () => {
     }
   });
 
+  // 내 예약내역 조회
+  const useMyReservations = (props: IPageableMyReservationReq) => {
+    return useQuery<IMyReservationListRes>({
+      queryKey: ['myReservations', props],
+      queryFn: () => fetchMyReservations(props),
+    });
+  };
 
   return {
     useMyAlertsQuery,
@@ -71,5 +94,6 @@ export const useMy = () => {
     useDeleteLike,
     useMyReviews,
     useDeleteReview,
+    useMyReservations,
   };
 };

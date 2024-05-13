@@ -140,3 +140,65 @@ export interface IReservationProps {
   price: number;
   address: string;
 }
+
+// 내 예약예역 요청
+export interface IPageableMyReservation {
+  page: number;
+  size: number;
+}
+
+// 내 예약내역 요청 pageable
+export interface IPageableMyReservationReq {
+  pageable: IPageableMyReservation;
+  dateType: 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL';
+  useType: 'BEFORE' | 'AFTER';
+}
+
+// 내 예약내역 campsite 응답
+export interface IMyReservationCampsite {
+  campsiteId: number;
+  campsiteName: string;
+  address: string;
+  thumbnailImageUrl: string;
+}
+
+// 내 예약내역 room 응답
+export interface IMyReservationRoom {
+  roomId: number;
+  roomName: string;
+  supplyList: string;
+}
+
+// 내 예약내역 reservation 응답
+export interface IMyReservationReservation {
+  reservationId: number;
+  headCnt: number;
+  price: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
+
+// 내 예약내역 campsiteLocation 응답
+export interface IMyReservationCampsiteLocation {
+  mapX: number;
+  mapY: number;
+}
+
+// 캠핑장, 방, 예약, 지도위치 결합한 타입 응답
+export interface IMyReservationAllRes {
+  campsite: IMyReservationCampsite;
+  room: IMyReservationRoom;
+  reservation: IMyReservationReservation;
+  campsiteLocation: IMyReservationCampsiteLocation;
+}
+
+// 모든 content 배열 응답
+export interface IMyReservationContentRes {
+  content: IMyReservationAllRes[];
+}
+
+// 예약내역 목록 응답 
+export interface IMyReservationListRes {
+  reservationList: IMyReservationContentRes;
+}
