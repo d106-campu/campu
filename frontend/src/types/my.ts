@@ -75,6 +75,51 @@ export interface IEmptyNotificationList {
   }
 }
 
+// 내 리뷰 요청
+export interface IPageableMyReview {
+  page: number;
+  size: number;
+}
+
+// 내 리뷰 요청 pageable
+export interface IPageableMyReivewReq {
+  pageable: IPageableMyReview;
+  dateType: 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL';
+}
+
+
+// 내 리뷰에 대한 정보 응답
+export interface IMyReviewRes {
+  reviewId: number;
+  score: number;
+  content: string;
+  createTime: string;
+  imageUrl: string;
+}
+
+// 나의 예약 정보 응답
+export interface IMyReservationRes {
+  campsiteId: number;
+  campsiteName: string;
+  roomName: string;
+}
+
+// 리뷰와 예약 정보를 결합한 타입 응답
+export interface IMyReivewMyReservationRes {
+  review: IMyReviewRes;
+  reservation: IMyReservationRes;
+}
+
+// 리뷰 목록 페이지 정보 응답
+export interface IMyReviewContentRes {
+  content: IMyReivewMyReservationRes[];
+}
+
+// 리뷰 목록 응답 
+export interface IMyReviewListRes {
+  reviewList: IMyReviewContentRes;
+}
+
 // 내 예약내역 -> api 연결시 수정
 export interface IDetailProps {
   titleLeft: string;
