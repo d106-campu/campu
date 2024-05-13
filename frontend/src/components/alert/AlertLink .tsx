@@ -7,6 +7,7 @@ import { RootState } from "@/app/store";
 
 const AlertLink = ({ page }: { page?: string }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const ref = useRef<HTMLDivElement>(null);
   const { useGetNotifyList } = useNotify();
   const dispatch = useDispatch();
@@ -48,13 +49,13 @@ const AlertLink = ({ page }: { page?: string }) => {
         }`}
       >
         <div className="flex items-center justify-center text-sm">알림</div>
-        {newNotifyCnt > 1 && (
+        {isLogin && newNotifyCnt > 1 && (
           <span className="absolute top-1 right-9 block h-2 w-2 rounded-full bg-MAIN_GREEN border-1 border-white"></span>
         )}
       </div>
 
       {/* 알림 목록 부분 */}
-      {openAlert && (
+      {isLogin && openAlert && (
         <div
           onClick={(event) => event.stopPropagation()}
           className="absolute top-full left-0 mt-3.5 w-72 border-2 bg-white shadow-lg rounded-2xl z-10 animate-showUp"

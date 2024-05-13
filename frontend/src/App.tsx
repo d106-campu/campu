@@ -16,8 +16,9 @@ import "@/components/@common/Toast/Toast.css";
 import { useEffect } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import Toast from "./components/@common/Toast/Toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewNotifyCnt } from "./features/notify/notifyCnt";
+import { RootState } from "./app/store";
 
 const router = createBrowserRouter([
   {
@@ -67,11 +68,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const accessToken = localStorage.getItem("accessToken");
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const accessToken = localStorage.getItem('accessToken')
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (accessToken) {
+    if (isLogin) {
       // eventSource 객체 생성
       const eventSource = new EventSourcePolyfill(
         import.meta.env.VITE_SSE_URL,
