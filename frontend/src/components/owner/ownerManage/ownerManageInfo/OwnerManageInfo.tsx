@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TagList from "@/components/home/TagList";
-import DummyInfo from "@/assets/images/CampingInfo.png";
+import FacilityList from "@/components/owner/ownerManage/ownerManageInfo/FacilityList";
 
 const OwnerManageInfo = () => {
   const tags = [
@@ -22,6 +22,7 @@ const OwnerManageInfo = () => {
   const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
     null
   ); // 캠핑장 유형 선택
+  const [selectedFacility, setSelectedFacility] = useState<string[]>([]); // 시설 선택
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -30,6 +31,14 @@ const OwnerManageInfo = () => {
       );
     } else {
       setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  const toggleFacility = (facility: string) => {
+    if (selectedFacility.includes(facility)) {
+      setSelectedFacility(selectedFacility.filter((i) => i !== facility));
+    } else {
+      setSelectedFacility([...selectedFacility, facility]);
     }
   };
 
@@ -85,16 +94,18 @@ const OwnerManageInfo = () => {
             {/* 캠핑장 테마 */}
             <div>
               <p className="py-3">캠핑장 테마</p>
-              <div>
+              <div className="pb-3">
                 <TagList tags={tags} onTagToggle={toggleTag} />
               </div>
             </div>
             {/* 시설 및 레저 */}
-            {/* @TODO: 실제 데이터로 변경해야함 */}
             <div>
               <p className="py-3">시설 및 레저</p>
               <div className="border border-gray-200 p-4 rounded-md flex justify-center">
-                <img src={DummyInfo} />
+                <FacilityList
+                  selectedFacility={selectedFacility}
+                  onFacilityToggle={toggleFacility}
+                />
               </div>
             </div>
           </div>

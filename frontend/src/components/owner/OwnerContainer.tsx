@@ -7,9 +7,10 @@ import { RootState } from "@/app/store";
 
 const OwnerContainer = () => {
   const tab = useSelector((state: RootState) => state.ownerTab.tab);
-  const selectCampground = useSelector(
-    (state: RootState) => state.ownerSide.selectedCampground
-  );
+  const selectCampsite = useSelector((state: RootState) => ({
+    name: state.ownerSide.campsiteName,
+    id: state.ownerSide.campsiteId,
+  }));
 
   return (
     <>
@@ -22,9 +23,9 @@ const OwnerContainer = () => {
             rightTab="리뷰"
           />
           <div className="w-full">
-            {tab === "내 캠핑장" ? <OwnerManage selectCampground={selectCampground} /> : null}
-            {tab === "예약 관리" ? <OwnerReservation selectCampground={selectCampground} /> : null}
-            {tab === "리뷰" ? <OwnerReview selectCampground={selectCampground} /> : null}
+            {tab === "내 캠핑장" ? <OwnerManage selectCampground={selectCampsite.id} /> : null}
+            {tab === "예약 관리" ? <OwnerReservation selectCampground={selectCampsite.id} /> : null}
+            {tab === "리뷰" ? <OwnerReview selectCampground={selectCampsite.id} /> : null}
           </div>
         </div>
       </div>

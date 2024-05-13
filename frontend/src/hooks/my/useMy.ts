@@ -1,6 +1,22 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { IEmptyNotificationList, IPageableReq, IMyFavoritCampListResq } from '@/types/my';
-import { fetchFavoriteCamps, fetchMyAlerts, deleteMyAlert, deleteLikes  } from '@/services/my/api';
+import {
+  IEmptyNotificationList,
+  IPageableReq,
+  IPageableMyReivewReq,
+  IMyFavoritCampListResq,
+  IMyReviewListRes,
+  IPageableMyReservationReq,
+  IMyReservationListRes,
+} from '@/types/my';
+import {
+  fetchFavoriteCamps,
+  fetchMyAlerts,
+  deleteMyAlert,
+  deleteLikes,
+  fetchMyReviews,
+  deleteReview,
+  fetchMyReservations,
+} from '@/services/my/api';
 
 export const useMy = () => {
 
@@ -43,10 +59,41 @@ export const useMy = () => {
     }
   });
 
+  // 내 리뷰 조회
+  const useMyReviews = (props: IPageableMyReivewReq) => {
+    return useQuery<IMyReviewListRes>({
+      queryKey: ['myReviews', props],
+      queryFn: () => fetchMyReviews(props),
+    });
+  };
+
+   // 내 리뷰 삭제
+   const useDeleteReview = useMutation({
+    mutationKey: ['deleteReview'],
+    mutationFn: deleteReview,
+    onSuccess: () => {
+      console.log('리뷰 삭제 성공!!');
+    },
+    onError: (error) => {
+      console.error('리뷰 삭제 실패:', error);
+    }
+  });
+
+  // 내 예약내역 조회
+  const useMyReservations = (props: IPageableMyReservationReq) => {
+    return useQuery<IMyReservationListRes>({
+      queryKey: ['myReservations', props],
+      queryFn: () => fetchMyReservations(props),
+    });
+  };
+
   return {
     useMyAlertsQuery,
     useDeleteAlert,
     useFavoriteCampsList,
     useDeleteLike,
+    useMyReviews,
+    useDeleteReview,
+    useMyReservations,
   };
 };
