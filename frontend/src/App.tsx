@@ -16,6 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "@/components/@common/Toast/Toast.css";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { useEffect } from "react";
+import { EventSourcePolyfill } from "event-source-polyfill";
 
 const router = createBrowserRouter([
   {
@@ -68,37 +70,44 @@ const queryClient = new QueryClient();
 
 function App() {
   // const isLogin = useSelector((state: RootState) => state.auth.isLogin);
-  // const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
 
-  // useEffect(() => {
-  //   if (isLogin) {
-  //     // eventSource 객체 생성
-  //     const eventSource = new EventSourcePolyfill(
-  //       import.meta.env.VITE_SSE_URL,
-  //       {
-  //         headers: {
-  //           Authorization: "Bearer " + accessToken,
-  //         },
-  //         heartbeatTimeout: 1000000,
-  //       }
-  //     );
+  useEffect(() => {
+    if (accessToken) {
+      // eventSource 객체 생성
+      const eventSource = new EventSourcePolyfill(
+        import.meta.env.VITE_SSE_URL,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+          heartbeatTimeout: 100000000,
+        }
+      );
 
-  //     // eventSource 연결
-  //     eventSource.onopen = () => {
-  //       console.log("eventSource 연결");
-  //     };
+      // eventSource 연결
+      eventSource.onopen = () => {
+        console.log("eventSource 연결");
+      };
 
-  //     // eventSource 에러
-  //     eventSource.onerror = async (event) => {
-  //       console.log("eventSource 에러", event);
-  //       eventSource.close();
-  //     };
+      // eventSource 에러
+      eventSource.onerror = async (event) => {
+        console.log("eventSource 에러", event);
+        eventSource.close();
+      };
 
-  //     return () => {
-  //       eventSource.close();
-  //     };
-  //   }
-  // }, [isLogin]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      eventSource.addEventListener("campu", async function (event: any) {
+        const data = JSON.parse(event.data);
+
+        console.log(data);
+      });
+
+      return () => {
+        eventSource.close();
+      };
+    }
+  }, [accessToken]);
 
   return (
     <>
