@@ -23,9 +23,10 @@ const MapModal = ({
   level = 5,
   toggleModal,
 }: IMapModalProps) => {
-
   // level: 지도 확대 정도 ( 기본 5로 임의 지정 )
   const locations = [{ lat, lng, facltNm, rate, level }];
+
+  console.log(locations);
 
   return (
     <>

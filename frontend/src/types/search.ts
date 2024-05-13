@@ -1,3 +1,5 @@
+import { IPageableSimpleReq } from "./model";
+
 export interface IMapInfo {
   mapX: number;
   mapY: number;
@@ -30,13 +32,8 @@ export interface ICampsiteListRes {
 
 // 캠핑장 조회 Response
 export interface ICampsiteRes {
-  mapCoordinates: IMapCoordinates;
+  mapCoordinates?: IMapCoordinates;
   campsiteList: ICampsiteListRes;
-}
-
-export interface IPageableSimpleReq {
-  page: number;
-  size: number;
 }
 
 // 캠핑장 조회 Request
@@ -50,4 +47,3 @@ export interface ICampsiteReq {
   theme?: string;
   pageable: IPageableSimpleReq;
 }
-

@@ -5,7 +5,7 @@ import OwnerManageRoom from "@/components/owner/ownerManage/ownerManageroom/Owne
 const OwnerManage = ({
   selectCampground,
 }: {
-  selectCampground: string | null;
+  selectCampground: number | null;
 }) => {
   // @TODO: api 연결 시 props으로 전달해야함
   console.log(selectCampground);

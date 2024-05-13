@@ -37,8 +37,10 @@ const SearchSection = () => {
   useEffect(() => {
     if (campsiteOfSearch) {
       dispatch(addCampingData(campsiteOfSearch.data.campsiteList.content));
-      dispatch(addMapXData(campsiteOfSearch.data.mapCoordinates.center.mapX));
-      dispatch(addMapYData(campsiteOfSearch.data.mapCoordinates.center.mapY));
+      if (campsiteOfSearch.data.mapCoordinates) {
+        dispatch(addMapXData(campsiteOfSearch.data.mapCoordinates.center.mapX));
+        dispatch(addMapYData(campsiteOfSearch.data.mapCoordinates.center.mapY));
+      }
     }
   }, [campsiteOfSearch]);
 
