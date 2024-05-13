@@ -1,6 +1,10 @@
 // 마이페이지 사이드바 Tab
 export type TabKey =
-'reservations' | 'reviews' | 'favorites' | 'alerts' | 'profile';
+  | "reservations"
+  | "reviews"
+  | "favorites"
+  | "alerts"
+  | "profile";
 
 // 내가 찜한 캠핑장 응답
 export interface IMyFavoritCampRes {
@@ -31,7 +35,7 @@ export interface IPageableSimpleReq {
 
 // 내가 찜한 캠핑장 요청 pageable
 export interface IPageableReq {
-  pageable: IPageableSimpleReq
+  pageable: IPageableSimpleReq;
 }
 
 // 내가 찜한 캠핑장 "좋아요 취소"
@@ -72,7 +76,7 @@ export interface IEmptyNotificationList {
   result: string;
   data: {
     emptyNotificationList: IEmptyNotification[];
-  }
+  };
 }
 
 // 내 리뷰 요청
@@ -84,9 +88,8 @@ export interface IPageableMyReview {
 // 내 리뷰 요청 pageable
 export interface IPageableMyReivewReq {
   pageable: IPageableMyReview;
-  dateType: 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL';
+  dateType: "MONTH" | "MONTH6" | "YEAR" | "TOTAL";
 }
-
 
 // 내 리뷰에 대한 정보 응답
 export interface IMyReviewRes {
@@ -115,7 +118,7 @@ export interface IMyReviewContentRes {
   content: IMyReivewMyReservationRes[];
 }
 
-// 리뷰 목록 응답 
+// 리뷰 목록 응답
 export interface IMyReviewListRes {
   reviewList: IMyReviewContentRes;
 }
