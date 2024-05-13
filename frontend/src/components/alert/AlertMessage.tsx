@@ -1,4 +1,5 @@
 import { INotifySInfo } from "@/types/notify";
+import { getTimeDiff } from "@/utils/diffTime";
 import { scrollToTop } from "@/utils/scrollToTop";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +18,7 @@ const AlertMessage = ({ item }: { item: INotifySInfo }) => {
       <div className="px-5 pb-5 pt-3 text-sm text-SUB_BLACK bg-SUB_GREEN_01 rounded-lg">
         <>
           <p className="text-UNIMPORTANT_TEXT_02 text-xs text-end pb-2 pt-0">
-            {item.createTime}
+            {getTimeDiff(item.createTime)}
           </p>
           <p>
             기다리신
