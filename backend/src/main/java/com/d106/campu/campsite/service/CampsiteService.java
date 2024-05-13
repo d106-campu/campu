@@ -8,12 +8,14 @@ import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
+import com.d106.campu.campsite.domain.jpa.Theme;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.ThemeRepository;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
@@ -58,6 +60,8 @@ public class CampsiteService {
     private final QCampsiteRepository qCampsiteRepository;
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
+
+    private final ThemeRepository themeRepository;
 
     private final RoomRepository roomRepository;
     private final QRoomRepository qRoomRepository;
@@ -212,8 +216,14 @@ public class CampsiteService {
 
     @Transactional(readOnly = true)
     public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId) {
-        return qCampsiteRepository.findById(campsiteId)
+        CampsiteDto.DetailResponse campsiteDetailDto = qCampsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+
+        campsiteDetailDto.setThemeList(
+            themeRepository.findByCampsiteThemeList_Campsite_Id(campsiteId).stream().map(Theme::getThemeStr)
+                .toList());
+
+        return campsiteDetailDto;
     }
 
     /**
