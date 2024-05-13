@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,29 @@ public class QCampsiteRepository {
     private final QRoom room = QRoom.room;
     private final QReview review = QReview.review;
     private final QReservation reservation = QReservation.reservation;
+
+    public Optional<CampsiteDto.DetailResponse> findById(Long campsiteId) {
+        Expression[] projections = new Expression[]{
+            campsite.id
+        };
+
+        BooleanBuilder predicates = new BooleanBuilder();
+
+        List<Tuple> tuples = jpaQueryFactory.select(projections)
+            .from(campsite)
+            .limit(1L)
+            .fetch();
+
+        if (tuples.size() == 0) {
+            return Optional.empty();
+        }
+        
+        Tuple tuple = tuples.getFirst();
+
+        return Optional.of(CampsiteDto.DetailResponse.builder()
+            .id(tuple.get(campsite.id))
+            .build());
+    }
 
     public Page<CampsiteDto.Response> findByTheme(String themeStr, int headCnt, Pageable pageable) {
 

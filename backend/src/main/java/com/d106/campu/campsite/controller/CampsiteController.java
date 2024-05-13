@@ -74,7 +74,7 @@ public class CampsiteController implements CampsiteControllerDoc {
     @Override
     @GetMapping("/{campsiteId}")
     public Response getCampsiteById(@PathVariable Long campsiteId) {
-        return new Response(CampsiteConstant.CAMPSITE, null);
+        return new Response(CampsiteConstant.CAMPSITE, campsiteService.getCampsiteDetailById(campsiteId));
     }
 
     @Override

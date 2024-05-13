@@ -208,6 +208,12 @@ public class CampsiteService {
         return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
     }
 
+    @Transactional(readOnly = true)
+    public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId) {
+        return qCampsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+    }
+
     /**
      * Toggle whether the user like or not this campsite.
      *
