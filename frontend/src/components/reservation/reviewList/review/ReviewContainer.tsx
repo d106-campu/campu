@@ -1,16 +1,33 @@
 import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
 import BackButton from "@/components/reservation/reviewList/review/BackButton";
 import ReviewPhotos from "@/components/reservation/reviewList/review/ReviewPhotos";
+import { useReview } from "@/hooks/review/useReview";
+import { useNavigate, useParams } from "react-router-dom";
+import { RouteParams } from "@/types/model";
 
 const ReviewContainer = () => {
+  const navigate = useNavigate();
+  const { useGetCampScore } = useReview();
+  const { campId } = useParams<RouteParams>();
+  const campsiteId = campId ? parseInt(campId, 10) : 0;
+
+  // 캠핑장 평점 조회
+  const { data: campScore } = useGetCampScore(campsiteId);
+  const types = campScore?.data.campsiteScore.indutyList || [];
+  const campsiteName = campScore?.data.campsiteScore.campsiteName || "";
+
+  const goToReviewList = () => {
+    navigate(`/camps/${campsiteId}/reviews`);
+  };
+
   return (
     <div className="max-w-[60%] w-[50%] mx-auto py-2">
-      <div className="flex items-end gap-2">
-        <BackButton route={`/camps/${campData.id}/reviews`} />
-        <CampSiteTitle
-          types={campData.types}
-          campsiteName={campData.campsite_faclt_nm}
-        />
+      <div
+        onClick={goToReviewList}
+        className="flex items-end gap-2 cursor-pointer"
+      >
+        <BackButton route={`/camps/${campsiteId}/reviews`} />
+        <CampSiteTitle types={types} campsiteName={campsiteName} />
       </div>
       <ReviewPhotos
         images={reviewData.images}
@@ -36,13 +53,6 @@ import photo3 from "@/assets/images/dummy/camping_spot_4.jpg";
 import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
 import photo5 from "@/assets/images/dummy/camping_spot_1.png";
 import ReviewContent from "./ReviewContent";
-
-// 더미 데이터
-const campData = {
-  id: 1,
-  campsite_faclt_nm: "캠프유캠푸 캠핑장",
-  types: ["오토캠핑", "글램핑", "카라반"],
-};
 
 const reviewData = {
   id: 1,

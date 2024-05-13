@@ -4,6 +4,7 @@ import { noImageOptions } from "@/assets/lotties/lottieOptions";
 import Rating from "@/components/@common/Review/Rating";
 import { IReview } from "@/types/review";
 import { useState } from "react";
+import { formatSimpleReviewTime } from "@/utils/formatDateTime";
 
 const ReviewItem = ({ review }: { review: IReview }) => {
   const [activeImage, setActiveImage] = useState(0);
@@ -73,7 +74,7 @@ const ReviewItem = ({ review }: { review: IReview }) => {
 
         <div className="line-clamp-3">{review.content}</div>
         <p className="text-[#A0A0A0] text-sm text-end">
-          {review.createTime} 작성
+          {formatSimpleReviewTime(review.createTime)} 작성
         </p>
       </div>
     </div>

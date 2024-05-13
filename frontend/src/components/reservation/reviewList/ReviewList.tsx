@@ -1,13 +1,11 @@
+import Lottie from "react-lottie";
 import ReviewItem from "@/components/@common/Review/ReviewItem";
+import Loading from "@/components/@common/Loading/Loading";
+import useIntersectionObserver from "@/hooks/@common/useIntersectionObserver";
 import { useNavigate } from "react-router-dom";
 import { scrollToTop } from "@/utils/scrollToTop";
 import { useReview } from "@/hooks/review/useReview";
-import useIntersectionObserver from "@/hooks/@common/useIntersectionObserver";
-import Lottie from "react-lottie";
-import {
-  caravanOptions,
-  roomsLoadingOptions,
-} from "@/assets/lotties/lottieOptions";
+import { caravanOptions } from "@/assets/lotties/lottieOptions";
 
 interface IReviewListProps {
   campsiteId: number;
@@ -41,15 +39,8 @@ const ReviewList = ({ campsiteId }: IReviewListProps) => {
       </div>
       <div className="flex flex-wrap justify-start gap-5 my-2 pb-10 h-[calc(100vh-22rem)]">
         {/* 로딩중 UI */}
-        {isLoading && (
-          <>
-            <div className="pt-10 text-center mx-auto">
-              <p className="text-MAIN_GREEN text-lg font-semibold">로딩 중</p>
-              <p className="text-sm text-SUB_BLACK">잠시만 기다려 주세요</p>
-              <Lottie options={roomsLoadingOptions} height={90} width={200} />
-            </div>
-          </>
-        )}
+        {isLoading && <Loading />}
+
         {reviewListData?.pages &&
         reviewListData.pages.some(
           (page) => page.data.reviewList.content.length > 0
