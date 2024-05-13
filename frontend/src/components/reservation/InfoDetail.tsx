@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRefs } from "@/context/RefContext";
+import { useParams } from "react-router-dom";
+import { RouteParams } from "@/types/model";
+import FacilityList from "@/components/reservation/FacilityList";
 import ReviewItem from "@/components/reservation/ReviewItem";
-import facility from "@/assets/images/dummy/dummy_Facility.png";
+import { scrollToTop } from "@/utils/scrollToTop";
+import { ISimpleReviewList } from "@/types/review";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
-import { ISimpleReviewList } from "@/types/review";
-import { scrollToTop } from "@/utils/scrollToTop";
-import { useRefs } from "@/context/RefContext";
 
 // @TODO: API 명세서 나오면 수정 필요
 interface IData {
@@ -24,7 +26,9 @@ interface IData {
     businessNumber: string;
     industryNumber: string;
   };
-  policy: string;
+  policy?: string;
+  facltList: string[];
+  animalCmgCl?: boolean; // 애완동물 반입 여부
 }
 
 interface IInfoDetailProps {
@@ -33,6 +37,7 @@ interface IInfoDetailProps {
 }
 
 const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
+  const { campId } = useParams<RouteParams>();
   const navigate = useNavigate();
   const { reviewRef } = useRefs();
 
@@ -70,8 +75,7 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
       {/* 시설 및 레저 */}
       <div className="pt-10">
         <h3 className="text-xl font-bold">시설 및 레저</h3>
-        {/* @TODO: 어떤 시설이 있는지 논의 후 구현 예정 */}
-        <img src={facility} className="w-[50%]" />
+        <FacilityList facilities={data.facltList} pet={data.animalCmgCl} />
       </div>
 
       {/* 방문자 리뷰 */}
@@ -89,7 +93,7 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
           <button
             className="text-MAIN_GREEN font-bold"
             onClick={() => {
-              navigate(`/camps/${data.id}/reviews`);
+              navigate(`/camps/${campId}/reviews`);
               scrollToTop();
             }}
           >
