@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     element: <ReviewListPage />,
   },
   {
-    path: "/camps/:campId/reviews/write",
+    path: "/camps/review-write",
     element: <WriteReviewPage />,
   },
   {
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
 
 function App() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem('accessToken')
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -99,10 +99,9 @@ function App() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       eventSource.addEventListener("campu", async function (event: any) {
         const data = JSON.parse(event.data);
-        if (data.data.notification === "success") {
-          console.log("SSE 최초 연결 알림");
-        } else {
-          Toast.info("새로운 알림이 있습니다!");
+        console.log(data); // 이벤트 발생
+        if (data) {
+          Toast.info("새로운 알림이 있습니다 !");
           dispatch(addNewNotifyCnt());
         }
       });

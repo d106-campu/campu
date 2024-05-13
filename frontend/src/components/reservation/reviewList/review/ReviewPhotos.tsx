@@ -18,15 +18,19 @@ const ReviewPhotos = ({
   const [selectedImage, setSelectedImage] = useState<string>(images[0]); // 선택된 이미지 상태 관리
 
   return (
-    <div className="ml-12 text-lg">
-      <div className="flex items-center gap-2 px-3 pt-7">
-        <img
-          src={profileImage}
-          alt="프로필 이미지"
-          className="rounded-full overflow-hidden w-7 h-7"
-        />
-        <p className="text-BLACK font-bold text-lg">{nickname}</p>
-        <p className="text-UNIMPORTANT_TEXT_02 ml-2">{date} 작성</p>
+    <div className="ml-12 text-lg w-[800px] ">
+      <div className="flex justify-between items-end pt-7">
+        <div className="flex items-center gap-2 px-3">
+          <img
+            src={profileImage}
+            alt="프로필 이미지"
+            className="rounded-full overflow-hidden w-7 h-7"
+          />
+          <p className="text-BLACK font-bold text-lg">{nickname}</p>
+        </div>
+        <div>
+          <p className="text-[#A0A0A0] text-sm mr-2">{date} 작성</p>
+        </div>
       </div>
 
       <div className="flex gap-4 px-3 pt-3 h-[450px]">
@@ -43,7 +47,7 @@ const ReviewPhotos = ({
               key={index}
               src={image}
               alt={`리뷰 이미지 ${index + 1}`}
-              className={`w-[80px] h-[80px] cursor-pointer object-cover object-center rounded-lg ${
+              className={`min-w-[80px] w-[80px] h-[80px] cursor-pointer object-cover object-center rounded-lg ${
                 selectedImage === image ? "" : "opacity-40"
               }`}
               onClick={() => setSelectedImage(image)}

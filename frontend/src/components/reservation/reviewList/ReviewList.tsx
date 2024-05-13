@@ -1,6 +1,5 @@
 import ReviewItem from "@/components/@common/Review/ReviewItem";
 import { useNavigate } from "react-router-dom";
-import { PiNotePencilLight } from "react-icons/pi";
 import { scrollToTop } from "@/utils/scrollToTop";
 import { useReview } from "@/hooks/review/useReview";
 import useIntersectionObserver from "@/hooks/@common/useIntersectionObserver";
@@ -39,22 +38,8 @@ const ReviewList = ({ campsiteId }: IReviewListProps) => {
           방문자 리뷰
           <span className="text-MAIN_GREEN pl-2">{totalElements}</span>
         </h3>
-        {/* @TODO: 예약 내역이 있을 경우에만 보이도록 */}
-        <button
-          onClick={() => {
-            navigate(`/camps/${campsiteId}/reviews/write`);
-            scrollToTop();
-          }}
-          className="flex items-end gap-1 text-sm"
-        >
-          리뷰 작성하기
-          <PiNotePencilLight
-            size={25}
-            className="hover:bg-SUB_GREEN_01 hover:text-MAIN_GREE"
-          />
-        </button>
       </div>
-      <div className="flex flex-wrap justify-start gap-5 my-2 pb-10">
+      <div className="flex flex-wrap justify-start gap-5 my-2 pb-10 h-[calc(100vh-22rem)]">
         {/* 로딩중 UI */}
         {isLoading && (
           <>
@@ -101,7 +86,7 @@ const ReviewList = ({ campsiteId }: IReviewListProps) => {
                 options={caravanOptions}
                 height={380}
                 width={1000}
-                speed={0.3}
+                speed={0.4}
               />
             </div>
           </div>

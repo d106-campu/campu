@@ -1,6 +1,6 @@
-import { getReviewList, getCampScore } from "@/services/review/api";
+import { getReviewList, getCampScore, postReview } from "@/services/review/api";
 import { IReviewListReq } from "@/types/review";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const useReview = () => {
   // 캠핑장 평점 조회 (무한 스크롤)
@@ -24,5 +24,19 @@ export const useReview = () => {
     });
   };
 
-  return { useGetReviewListInfinite, useGetCampScore };
+  // 리뷰 등록
+  const usePostReview = () => {
+    return useMutation({
+      mutationKey: ["user review"],
+      mutationFn: postReview,
+      onSuccess: (res) => {
+        console.log("리뷰 등록 성공", res);
+      },
+      onError: (err) => {
+        console.error("리뷰 등록 실패", err);
+      },
+    });
+  };
+
+  return { useGetReviewListInfinite, useGetCampScore, usePostReview };
 };
