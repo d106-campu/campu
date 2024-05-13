@@ -2,8 +2,18 @@ import { axiosAuthInstance } from '@/apis/axiosInstance';
 import { APIResponse } from '@/types/model';
 import { IUserProfileRes, IUserNickNameUpdate, IUserPhoneUpdate, IUserPasswordUpdate, IUserProfileImageRes} from '@/types/user';
 
+// 로그인 상태 확인 함수
+const isUserLoggedIn = () => {
+  const accessToken = localStorage.getItem("accessToken");
+  return accessToken ? true : false;
+};
+
 // 내 프로필 조회
 export const fetchUserProfile = async (): Promise<APIResponse<IUserProfileRes>> => {
+  if (!isUserLoggedIn()) {
+    return Promise.reject(new Error("로그인 시에만 api 호출"));
+  }
+  
   const response = await axiosAuthInstance.get('/mypage/profile');
   return response.data;
 };
