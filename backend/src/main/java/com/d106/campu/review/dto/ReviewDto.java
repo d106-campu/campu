@@ -2,9 +2,19 @@ package com.d106.campu.review.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 
 public class ReviewDto {
+
+    @Data
+    @Builder
+    public static class ScoreResponse {
+
+        private String campsiteName;
+        private List<String> indutyList;
+        private double score;
+    }
 
     @Data
     public static class Response {

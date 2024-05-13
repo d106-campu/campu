@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
 
-    @Mapping(target = "induty", expression = "java(room.getInduty().getInduty())")
+    @Mapping(target = "induty", expression = "java(room.getInduty().getIndutyStr())")
     RoomDto.Response toRoomResponseDto(Room room);
 
 }
