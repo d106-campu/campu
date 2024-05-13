@@ -23,3 +23,8 @@ export interface INotifyListRes {
 export interface INotifyReq {
   pageable: IPageableSimpleReq;
 }
+
+// 알림 삭제 Request
+export interface INotifyDeleteReq {
+  notificationId: number;
+}

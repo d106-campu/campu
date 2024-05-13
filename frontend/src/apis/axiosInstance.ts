@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import refresh from '@/apis/refresh';
+import refresh from '@/apis/refresh';
 import setAuthorization from '@/apis/setAuthorization';
 
 // 환경 변수로부터 baseURL 가져오기
@@ -28,7 +28,7 @@ axiosAuthInstance.interceptors.request.use(setAuthorization, error => Promise.re
 // 응답 인터셉터
 axiosAuthInstance.interceptors.response.use(
   response => response,
-  // refresh  // 토큰 만료의 경우 401 인증 실패를 처리하기 위해 refresh.ts에서 처리
+  refresh  // 토큰 만료의 경우 401 인증 실패를 처리하기 위해 refresh.ts에서 처리
 );
 
 export { axiosCommonInstance, axiosAuthInstance };
