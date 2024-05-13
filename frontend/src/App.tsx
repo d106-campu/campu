@@ -1,5 +1,4 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import MyPage from "@/pages/mypage";
@@ -14,10 +13,11 @@ import WriteReviewPage from "./pages/reservation/reviewList/writeReview";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "@/components/@common/Toast/Toast.css";
-import { Provider } from "react-redux";
-import { store } from "./app/store";
 import { useEffect } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
+import Toast from "./components/@common/Toast/Toast";
+import { useDispatch } from "react-redux";
+import { addNewNotifyCnt } from "./features/notify/notifyCnt";
 
 const router = createBrowserRouter([
   {
@@ -66,11 +66,9 @@ const router = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient();
-
 function App() {
-  // const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const accessToken = localStorage.getItem("accessToken");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (accessToken) {
@@ -99,7 +97,11 @@ function App() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       eventSource.addEventListener("campu", async function (event: any) {
         const data = JSON.parse(event.data);
-        console.log(data);
+        console.log(data); // 이벤트 발생
+        if (data) {
+          Toast.info("새로운 알림이 있습니다 !");
+          dispatch(addNewNotifyCnt());
+        }
       });
 
       return () => {
@@ -110,12 +112,8 @@ function App() {
 
   return (
     <>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <ToastContainer position="top-center" />
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </Provider>
+      <ToastContainer position="top-center" />
+      <RouterProvider router={router} />
     </>
   );
 }

@@ -1,11 +1,17 @@
+import { useNotify } from "@/hooks/notify/useNotify";
 import { INotifySInfo } from "@/types/notify";
 import { getTimeDiff } from "@/utils/diffTime";
 import { scrollToTop } from "@/utils/scrollToTop";
 import { useNavigate } from "react-router-dom";
 
 const AlertMessage = ({ item }: { item: INotifySInfo }) => {
+  const { useDeleteNotify } = useNotify();
+  // 알림 삭제
+  const { mutate: deleteNotify } = useDeleteNotify();
+
   const navigate = useNavigate();
   const goToRevservation = (campId: number) => {
+    deleteNotify({ notificationId: item.notificationId });
     navigate(`/camps/${campId}`);
     scrollToTop();
   };

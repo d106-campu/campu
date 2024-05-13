@@ -1,6 +1,6 @@
-import { getNotifyList } from "@/services/notify/api";
+import { deleteNotify, getNotifyList } from "@/services/notify/api";
 import { INotifyReq } from "@/types/notify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useNotify = () => {
   // 전체 알림 조회
@@ -10,5 +10,14 @@ export const useNotify = () => {
       queryFn: () => getNotifyList(props),
     });
   };
-  return { useGetNotifyList };
+
+  // 알림 삭제
+  const useDeleteNotify = () => {
+    return useMutation({
+      mutationFn: ({ notificationId }: { notificationId: number }) =>
+        deleteNotify(notificationId),
+    });
+  };
+
+  return { useGetNotifyList, useDeleteNotify };
 };
