@@ -36,7 +36,7 @@ public class QRoomRepository {
     public Page findByCampsite(Campsite campsite, int headCnt, Pageable pageable) {
 
         Expression[] projections = new Expression[]{
-            room.id, room.name, room.induty.induty, room.baseNo, room.maxNo, room.price, room.extraPrice, room.roomCnt,
+            room.id, room.name, room.induty.indutyStr, room.baseNo, room.maxNo, room.price, room.extraPrice, room.roomCnt,
             room.toiletCnt, room.supplyList, room.imageUrl
         };
 
@@ -60,7 +60,7 @@ public class QRoomRepository {
             responseList.add(RoomDto.Response.builder()
                 .id(tuple.get(room.id))
                 .name(tuple.get(room.name))
-                .induty(tuple.get(room.induty.induty))
+                .induty(tuple.get(room.induty.indutyStr))
                 .baseNo(tuple.get(room.baseNo))
                 .maxNo(tuple.get(room.maxNo))
                 .price(tuple.get(room.price))
