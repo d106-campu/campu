@@ -12,9 +12,11 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
     "@tanstack/react-query": "^5.31.0",
+    "@types/event-source-polyfill": "^1.0.5",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.8",
     "date-fns": "^3.6.0",
+    "event-source-polyfill": "^1.0.31",
     "msw": "^2.2.14",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
