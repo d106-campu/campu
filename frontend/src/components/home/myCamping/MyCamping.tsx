@@ -56,7 +56,7 @@ const MyCamping = () => {
             </p>
           )}
         </div>
-        {myCampsiteList?.campsiteList.content ? (
+        {myCampsiteList?.campsiteList ? (
           <div className="flex justify-center">
             <div className="flex flex-wrap w-full">
               {myCampsiteList?.campsiteList.content.map((camping) => (
