@@ -18,8 +18,4 @@ public interface ImageMapper {
     @Mapping(target = "review", ignore = true)
     ReviewImage toReviewImage(String url);
 
-    default String toUrl(String baseUrl, String url) {
-        return StringUtils.join(baseUrl, url);
-    }
-
 }
