@@ -11,6 +11,8 @@ import com.d106.campu.image.constant.ImageConstant;
 import com.d106.campu.image.exception.code.ImageExceptionCode;
 import com.d106.campu.image.mapper.ImageMapper;
 import com.d106.campu.image.repository.ImageRepository;
+import com.d106.campu.review.domain.jpa.Review;
+import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -18,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,7 @@ public class ImageService {
     private final UserRepository userRepository;
     private final CampsiteRepository campsiteRepository;
     private final ImageRepository imageRepository;
+    private final ReviewRepository reviewRepository;
     private final ImageMapper imageMapper;
     private final SecurityHelper securityHelper;
 
@@ -118,6 +122,25 @@ public class ImageService {
 
         return campsite.getCampsiteImageList().stream()
             .map(campsiteImage -> imageMapper.toUrl(baseUrl, campsiteImage.getUrl())).toList();
+    }
+
+    @Transactional
+    public void uploadReviewImageList(Review review, List<MultipartFile> reviewImageList) {
+        Path basePath = ImageConstant.CAMPSITE_DIR.resolve(review.getCampsite().getId().toString())
+            .resolve(ImageConstant.REVIEW).resolve(review.getReservation().getId().toString());
+        createAndCleanDirectory(basePath);
+
+        review.setReviewImageList(new ArrayList<>());
+
+        reviewImageList.stream()
+            .map(file -> saveFile(basePath, file))
+            .map(fileName -> String.join("/", review.getCampsite().getId().toString(), ImageConstant.REVIEW,
+                review.getReservation().getId().toString(), fileName))
+            .map(postfix -> StringUtils.join(ImageConstant.CAMPSITE_URL, postfix))
+            .map(imageMapper::toReviewImage)
+            .forEach(review::addReviewImage);
+
+        reviewRepository.save(review);
     }
 
     private String saveFile(Path dir, MultipartFile file) {
