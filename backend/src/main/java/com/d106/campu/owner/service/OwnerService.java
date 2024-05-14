@@ -41,7 +41,7 @@ public class OwnerService {
     public Page getOwnerReservationListByCampsite(Long campsiteId, Pageable pageable) {
         Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
             CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
-        return null;
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), pageable);
     }
 
     private User getOwnerUser() {

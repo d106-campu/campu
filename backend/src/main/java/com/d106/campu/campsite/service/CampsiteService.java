@@ -29,7 +29,7 @@ import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
 import com.d106.campu.user.domain.jpa.User;
-import com.d106.campu.user.dto.UserDto.NameAndTel;
+import com.d106.campu.user.dto.UserDto;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.awt.geom.Point2D;
@@ -210,7 +210,7 @@ public class CampsiteService {
 
         return CampsiteDto.DetailResponse.builder()
             .id(campsite.getId())
-            .owner(NameAndTel.builder()
+            .owner(UserDto.NicknameAndTel.builder()
                 .nickName(campsite.getUser().getNickname())
                 .tel(campsite.getUser().getNickname())
                 .build())
