@@ -12,9 +12,13 @@ public enum CommonExceptionCode implements ExceptionCode {
 
     /* UnAuthorized Exception */
     UNAUTHORIZED("COMMON101", "Unauthorized"),
+    NO_TOKEN("COMMON102", "No Token"),
 
     /* Inaccessible Exception */
-    INACCESSIBLE_DATA("COMMON201", "Inaccessible data");
+    INACCESSIBLE_DATA("COMMON201", "Inaccessible data"),
+
+    /* Server Error */
+    SERVER_ERROR("SERVER", "Server error");
 
     private final String code;
     private final String message;
