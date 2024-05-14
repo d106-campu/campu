@@ -330,7 +330,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
                 backgroundColor="bg-SUB_GREEN_01"
                 textColor="text-MAIN_GREEN"
                 hoverTextColor="text-green-700"
-                hoverBackgroundColor="hover:bg-SUB_GREEN_02"
+                hover-BackgroundColor="hover:bg-SUB_GREEN_02"
                 padding="p-2"
                 fontWeight="none"
                 onClick={() => {
