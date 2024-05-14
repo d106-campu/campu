@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FiMapPin } from "react-icons/fi";
 import ReservationSection from '@/components/@common/Reservation/ReservationSection';
@@ -19,7 +20,14 @@ const ReservationAccordion = ({
   index,
   openMapModal
 }: IReservationAccordionProps): JSX.Element => {
-  
+  const navigate = useNavigate();
+  const dataToSend = {
+    campsiteId: reservation.campsite.campsiteId,
+    reservationId: reservation.reservation.reservationId,
+    startDate: reservation.reservation.startDate,
+    endDate: reservation.reservation.endDate
+  };
+
   // 입실일과 퇴실일로부터 숙박일 계산
   const calculateNights = (() => {
     const startDate = new Date(reservation.reservation.startDate);
@@ -117,6 +125,10 @@ const ReservationAccordion = ({
                   backgroundColor='bg-SUB_YELLOW'
                   hoverTextColor='text-MAIN_GREEN'
                   hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                  onClick={() =>
+                    navigate(`/camps/review-write`, { state: dataToSend })
+                  }
+          
                 />}
               {reservation.reservation.status === 'reservation' &&
                 <Button

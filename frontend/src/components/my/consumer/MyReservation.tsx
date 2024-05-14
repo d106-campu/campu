@@ -15,7 +15,9 @@ const MyReservation = (): JSX.Element => {
   const initialViewCount = 4; // 렌더링 시 아코디언 첫 개수
   const filters = ['YEAR', 'MONTH6', 'MONTH', 'TOTAL'] as const; // 날짜 관련 필터 목록
   const { data, isLoading, isError, refetch } = useMyReservations({
-    pageable: { page: 0, size: 100 }, dateType: selectedFilter, useType: useType,
+    pageable: { page: 0, size: 100 },
+    dateType: useType === 'BEFORE' ? 'TOTAL' : selectedFilter,
+    useType: useType,
   });
   const [mapModalOpen, setMapModalOpen] = useState<boolean>(false); // 맵 모달 상태 관리
   const [mapLocation, setMapLocation] = useState({ lat: 0, lng: 0, facltNm: '', addr1: '', level: 5 }); // 전달할 위도와 경도 상태 관리
@@ -51,6 +53,9 @@ const MyReservation = (): JSX.Element => {
   const handleUseTypeChange = (type: 'BEFORE' | 'AFTER') => {
     console.log("선택한 useType 확인 :", type)
     setUseType(type);
+    if (type === 'BEFORE') {
+      setSelectedFilter('TOTAL'); // 예약 현황일 때는 항상 TOTAL로 설정
+    }
     refetch();
   };
   
@@ -145,17 +150,28 @@ const MyReservation = (): JSX.Element => {
       </div>
 
       {/* 날짜 선택 */}
-      <div className="flex space-x-2 pb-10">
-        {filters.map(filter => (
+      {useType === 'BEFORE' ? (
+        <div className="flex space-x-2 pb-10">
           <button
-            key={filter}
-            onClick={() => handleDateTypeChange(filter as 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL')}
-            className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${filter === selectedFilter ? 'bg-MAIN_GREEN text-white' : 'bg-gray-100 text-black'}`}
+            onClick={() => handleDateTypeChange('TOTAL')}
+            className="w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg bg-MAIN_GREEN text-white"
           >
-            {filterLabels[filter]}
+            전체
           </button>
-        ))}
-      </div>
+        </div>
+      ) : (
+        <div className="flex space-x-2 pb-10">
+          {filters.map(filter => (
+            <button
+              key={filter}
+              onClick={() => handleDateTypeChange(filter as 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL')}
+              className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${filter === selectedFilter ? 'bg-MAIN_GREEN text-white' : 'bg-gray-100 text-black'}`}
+            >
+              {filterLabels[filter]}
+            </button>
+          ))}
+        </div>
+      )}
       
       {/* 아코디언 */}
       <div className='max-h-[500px] overflow-y-auto'>
