@@ -34,7 +34,7 @@ const MyReservation = (): JSX.Element => {
   const filterLabels: Record<typeof filters[number], string> = {
     YEAR: '1년',
     MONTH6: '6개월',
-    MONTH: '한달',
+    MONTH: '1개월',
     TOTAL: '전체'
   };
   
@@ -128,13 +128,13 @@ const MyReservation = (): JSX.Element => {
         </div>
         <div className='flex'>
           <button
-            className={`p-2 ${useType === 'BEFORE' ? 'text-MAIN_GREEN' : ''}`}
+            className={`p-2 ${useType === 'BEFORE' ? 'text-MAIN_GREEN font-bold' : ''}`}
             onClick={() => handleUseTypeChange('BEFORE')}
           >
             예약 현황
           </button>
           <button
-            className={`p-2 ${useType === 'AFTER' ? 'text-MAIN_GREEN' : ''}`}
+            className={`p-2 ${useType === 'AFTER' ? 'text-MAIN_GREEN font-bold' : ''}`}
             onClick={() => handleUseTypeChange('AFTER')}
           >
             이용 완료

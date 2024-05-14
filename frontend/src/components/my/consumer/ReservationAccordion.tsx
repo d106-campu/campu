@@ -101,8 +101,8 @@ const ReservationAccordion = ({
                 hoverTextColor='text-MAIN_GREEN'
                 hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
                 onClick={() => openMapModal(
-                  reservation.campsiteLocation.mapX,
                   reservation.campsiteLocation.mapY,
+                  reservation.campsiteLocation.mapX,
                   reservation.campsite.campsiteName,
                   reservation.campsite.address,
                   5

@@ -25,7 +25,7 @@ const Header = ({ page }: { page?: string }) => {
   // 프로필이미지 추출
   useEffect(() => {
     if (profileData?.profileImageUrl) {
-      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImageUrl(fullImageUrl);
       // console.log("이미지 주소 확인:", fullImageUrl);
     }
