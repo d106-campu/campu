@@ -87,13 +87,19 @@ const ReservationAccordion = ({
                   titleLeft="가격"
                   contentLeft={reservation.reservation.price.toString()}
                   titleRight="인원"
-                  contentRight={reservation.reservation.headCnt.toString()}
+                  contentRight={`${reservation.reservation.headCnt.toString()}명`}
                 />
                 <ReservationSection
                   titleLeft="사이트"
                   contentLeft={reservation.room.roomName || "등록된 위치가 없습니다."}
-                  titleRight="기타정보"
-                  contentRight={reservation.room.supplyList || "기타정보가 없습니다."}
+                  titleRight=""
+                  contentRight=""
+                />
+                <ReservationSection
+                  titleLeft="기타정보"
+                  contentLeft={reservation.room.supplyList || "..."}
+                  titleRight=""
+                  contentRight=""
                 />
               </div>
             </div>
@@ -128,9 +134,8 @@ const ReservationAccordion = ({
                   onClick={() =>
                     navigate(`/camps/review-write`, { state: dataToSend })
                   }
-          
                 />}
-              {reservation.reservation.status === 'reservation' &&
+              {reservation.reservation.status === 'cancle' &&
                 <Button
                   width='w-[300px]'
                   text='예약 취소하기'
@@ -140,7 +145,7 @@ const ReservationAccordion = ({
                   hoverTextColor='text-MAIN_GREEN'
                   hoverBackgroundColor="hover:bg-HOVER_YELLOW"
                 />}
-              {reservation.reservation.status === 'cancel' &&
+              {reservation.reservation.status === 'reservation' &&
                 <Button
                   width='w-[300px]'
                   text='다시 예약하기'
