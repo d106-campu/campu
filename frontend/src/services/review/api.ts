@@ -1,4 +1,4 @@
-import { axiosCommonInstance, axiosAuthInstance } from "@/apis/axiosInstance";
+import { axiosCommonInstance, axiosFileInstance } from "@/apis/axiosInstance";
 import { APIResponse, APISimpleResponse } from "@/types/model";
 import {
   IReviewListRes,
@@ -38,11 +38,30 @@ export const postReview = async ({
   reservationId,
   content,
   score,
+  files,
 }: IPostReviewReq): Promise<APISimpleResponse> => {
-  const res = await axiosAuthInstance.post(`/review`, {
-    reservationId: reservationId,
-    content: content,
-    score: score,
+  const formData = new FormData();
+
+  // createRequestDto 객체를 JSON 문자열로 변환하여 FormData에 추가
+  const createRequestDto = {
+    reservationId,
+    content,
+    score,
+  };
+
+  const review = new Blob([JSON.stringify(createRequestDto)], {
+    type: "application/json",
   });
+
+  formData.append("createRequestDto", review);
+
+  // files 배열의 각 항목을 FormData에 추가
+  files.forEach((file) => {
+    formData.append("files", file);
+    console.log("api - file", file);
+  });
+
+  console.log("formData :", formData, formData.values.length);
+  const res = await axiosFileInstance.post(`/review`, formData);
   return res.data;
 };

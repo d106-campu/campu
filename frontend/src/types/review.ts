@@ -71,6 +71,7 @@ export interface IPostReviewReq {
   reservationId: number;
   content: string;
   score: number;
+  files: string[];
 }
 
 // 내 리뷰 (마이페이지)

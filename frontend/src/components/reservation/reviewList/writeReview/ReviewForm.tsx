@@ -55,14 +55,18 @@ const ReviewForm = ({ reservationId }: IReviewFormProps) => {
 
     // API 호출
     postReview(
-      { reservationId, content, score },
+      { reservationId, content, score, files: photos },
       {
         onSuccess: () => {
           Toast.success("리뷰가 성공적으로 등록되었습니다.");
         },
         onError: (err) => {
           if (axios.isAxiosError(err)) {
+            console.log(photos);
             const res = err.response;
+            if (!photos) {
+              Toast.error("사진 첨부는 필수 입니다");
+            }
             if (res && res.status === 401) {
               Toast.error("리뷰 작성의 권한이 없습니다 😥");
               return;
