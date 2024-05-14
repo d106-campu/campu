@@ -12,13 +12,26 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
-
+    
+    String TO_CAMPSITE_ID = "java(review.getCampsite().getId())";
+    String TO_CAMPSITE_NAME = "java(review.getCampsite().getFacltNm())";
     String TO_USER = "java(toUserResponse(review.getReservation().getUser()))";
     String TO_REVIEW_IMAGE_LIST = "java(review.getReviewImageList() == null ? null : review.getReviewImageList().stream().map(ReviewImage::getUrl).toList())";
+    String TO_VISIT_DATE = "java(review.getReservation().getStartDate())";
 
     @Mapping(target = "user", expression = TO_USER)
     @Mapping(target = "reviewImageList", expression = TO_REVIEW_IMAGE_LIST)
     ReviewDto.Response toReviewDto(Review review);
+
+    @Mapping(target = "campsiteId", expression = TO_CAMPSITE_ID)
+    @Mapping(target = "campsiteName", expression = TO_CAMPSITE_NAME)
+    @Mapping(target = "indutyList", ignore = true)
+    @Mapping(target = "reviewId", source = "id")
+    @Mapping(target = "user", expression = TO_USER)
+    @Mapping(target = "reviewImageList", expression = TO_REVIEW_IMAGE_LIST)
+    @Mapping(target = "visitDate", expression = TO_VISIT_DATE)
+    @Mapping(target = "mine", ignore = true)
+    ReviewDto.DetailResponse toDetailReviewDto(Review review);
 
     List<Response> toReviewDto(List<Review> reviewList);
 
