@@ -50,7 +50,7 @@ public class SecurityConfig {
         /* file */
         "/file/**",
         /* review */
-        "/review/campsite/**"
+        "/review/campsite/**",
     };
 
     @Value("${cors.origin.list}")
