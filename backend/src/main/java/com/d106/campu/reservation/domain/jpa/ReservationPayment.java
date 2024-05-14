@@ -33,7 +33,7 @@ public class ReservationPayment {
     private String name;
 
     @Column(table = "reservation_payment", name = "amount")
-    private int amount;
+    private long amount;
 
     @Column(table = "reservation_payment", name = "buyer_email")
     private String buyerEmail;

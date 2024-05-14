@@ -98,7 +98,7 @@ public class QCampsiteRepository {
         return PageableExecutionUtils.getPage(responseList, pageable, countQuery::fetchOne);
     }
 
-    public Map<Long, Integer> findCheapestRoomPriceByCampsite(List<Long> campsiteIds, int headCnt) {
+    public Map<Long, Long> findCheapestRoomPriceByCampsite(List<Long> campsiteIds, int headCnt) {
         List<Tuple> tuples = jpaQueryFactory
             .select(new Expression[]{
                 campsite.id, room.id, room.maxNo, room.price.min()
@@ -112,7 +112,7 @@ public class QCampsiteRepository {
             .orderBy(new OrderSpecifier[]{campsite.id.asc()})
             .fetch();
 
-        Map<Long, Integer> responseMap = new TreeMap<>();
+        Map<Long, Long> responseMap = new TreeMap<>();
         tuples.forEach(tuple -> {
             responseMap.put(tuple.get(campsite.id), tuple.get(room.price.min()));
         });

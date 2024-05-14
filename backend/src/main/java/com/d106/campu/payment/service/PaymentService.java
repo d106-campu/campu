@@ -31,6 +31,7 @@ import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +75,10 @@ public class PaymentService {
         User user = userRepository.findByAccount(securityHelper.getLoginAccount())
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
-        int totalPrice = room.getPrice() + room.getExtraPrice() * (prepareRequest.getHeadCnt() - room.getBaseNo());
+        long days = ChronoUnit.DAYS.between(prepareRequest.getStartDate(), prepareRequest.getEndDate());
+        long pricePerDay = room.getPrice() + room.getExtraPrice() * (prepareRequest.getHeadCnt() - room.getBaseNo());
+        long totalPrice = pricePerDay * days;
+
         if (room.getMaxNo() < prepareRequest.getHeadCnt() || totalPrice != prepareRequest.getPrice()) {
             throw new InvalidException(CommonExceptionCode.INVALID_PARAM);
         }

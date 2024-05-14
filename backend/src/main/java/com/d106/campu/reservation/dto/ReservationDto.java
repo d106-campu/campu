@@ -12,7 +12,7 @@ public class ReservationDto {
         private Long id;
         private RoomDto.RoomInfo room;
         private int headCnt;
-        private int price;
+        private Long price;
         private LocalDate startDate;
         private LocalDate endDate;
 

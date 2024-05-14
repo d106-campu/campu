@@ -45,7 +45,7 @@ public class MyPageDto {
 
         private Long reservationId;
         private Integer headCnt;
-        private Integer price;
+        private Long price;
         private LocalDate startDate;
         private LocalDate endDate;
         private String status;
@@ -96,7 +96,7 @@ public class MyPageDto {
         private String thumbnailImageUrl;
         private String lineIntro;
         private String address;
-        private Integer minPrice;
+        private Long minPrice;
         private Double score;
     }
 

@@ -113,7 +113,7 @@ public class CampsiteService {
         }
 
         List<Long> campsiteIds = responsePage.stream().mapToLong(Campsite::getId).boxed().toList();
-        Map<Long, Integer> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
+        Map<Long, Long> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
         Map<Long, Boolean> campsiteLikeByUserMap =
             (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
         Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
@@ -290,8 +290,8 @@ public class CampsiteService {
             room.setAvailable(campsiteAvailabilityMap.getOrDefault(room.getId(), false));
             room.setEmptyNotification(user != null && emptyNotificationMap.getOrDefault(room.getId(), false));
 
-            int dailyPrice = room.getPrice() + (headCnt - room.getBaseNo()) * room.getExtraPrice();
-            int dateDiff = (int) startDate.until(endDate, ChronoUnit.DAYS);
+            long dailyPrice = room.getPrice() + (headCnt - room.getBaseNo()) * room.getExtraPrice();
+            long dateDiff = startDate.until(endDate, ChronoUnit.DAYS);
             room.setTotalPrice(dailyPrice * dateDiff);
             return room;
         });
