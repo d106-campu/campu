@@ -34,7 +34,7 @@ const OwnerPage = () => {
         </>
       ) : (
         <AddCamping />
-      )}
+       )}
       <Footer />
     </div>
   );
