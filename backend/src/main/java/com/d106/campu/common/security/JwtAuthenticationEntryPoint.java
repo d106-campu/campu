@@ -32,7 +32,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
         } else {
-            responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
+            responseFail = new ResponseFail(CommonExceptionCode.INACCESSIBLE_DATA.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
         }
 
