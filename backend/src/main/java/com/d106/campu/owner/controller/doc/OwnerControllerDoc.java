@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
@@ -42,5 +43,20 @@ public interface OwnerControllerDoc {
         @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response getOwnerCampsiteList(Pageable pageable);
+
+    @Operation(summary = "캠핑장 등록", description = "사장님이 캠핑장 관리 페이지에서 캠핑장을 등록하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 등록 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CreateCampsiteResponse.class)),
+            })),
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
+    })
+    Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
+
+    class CreateCampsiteResponse {
+        public CampsiteDto.CreateResponse campsite;
+    }
 
 }
