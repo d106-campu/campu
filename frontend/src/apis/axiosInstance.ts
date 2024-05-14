@@ -47,7 +47,7 @@ axiosAuthInstance.interceptors.request.use(setAuthorization, (error) =>
 axiosFileInstance.interceptors.response.use(null, refresh);
 axiosAuthInstance.interceptors.response.use(
   (response) => response,
-  refresh // 토큰 만료의 경우 401 인증 실패를 처리하기 위해 refresh.ts에서 처리
+  (error) => refresh(error)
 );
 
 export { axiosCommonInstance, axiosAuthInstance, axiosFileInstance };

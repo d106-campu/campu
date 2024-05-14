@@ -10,10 +10,13 @@ import {
 } from '@/services/auth/api';
 import { ISignUpReq, IVerifyPhoneReq } from '@/types/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setRole } from '@/features/login/authSlice';
 
 export const useSignup = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   // 아이디 중복 검사
   const checkId = (account: string) => useQuery({
@@ -63,7 +66,11 @@ export const useSignup = () => {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (res) => {
-      console.log("로그인 성공!! :", res)
+      console.log("로그인 성공!!")
+      
+      dispatch(setRole(res.data.user.role)) // 유저 권한
+      console.log("유저 권한 확인:", res.data.user.role)
+
       const from = location.state?.from?.pathname || '/';
       console.log('이전 페이지 확인 :', from)
       // 이전 페이지로 이동 (저장된 이전페이지 경로가 없으면 메인페이지로)

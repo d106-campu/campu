@@ -45,7 +45,7 @@ export const verifyPhoneNumber = async (data: IVerifyPhoneReq): Promise<APIRespo
 };
 
 // 로그인 요청
-export const login = async (data: { account: string; password: string }): Promise<APIResponse<{ user: { account: string; password: string; }; }>> => {
+export const login = async (data: { account: string; password: string }): Promise<APIResponse<{ user: { account: string; password: string; role: string; }; }>> => {
   const response = await axiosCommonInstance.post('/auth/login', data);
 
   if (response.status === 200 && response.headers.authorization) {
