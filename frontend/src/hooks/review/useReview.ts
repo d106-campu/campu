@@ -3,7 +3,7 @@ import { IReviewListReq } from "@/types/review";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const useReview = () => {
-  // 캠핑장 평점 조회 (무한 스크롤)
+  // 리뷰 목록 조회 (무한 스크롤)
   const useGetReviewListInfinite = (props: IReviewListReq) => {
     return useInfiniteQuery({
       queryKey: ["reviews", props.campsiteId, props.size],
@@ -16,7 +16,15 @@ export const useReview = () => {
     });
   };
 
-  // 리뷰 목록 조회
+  // 리뷰 목록 조회 (예약 페이지에서 필요)
+  const useGetReviewList = (props: IReviewListReq) => {
+    return useQuery({
+      queryKey: ["reviews", props.campsiteId],
+      queryFn: () => getReviewList(props),
+    });
+  };
+
+  // 캠핑장 평점 조회
   const useGetCampScore = (campsiteId: number) => {
     return useQuery({
       queryKey: ["campsite", campsiteId],
@@ -38,5 +46,10 @@ export const useReview = () => {
     });
   };
 
-  return { useGetReviewListInfinite, useGetCampScore, usePostReview };
+  return {
+    useGetReviewListInfinite,
+    useGetReviewList,
+    useGetCampScore,
+    usePostReview,
+  };
 };

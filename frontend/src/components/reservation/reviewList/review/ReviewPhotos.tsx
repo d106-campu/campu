@@ -1,4 +1,5 @@
 import defaultProfile from "@/assets/images/profile.png"; // 기본 프로필
+import { formatReviewTime } from "@/utils/formatDateTime";
 import { useState } from "react";
 
 interface IReviewPhotosProps {
@@ -29,7 +30,9 @@ const ReviewPhotos = ({
           <p className="text-BLACK font-bold text-lg">{nickname}</p>
         </div>
         <div>
-          <p className="text-[#A0A0A0] text-sm mr-2">{date} 작성</p>
+          <p className="text-[#A0A0A0] text-sm mr-3">
+            {formatReviewTime(date)} 작성
+          </p>
         </div>
       </div>
 
