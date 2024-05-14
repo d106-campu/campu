@@ -11,11 +11,12 @@ import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
-import com.d106.campu.reservation.repository.jpa.QReservationRepository;
 import com.d106.campu.owner.exception.code.OwnerExceptionCode;
+import com.d106.campu.reservation.repository.jpa.QReservationRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +55,8 @@ public class OwnerService {
     public Page getOwnerReservationListByCampsite(Long campsiteId, Pageable pageable) {
         Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
             CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
-        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), pageable);
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), LocalDate.now(),
+            pageable);
     }
 
     private User getOwnerUser() {

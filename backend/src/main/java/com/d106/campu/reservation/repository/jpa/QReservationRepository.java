@@ -15,6 +15,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class QReservationRepository {
     private final QUser user = QUser.user;
 
     public Page<ReservationDto.ResponseWithUser> findReservationListByCampsiteAndOwner(Campsite targetCampsite, User owner,
-        Pageable pageable) {
+        LocalDate today, Pageable pageable) {
         Expression<?>[] projection = new Expression[]{
             reservation.id, room.id, room.name, reservation.user.nickname, reservation.user.tel, reservation.headCnt,
             reservation.startDate, reservation.endDate, reservation.status,
@@ -43,7 +44,8 @@ public class QReservationRepository {
 
         BooleanBuilder predicates = new BooleanBuilder()
             .and(campsite.eq(targetCampsite))
-            .and(campsite.user.eq(owner));
+            .and(campsite.user.eq(owner))
+            .and(reservation.startDate.loe(today).and(reservation.endDate.goe(today)));
 
         List<Tuple> tuples = jpaQueryFactory
             .select(projection)

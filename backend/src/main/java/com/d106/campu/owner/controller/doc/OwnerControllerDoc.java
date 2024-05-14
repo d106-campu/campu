@@ -44,7 +44,7 @@ public interface OwnerControllerDoc {
     })
     Response getOwnerCampsiteList(Pageable pageable);
 
-    @Operation(summary = "사장님 캠핑장별 예약 목록 조회", description = "사장님이 관리하는 캠핑장별로 예약 목록을 조회하는 API를 호출한다.")
+    @Operation(summary = "사장님 캠핑장별 예약 목록 조회", description = "사장님이 관리하는 캠핑장별로 오늘 날짜가 포함된 예약 목록을 조회하는 API를 호출한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "예약 목록 조회 성공",
             content = @Content(schemaProperties = {
