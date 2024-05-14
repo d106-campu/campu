@@ -102,6 +102,7 @@ public class PaymentService {
         reservation.setReference(user, room, reservationPayment);
 
         PrepareData prepareData = new PrepareData(merchantUid, BigDecimal.valueOf(totalPrice));
+        log.info("totalPrice: {}", totalPrice);
         IamportResponse<Prepare> iamportResponse = null;
         try {
             iamportResponse = iamportClient.postPrepare(prepareData);
