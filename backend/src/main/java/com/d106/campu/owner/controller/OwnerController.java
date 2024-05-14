@@ -7,7 +7,9 @@ import com.d106.campu.owner.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/owner")
@@ -16,6 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class OwnerController implements OwnerControllerDoc {
 
     private final OwnerService ownerService;
+
+    @Override
+    @PostMapping("/bizrno")
+    public Response registerCampsite(@RequestParam String bizrno) {
+        ownerService.registerCampsite(bizrno);
+        return new Response();
+    }
 
     @Override
     @GetMapping("/campsite")
