@@ -7,6 +7,7 @@ import com.d106.campu.room.domain.jpa.QInduty;
 import com.d106.campu.room.domain.jpa.QRoom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,10 +45,12 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
     }
 
     public List<String> getIndutyList(Long campsiteId) {
-        return queryFactory.select(induty.indutyStr)
+        List<String> temp = queryFactory.select(induty.indutyStr)
             .from(room).join(induty).on(room.induty.eq(induty))
             .where(room.campsite.id.eq(campsiteId))
             .fetch();
+
+        return List.copyOf(Set.copyOf(temp));
     }
 
 }
