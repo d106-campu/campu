@@ -15,19 +15,21 @@ const OwnerPage = () => {
 
   console.log(OwnerCampsiteList?.data.campsiteList.content);
 
-  const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map((item) => ({
-    id: item.id,
-    name: item.facltNm,
-  }));
+  const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map(
+    (item) => ({
+      id: item.id,
+      name: item.facltNm,
+    })
+  );
 
   console.log(campsiteData);
   return (
     <div>
       <Header page={"owner"} />
 
-      {campsiteData?.length ? (
+      {OwnerCampsiteList?.data.campsiteList.content ? (
         <>
-          <SideTabbar campData={campsiteData} />
+          <SideTabbar campData={campsiteData!} />
           <OwnerContainer />
         </>
       ) : (
