@@ -28,6 +28,14 @@ public class EventListener {
         smsUtil.sendEmptyRoomNotification(saveResponseDtoList);
     }
 
+//    @Async
+//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = {PaymentEvent.class})
+//    public void saveAndSendNotification(PaymentEvent paymentEvent) {
+//        List<SaveResponse> saveResponseDtoList = notificationService.saveNotification(paymentEvent.getData());
+//        notificationService.sendNotification(saveResponseDtoList);
+//        smsUtil.sendEmptyRoomNotification(saveResponseDtoList);
+//    }
+
     /**
      * 커밋이 없는 테스트 환경에서 사용한다.
      */

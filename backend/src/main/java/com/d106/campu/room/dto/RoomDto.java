@@ -15,8 +15,9 @@ public class RoomDto {
         private String induty;
         private int baseNo;
         private int maxNo;
-        private int price;
-        private int extraPrice;
+        private Long price;
+        private Long extraPrice;
+        private Long totalPrice;
         private int roomCnt;
         private int toiletCnt;
         private String supplyList;

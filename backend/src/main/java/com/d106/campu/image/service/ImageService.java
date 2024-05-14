@@ -27,6 +27,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Service
 public class ImageService {
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     private final UserRepository userRepository;
     private final CampsiteRepository campsiteRepository;
@@ -51,7 +55,7 @@ public class ImageService {
         createAndCleanDirectory(basePath);
         String fileName = saveFile(basePath, profileImage);
         String postfix = String.join("/", user.getId().toString(), ImageConstant.PROFILE, fileName);
-        String profileImageUrl = StringUtils.join(ImageConstant.USER_URL, postfix);
+        String profileImageUrl = StringUtils.join(baseUrl, ImageConstant.USER_URL, postfix);
         user.setProfileImageUrl(profileImageUrl);
 
         return userRepository.save(user).getProfileImageUrl();
@@ -69,7 +73,7 @@ public class ImageService {
         createAndCleanDirectory(basePath);
         String fileName = saveFile(basePath, thumbnailImage);
         String postfix = String.join("/", campsite.getId().toString(), ImageConstant.THUMBNAIL, fileName);
-        String thumbnailImageUrl = StringUtils.join(ImageConstant.CAMPSITE_URL, postfix);
+        String thumbnailImageUrl = StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix);
         campsite.setThumbnailImageUrl(thumbnailImageUrl);
 
         return campsiteRepository.save(campsite).getThumbnailImageUrl();
@@ -87,7 +91,7 @@ public class ImageService {
         createAndCleanDirectory(basePath);
         String fileName = saveFile(basePath, mapImage);
         String postfix = String.join("/", campsite.getId().toString(), ImageConstant.MAP, fileName);
-        String mapImageUrl = StringUtils.join(ImageConstant.CAMPSITE_URL, postfix);
+        String mapImageUrl = StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix);
         campsite.setMapImageUrl(mapImageUrl);
 
         return campsiteRepository.save(campsite).getMapImageUrl();
@@ -109,7 +113,7 @@ public class ImageService {
         generalImageList.stream()
             .map(file -> saveFile(basePath, file))
             .map(fileName -> String.join("/", campsite.getId().toString(), ImageConstant.GENERAL, fileName))
-            .map(postfix -> StringUtils.join(ImageConstant.CAMPSITE_URL, postfix))
+            .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
             .map(imageMapper::toCampsiteImage)
             .forEach(campsite::addCampsiteImage);
 
@@ -130,7 +134,7 @@ public class ImageService {
             .map(file -> saveFile(basePath, file))
             .map(fileName -> String.join("/", review.getCampsite().getId().toString(), ImageConstant.REVIEW,
                 review.getReservation().getId().toString(), fileName))
-            .map(postfix -> StringUtils.join(ImageConstant.CAMPSITE_URL, postfix))
+            .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
             .map(imageMapper::toReviewImage)
             .forEach(review::addReviewImage);
 

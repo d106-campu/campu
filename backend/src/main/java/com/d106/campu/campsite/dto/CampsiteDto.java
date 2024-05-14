@@ -3,11 +3,13 @@ package com.d106.campu.campsite.dto;
 import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
@@ -33,8 +35,41 @@ public class CampsiteDto {
         private CampsiteLocation campsiteLocation;
         private boolean like;
         private boolean available;
-        private Integer price;
+        private Long price;
         private Double score;
+
+    }
+
+    @Data
+    @Builder
+    public static class DetailResponse {
+
+        private Long id;
+        private UserDto.NameAndTel owner;
+        private String facltNm;
+        private String tel;
+        private String lineIntro;
+        private String intro;
+        private int allar;
+        private String bizrno;
+        private String trsagntNo;
+        private String doNm;
+        private String sigunguNm;
+        private String addr1;
+        private String addr2;
+        private List<String> indutyList;
+        private List<String> themeList;
+        private List<String> facltList;
+        private double score;
+        private CampsiteLocation campsiteLocation;
+        private double sitedStnc;
+        private String animalCmgCl;
+        private int hit;
+        private boolean like;
+        private String homepage;
+        private String thumbnailImageUrl;
+        private String mapImageUrl;
+        private List<String> campsiteImageUrlList;
 
     }
 

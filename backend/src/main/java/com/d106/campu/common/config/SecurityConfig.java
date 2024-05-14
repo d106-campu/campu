@@ -43,13 +43,14 @@ public class SecurityConfig {
         "/notification/test/**",
         /* campsite */
         "/campsite",
+        "/campsite/*",
         "/campsite/*/room",
         /* reservation */
         "/reservation/**",
         /* file */
         "/file/**",
         /* review */
-        "/review/campsite/**"
+        "/review/campsite/**",
     };
 
     @Value("${cors.origin.list}")

@@ -50,10 +50,10 @@ public class Room extends BaseTime {
     private int maxNo;
 
     @Column(name = "price", nullable = false)
-    private int price;
+    private Long price;
 
     @Column(name = "extra_price")
-    private int extraPrice;
+    private Long extraPrice;
 
     @Column(name = "room_cnt", nullable = false)
     private int roomCnt;

@@ -10,6 +10,7 @@ import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.room.domain.jpa.QRoom;
+import com.d106.campu.user.domain.jpa.QUser;
 import com.d106.campu.user.domain.jpa.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -42,6 +43,7 @@ public class QCampsiteRepository {
     private final QRoom room = QRoom.room;
     private final QReview review = QReview.review;
     private final QReservation reservation = QReservation.reservation;
+    private final QUser user = QUser.user;
 
     public Page<CampsiteDto.Response> findByTheme(String themeStr, int headCnt, Pageable pageable) {
 
@@ -96,7 +98,7 @@ public class QCampsiteRepository {
         return PageableExecutionUtils.getPage(responseList, pageable, countQuery::fetchOne);
     }
 
-    public Map<Long, Integer> findCheapestRoomPriceByCampsite(List<Long> campsiteIds, int headCnt) {
+    public Map<Long, Long> findCheapestRoomPriceByCampsite(List<Long> campsiteIds, int headCnt) {
         List<Tuple> tuples = jpaQueryFactory
             .select(new Expression[]{
                 campsite.id, room.id, room.maxNo, room.price.min()
@@ -110,20 +112,20 @@ public class QCampsiteRepository {
             .orderBy(new OrderSpecifier[]{campsite.id.asc()})
             .fetch();
 
-        Map<Long, Integer> responseMap = new TreeMap<>();
+        Map<Long, Long> responseMap = new TreeMap<>();
         tuples.forEach(tuple -> {
             responseMap.put(tuple.get(campsite.id), tuple.get(room.price.min()));
         });
         return responseMap;
     }
 
-    public Map<Long, Boolean> findCampsiteLikeByUser(List<Long> campsiteIds, User user) {
+    public Map<Long, Boolean> findCampsiteLikeByUser(List<Long> campsiteIds, User loginUser) {
         List<Tuple> tuples = jpaQueryFactory
             .select(new Expression[]{campsiteLike.id, campsiteLike.campsite.id})
             .from(campsiteLike)
             .where(new BooleanBuilder()
                 .and(campsiteLike.campsite.id.in(campsiteIds))
-                .and(campsiteLike.user.eq(user))
+                .and(campsiteLike.user.eq(loginUser))
             )
             .orderBy(new OrderSpecifier[]{campsiteLike.id.asc()})
             .fetch();

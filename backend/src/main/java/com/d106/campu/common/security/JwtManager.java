@@ -1,11 +1,13 @@
 package com.d106.campu.common.security;
 
 import com.d106.campu.auth.constant.AuthConstant;
+import com.d106.campu.common.constant.SecurityConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Arrays;
@@ -77,13 +79,14 @@ public class JwtManager {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String validateToken(String accessToken, HttpServletResponse servletResponse) {
+    public String validateToken(String accessToken, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
         try {
             getClaims(accessToken);
             return accessToken;
         } catch (ExpiredJwtException ex) {
             // TODO : refreshToken 으로 accessToken 발급
         }
+        servletRequest.setAttribute(SecurityConstant.NO_TOKEN, SecurityConstant.NO_TOKEN);
         return null;
     }
 

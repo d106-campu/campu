@@ -2,6 +2,7 @@ package com.d106.campu.common.security;
 
 import com.d106.campu.auth.constant.AuthConstant;
 import com.d106.campu.common.config.SecurityConfig;
+import com.d106.campu.common.constant.SecurityConstant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String uri = servletRequest.getRequestURI();
 
         if (StringUtils.hasText(accessToken)) {
-            accessToken = jwtManager.validateToken(accessToken, servletResponse);
+            accessToken = jwtManager.validateToken(accessToken, servletRequest, servletResponse);
 
             if (!accessToken.isEmpty()) {
                 Authentication authentication = jwtManager.getAuthentication(accessToken);
@@ -61,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     method, uri);
             }
         } else {
+            servletRequest.setAttribute(SecurityConstant.NO_TOKEN, SecurityConstant.NO_TOKEN);
             log.debug("No token : uri {} {}", method, uri);
         }
 

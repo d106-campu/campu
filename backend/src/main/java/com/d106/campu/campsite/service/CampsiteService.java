@@ -6,32 +6,35 @@ import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.IndutyEnum;
 import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
+import com.d106.campu.campsite.domain.jpa.CampsiteImage;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
+import com.d106.campu.campsite.domain.jpa.Fclty;
+import com.d106.campu.campsite.domain.jpa.Theme;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.FcltyRepository;
 import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.ThemeRepository;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
-import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
-import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
-import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
-import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.dto.UserDto.NameAndTel;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -59,13 +62,12 @@ public class CampsiteService {
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
 
-    private final RoomRepository roomRepository;
+    private final FcltyRepository fcltyRepository;
+    private final ThemeRepository themeRepository;
+
     private final QRoomRepository qRoomRepository;
-    private final RoomMapper roomMapper;
 
     private final ReviewRepository reviewRepository;
-
-    private final ReservationRepository reservationRepository;
 
     private final SecurityHelper securityHelper;
 
@@ -111,7 +113,7 @@ public class CampsiteService {
         }
 
         List<Long> campsiteIds = responsePage.stream().mapToLong(Campsite::getId).boxed().toList();
-        Map<Long, Integer> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
+        Map<Long, Long> minPriceByCampsiteMap = qCampsiteRepository.findCheapestRoomPriceByCampsite(campsiteIds, headCnt);
         Map<Long, Boolean> campsiteLikeByUserMap =
             (user == null) ? null : qCampsiteRepository.findCampsiteLikeByUser(campsiteIds, user);
         Map<Long, Double> avgScoreByCampsiteMap = qCampsiteRepository.findAvgScoreByCampsite(campsiteIds);
@@ -120,8 +122,6 @@ public class CampsiteService {
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
-            List<Room> roomList = campsite.getRoomList();
-
             // available at least one room can be reserved on the date range
             campsite.setAvailable(campsiteAvailabilityMap.getOrDefault(campsite.getId(), false));
 
@@ -182,13 +182,6 @@ public class CampsiteService {
         return CampsiteLocation.builder().mapX(xAvg / campsiteList.size()).mapY(yAvg / campsiteList.size()).build();
     }
 
-    @Transactional(readOnly = true)
-    public Page<CampsiteDto.Response> getOwnerCampsiteList(Pageable pageable) {
-        User user = getUserByAccount();
-        checkUserRoleOwner(user);
-        return campsiteRepository.findByUser(pageable, user).map(campsiteMapper::toCampsiteListResponseDto);
-    }
-
     /**
      * Regist a campsite.
      *
@@ -208,6 +201,44 @@ public class CampsiteService {
         /* TODO: insert campsite location(coordinates), induty, etc. */
 
         return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
+    }
+
+    @Transactional(readOnly = true)
+    public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId, User user) {
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+
+        return CampsiteDto.DetailResponse.builder()
+            .id(campsite.getId())
+            .owner(NameAndTel.builder()
+                .nickName(campsite.getUser().getNickname())
+                .tel(campsite.getUser().getNickname())
+                .build())
+            .facltNm(campsite.getFacltNm())
+            .tel(campsite.getTel())
+            .lineIntro(campsite.getLineIntro())
+            .intro(campsite.getIntro())
+            .allar(campsite.getAllar())
+            .bizrno(campsite.getBizrno())
+            .trsagntNo(campsite.getTrsagntNo())
+            .doNm(campsite.getDoNm())
+            .sigunguNm(campsite.getSigunguNm())
+            .addr1(campsite.getAddr1())
+            .addr2(campsite.getAddr2())
+            .indutyList(List.of(campsite.getIndutyList().split(",")))
+            .themeList(themeRepository.findByCampsiteThemeList_Campsite(campsite).stream().map(Theme::getThemeStr)
+                .toList())
+            .facltList(fcltyRepository.findByCampsiteFcltyList_Campsite(campsite).stream().map(Fclty::getFcltyStr).toList())
+            .score(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0))
+            .campsiteLocation(campsite.getCampsiteLocation())
+            .sitedStnc(campsite.getSitedStnc())
+            .animalCmgCl(campsite.getAnimalCmgCl())
+            .like(user != null && campsiteLikeRepository.existsByCampsiteAndUser(campsite, user))
+            .homepage(campsite.getHomepage())
+            .thumbnailImageUrl(campsite.getThumbnailImageUrl())
+            .mapImageUrl(campsite.getMapImageUrl())
+            .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(CampsiteImage::getUrl).toList())
+            .build();
     }
 
     /**
@@ -258,6 +289,10 @@ public class CampsiteService {
         return roomPage.map(room -> {
             room.setAvailable(campsiteAvailabilityMap.getOrDefault(room.getId(), false));
             room.setEmptyNotification(user != null && emptyNotificationMap.getOrDefault(room.getId(), false));
+
+            long dailyPrice = room.getPrice() + (headCnt - room.getBaseNo()) * room.getExtraPrice();
+            long dateDiff = startDate.until(endDate, ChronoUnit.DAYS);
+            room.setTotalPrice(dailyPrice * dateDiff);
             return room;
         });
     }
