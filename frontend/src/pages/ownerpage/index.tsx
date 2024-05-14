@@ -27,9 +27,9 @@ const OwnerPage = () => {
     <div>
       <Header page={"owner"} />
 
-      {OwnerCampsiteList?.data.campsiteList.content ? (
+      {campsiteData?.length ? (
         <>
-          <SideTabbar campData={campsiteData!} />
+          <SideTabbar campData={campsiteData} />
           <OwnerContainer />
         </>
       ) : (
