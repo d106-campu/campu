@@ -160,7 +160,7 @@ CREATE TABLE `reservation_cancel` (
 
 CREATE TABLE `campsite` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+  `user_id` bigint(20) COMMENT '회원 식별번호',
   `faclt_nm` varchar(128) DEFAULT NULL COMMENT '야영장명',
   `faclt_div_nm` varchar(16) DEFAULT NULL COMMENT '사업주체 구분',
   `tel` char(11) DEFAULT NULL COMMENT '전화',

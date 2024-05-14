@@ -43,6 +43,7 @@ public class SecurityConfig {
         "/notification/test/**",
         /* campsite */
         "/campsite",
+        "/campsite/*",
         "/campsite/*/room",
         /* reservation */
         "/reservation/**",

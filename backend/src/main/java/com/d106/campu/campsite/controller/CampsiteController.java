@@ -8,12 +8,8 @@ import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.service.CampsiteService;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
-import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.response.Response;
-import com.d106.campu.common.security.JwtManager;
-import com.d106.campu.user.domain.jpa.User;
-import com.d106.campu.user.exception.code.UserExceptionCode;
-import com.d106.campu.user.repository.jpa.UserRepository;
+import com.d106.campu.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CampsiteController implements CampsiteControllerDoc {
 
-    private final UserRepository userRepository;
-
     private final CampsiteService campsiteService;
-
-    private final JwtManager jwtManager;
+    private final UserService userService;
 
     @Override
     @GetMapping
@@ -50,13 +43,8 @@ public class CampsiteController implements CampsiteControllerDoc {
         Pageable pageable,
         HttpServletRequest request
     ) {
-        User user = null;
-        if (request.getHeader("Authorization") != null) {
-            user = userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
-                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        }
         return campsiteService.getCampsiteListResponse(doNm, sigunguNm, startDate, endDate, headCnt, induty, theme, pageable,
-            user);
+            userService.getUserFromToken(request));
     }
 
     @Override
@@ -72,6 +60,13 @@ public class CampsiteController implements CampsiteControllerDoc {
     }
 
     @Override
+    @GetMapping("/{campsiteId}")
+    public Response getCampsiteById(@PathVariable Long campsiteId, HttpServletRequest request) {
+        return new Response(CampsiteConstant.CAMPSITE,
+            campsiteService.getCampsiteDetailById(campsiteId, userService.getUserFromToken(request)));
+    }
+
+    @Override
     @PostMapping("/like/{campsiteId}")
     public Response likeCampsite(@PathVariable long campsiteId) {
         return new Response(CampsiteConstant.CAMPSITE_LIKE, campsiteService.likeCampsite(campsiteId));
@@ -81,13 +76,9 @@ public class CampsiteController implements CampsiteControllerDoc {
     @GetMapping("/{campsiteId}/room")
     public Response getCampsiteRoomList(@PathVariable long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
         Pageable pageable, HttpServletRequest request) {
-        User user = null;
-        if (request.getHeader("Authorization") != null) {
-            user = userRepository.findByAccount(jwtManager.getAccount(request.getHeader("Authorization").substring(7)))
-                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        }
         return new Response(CampsiteConstant.CAMPSITE_ROOM_LIST,
-            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, user, pageable));
+            campsiteService.getCampsiteRoomList(campsiteId, startDate, endDate, headCnt, userService.getUserFromToken(request),
+                pageable));
     }
 
 }

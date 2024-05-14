@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,18 @@ public interface ReviewControllerDoc {
     })
     Response getCampsiteScore(Long campsiteId);
 
+    @Operation(summary = "리뷰 상세 조회", description = "리뷰를 상세 조회하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "리뷰 상세 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = ReviewDetailResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰", content = @Content)
+    })
+    Response getReviewDetail(Long reviewId, HttpServletRequest request);
+
     @Operation(summary = "캠핑장 리뷰 목록 조회", description = "캠핑장의 리뷰들을 조회하는 API를 호출한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "캠핑장 리뷰 목록 조회 성공",
@@ -73,6 +86,10 @@ public interface ReviewControllerDoc {
 
     class ReviewListResponse {
         public Page<ReviewDto.Response> reviewList;
+    }
+
+    class ReviewDetailResponse {
+        public ReviewDto.DetailResponse reviewDetail;
     }
 
 }
