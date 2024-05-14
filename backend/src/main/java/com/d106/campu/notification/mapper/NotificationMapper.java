@@ -73,7 +73,7 @@ public interface NotificationMapper {
                 .date(String.format("%s ~ %s ꞏ %s박", emptyRoomEventData.getStartDate(), emptyRoomEventData.getEndDate(),
                     ChronoUnit.DAYS.between(emptyRoomEventData.getStartDate(), emptyRoomEventData.getEndDate())))
                 .no(String.format("기준 %d인 (최대 %d인)", emptyRoomEventData.getBaseNo(), emptyRoomEventData.getMaxNo()))
-                .url(String.join("/", baseUrl, "campsite", emptyRoomEventData.getCampsiteId()))
+                .url(String.join("/", baseUrl, "camps", emptyRoomEventData.getCampsiteId()))
                 .build())
             .toList();
     }

@@ -153,7 +153,7 @@ SET @fclty_internet = (SELECT id from `fclty` where fclty = '유무선인터넷'
 SET @fclty_cookingware = (SELECT id from `fclty` where fclty = '취사도구');
 SET @fclty_bed = (SELECT id from `fclty` where fclty = '침대');
 
-INSERT INTO `campsite_fclty` (`campsite_id`, `theme_id`)
+INSERT INTO `campsite_fclty` (`campsite_id`, `fclty_id`)
 VALUES (@campsite_1, @fclty_tv),
        (@campsite_1, @fclty_toilet),
        (@campsite_1, @fclty_airconditioner),

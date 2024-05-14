@@ -29,14 +29,14 @@ public class PaymentController implements PaymentControllerDoc {
 
     @Override
     @PostMapping("/complete")
-    public PaymentDto.CompleteResponse completePayment(@RequestBody PaymentDto.CompleteRequest completeRequestDto) {
-        return paymentService.completePayment(completeRequestDto);
+    public Response completePayment(@RequestBody PaymentDto.CompleteRequest completeRequestDto) {
+        return new Response(ReservationConstant.COMPLETE_PAYMENT, paymentService.completePayment(completeRequestDto));
     }
 
     @Override
     @DeleteMapping("/cancel")
-    public PaymentDto.CancelResponse cancelPayment(@RequestBody PaymentDto.CancelRequest cancelRequestDto) {
-        return paymentService.cancelPayment(cancelRequestDto);
+    public Response cancelPayment(@RequestBody PaymentDto.CancelRequest cancelRequestDto) {
+        return new Response(ReservationConstant.CANCEL_PAYMENT, paymentService.cancelPayment(cancelRequestDto));
     }
 
 }

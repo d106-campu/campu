@@ -35,7 +35,7 @@ public interface PaymentControllerDoc {
         ),
         @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
     })
-    PaymentDto.CompleteResponse completePayment(PaymentDto.CompleteRequest completeRequestDto);
+    Response completePayment(PaymentDto.CompleteRequest completeRequestDto);
 
     @Operation(summary = "결제 취소", description = "결제 취소를 위한 API를 호출한다.")
     @ApiResponses({
@@ -47,7 +47,7 @@ public interface PaymentControllerDoc {
         ),
         @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
     })
-    PaymentDto.CancelResponse cancelPayment(PaymentDto.CancelRequest cancelRequestDto);
+    Response cancelPayment(PaymentDto.CancelRequest cancelRequestDto);
 
     class PaymentPrepareResponse {
         public PaymentDto.PrepareResponse prepareResponse;
