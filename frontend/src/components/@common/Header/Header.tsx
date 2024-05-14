@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/app/store';
-import { setIsLogin } from '@/features/login/authSlice';
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store";
+import { setIsLogin } from "@/features/login/authSlice";
 import logo from "@/assets/images/temp_log2.png";
 import profileDefaultImage from "@/assets/images/profile.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
 import AlertLink from "@/components/alert/AlertLink ";
-import { useUser } from '@/hooks/user/useUser';
-import Toast from '@/components/@common/Toast/Toast';
+import { useUser } from "@/hooks/user/useUser";
+import Toast from "@/components/@common/Toast/Toast";
 
 // @TODO: 로그인 여부 구분
 // @TODO: 알림 열기
@@ -21,6 +21,7 @@ const Header = ({ page }: { page?: string }) => {
   const profileData = userProfileQuery.data?.data.myProfile;
   const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
   const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
+  const role = useSelector((state: RootState) => state.auth.role);
 
   // 프로필이미지 추출
   useEffect(() => {
@@ -32,12 +33,12 @@ const Header = ({ page }: { page?: string }) => {
   }, [profileData, imageBaseURL]);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       dispatch(setIsLogin(false));
     }
   }, [dispatch]);
-  
+
   const handleLogout = () => {
     // console.log("로그아웃 딸깍!!");
     localStorage.removeItem("accessToken");
@@ -83,12 +84,21 @@ const Header = ({ page }: { page?: string }) => {
           isClicked={isCurrentPage(location.pathname, "my")}
           page={page}
         />
-        <HeaderLink
-          label="캠핑장 관리"
-          link="/owner"
-          isClicked={isCurrentPage(location.pathname, "owner")}
-          page={page}
-        />
+        {isLogin && role !== "USER" ? (
+          <HeaderLink
+            label="캠핑장 관리"
+            link="/owner"
+            isClicked={isCurrentPage(location.pathname, "owner")}
+            page={page}
+          />
+        ) : (
+          <HeaderLink
+            label="캠핑장 등록"
+            link="/owner/add"
+            isClicked={isCurrentPage(location.pathname, "owneradd")}
+            page={page}
+          />
+        )}
 
         {/* 알림 */}
         {/* @TODO: SSE 알림 여부 구분*/}
