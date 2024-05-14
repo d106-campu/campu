@@ -34,6 +34,7 @@ import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -288,6 +289,10 @@ public class CampsiteService {
         return roomPage.map(room -> {
             room.setAvailable(campsiteAvailabilityMap.getOrDefault(room.getId(), false));
             room.setEmptyNotification(user != null && emptyNotificationMap.getOrDefault(room.getId(), false));
+
+            int dailyPrice = room.getPrice() + (headCnt - room.getBaseNo()) * room.getExtraPrice();
+            int dateDiff = (int) startDate.until(endDate, ChronoUnit.DAYS);
+            room.setTotalPrice(dailyPrice * dateDiff);
             return room;
         });
     }

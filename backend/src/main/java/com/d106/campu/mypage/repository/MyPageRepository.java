@@ -65,18 +65,19 @@ public class MyPageRepository {
         BooleanBuilder predicate = new BooleanBuilder();
         predicate.and(user.account.eq(account));
 
-        if (dateType.equals(DateType.MONTH)) {
-            predicate.and(reservation.startDate.goe(LocalDate.now().minusMonths(1L)));
-        } else if (dateType.equals(DateType.MONTH6)) {
-            predicate.and(reservation.startDate.goe(LocalDate.now().minusMonths(6L)));
-        } else if (dateType.equals(DateType.YEAR)) {
-            predicate.and(reservation.startDate.goe(LocalDate.now().minusYears(1L)));
+        if (useType.equals(UseType.AFTER)) {
+            if (dateType.equals(DateType.MONTH)) {
+                predicate.and(reservation.startDate.goe(LocalDate.now().minusMonths(1L)));
+            } else if (dateType.equals(DateType.MONTH6)) {
+                predicate.and(reservation.startDate.goe(LocalDate.now().minusMonths(6L)));
+            } else if (dateType.equals(DateType.YEAR)) {
+                predicate.and(reservation.startDate.goe(LocalDate.now().minusYears(1L)));
+            }
+            predicate.and(reservation.endDate.lt(LocalDate.now()));
         }
 
         if (useType.equals(UseType.BEFORE)) {
             predicate.and(reservation.endDate.goe(LocalDate.now()));
-        } else if (useType.equals(UseType.AFTER)) {
-            predicate.and(reservation.endDate.loe(LocalDate.now()));
         }
 
         OrderSpecifier<?>[] orderBys = new OrderSpecifier[]{
@@ -97,7 +98,7 @@ public class MyPageRepository {
         List<MyReservationResponse> myReservationResponseList = new ArrayList<>();
         for (Tuple tuple : tuples) {
             String status;
-            if (Objects.requireNonNull(tuple.get(reservation.endDate)).isAfter(LocalDate.now())) {
+            if (Objects.requireNonNull(tuple.get(reservation.startDate)).isAfter(LocalDate.now())) {
                 status = MyPageConstant.RESERVATION_CANCLE;
             } else if (tuple.get(review.id) == null) {
                 status = MyPageConstant.REVIEW;
