@@ -46,7 +46,6 @@ export const postReview = async ({
   files.forEach((file) => {
     if (file instanceof File) {
       formData.append("files", file);
-      console.log("api - file", file);
     } else {
       console.error("Invalid file object:", file);
     }
@@ -65,10 +64,10 @@ export const postReview = async ({
 
   formData.append("createRequestDto", review);
 
-  // FormData의 모든 키-값 쌍을 출력
-  for (const pair of formData.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-  }
+  // // FormData의 모든 키-값 쌍을 출력
+  // for (const pair of formData.entries()) {
+  //   console.log(`${pair[0]}: ${pair[1]}`);
+  // }
 
   console.log("formData :", formData, formData.values.length);
   const res = await axiosFileInstance.post(`/review`, formData);

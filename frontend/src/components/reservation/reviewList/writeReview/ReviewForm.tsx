@@ -62,7 +62,6 @@ const ReviewForm = ({ reservationId }: IReviewFormProps) => {
         },
         onError: (err) => {
           if (axios.isAxiosError(err)) {
-            console.log(photos);
             const res = err.response;
             if (!photos) {
               Toast.error("사진 첨부는 필수 입니다");
