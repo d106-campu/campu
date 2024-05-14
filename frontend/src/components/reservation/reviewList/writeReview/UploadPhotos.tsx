@@ -5,8 +5,8 @@ import { FaMinus } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 
 interface IUploadPhotosProps {
-  photos: string[];
-  setPhotos: React.Dispatch<React.SetStateAction<string[]>>;
+  photos: File[];
+  setPhotos: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
@@ -25,7 +25,7 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
         return;
       }
       setMessage(""); // 메시지 초기화
-      const newPhotos: string[] = [];
+      const newPhotos: File[] = Array.from(imgRef.current.files);
       const filesToLoad = Math.min(
         imgRef.current.files.length,
         maxPhotos - photos.length
@@ -36,15 +36,10 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
-        reader.onloadend = () => {
-          const result = reader.result as string;
-          newPhotos.push(result);
-
-          // 마지막 파일이 로드되면 한 번에 업데이트
-          if (i === filesToLoad - 1) {
-            setPhotos((prevPhotos: string[]) => [...prevPhotos, ...newPhotos]);
-          }
-        };
+        setPhotos((prevPhotos: File[]) => [
+          ...prevPhotos,
+          ...newPhotos.slice(0, filesToLoad),
+        ]);
       }
     }
   };
@@ -84,7 +79,7 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
             >
               {photos.length !== 0 ? (
                 <img
-                  src={photos[selectedPhotoIndex]}
+                  src={URL.createObjectURL(photos[selectedPhotoIndex])}
                   alt="profilePhoto"
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
@@ -139,11 +134,11 @@ const UploadPhotos = ({ photos, setPhotos }: IUploadPhotosProps) => {
                 </li>
                 <div className="overflow-x-auto whitespace-nowrap flex gap-3">
                   {photos.length !== 0 &&
-                    photos.map((image, index) => (
+                    photos.map((file, index) => (
                       <li key={index}>
                         <div className="w-20 h-20  overflow-hidden rounded-lg relative border">
                           <img
-                            src={image}
+                            src={URL.createObjectURL(file)}
                             className="w-20 h-20 object-cover"
                             onClick={() => handlePhotoSelect(index)}
                           />

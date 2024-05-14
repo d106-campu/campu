@@ -21,7 +21,7 @@ const ReviewForm = ({ reservationId }: IReviewFormProps) => {
   const { usePostReview } = useReview();
   const { mutate: postReview } = usePostReview();
 
-  const [photos, setPhotos] = useState<string[]>([]); // 리뷰 사진
+  const [photos, setPhotos] = useState<File[]>([]); // 리뷰 사진
   const [score, setScore] = useState<number>(0); // 리뷰 점수
   const [content, setContent] = useState<string>(""); // 리뷰 내용
   const [subText, setSubText] = useState<ISubText>({ text: "", type: "info" });

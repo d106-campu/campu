@@ -10,7 +10,13 @@ interface IReservationAccordionProps {
   expanded: boolean;
   toggleDetails: (index: number) => void;
   index: number;
-  openMapModal: (lat: number, lng: number, facltNm: string, addr1: string, level: number) => void;
+  openMapModal: (
+    lat: number,
+    lng: number,
+    facltNm: string,
+    addr1: string,
+    level: number
+  ) => void;
 }
 
 const ReservationAccordion = ({
@@ -18,24 +24,24 @@ const ReservationAccordion = ({
   expanded,
   toggleDetails,
   index,
-  openMapModal
+  openMapModal,
 }: IReservationAccordionProps): JSX.Element => {
   const navigate = useNavigate();
   const dataToSend = {
     campsiteId: reservation.campsite.campsiteId,
-    reservationId: reservation.reservation.reservationId,
+    reservationId: 28,
     startDate: reservation.reservation.startDate,
-    endDate: reservation.reservation.endDate
+    endDate: reservation.reservation.endDate,
   };
 
   // 입실일과 퇴실일로부터 숙박일 계산
-  const calculateNights = (() => {
+  const calculateNights = () => {
     const startDate = new Date(reservation.reservation.startDate);
     const endDate = new Date(reservation.reservation.endDate);
     return Math.round(
       (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
     );
-  });
+  };
   const nights = calculateNights();
 
   return (
@@ -100,8 +106,10 @@ const ReservationAccordion = ({
                   <FiMapPin />
                   캠핑장 위치
                 </h3>
-                <p className="pb-[12px] font-bold text-BLACK">{reservation.campsite.address}</p>
-                <img 
+                <p className="pb-[12px] font-bold text-BLACK">
+                  {reservation.campsite.address}
+                </p>
+                <img
                   src={reservation.campsite.thumbnailImageUrl}
                   alt="캠핑장 사진"
                   className="w-full h-52 object-cover object-center rounded-xl"
@@ -126,7 +134,9 @@ const ReservationAccordion = ({
                 />
                 <ReservationSection
                   titleLeft="사이트"
-                  contentLeft={reservation.room.roomName || "등록된 위치가 없습니다."}
+                  contentLeft={
+                    reservation.room.roomName || "등록된 위치가 없습니다."
+                  }
                   titleRight=""
                   contentRight=""
                 />
@@ -149,47 +159,52 @@ const ReservationAccordion = ({
                 backgroundColor="bg-[#E3F0E5]"
                 hoverTextColor="text-MAIN_GREEN"
                 hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
-                onClick={() => openMapModal(
-                  reservation.campsiteLocation.mapY,
-                  reservation.campsiteLocation.mapX,
-                  reservation.campsite.campsiteName,
-                  reservation.campsite.address,
-                  5
-                )}
+                onClick={() =>
+                  openMapModal(
+                    reservation.campsiteLocation.mapY,
+                    reservation.campsiteLocation.mapX,
+                    reservation.campsite.campsiteName,
+                    reservation.campsite.address,
+                    5
+                  )
+                }
               />
-              {reservation.reservation.status === 'review' &&
+              {reservation.reservation.status === "review" && (
                 <Button
-                  width='w-[300px]'
-                  text='리뷰 작성하기'
+                  width="w-[300px]"
+                  text="리뷰 작성하기"
                   textColor="text-[#3A2929]"
-                  fontWeight='none'
-                  backgroundColor='bg-SUB_YELLOW'
-                  hoverTextColor='text-MAIN_GREEN'
+                  fontWeight="none"
+                  backgroundColor="bg-SUB_YELLOW"
+                  hoverTextColor="text-MAIN_GREEN"
                   hoverBackgroundColor="hover:bg-HOVER_YELLOW"
                   onClick={() =>
                     navigate(`/camps/review-write`, { state: dataToSend })
                   }
-                />}
-              {reservation.reservation.status === 'cancle' &&
+                />
+              )}
+              {reservation.reservation.status === "cancle" && (
                 <Button
-                  width='w-[300px]'
-                  text='예약 취소하기'
+                  width="w-[300px]"
+                  text="예약 취소하기"
                   textColor="text-[#3A2929]"
-                  fontWeight='none'
-                  backgroundColor='bg-SUB_YELLOW'
-                  hoverTextColor='text-MAIN_GREEN'
+                  fontWeight="none"
+                  backgroundColor="bg-SUB_YELLOW"
+                  hoverTextColor="text-MAIN_GREEN"
                   hoverBackgroundColor="hover:bg-HOVER_YELLOW"
-                />}
-              {reservation.reservation.status === 'reservation' &&
+                />
+              )}
+              {reservation.reservation.status === "reservation" && (
                 <Button
-                  width='w-[300px]'
-                  text='다시 예약하기'
+                  width="w-[300px]"
+                  text="다시 예약하기"
                   textColor="text-[#3A2929]"
-                  fontWeight='none'
-                  backgroundColor='bg-SUB_YELLOW'
-                  hoverTextColor='text-MAIN_GREEN'
+                  fontWeight="none"
+                  backgroundColor="bg-SUB_YELLOW"
+                  hoverTextColor="text-MAIN_GREEN"
                   hoverBackgroundColor="hover:bg-HOVER_YELLOW"
-                />}
+                />
+              )}
             </div>
           </div>
         )}
