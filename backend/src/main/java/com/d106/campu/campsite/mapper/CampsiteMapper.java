@@ -26,6 +26,8 @@ public interface CampsiteMapper {
     @Mapping(target = "price", ignore = true)
     @Mapping(target = "score", ignore = true)
     @Mapping(target = "campsiteFcltyList", ignore = true)
+    @Mapping(target = "checkin", ignore = true)
+    @Mapping(target = "checkout", ignore = true)
     Campsite toCampsite(CampsiteDto.CreateRequest createRequestDto);
 
 }

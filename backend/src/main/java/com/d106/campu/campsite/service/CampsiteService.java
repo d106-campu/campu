@@ -226,8 +226,7 @@ public class CampsiteService {
             .addr1(campsite.getAddr1())
             .addr2(campsite.getAddr2())
             .indutyList(List.of(campsite.getIndutyList().split(",")))
-            .themeList(themeRepository.findByCampsiteThemeList_Campsite(campsite).stream().map(Theme::getThemeStr)
-                .toList())
+            .themeList(themeRepository.findByCampsiteThemeList_Campsite(campsite).stream().map(Theme::getThemeStr).toList())
             .facltList(fcltyRepository.findByCampsiteFcltyList_Campsite(campsite).stream().map(Fclty::getFcltyStr).toList())
             .score(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0))
             .campsiteLocation(campsite.getCampsiteLocation())
@@ -238,6 +237,8 @@ public class CampsiteService {
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
             .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(CampsiteImage::getUrl).toList())
+            .checkin(campsite.getCheckin())
+            .checkout(campsite.getCheckout())
             .build();
     }
 

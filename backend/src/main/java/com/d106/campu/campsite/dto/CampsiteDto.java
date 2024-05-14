@@ -70,6 +70,8 @@ public class CampsiteDto {
         private String thumbnailImageUrl;
         private String mapImageUrl;
         private List<String> campsiteImageUrlList;
+        private String checkin;
+        private String checkout;
 
     }
 
