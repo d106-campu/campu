@@ -1,19 +1,24 @@
+import { dayOfWeekend } from "@/utils/dayOfWeekend";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ISearchState {
   region: string | null;
   subRegion: string | null;
-  startDate: string | null;
-  endDate: string | null;
+  startDate: string;
+  endDate: string;
   numberOfPeople: number;
+  keyword: string | null;
 }
+
+const weekendDates = dayOfWeekend();
 
 const initialState: ISearchState = {
   region: null,
   subRegion: null,
-  startDate: null,
-  endDate: null,
+  startDate: weekendDates.saturday,
+  endDate: weekendDates.sunday,
   numberOfPeople: 2,
+  keyword: null,
 };
 
 const searchBarSlice = createSlice({
@@ -26,14 +31,17 @@ const searchBarSlice = createSlice({
     setSubRegion(state, action: PayloadAction<string | null>) {
       state.subRegion = action.payload;
     },
-    setStartDate(state, action: PayloadAction<string | null>) {
+    setStartDate(state, action: PayloadAction<string>) {
       state.startDate = action.payload;
     },
-    setEndDate(state, action: PayloadAction<string | null>) {
+    setEndDate(state, action: PayloadAction<string>) {
       state.endDate = action.payload;
     },
     setPeople(state, action: PayloadAction<number>) {
       state.numberOfPeople = action.payload;
+    },
+    setKeyword(state, action: PayloadAction<string | null>) {
+      state.keyword = action.payload;
     },
 
     // 검색바를 초기화
@@ -41,8 +49,9 @@ const searchBarSlice = createSlice({
       state.region = null;
       state.subRegion = null;
       state.numberOfPeople = 2;
-      state.startDate = null;
-      state.endDate = null;
+      state.startDate = weekendDates.saturday;
+      state.endDate = weekendDates.sunday;
+      state.keyword = null;
     },
   },
 });
@@ -54,6 +63,7 @@ export const {
   setEndDate,
   setPeople,
   clearSearchData,
+  setKeyword,
 } = searchBarSlice.actions;
 
 export const searchBarReducer = searchBarSlice.reducer;

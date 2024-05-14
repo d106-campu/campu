@@ -66,19 +66,21 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
         tel = "",
       } = userProfileQuery.data.data.myProfile;
       setValues((v) => ({ ...v, account, nickname, tel }));
+      // console.log("프로필 사진 :", profileData?.profileImageUrl)
       // dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
     }
   }, [userProfileQuery.data, userProfileQuery.isSuccess]);
 
   // 프로필이미지 추출
   useEffect(() => {
+    console.log("프로필 사진 :", profileData?.profileImageUrl)
     if (profileData?.profileImageUrl) {
       const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
       console.log(
         "프로필페이지 환경변수 주소 :",
         import.meta.env.VITE_IMAGE_BASE_URL_PROD
       );
-      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      const fullImageUrl = `${profileData.profileImageUrl}`;
       // const fullImageUrl = profileData.profileImageUrl;
       console.log(imageBaseURL);
       setProfileImageUrl(fullImageUrl);

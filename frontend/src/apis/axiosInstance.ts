@@ -32,9 +32,9 @@ const axiosFileInstance = axios.create({
       ? ""
       : import.meta.env.VITE_IMAGE_BASE_URL_PROD,
   withCredentials: true, // 쿠키 전송을 위해 필요한 크레덴셜
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
+  // headers: {
+  //   "Content-Type": "multipart/form-data",
+  // },
 });
 
 // 요청 인터셉터
@@ -47,7 +47,7 @@ axiosAuthInstance.interceptors.request.use(setAuthorization, (error) =>
 axiosFileInstance.interceptors.response.use(null, refresh);
 axiosAuthInstance.interceptors.response.use(
   (response) => response,
-  refresh // 토큰 만료의 경우 401 인증 실패를 처리하기 위해 refresh.ts에서 처리
+  (error) => refresh(error)
 );
 
 export { axiosCommonInstance, axiosAuthInstance, axiosFileInstance };
