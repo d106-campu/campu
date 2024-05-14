@@ -9,9 +9,11 @@ import com.d106.campu.payment.dto.PaymentDto;
 import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.constant.ReservationConstant;
 import com.d106.campu.reservation.domain.jpa.Reservation;
+import com.d106.campu.reservation.domain.jpa.ReservationCancel;
 import com.d106.campu.reservation.domain.jpa.ReservationPayment;
 import com.d106.campu.reservation.exception.code.ReservationExceptionCode;
 import com.d106.campu.reservation.mapper.ReservationMapper;
+import com.d106.campu.reservation.repository.jpa.ReservationCancelRepository;
 import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.exception.code.RoomExceptionCode;
@@ -20,6 +22,7 @@ import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.request.PrepareData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
@@ -41,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationCancelRepository reservationCancelRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final CampsiteRepository campsiteRepository;
@@ -67,9 +71,7 @@ public class PaymentService {
 
         Room room = roomRepository.findById(prepareRequest.getRoomId())
             .orElseThrow(() -> new NotFoundException(RoomExceptionCode.NOT_FOUND_ROOM));
-//        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-//            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        User user = userRepository.findByAccount("choihojo")
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
 
         int totalPrice = room.getPrice() + room.getExtraPrice() * (prepareRequest.getHeadCnt() - room.getBaseNo());
@@ -113,8 +115,6 @@ public class PaymentService {
 
     @Transactional
     public PaymentDto.CompleteResponse completePayment(PaymentDto.CompleteRequest completeRequest) {
-        log.info("completeRequest: {}", completeRequest);
-
         Reservation reservation = reservationRepository.findById(Long.parseLong(completeRequest.getReservationId()))
             .orElseThrow(() -> new NotFoundException(ReservationExceptionCode.RESERVATION_NOT_FOUND));
         if (reservation.getStatus() != PaymentStatus.PREPARE) {
@@ -137,6 +137,39 @@ public class PaymentService {
         reservation.setStatus(PaymentStatus.SUCCESS);
 
         return reservationMapper.toCompleteResponseDto(reservationRepository.save(reservation));
+    }
+
+    @Transactional
+    public PaymentDto.CancelResponse cancelPayment(PaymentDto.CancelRequest cancelRequest) {
+        Reservation reservation = reservationRepository.findById(cancelRequest.getReservationId())
+            .orElseThrow(() -> new NotFoundException(ReservationExceptionCode.RESERVATION_NOT_FOUND));
+        if (reservation.getStatus() != PaymentStatus.SUCCESS) {
+            throw new InvalidException(ReservationExceptionCode.CANCEL_FAIL_EX);
+        }
+
+        CancelData cancelData = new CancelData(cancelRequest.getImpUid(), true);
+        cancelData.setReason(cancelRequest.getReason());
+        IamportResponse<Payment> iamportResponse = null;
+        try {
+            iamportResponse = iamportClient.cancelPaymentByImpUid(cancelData);
+        } catch (Exception e) {
+            reservation.setStatus(PaymentStatus.FAIL);
+            throw new InvalidException(ReservationExceptionCode.CANCEL_FAIL_EX);
+        }
+        if (iamportResponse.getCode() != 0) {
+            reservation.setStatus(PaymentStatus.FAIL);
+            throw new InvalidException(ReservationExceptionCode.CANCEL_FAIL_CODE);
+        }
+
+        ReservationCancel reservationCancel = ReservationCancel.builder()
+            .reason(cancelRequest.getReason())
+            .build();
+        reservationCancelRepository.save(reservationCancel);
+
+        reservation.cancelPayment(reservationCancel);
+        reservation.setStatus(PaymentStatus.CANCEL);
+
+        return reservationMapper.toCancelResponseDto(reservationRepository.save(reservation));
     }
 
 }

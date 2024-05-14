@@ -31,6 +31,21 @@ public class PaymentDto {
     }
 
     @Data
+    public static class CancelResponse {
+
+        private String impUid;
+        private Long reservationId;
+        private RoomDto.RoomInfo room;
+        private int headCnt;
+        private int price;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private String status;
+        private int amount;
+
+    }
+
+    @Data
     public static class PrepareRequest {
 
         private Long roomId;
@@ -55,6 +70,15 @@ public class PaymentDto {
         private String buyerTel;
         private String buyerAddr;
         private String buyerPostcode;
+
+    }
+
+    @Data
+    public static class CancelRequest {
+
+        private Long reservationId;
+        private String impUid;
+        private String reason;
 
     }
 

@@ -1,11 +1,13 @@
 package com.d106.campu.payment.controller;
 
+import com.d106.campu.common.response.Response;
+import com.d106.campu.payment.controller.doc.PaymentControllerDoc;
 import com.d106.campu.payment.dto.PaymentDto;
-import com.d106.campu.payment.dto.PaymentDto.CompleteRequest;
-import com.d106.campu.payment.dto.PaymentDto.CompleteResponse;
 import com.d106.campu.payment.service.PaymentService;
+import com.d106.campu.reservation.constant.ReservationConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,29 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/payment")
 @Slf4j
-public class PaymentController {
+public class PaymentController implements PaymentControllerDoc {
 
     private final PaymentService paymentService;
 
+    @Override
     @PostMapping("/prepare")
-    public PaymentDto.PrepareResponse preparePayment(@RequestBody PaymentDto.PrepareRequest prepareRequest) {
-        return paymentService.preparePayment(prepareRequest);
+    public Response preparePayment(@RequestBody PaymentDto.PrepareRequest prepareRequest) {
+        return new Response(ReservationConstant.PREPARE_PAYMENT, paymentService.preparePayment(prepareRequest));
     }
 
+    @Override
     @PostMapping("/complete")
-    public CompleteResponse completePayment(@RequestBody CompleteRequest completeRequestDto) {
+    public PaymentDto.CompleteResponse completePayment(@RequestBody PaymentDto.CompleteRequest completeRequestDto) {
         return paymentService.completePayment(completeRequestDto);
     }
 
-//    @DeleteMapping("/cancel/{impUid}")
-//    public void cancelPaymentByImpUid(@PathVariable(value = "impUid") String impUid)
-//        throws IamportResponseException, IOException {
-//        CancelData cancelData = new CancelData(impUid, true);
-//        IamportResponse<Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(cancelData);
-//        log.info("iamportResponse code: {}", iamportResponse.getCode());
-//        log.info("iamportResponse message: {}", iamportResponse.getMessage());
-//        log.info("iamportResponse response: {}", iamportResponse.getResponse());
-//        return iamportResponse;
-//    }
+    @Override
+    @DeleteMapping("/cancel")
+    public PaymentDto.CancelResponse cancelPayment(@RequestBody PaymentDto.CancelRequest cancelRequestDto) {
+        return paymentService.cancelPayment(cancelRequestDto);
+    }
 
 }

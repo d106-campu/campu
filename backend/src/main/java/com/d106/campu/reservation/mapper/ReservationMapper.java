@@ -37,4 +37,9 @@ public interface ReservationMapper {
     @Mapping(target = "reservationId", source = "reservation.id")
     PaymentDto.CompleteResponse toCompleteResponseDto(Reservation reservation);
 
+    @Mapping(target = "amount", source = "reservation.reservationPayment.amount")
+    @Mapping(target = "impUid", source = "reservation.reservationPayment.impUid")
+    @Mapping(target = "reservationId", source = "reservation.id")
+    PaymentDto.CancelResponse toCancelResponseDto(Reservation reservation);
+
 }

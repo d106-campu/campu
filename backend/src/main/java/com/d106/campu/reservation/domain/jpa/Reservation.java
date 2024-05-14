@@ -50,8 +50,8 @@ public class Reservation extends BaseTime {
     private int headCnt;
 
     @Column(name = "status")
-    @Setter
     @Enumerated(EnumType.STRING)
+    @Setter
     private PaymentStatus status;
 
     @Column(name = "price", nullable = false)
@@ -73,6 +73,10 @@ public class Reservation extends BaseTime {
         this.user = user;
         this.room = room;
         this.reservationPayment = reservationPayment;
+    }
+
+    public void cancelPayment(ReservationCancel reservationCancel) {
+        this.reservationCancel = reservationCancel;
     }
 
 }
