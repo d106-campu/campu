@@ -25,14 +25,21 @@ const Header = ({ page }: { page?: string }) => {
   // 프로필이미지 추출
   useEffect(() => {
     if (profileData?.profileImageUrl) {
-      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImageUrl(fullImageUrl);
       // console.log("이미지 주소 확인:", fullImageUrl);
     }
   }, [profileData, imageBaseURL]);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      dispatch(setIsLogin(false));
+    }
+  }, [dispatch]);
   
   const handleLogout = () => {
-    console.log("로그아웃 딸깍!!");
+    // console.log("로그아웃 딸깍!!");
     localStorage.removeItem("accessToken");
     Toast.success("로그아웃 되었습니다 !");
     dispatch(setIsLogin(false));
