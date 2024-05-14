@@ -6,6 +6,7 @@ import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.IndutyEnum;
 import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
+import com.d106.campu.campsite.domain.jpa.CampsiteImage;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.Fclty;
@@ -41,8 +42,6 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -68,9 +67,6 @@ public class CampsiteService {
     private final QRoomRepository qRoomRepository;
 
     private final ReviewRepository reviewRepository;
-
-    @Value("${app.base-url}")
-    private String baseUrl;
 
     private final SecurityHelper securityHelper;
 
@@ -247,8 +243,7 @@ public class CampsiteService {
             .homepage(campsite.getHomepage())
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
-            .campsiteImageUrlList(campsite.getCampsiteImageList().stream()
-                .map(campsiteImage -> StringUtils.join(baseUrl, campsiteImage.getUrl())).toList())
+            .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(CampsiteImage::getUrl).toList())
             .build();
     }
 
