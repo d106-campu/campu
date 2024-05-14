@@ -36,9 +36,8 @@ public class OwnerController implements OwnerControllerDoc {
 
     @Override
     @GetMapping("/reservation/campsite/{campsiteId}")
-    public Response getOwnerReservationListByCampsite(@PathVariable Long campsiteId, Pageable pageable) {
-        return new Response(ReservationConstant.RESERVATION_LIST,
-            ownerService.getOwnerReservationListByCampsite(campsiteId, pageable));
+    public Response getOwnerReservationListByCampsite(@PathVariable Long campsiteId) {
+        return new Response(ReservationConstant.RESERVATION_LIST, ownerService.getOwnerReservationListByCampsite(campsiteId));
     }
 
 }

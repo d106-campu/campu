@@ -12,11 +12,13 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.owner.exception.code.OwnerExceptionCode;
+import com.d106.campu.reservation.dto.ReservationDto;
 import com.d106.campu.reservation.repository.jpa.QReservationRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,11 +54,10 @@ public class OwnerService {
         return campsiteRepository.findByUser(pageable, getOwnerUser()).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
-    public Page getOwnerReservationListByCampsite(Long campsiteId, Pageable pageable) {
+    public List<ReservationDto.ResponseWithUser> getOwnerReservationListByCampsite(Long campsiteId) {
         Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
             CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
-        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), LocalDate.now(),
-            pageable);
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), LocalDate.now());
     }
 
     private User getOwnerUser() {

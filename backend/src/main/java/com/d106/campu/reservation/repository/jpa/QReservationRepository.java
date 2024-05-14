@@ -13,16 +13,12 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -35,8 +31,8 @@ public class QReservationRepository {
     private final QReservation reservation = QReservation.reservation;
     private final QUser user = QUser.user;
 
-    public Page<ReservationDto.ResponseWithUser> findReservationListByCampsiteAndOwner(Campsite targetCampsite, User owner,
-        LocalDate today, Pageable pageable) {
+    public List<ReservationDto.ResponseWithUser> findReservationListByCampsiteAndOwner(Campsite targetCampsite, User owner,
+        LocalDate today) {
         Expression<?>[] projection = new Expression[]{
             reservation.id, room.id, room.name, reservation.user.nickname, reservation.user.tel, reservation.headCnt,
             reservation.startDate, reservation.endDate, reservation.status,
@@ -58,7 +54,7 @@ public class QReservationRepository {
             })
             .fetch();
 
-        List<ReservationDto.ResponseWithUser> responseList = tuples.stream()
+        return tuples.stream()
             .map(tuple -> ReservationDto.ResponseWithUser.builder()
                 .id(tuple.get(reservation.id))
                 .room(IdAndName.builder()
@@ -75,15 +71,6 @@ public class QReservationRepository {
                 .status(tuple.get(reservation.status))
                 .build())
             .collect(Collectors.toCollection(() -> new ArrayList<ReservationDto.ResponseWithUser>(tuples.size())));
-
-        JPAQuery<Long> countQuery = jpaQueryFactory
-            .select(reservation.count())
-            .from(campsite)
-            .innerJoin(room).on(room.campsite.eq(campsite))
-            .innerJoin(reservation).on(reservation.room.eq(room))
-            .where(predicates);
-
-        return PageableExecutionUtils.getPage(responseList, pageable, countQuery::fetchOne);
     }
 
 }
