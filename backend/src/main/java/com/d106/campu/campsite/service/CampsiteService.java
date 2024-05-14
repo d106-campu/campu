@@ -24,15 +24,9 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
-import com.d106.campu.image.mapper.ImageMapper;
-import com.d106.campu.image.repository.ImageRepository;
-import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
-import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
-import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
-import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.dto.UserDto.NameAndTel;
 import com.d106.campu.user.exception.code.UserExceptionCode;
@@ -71,18 +65,12 @@ public class CampsiteService {
     private final FcltyRepository fcltyRepository;
     private final ThemeRepository themeRepository;
 
-    private final RoomRepository roomRepository;
     private final QRoomRepository qRoomRepository;
-    private final RoomMapper roomMapper;
 
     private final ReviewRepository reviewRepository;
 
-    private final ReservationRepository reservationRepository;
-
     @Value("${app.base-url}")
     private String baseUrl;
-    private final ImageRepository imageRepository;
-    private final ImageMapper imageMapper;
 
     private final SecurityHelper securityHelper;
 
@@ -137,8 +125,6 @@ public class CampsiteService {
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
-            List<Room> roomList = campsite.getRoomList();
-
             // available at least one room can be reserved on the date range
             campsite.setAvailable(campsiteAvailabilityMap.getOrDefault(campsite.getId(), false));
 
