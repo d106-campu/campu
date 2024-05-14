@@ -29,7 +29,7 @@ const ReservationAccordion = ({
   const navigate = useNavigate();
   const dataToSend = {
     campsiteId: reservation.campsite.campsiteId,
-    reservationId: 28,
+    reservationId: reservation.reservation.reservationId,
     startDate: reservation.reservation.startDate,
     endDate: reservation.reservation.endDate,
   };
@@ -86,16 +86,6 @@ const ReservationAccordion = ({
         </div>
       </div>
 
-      <Button
-        onClick={() => navigate(`/camps/review-write`, { state: dataToSend })}
-        width="w-[300px]"
-        text="리뷰 작성하기"
-        textColor="text-[#3A2929]"
-        fontWeight="none"
-        backgroundColor="bg-SUB_YELLOW"
-        hoverTextColor="text-MAIN_GREEN"
-        hoverBackgroundColor="hover:bg-HOVER_YELLOW"
-      />
       <div className="text-sm bg-white text-black pt-1 pb-3 rounded-b-xl ">
         {expanded && (
           <div className="">
