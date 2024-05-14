@@ -3,72 +3,93 @@ import Button from '@/components/@common/Button/Button';
 import ReservationAccordion from '@/components/my/consumer/ReservationAccordion';
 import { IMyReservationAllRes } from '@/types/my';
 import { useMy } from '@/hooks/my/useMy';
+import MapModal from '@/components/@common/Map/MapModal';
 
 const MyReservation = (): JSX.Element => {
   const { useMyReservations } = useMy();
-  const [selectedFilter, setSelectedFilter] = useState('전체'); // 날짜 선택 상태 관리
+  const [selectedFilter, setSelectedFilter] = useState<'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL'>('TOTAL'); // 날짜 선택 상태 관리
+  const [useType, setUseType] = useState<'BEFORE' | 'AFTER'>('BEFORE'); // 이용완료 or 이용완료 선택 상태 관리
   const [expanded, setExpanded] = useState<Record<number, boolean>>({}); // 아코디언 토글 상태 관리
   const [reservations, setReservations] = useState<IMyReservationAllRes[]>([]); // 예약내역 데이터 상태 관리
   const [viewCount, setViewCount] = useState<number>(4); // 초기에 표시할 예약내역 수 관리
   const initialViewCount = 4; // 렌더링 시 아코디언 첫 개수
-  const filters = ['1년', '6개월', '한달', '전체'];; // 날짜 관련 필터 목록
-  const { data, isLoading, isError } = useMyReservations({
-    pageable: { page: 0, size: 100 }, dateType: 'TOTAL', useType: 'BEFORE'
+  const filters = ['YEAR', 'MONTH6', 'MONTH', 'TOTAL'] as const; // 날짜 관련 필터 목록
+  const { data, isLoading, isError, refetch } = useMyReservations({
+    pageable: { page: 0, size: 100 }, dateType: selectedFilter, useType: useType,
   });
+  const [mapModalOpen, setMapModalOpen] = useState<boolean>(false); // 맵 모달 상태 관리
+  const [mapLocation, setMapLocation] = useState({ lat: 0, lng: 0, facltNm: '', addr1: '', level: 5 }); // 전달할 위도와 경도 상태 관리
 
+  // 예약 내역 조회 API 연결
   useEffect(() => {
     if (data?.reservationList?.content) {
-      setReservations(data.reservationList.content);
+      const allReservations = data.reservationList.content;
+      setReservations(allReservations);
+      setExpanded({});
+      setViewCount(initialViewCount);
     }
-  }, [data]);
+  }, [data, selectedFilter, useType]);
 
-  // 더미데이터 로드 후 가장 최근순으로 정렬하기 위한 계산
-  // useEffect(() => {
-  //   const loadedReservations = GetReservations();
-  //   const today = new Date();
-  //   // @TODO : 백엔드로부터 받아올 때 최근순 정렬이 되어있지 않다면 사용
-  //   loadedReservations.sort((a, b) => {
-  //     const dateA = new Date(a.date.split(' ~ ')[0]);
-  //     const dateB = new Date(b.date.split(' ~ ')[0]);
-  //     return Math.abs(today.getTime() - dateA.getTime()) - Math.abs(today.getTime() - dateB.getTime());
-  //   });
-    
-  //   setReservations(loadedReservations); 
-  // }, []);
-
-  // 날짜 선택에 따른 필터 체인지
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilter(filter);
-    // @TODO : 여기서 필터에 따른 데이터 로드 로직을 추가 예정
+  // 받아오는 날짜 필터 한글로 변환
+  const filterLabels: Record<typeof filters[number], string> = {
+    YEAR: '1년',
+    MONTH6: '6개월',
+    MONTH: '한달',
+    TOTAL: '전체'
   };
-
+  
+  // 날짜 선택에 따른 필터 체인지
+  const handleDateTypeChange = (filter: 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL') => {
+    console.log("보내는 DateType 확인 :", filter)
+    setSelectedFilter(filter);
+    refetch();
+  };
+  
+  // 예약 현황 또는 이용 완료에 대한 선택 타입
+  const handleUseTypeChange = (type: 'BEFORE' | 'AFTER') => {
+    console.log("선택한 useType 확인 :", type)
+    setUseType(type);
+    refetch();
+  };
+  
   // 아코디언 "더보기" 버튼 토글
   const toggleDetails = (index: number) => {
     setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
   };
-
-  // '과거 내역 더보기'를 통해 과거 예약 내역에 더 접근할 수 있도록 하기
+  
+  // '더보기'를 통해 과거 예약 내역에 더 접근할 수 있도록 하기
   const showMoreReservations = () => {
-    setViewCount(prev => Math.min(prev + 4, reservations.length));
+    setViewCount(prev => Math.min(prev + 4, data?.reservationList?.content?.length || 0));
   };
-
-  // '이전으로' 버튼으로 다시 돌아가기
+  
+  // '줄이기' 버튼으로 다시 돌아가기
   const showLessReservations = () => {
     setViewCount(prev => Math.max(prev - 4, initialViewCount));
   };
+  
+  // 지도 모달 열기
+  const openMapModal = (lat: number, lng: number, facltNm: string, addr1: string, level: number) => {
+    setMapLocation({ lat, lng, facltNm, addr1, level });
+    setMapModalOpen(true);
+  };
+
+  // 지도 모달 닫기
+  const closeMapModal = () => {
+    setMapModalOpen(false);
+  }
 
   // 로딩 중일 때 처리
   if (isLoading) {
     return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
   }
-
+  
   // 데이터 에러 발생 시 처리
   if (isError) {
     return <div>내 예약내역을 가져오지 못했습니다. 😭</div>;
   }
 
   // 내가 쓴 리뷰가 하나도 없을 때 처리
-  if (reservations.length === 0) {
+  if (data?.reservationList?.content.length === 0) {
     // console.error("내 예약내역 리스트가 비어있음 !");
     return (
       <>
@@ -76,10 +97,14 @@ const MyReservation = (): JSX.Element => {
         <div className='flex justify-between'>
           <h1 className='text-lg font-bold pb-5'>예약 내역</h1>
           <div className='flex'>
-            <button className='p-2 hover:text-MAIN_GREEN'>
+            <button
+              className='p-2 hover:text-MAIN_GREEN'
+            >
               예약 현황
             </button>
-            <button className='p-2 hover:text-MAIN_GREEN'>
+            <button
+              className='p-2 hover:text-MAIN_GREEN'
+            >
               이용 완료
             </button>
           </div>
@@ -92,16 +117,26 @@ const MyReservation = (): JSX.Element => {
       </>
     );
   }
+
   return (
     <div className="min-h-[calc(100vh-10rem)]">
       {/* 예약 내역 헤더 */}
       <div className='flex justify-between'>
-        <h1 className='text-lg font-bold pb-5'>예약 내역</h1>
         <div className='flex'>
-          <button className='p-2 hover:text-MAIN_GREEN'>
+          <h1 className='text-lg font-bold pb-5'>예약 내역</h1>
+          <span className="text-MAIN_GREEN font-thin pl-2 text-lg">{reservations.length}</span>
+        </div>
+        <div className='flex'>
+          <button
+            className={`p-2 ${useType === 'BEFORE' ? 'text-MAIN_GREEN' : ''}`}
+            onClick={() => handleUseTypeChange('BEFORE')}
+          >
             예약 현황
           </button>
-          <button className='p-2 hover:text-MAIN_GREEN'>
+          <button
+            className={`p-2 ${useType === 'AFTER' ? 'text-MAIN_GREEN' : ''}`}
+            onClick={() => handleUseTypeChange('AFTER')}
+          >
             이용 완료
           </button>
         </div>
@@ -112,10 +147,10 @@ const MyReservation = (): JSX.Element => {
         {filters.map(filter => (
           <button
             key={filter}
-            onClick={() => handleFilterChange(filter)}
+            onClick={() => handleDateTypeChange(filter as 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL')}
             className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${filter === selectedFilter ? 'bg-MAIN_GREEN text-white' : 'bg-gray-100 text-black'}`}
           >
-            {filter}
+            {filterLabels[filter]}
           </button>
         ))}
       </div>
@@ -123,23 +158,37 @@ const MyReservation = (): JSX.Element => {
       {/* 아코디언 */}
       <div className='max-h-[500px] overflow-y-auto'>
         <div className='w-[90%] mx-auto'>
-          {reservations.slice(0, viewCount).map((reservation, index) => (
+          {data?.reservationList?.content.slice(0, viewCount).map((reservation, index) => (
             <ReservationAccordion
               key={index}
               index={index}
               reservation={reservation}
               expanded={expanded[index]}
               toggleDetails={() => toggleDetails(index)}
+              openMapModal={openMapModal}
             />
           ))}
         </div>
       </div>
 
+      {/* 지도 보기 렌더링 */}
+      {mapModalOpen && (
+        <MapModal
+          lat={mapLocation.lat}
+          lng={mapLocation.lng}
+          facltNm={mapLocation.facltNm}
+          // rate={mapLocation.rate}
+          addr1={mapLocation.addr1}
+          level={5}
+          toggleModal={closeMapModal}
+        />
+      )}
+
       {/* 내역 더보기 토글 버튼 */}
       <div className='flex justify-center my-4'>
         {viewCount > initialViewCount && (
           <Button
-            text='이전으로'
+            text='줄이기'
             textColor='text-black'
             backgroundColor='none'
             hoverTextColor='text-MAIN_GREEN'
@@ -147,9 +196,9 @@ const MyReservation = (): JSX.Element => {
             onClick={showLessReservations}
           />
         )}
-        {viewCount < reservations.length && (
+        {viewCount < (data?.reservationList?.content.length || 0) && (
           <Button
-            text='과거 내역 더보기'
+            text='더보기'
             textColor='text-black'
             backgroundColor='none'
             hoverTextColor='text-MAIN_GREEN'

@@ -1,5 +1,4 @@
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import DummyImage from '@/assets/images/dummyCamping2.png';
 import { FiMapPin } from "react-icons/fi";
 import ReservationSection from '@/components/@common/Reservation/ReservationSection';
 import Button from '@/components/@common/Button/Button'
@@ -10,16 +9,19 @@ interface IReservationAccordionProps {
   expanded: boolean;
   toggleDetails: (index: number) => void;
   index: number;
+  openMapModal: (lat: number, lng: number, facltNm: string, addr1: string, level: number) => void;
 }
 
 const ReservationAccordion = ({
   reservation,
   expanded,
   toggleDetails,
-  index
+  index,
+  openMapModal
 }: IReservationAccordionProps): JSX.Element => {
-   // 입실일과 퇴실일로부터 숙박일 계산
-   const calculateNights = (() => {
+  
+  // 입실일과 퇴실일로부터 숙박일 계산
+  const calculateNights = (() => {
     const startDate = new Date(reservation.reservation.startDate);
     const endDate = new Date(reservation.reservation.endDate);
     return Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
@@ -57,7 +59,7 @@ const ReservationAccordion = ({
                 </h3>
                 <p className="pb-[12px] font-bold text-BLACK">{reservation.campsite.address}</p>
                 <img 
-                  src={DummyImage}
+                  src={reservation.campsite.thumbnailImageUrl}
                   alt="캠핑장 사진"
                   className='w-full h-52 object-cover object-center rounded-xl'
                 />
@@ -80,10 +82,10 @@ const ReservationAccordion = ({
                   contentRight={reservation.reservation.headCnt.toString()}
                 />
                 <ReservationSection
-                  titleLeft="기타정보"
-                  contentLeft={reservation.room.supplyList || "기타정보가 없습니다."}
-                  titleRight=""
-                  contentRight=""
+                  titleLeft="사이트"
+                  contentLeft={reservation.room.roomName || "등록된 위치가 없습니다."}
+                  titleRight="기타정보"
+                  contentRight={reservation.room.supplyList || "기타정보가 없습니다."}
                 />
               </div>
             </div>
@@ -98,16 +100,44 @@ const ReservationAccordion = ({
                 backgroundColor='bg-[#E3F0E5]'
                 hoverTextColor='text-MAIN_GREEN'
                 hoverBackgroundColor="hover:bg-HOVER_LIGHT_GREEN"
+                onClick={() => openMapModal(
+                  reservation.campsiteLocation.mapX,
+                  reservation.campsiteLocation.mapY,
+                  reservation.campsite.campsiteName,
+                  reservation.campsite.address,
+                  5
+                )}
               />
-              <Button
-                width='w-[300px]'
-                text='리뷰 작성하기'
-                textColor="text-[#3A2929]"
-                fontWeight='none'
-                backgroundColor='bg-SUB_YELLOW'
-                hoverTextColor='text-MAIN_GREEN'
-                hoverBackgroundColor="hover:bg-HOVER_YELLOW"
-              />
+              {reservation.reservation.status === 'review' &&
+                <Button
+                  width='w-[300px]'
+                  text='리뷰 작성하기'
+                  textColor="text-[#3A2929]"
+                  fontWeight='none'
+                  backgroundColor='bg-SUB_YELLOW'
+                  hoverTextColor='text-MAIN_GREEN'
+                  hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                />}
+              {reservation.reservation.status === 'reservation' &&
+                <Button
+                  width='w-[300px]'
+                  text='예약 취소하기'
+                  textColor="text-[#3A2929]"
+                  fontWeight='none'
+                  backgroundColor='bg-SUB_YELLOW'
+                  hoverTextColor='text-MAIN_GREEN'
+                  hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                />}
+              {reservation.reservation.status === 'cancel' &&
+                <Button
+                  width='w-[300px]'
+                  text='다시 예약하기'
+                  textColor="text-[#3A2929]"
+                  fontWeight='none'
+                  backgroundColor='bg-SUB_YELLOW'
+                  hoverTextColor='text-MAIN_GREEN'
+                  hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                />}
             </div>
           </div>
         )}

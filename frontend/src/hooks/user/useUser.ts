@@ -21,6 +21,7 @@ export const useUser = () => {
     mutationFn: (data: IUserNickNameUpdate) => updateUserNickName(data),
     onSuccess: () => {
       console.log('닉네임 변경했음!!');
+      userProfileQuery.refetch();
     },
     onError: (error) => {
       console.error('닉네임 변경 실패 :', error);
@@ -54,6 +55,7 @@ export const useUser = () => {
     mutationFn: (file: File) => updateProfileImage(file),
     onSuccess: () => {
       console.log('프로필 이미지 바꿨음!!');
+      userProfileQuery.refetch();
     },
     onError: (error) => {
       console.error('프로필 이미지 못바꿨음:', error);
