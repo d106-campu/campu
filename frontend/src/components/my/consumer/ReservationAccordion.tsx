@@ -179,9 +179,10 @@ const ReservationAccordion = ({
                   text="예약 취소하기"
                   textColor="text-[#3A2929]"
                   fontWeight="none"
-                  backgroundColor="bg-SUB_YELLOW"
+                  backgroundColor="bg-SUB_PINK"
                   hoverTextColor="text-MAIN_GREEN"
-                  hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                  hoverBackgroundColor="hover:bg-HOVER_PINK"
+                  // @TODO : 예약취소 API 연결 필요 (삭제)
                 />
               )}
               {reservation.reservation.status === "reservation" && (
@@ -190,9 +191,12 @@ const ReservationAccordion = ({
                   text="다시 예약하기"
                   textColor="text-[#3A2929]"
                   fontWeight="none"
-                  backgroundColor="bg-SUB_YELLOW"
+                  backgroundColor="bg-blue-200"
                   hoverTextColor="text-MAIN_GREEN"
-                  hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                  hoverBackgroundColor="hover:bg-blue-300"
+                  onClick={() =>
+                    navigate(`/camps/${reservation.campsite.campsiteId}`)
+                  }
                 />
               )}
             </div>

@@ -6,8 +6,10 @@ import Rating from "@/components/@common/Review/Rating";
 import { IMyReivewMyReservationRes, } from '@/types/my';
 import { useMy } from '@/hooks/my/useMy';
 import Toast from '@/components/@common/Toast/Toast';
+import { useNavigate } from 'react-router-dom';
 
 const MyReview = (): JSX.Element => {
+  const navigate = useNavigate();
   const { useMyReviews, useDeleteReview } = useMy();
   const [selectedFilter, setSelectedFilter] = useState<'TOTAL' | 'YEAR' | 'MONTH6' | 'MONTH'>('TOTAL');  // 날짜 선택 상태 관리
   const [reviews, setReviews] = useState<IMyReivewMyReservationRes[]>([]); // 리뷰 데이터 상태 관리
@@ -23,10 +25,10 @@ const MyReview = (): JSX.Element => {
   // 내가쓴리뷰 데이터 API 조회
   useEffect(() => {
     if (data?.reviewList?.content) {
-      console.log("내가 쓴 리뷰 데이터 가져옴")
+      console.log("내가 쓴 리뷰 데이터 가져옴", data.reviewList.content)
       setReviews(data.reviewList.content);
     } else {
-      console.log('데이터에 접근 못하는중')
+      console.log('내가쓴리뷰 비어있음')
     }
   }, [data]);
   
@@ -130,7 +132,14 @@ const MyReview = (): JSX.Element => {
             <div className='w-[50%] flex flex-col justify-center items-start pl-3'>
               <div className='flex'>
                 <h1 className='text-lg'>{review.reservation.campsiteName}</h1>
-                <button className='pl-2'><FaArrowRightToBracket /></button>
+                <button
+                  className='pl-2'
+                  onClick={() =>
+                    navigate(`/camps/${review.reservation.campsiteId}/reviews`)
+                  }
+                >
+                  <FaArrowRightToBracket />
+                </button>
               </div>
               <div className='flex pb-2'>
                 <Rating rating={review.review.score} size={25} gap="gap-[0.7px]" />
