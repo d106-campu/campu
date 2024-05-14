@@ -68,24 +68,24 @@ const ReviewForm = ({ reservationId }: IReviewFormProps) => {
               Toast.error("사진 첨부는 필수 입니다");
             }
             if (res && res.status === 401) {
-              Toast.error("리뷰 작성의 권한이 없습니다 😥");
+              Toast.error("리뷰 작성의 권한이 없습니다😥");
               return;
             }
 
             if (res && res.status === 404) {
-              Toast.error("존재하지 않는 예약입니다 😥");
+              Toast.error("존재하지 않는 예약입니다😥");
               return;
             }
 
             // @TODO: 에러 메시지에 따라 에러문구 분리
             if (res && res.status === 409) {
-              if (res.data.code === "EMPTY_NOTIFICATION501") {
+              if (res.data.message === "Already Existed Review") {
                 Toast.error("이미 리뷰를 작성한 예약입니다.");
                 return;
               }
-              if (res.data.code === "EMPTY_NOTIFICATION501") {
+              if (res.data.code === "Not end reservation") {
                 Toast.error(
-                  "예약이 완료되지 않았습니다 😥 캠핑장 방문 후에 리뷰를 작성해주세요"
+                  "예약이 완료되지 않았습니다😥 캠핑장 방문 후에 리뷰를 작성해주세요"
                 );
                 return;
               }

@@ -42,6 +42,12 @@ export const postReview = async ({
 }: IPostReviewReq): Promise<APISimpleResponse> => {
   const formData = new FormData();
 
+  // files 배열의 각 항목을 FormData에 추가
+  files.forEach((file) => {
+    formData.append("files", file);
+    console.log("api - file", file);
+  });
+
   // createRequestDto 객체를 JSON 문자열로 변환하여 FormData에 추가
   const createRequestDto = {
     reservationId,
@@ -54,12 +60,6 @@ export const postReview = async ({
   });
 
   formData.append("createRequestDto", review);
-
-  // files 배열의 각 항목을 FormData에 추가
-  files.forEach((file) => {
-    formData.append("files", file);
-    console.log("api - file", file);
-  });
 
   console.log("formData :", formData, formData.values.length);
   const res = await axiosFileInstance.post(`/review`, formData);
