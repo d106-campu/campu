@@ -7,6 +7,7 @@ interface ISearchState {
   startDate: string;
   endDate: string;
   numberOfPeople: number;
+  keyword: string | null;
 }
 
 const weekendDates = dayOfWeekend();
@@ -17,6 +18,7 @@ const initialState: ISearchState = {
   startDate: weekendDates.saturday,
   endDate: weekendDates.sunday,
   numberOfPeople: 2,
+  keyword: null,
 };
 
 const searchBarSlice = createSlice({
@@ -38,6 +40,9 @@ const searchBarSlice = createSlice({
     setPeople(state, action: PayloadAction<number>) {
       state.numberOfPeople = action.payload;
     },
+    setKeyword(state, action: PayloadAction<string | null>) {
+      state.keyword = action.payload;
+    },
 
     // 검색바를 초기화
     clearSearchData(state) {
@@ -46,6 +51,7 @@ const searchBarSlice = createSlice({
       state.numberOfPeople = 2;
       state.startDate = weekendDates.saturday;
       state.endDate = weekendDates.sunday;
+      state.keyword = null;
     },
   },
 });
@@ -57,6 +63,7 @@ export const {
   setEndDate,
   setPeople,
   clearSearchData,
+  setKeyword,
 } = searchBarSlice.actions;
 
 export const searchBarReducer = searchBarSlice.reducer;

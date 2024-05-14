@@ -17,6 +17,7 @@ import {
 } from "@/utils/formatDateTime";
 import {
   setEndDate,
+  setKeyword,
   setPeople,
   setStartDate,
 } from "@/features/search/searchBarSlice";
@@ -28,7 +29,6 @@ import { FaArrowRotateRight } from "react-icons/fa6";
 const SearchBar = ({ state }: { state?: string }) => {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [scheduleModal, setScheduleModal] = useState<boolean>(false);
-  const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
@@ -38,19 +38,19 @@ const SearchBar = ({ state }: { state?: string }) => {
     setLocalEndDate(dateStringToDate(endDate));
   };
 
-  const { startDate, endDate } = useSelector(
+  const { startDate, endDate, keyword } = useSelector(
     (state: RootState) => state.searchBar
   );
 
   const initialStartDate = dateStringToDate(startDate);
   const initialEndDate = dateStringToDate(endDate);
-
   const [localStartDate, setLocalStartDate] = useState<Date | null>(
     initialStartDate
   );
   const [localEndDate, setLocalEndDate] = useState<Date | null>(initialEndDate);
-
-  console.log("선택한 일정", localStartDate, localEndDate);
+  const [searchKeyword, setSearchKeyword] = useState<string | null>(
+    keyword || null
+  );
 
   const resetCalendar = () => {
     setLocalStartDate(dateStringToDate(startDate));
@@ -72,7 +72,10 @@ const SearchBar = ({ state }: { state?: string }) => {
   };
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
+    const { value } = e.target;
+    setSearchKeyword(value);
+    console.log("저장하려는 값", value, "타입", typeof value);
+    dispatch(setKeyword(value));
   };
 
   const goToSearchPage = () => {
@@ -83,7 +86,6 @@ const SearchBar = ({ state }: { state?: string }) => {
   const calendarSubmit = () => {
     const formattedStartDate = dateToDateString(localStartDate);
     const formattedEndDate = dateToDateString(localEndDate);
-    console.log("변환", formattedStartDate, formattedEndDate);
     if (formattedStartDate !== null && formattedEndDate !== null) {
       dispatch(setStartDate(formattedStartDate));
       dispatch(setEndDate(formattedEndDate));
@@ -149,7 +151,7 @@ const SearchBar = ({ state }: { state?: string }) => {
           <input
             className="ml-2 outline-none placeholder-black text-xs"
             placeholder="키워드로 캠핑장을 검색해보세요"
-            value={searchKeyword}
+            value={keyword || ""}
             onChange={handleKeywordChange}
           ></input>
         </div>
