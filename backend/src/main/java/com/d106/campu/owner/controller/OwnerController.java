@@ -6,7 +6,6 @@ import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
 import com.d106.campu.owner.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,6 @@ public class OwnerController implements OwnerControllerDoc {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('OWNER')")
     @GetMapping("/campsite")
     public Response getOwnerCampsiteList(Pageable pageable) {
         return new Response(CampsiteConstant.CAMPSITE_LIST, ownerService.getOwnerCampsiteList(pageable));
