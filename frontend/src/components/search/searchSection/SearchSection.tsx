@@ -46,19 +46,21 @@ const SearchSection = () => {
 
   return (
     <>
-      <div className="w-full">
-        <SearchBar />
-      </div>
       <div>
-        {campsiteOfSearch?.data.campsiteList.content.length === 0 ? (
-          <SearchNoResult />
-        ) : (
-          campsiteOfSearch?.data.campsiteList.content.map(
-            (camping: ICampsiteSimpleRes) => (
-              <SearchCampingItem key={camping.id} camping={camping} />
+        <div className="w-full">
+          <SearchBar />
+        </div>
+        <div className="h-[calc(100vh-10rem)] overflow-auto">
+          {campsiteOfSearch?.data.campsiteList.content.length === 0 ? (
+            <SearchNoResult />
+          ) : (
+            campsiteOfSearch?.data.campsiteList.content.map(
+              (camping: ICampsiteSimpleRes) => (
+                <SearchCampingItem key={camping.id} camping={camping} />
+              )
             )
-          )
-        )}
+          )}
+        </div>
       </div>
     </>
   );
