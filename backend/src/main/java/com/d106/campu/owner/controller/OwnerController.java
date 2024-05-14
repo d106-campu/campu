@@ -18,7 +18,7 @@ public class OwnerController implements OwnerControllerDoc {
     private final OwnerService ownerService;
 
     @Override
-    @GetMapping("/owner")
+    @GetMapping("/campsite")
     public Response getOwnerCampsiteList(Pageable pageable) {
         return new Response(CampsiteConstant.CAMPSITE_LIST, ownerService.getOwnerCampsiteList(pageable));
     }
