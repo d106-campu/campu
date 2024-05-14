@@ -9,6 +9,24 @@ export interface ISignUpFormValues extends ILoginFormValues {
   phone: string;
 }
 
+// 로그인 요청 타입
+export interface ILoginReq {
+  account: string;
+  password: string;
+}
+
+// 로그인 응답 타입
+export interface ILoginRes {
+  result: string;
+  data: {
+    user: {
+      nickname: string;
+      profileImageUrl: string;
+      role: string;
+    };
+  };
+}
+
 // 아이디 중복 검사 API 요청
 export interface ICheckIdReq {
   account: string;
