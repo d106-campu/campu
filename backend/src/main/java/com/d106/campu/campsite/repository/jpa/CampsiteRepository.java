@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
 
+    Optional<Campsite> findByBizrno(String bizrno);
+
     Optional<Campsite> findByFacltNm(String name);
 
     @Query("""
