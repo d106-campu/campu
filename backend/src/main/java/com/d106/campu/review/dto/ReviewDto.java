@@ -2,6 +2,7 @@ package com.d106.campu.review.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class ReviewDto {
 
         @NotNull
         private Long reservationId;
-        
+
         @Size(max = 200, message = "content max 200")
         private String content;
 
@@ -52,6 +53,22 @@ public class ReviewDto {
     public static class ReviewImageResponse {
 
         private String url;
+    }
+
+    @Data
+    public static class DetailResponse {
+
+        private Long campsiteId;
+        private String campsiteName;
+        private List<String> indutyList;
+        private Long reviewId;
+        private LocalDateTime createTime;
+        private UserResponse user;
+        private int score;
+        private String content;
+        private LocalDate visitDate;
+        private List<String> reviewImageList;
+        private boolean mine;
     }
 
 }
