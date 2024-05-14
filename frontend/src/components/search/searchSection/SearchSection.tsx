@@ -7,7 +7,7 @@ import {
   addMapXData,
   addMapYData,
 } from "@/features/search/campingMapSlice";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import SearchNoResult from "./SearchNoResult";
 import { useCampsite } from "@/hooks/search/useCampsite";
 import { RootState } from "@/app/store";
@@ -34,6 +34,10 @@ const SearchSection = () => {
     pageable: { page: 0, size: 1000 },
   });
 
+  // 테스트
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (campsiteOfSearch) {
       dispatch(addCampingData(campsiteOfSearch.data.campsiteList.content));
@@ -44,19 +48,31 @@ const SearchSection = () => {
     }
   }, [campsiteOfSearch]);
 
+  useEffect(() => {
+    containerRef.current?.scrollTo({
+      top: 124 * selectedIndex,
+      behavior: "smooth",
+    });
+  }, [selectedIndex]);
+
   return (
     <>
       <div>
         <div className="w-full">
           <SearchBar />
         </div>
-        <div className="h-[calc(100vh-10rem)] overflow-auto">
+        <div className="h-[calc(100vh-10rem)] overflow-auto" ref={containerRef}>
           {campsiteOfSearch?.data.campsiteList.content.length === 0 ? (
             <SearchNoResult />
           ) : (
             campsiteOfSearch?.data.campsiteList.content.map(
-              (camping: ICampsiteSimpleRes) => (
-                <SearchCampingItem key={camping.id} camping={camping} />
+              (camping: ICampsiteSimpleRes, index: number) => (
+                <SearchCampingItem
+                  key={camping.id}
+                  camping={camping}
+                  index={index}
+                  selected={setSelectedIndex}
+                />
               )
             )
           )}

@@ -1,14 +1,29 @@
 import { RootState } from "@/app/store";
 import LikeButton from "@/components/@common/Like/LikeButton";
 import { ICampsiteSimpleRes } from "@/types/search";
+import { useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
-const SearchCampingItem = ({ camping }: { camping: ICampsiteSimpleRes }) => {
+const SearchCampingItem = ({
+  camping,
+  index,
+  selected,
+}: {
+  camping: ICampsiteSimpleRes;
+  index: number;
+  selected: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const markers = useSelector((state: RootState) => state.markers.facltNm);
   const isAvailable = camping.available;
   const facltNmColor = markers === camping.facltNm ? " bg-SUB_GREEN_01" : "";
+
+  useEffect(() => {
+    if (markers === camping.facltNm) {
+      selected(index);
+    }
+  }, [markers]);
 
   return (
     <>

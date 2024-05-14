@@ -45,7 +45,7 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
         mapY && mapX
           ? new window.kakao.maps.LatLng(mapY, mapX)
           : new window.kakao.maps.LatLng(locations[0].lat, locations[0].lng),
-      level: locations[0].level || 8,
+      level: 8,
     };
 
     const map = new window.kakao.maps.Map(container, options);
