@@ -1,5 +1,6 @@
 package com.d106.campu.common.security;
 
+import com.d106.campu.common.constant.SecurityConstant;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.ResponseFail;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,18 +26,23 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         // TODO : 상세환 예외처리 추가
         ResponseFail responseFail;
-        if (exception instanceof BadCredentialsException) {
+
+        if (request.getAttribute(SecurityConstant.NO_TOKEN).equals(SecurityConstant.NO_TOKEN)) {
+            responseFail = new ResponseFail(CommonExceptionCode.NO_TOKEN.getCode(),
+                CommonExceptionCode.NO_TOKEN.getMessage());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        } else if (exception instanceof BadCredentialsException) {
             responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
         } else if (exception instanceof UsernameNotFoundException) {
             responseFail = new ResponseFail(CommonExceptionCode.UNAUTHORIZED.getCode(),
                 CommonExceptionCode.UNAUTHORIZED.getMessage());
         } else {
-            responseFail = new ResponseFail(CommonExceptionCode.INACCESSIBLE_DATA.getCode(),
-                CommonExceptionCode.UNAUTHORIZED.getMessage());
+            responseFail = new ResponseFail(CommonExceptionCode.SERVER_ERROR.getCode(),
+                CommonExceptionCode.SERVER_ERROR.getMessage());
+            response.setStatus(HttpStatus.FORBIDDEN.value());
         }
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
