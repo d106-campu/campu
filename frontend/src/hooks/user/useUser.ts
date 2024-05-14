@@ -7,6 +7,7 @@ import {
   updateProfileImage,
 } from '@/services/user/api';
 import { IUserNickNameUpdate, IUserPasswordUpdate, IUserPhoneUpdate } from '@/types/user';
+import Toast from '@/components/@common/Toast/Toast';
 
 export const useUser = () => {
 
@@ -54,9 +55,11 @@ export const useUser = () => {
     mutationFn: (file: File) => updateProfileImage(file),
     onSuccess: () => {
       console.log('프로필 이미지 바꿨음!!');
+      Toast.success('프로필 이미지가 수정되었습니다.');
     },
     onError: (error) => {
       console.error('프로필 이미지 못바꿨음:', error);
+      Toast.error('프로필 이미지 수정에 실패했습니다.');
     }
   });
 

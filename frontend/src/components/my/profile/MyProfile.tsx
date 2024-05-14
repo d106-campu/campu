@@ -1,60 +1,71 @@
 import { useState, useEffect, useRef } from "react";
 import profileDefaultImage from "@/assets/images/profile.png";
 import Button from "@/components/@common/Button/Button";
-import { IUserProfileUpdate } from '@/types/user';
+import { IUserProfileUpdate } from "@/types/user";
 import { ChangePhoneModal } from "@/components/my/profile/ChangePhoneModal";
 import { ChangePasswordModal } from "@/components/my/profile/ChangePasswordModal";
-import { MIN_NICKNAME_LENGTH, MAX_NICKNAME_LENGTH } from "@/constants/constants";
-import { useUser } from '@/hooks/user/useUser';
+import {
+  MIN_NICKNAME_LENGTH,
+  MAX_NICKNAME_LENGTH,
+} from "@/constants/constants";
+import { useUser } from "@/hooks/user/useUser";
 import { checkNicknameDuplicate } from "@/services/auth/api";
 
 interface IMyProfileProps {
   phoneVerified: boolean;
 }
 
-const MyProfile = ({
-  phoneVerified
-}: IMyProfileProps): JSX.Element => {
-  const { userProfileQuery, updateNickNameMutation, updateProfileImageMutation } = useUser();
+const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
+  const {
+    userProfileQuery,
+    updateNickNameMutation,
+    updateProfileImageMutation,
+  } = useUser();
   const profileData = userProfileQuery.data?.data.myProfile;
   const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
 
   // 폼 입력 값 상태 관리
   const [values, setValues] = useState<IUserProfileUpdate>({
-    account: '',
-    nickname: '',
-    tel: '',
-    profileImageUrl: '',
-    newPassword: '',
-    currentPassword: '',
-    newPasswordCheck: '',
-    verifyNums: '',
+    account: "",
+    nickname: "",
+    tel: "",
+    profileImageUrl: "",
+    newPassword: "",
+    currentPassword: "",
+    newPasswordCheck: "",
+    verifyNums: "",
   });
 
   // 유효성 통과 실패하면 오류 메세지 관리
   const [errors, setErrors] = useState<IUserProfileUpdate>({
-    account: '',
-    nickname: '',
-    tel: '',
-    newPassword: '',
-    currentPassword: '',
-    newPasswordCheck: '',
+    account: "",
+    nickname: "",
+    tel: "",
+    newPassword: "",
+    currentPassword: "",
+    newPasswordCheck: "",
   });
 
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState<boolean>(false); // 휴대폰 변경 모달 관리Z
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState<boolean>(false); // 비밀번호 변경 모달 관리
+  const [isPasswordModalOpen, setIsPasswordModalOpen] =
+    useState<boolean>(false); // 비밀번호 변경 모달 관리
 
   const hasCustomImageRef = useRef<boolean>(false); // 프로필 이미지 변경했는지 추적 관리
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false); // 닉네임 수정 가능 상태 관리
-  const [nicknameMessage, setNicknameMessage] = useState<string>(''); // 닉네임 유효성 통과 상태 관리
-  const [isSaveButtonEnabled, setIsSaveButtonEnabled] = useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
-  
+  const [nicknameMessage, setNicknameMessage] = useState<string>(""); // 닉네임 유효성 통과 상태 관리
+  const [isSaveButtonEnabled, setIsSaveButtonEnabled] =
+    useState<boolean>(false); // 닉네임 유효성 통과 시에 상태 관리
+
   // 프로필 조회 API 요청 진행
   useEffect(() => {
     if (userProfileQuery.isSuccess && userProfileQuery.data) {
-      console.log("프로필 조회 성공")
-      const { account = '', nickname = '', tel = '', } = userProfileQuery.data.data.myProfile;
-      setValues(v => ({ ...v, account, nickname, tel }));
+      console.log("프로필 조회 성공");
+      const {
+        account = "",
+        nickname = "",
+        tel = "",
+      } = userProfileQuery.data.data.myProfile;
+      setValues((v) => ({ ...v, account, nickname, tel }));
       // dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
     }
   }, [userProfileQuery.data, userProfileQuery.isSuccess]);
@@ -63,76 +74,98 @@ const MyProfile = ({
   useEffect(() => {
     if (profileData?.profileImageUrl) {
       const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
-      console.log('프로필페이지 환경변수 주소 :', import.meta.env.VITE_IMAGE_BASE_URL_PROD);
-      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;;
+      console.log(
+        "프로필페이지 환경변수 주소 :",
+        import.meta.env.VITE_IMAGE_BASE_URL_PROD
+      );
+      const fullImageUrl = `${imageBaseURL}${profileData.profileImageUrl}`;
+      // const fullImageUrl = profileData.profileImageUrl;
+      console.log(imageBaseURL);
       setProfileImageUrl(fullImageUrl);
-      // console.log("이미지 주소 확인:", fullImageUrl);
     }
   }, [profileData]);
-
 
   // "닉네임"에서 수정 버튼을 클릭해야 수정이 가능하도록
   const handleEditNicknameClick = async () => {
     if (isEditingNickname) {
       // 닉네임 유효성 검사 및 중복 검사를 모두 통과했는지 확인
-      if (nicknameMessage === '사용 가능한 닉네임입니다.' && isSaveButtonEnabled) {
+      if (
+        nicknameMessage === "사용 가능한 닉네임입니다." &&
+        isSaveButtonEnabled
+      ) {
         // 중복 검사 후 닉네임 업데이트
         const checkResult = await checkNicknameDuplicate(values.nickname);
         if (checkResult.data.available) {
           // 닉네임 변경 API 호출
-          updateNickNameMutation.mutate({
-            nickname: values.nickname
-          }, {
-            onSuccess: () => {
-              console.log('닉네임 변경 성공@@');
-              // dispatch(setNickname(values.nickname));
-              setIsEditingNickname(false);  // 편집 상태 해제
-              setNicknameMessage(''); 
-              setErrors(prev => ({ ...prev, nickname: '닉네임이 변경되었습니다 !' }))
+          updateNickNameMutation.mutate(
+            {
+              nickname: values.nickname,
             },
-            onError: (error) => {
-              console.error('닉네임 변경 중 오류 발생:', error);
-              setNicknameMessage('닉네임 변경에 실패했습니다. 다시 시도해주세요.');
+            {
+              onSuccess: () => {
+                console.log("닉네임 변경 성공@@");
+                // dispatch(setNickname(values.nickname));
+                setIsEditingNickname(false); // 편집 상태 해제
+                setNicknameMessage("");
+                setErrors((prev) => ({
+                  ...prev,
+                  nickname: "닉네임이 변경되었습니다 !",
+                }));
+              },
+              onError: (error) => {
+                console.error("닉네임 변경 중 오류 발생:", error);
+                setNicknameMessage(
+                  "닉네임 변경에 실패했습니다. 다시 시도해주세요."
+                );
+              },
             }
-          });
+          );
         } else {
-          setNicknameMessage('이미 사용 중인 닉네임입니다.');
+          setNicknameMessage("이미 사용 중인 닉네임입니다.");
         }
       }
     } else {
-      setIsEditingNickname(true);  // 닉네임 수정 모드 활성화
-      setNicknameMessage('');
+      setIsEditingNickname(true); // 닉네임 수정 모드 활성화
+      setNicknameMessage("");
     }
   };
 
   // "닉네임" 수정 시 input 추적해서 유효성 검사
   const handleChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setValues(prev => ({ ...prev, nickname: value }));
-    validateField('nickname', value); // 닉네임 유효성 검사와 연결
-    setIsSaveButtonEnabled(nicknameMessage  === '사용 가능한 닉네임입니다.');
+    setValues((prev) => ({ ...prev, nickname: value }));
+    validateField("nickname", value); // 닉네임 유효성 검사와 연결
+    setIsSaveButtonEnabled(nicknameMessage === "사용 가능한 닉네임입니다.");
   };
 
   // 실시간 사용자가 입력하는 프로필 수정 input 값 유효성 검사
-  const validateField = async (field: keyof IUserProfileUpdate, value: string) => {
-    let message = '';
+  const validateField = async (
+    field: keyof IUserProfileUpdate,
+    value: string
+  ) => {
+    let message = "";
     if (value) {
       switch (field) {
-        case 'nickname':
-          if (value.length < MIN_NICKNAME_LENGTH || value.length > MAX_NICKNAME_LENGTH) {
-            message = '닉네임은 2~8자 이내로 해주세요.';
+        case "nickname":
+          if (
+            value.length < MIN_NICKNAME_LENGTH ||
+            value.length > MAX_NICKNAME_LENGTH
+          ) {
+            message = "닉네임은 2~8자 이내로 해주세요.";
           } else if (!/^[가-힣a-zA-Z0-9]+$/.test(value)) {
-            message = '특수문자, 띄워쓰기는 사용할 수 없습니다.';
+            message = "특수문자, 띄워쓰기는 사용할 수 없습니다.";
           } else {
             const res = await checkNicknameDuplicate(value);
-            message = res.data.available ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.';
+            message = res.data.available
+              ? "사용 가능한 닉네임입니다."
+              : "이미 사용 중인 닉네임입니다.";
             setIsSaveButtonEnabled(res.data.available);
           }
           setNicknameMessage(message);
           break;
       }
     }
-    setErrors(prev => ({ ...prev, [field]: message }));
+    setErrors((prev) => ({ ...prev, [field]: message }));
   };
 
   // 휴대폰 번호 변경 모달 열기
@@ -144,40 +177,40 @@ const MyProfile = ({
   const handlePhoneModalClose = () => {
     setIsPhoneModalOpen(false);
     // 모달이 닫힐 때 휴대폰 번호와 인증번호 관련 상태 및 오류 상태 초기화
-    setValues(prev => ({
+    setValues((prev) => ({
       ...prev,
-      tel: '',
-      verifyNums: '',
+      tel: "",
+      verifyNums: "",
     }));
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      tel: '',
-      verifyNums: '',
+      tel: "",
+      verifyNums: "",
     }));
   };
 
   // 비밀번호 변경 모달 열기
   const handleOpenPasswordModal = () => {
     setIsPasswordModalOpen(true);
-  }
+  };
 
   // 비밀번호 변경 모달 닫기
   const handleClosePasswordModal = () => {
     setIsPasswordModalOpen(false);
     // 모달 닫힐 때 비밀번호, 비밀번호 확인 관련 상태와 오류 메세지 초기화
-    setValues(prev => ({
+    setValues((prev) => ({
       ...prev,
-      newPassword: '',
-      currentPassword: '',
-      newPasswordCheck: '',
+      newPassword: "",
+      currentPassword: "",
+      newPasswordCheck: "",
     }));
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      newPassword: '',
-      currentPassword: '',
-      newPasswordCheck: '',
+      newPassword: "",
+      currentPassword: "",
+      newPasswordCheck: "",
     }));
-  }
+  };
 
   // 이미지 업로드 핸들러
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -188,11 +221,11 @@ const MyProfile = ({
         onSuccess: (data) => {
           // 서버로부터 반환된 이미지 URL을 리덕스 스토어에 저장
           // dispatch(setIsProfileImage(data.data.profileImage));
-          console.log("프로필이미지 수정한거 전달!!", data)
+          console.log("프로필이미지 수정한거 전달!!", data);
         },
         onError: (error) => {
-          console.error('프로필 이미지 업데이트 실패:', error.message);
-        }
+          console.error("프로필 이미지 업데이트 실패:", error.message);
+        },
       });
     }
   };
@@ -211,21 +244,20 @@ const MyProfile = ({
       const value = values[key];
 
       // undefined가 아닐 때만 유효성 검사를 수행
-      if (value !== undefined) { 
+      if (value !== undefined) {
         validateField(key, value);
       }
     });
   }, [phoneVerified]);
 
-
   return (
     <div className="min-h-[calc(100vh-10rem)]">
       {/* 프로필 수정 헤더 */}
-      <div className='flex flex-col pb-4'>
-        <h1 className='text-lg font-bold'>
-          프로필 설정
+      <div className="flex flex-col pb-4">
+        <h1 className="text-lg font-bold">프로필 설정</h1>
+        <h1 className="text-sm text-gray-400">
+          {values.nickname}님의 프로필을 변경할 수 있습니다.
         </h1>
-        <h1 className="text-sm text-gray-400">{values.nickname}님의 프로필을 변경할 수 있습니다.</h1>
       </div>
 
       {/* 아이디 + 닉네임 */}
@@ -237,7 +269,7 @@ const MyProfile = ({
               type="text"
               className="w-full h-[35px] pl-2 outline-none border-2 rounded-md bg-gray-100"
               disabled // 수정 불가능하게 막기
-              value={values.account || ''}
+              value={values.account || ""}
             />
           </div>
           <div className="pb-5">
@@ -253,32 +285,46 @@ const MyProfile = ({
                   저 장
                 </button>
               ) : (
-                <button onClick={handleEditNicknameClick} className="hover:text-MAIN_GREEN text-sm">
+                <button
+                  onClick={handleEditNicknameClick}
+                  className="hover:text-MAIN_GREEN text-sm"
+                >
                   수 정
                 </button>
               )}
             </div>
             <input
               type="text"
-              className={`w-full h-[35px] pl-2 outline-none border-2 rounded-md ${isEditingNickname ? '' : 'pointer-events-none'}`}
+              className={`w-full h-[35px] pl-2 outline-none border-2 rounded-md ${
+                isEditingNickname ? "" : "pointer-events-none"
+              }`}
               disabled={!isEditingNickname}
               maxLength={MAX_NICKNAME_LENGTH}
-              value={values.nickname || ''}
+              value={values.nickname || ""}
               onChange={handleChangeNickname}
             />
-            <p className={`pl-2 pt-2 text-xs flex justify-end items-center ${nicknameMessage === '사용 가능한 닉네임입니다.' || '닉네임이 변경되었습니다 !' ? 'text-MAIN_GREEN' : 'text-red-500'}`}>{errors.nickname}</p> 
+            <p
+              className={`pl-2 pt-2 text-xs flex justify-end items-center ${
+                nicknameMessage === "사용 가능한 닉네임입니다." ||
+                "닉네임이 변경되었습니다 !"
+                  ? "text-MAIN_GREEN"
+                  : "text-red-500"
+              }`}
+            >
+              {errors.nickname}
+            </p>
           </div>
         </div>
         {/* 프로필 이미지 */}
         <div className="w-[50%] flex flex-col items-center justify-center pr-10 pt-1">
-          <img 
+          <img
             src={profileImageUrl || profileDefaultImage}
-            alt="프로필 이미지" 
+            alt="프로필 이미지"
             className="w-[150px] h-[150px] object-cover object-center rounded-full"
           />
           <div className="pt-2 flex justify-center">
             <div className="px-2">
-              <Button 
+              <Button
                 text="사진 변경"
                 width="w-full"
                 backgroundColor="bg-SUB_GREEN_01"
@@ -287,13 +333,15 @@ const MyProfile = ({
                 hoverBackgroundColor="hover:bg-SUB_GREEN_02"
                 padding="p-2"
                 fontWeight="none"
-                onClick={() => {document.getElementById('imageUpload')?.click();}}
+                onClick={() => {
+                  document.getElementById("imageUpload")?.click();
+                }}
               />
             </div>
             {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
             <div>
               {profileData?.profileImageUrl !== profileDefaultImage && (
-                <Button 
+                <Button
                   text="기본 사진"
                   width="w-full"
                   backgroundColor="bg-SUB_GREEN_01"
@@ -325,13 +373,13 @@ const MyProfile = ({
         <h1 className="pb-2">휴대폰 번호</h1>
         <div className="flex items-center justify-start">
           <input
-            type="text" 
+            type="text"
             className="w-[25%] h-[35px] pl-2 outline-none border-2 rounded-md"
             disabled
-            value={values.tel || ''}
+            value={values.tel || ""}
           />
           <div className="pl-5 flex items-center  justify-center">
-            <Button 
+            <Button
               text="전화번호 변경"
               width="w-full"
               backgroundColor="bg-SUB_GREEN_01"
@@ -383,6 +431,6 @@ const MyProfile = ({
       )}
     </div>
   );
-}
+};
 
 export default MyProfile;
