@@ -48,12 +48,6 @@ public class CampsiteController implements CampsiteControllerDoc {
     }
 
     @Override
-    @GetMapping("/owner")
-    public Response getOwnerCampsiteList(Pageable pageable) {
-        return new Response(CampsiteConstant.CAMPSITE_LIST, campsiteService.getOwnerCampsiteList(pageable));
-    }
-
-    @Override
     @PostMapping("/register")
     public Response createCampsite(@RequestBody CampsiteDto.CreateRequest createRequestDto) {
         return new Response(CampsiteConstant.CAMPSITE, campsiteService.createCampsite(createRequestDto));
