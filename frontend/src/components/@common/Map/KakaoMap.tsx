@@ -45,7 +45,7 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
         mapY && mapX
           ? new window.kakao.maps.LatLng(mapY, mapX)
           : new window.kakao.maps.LatLng(locations[0].lat, locations[0].lng),
-      level: locations[0].level || 5,
+      level: locations[0].level || 8,
     };
 
     const map = new window.kakao.maps.Map(container, options);
@@ -73,9 +73,13 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
       <div style="background-color: #fff; padding: 10px; border-radius: 10px; position: relative; top: -100px;">
         <div>
           <div class="font-bold">${location.facltNm}</div>
-          <div class="text-MAIN_RED font-bold flex text-[14px]"><img src=${Star} style="height: 20px; margin-right: 4px;" /> ${location.rate?.toFixed(
-        1
-      )}</div>
+          ${
+            location.rate
+              ? `<div class="text-MAIN_RED font-bold flex text-[14px]"><img src=${Star} style="height: 20px; margin-right: 4px;" /> ${location.rate.toFixed(
+                  1
+                )}</div>`
+              : ""
+          }
         </div>
       </div>`;
 
