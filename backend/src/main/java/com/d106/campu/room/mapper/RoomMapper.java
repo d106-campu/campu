@@ -10,6 +10,7 @@ public interface RoomMapper {
 
     @Mapping(target = "induty", expression = "java(room.getInduty().getIndutyStr())")
     @Mapping(target = "emptyNotification", ignore = true)
+    @Mapping(target = "totalPrice", ignore = true)
     RoomDto.Response toRoomResponseDto(Room room);
 
 }

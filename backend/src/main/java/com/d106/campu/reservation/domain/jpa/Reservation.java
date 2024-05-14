@@ -55,7 +55,7 @@ public class Reservation extends BaseTime {
     private PaymentStatus status;
 
     @Column(name = "price", nullable = false)
-    private int price;
+    private Long price;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;

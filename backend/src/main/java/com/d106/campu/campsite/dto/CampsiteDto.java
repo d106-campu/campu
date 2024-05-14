@@ -35,7 +35,7 @@ public class CampsiteDto {
         private CampsiteLocation campsiteLocation;
         private boolean like;
         private boolean available;
-        private Integer price;
+        private Long price;
         private Double score;
 
     }

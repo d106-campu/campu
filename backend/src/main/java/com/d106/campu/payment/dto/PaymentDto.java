@@ -22,11 +22,11 @@ public class PaymentDto {
         private Long reservationId;
         private RoomDto.RoomInfo room;
         private int headCnt;
-        private int price;
+        private Long price;
         private LocalDate startDate;
         private LocalDate endDate;
         private String status;
-        private int amount;
+        private long amount;
 
     }
 
@@ -37,11 +37,11 @@ public class PaymentDto {
         private Long reservationId;
         private RoomDto.RoomInfo room;
         private int headCnt;
-        private int price;
+        private Long price;
         private LocalDate startDate;
         private LocalDate endDate;
         private String status;
-        private int amount;
+        private long amount;
 
     }
 
@@ -50,7 +50,7 @@ public class PaymentDto {
 
         private Long roomId;
         private int headCnt;
-        private int price;
+        private Long price;
         private LocalDate startDate;
         private LocalDate endDate;
 
@@ -64,7 +64,7 @@ public class PaymentDto {
         private String pg;
         private String payMethod;
         private String name;
-        private int amount;
+        private long amount;
         private String buyerEmail;
         private String buyerName;
         private String buyerTel;
