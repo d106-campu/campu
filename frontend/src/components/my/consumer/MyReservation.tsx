@@ -27,6 +27,8 @@ const MyReservation = (): JSX.Element => {
       setReservations(allReservations);
       setExpanded({});
       setViewCount(initialViewCount);
+    } else {
+      setReservations([]); // 예약내역 0개로 받아오면 빈 배열로 설정
     }
   }, [data, selectedFilter, useType]);
 
@@ -88,7 +90,7 @@ const MyReservation = (): JSX.Element => {
     return <div>내 예약내역을 가져오지 못했습니다. 😭</div>;
   }
 
-  // 내가 쓴 리뷰가 하나도 없을 때 처리
+  // 내 예약내역이 하나도 없을 때 처리
   if (data?.reservationList?.content.length === 0) {
     // console.error("내 예약내역 리스트가 비어있음 !");
     return (
@@ -124,7 +126,7 @@ const MyReservation = (): JSX.Element => {
       <div className='flex justify-between'>
         <div className='flex'>
           <h1 className='text-lg font-bold pb-5'>예약 내역</h1>
-          <span className="text-MAIN_GREEN font-thin pl-2 text-lg">{reservations.length}</span>
+          <span className="text-MAIN_GREEN font-thin pl-2 text-lg">{reservations.length || 0}</span>
         </div>
         <div className='flex'>
           <button
