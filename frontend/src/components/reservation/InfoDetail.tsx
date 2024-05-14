@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRefs } from "@/context/RefContext";
-import { useParams } from "react-router-dom";
-import { RouteParams } from "@/types/model";
+import { scrollToTop } from "@/utils/scrollToTop";
+import { IReviewList } from "@/types/review";
 import FacilityList from "@/components/reservation/FacilityList";
 import ReviewItem from "@/components/reservation/ReviewItem";
-import { scrollToTop } from "@/utils/scrollToTop";
-import { ISimpleReviewList } from "@/types/review";
+import Loading from "@/components/@common/Loading/Loading";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
 
@@ -33,17 +32,22 @@ interface IData {
 
 interface IInfoDetailProps {
   data: IData;
-  reviewsData: ISimpleReviewList;
+  reviewList: IReviewList | null;
+  isLoading: boolean;
+  campsiteId: number;
 }
 
-const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
-  const { campId } = useParams<RouteParams>();
+const InfoDetail = ({
+  data,
+  reviewList,
+  isLoading,
+  campsiteId,
+}: IInfoDetailProps) => {
   const navigate = useNavigate();
   const { reviewRef } = useRefs();
 
-  const reviews = reviewsData.reviews ? reviewsData.reviews.slice(0, 3) : []; // 보여줄 리뷰 개수
-  const [isOpen, setIsOpen] = useState<boolean>(false); // 아코디언 상태관리
-
+  // 아코디언
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -79,34 +83,36 @@ const InfoDetail = ({ data, reviewsData }: IInfoDetailProps) => {
       </div>
 
       {/* 방문자 리뷰 */}
-      <div ref={reviewRef} className="pt-10">
-        <h3 className="text-xl font-bold">방문자 리뷰</h3>
-        <div className="flex justify-between pt-1">
-          <div className="flex items-center text-BLACK font-bold">
-            <FaStar size={18} className="text-yellow-500 mx-1" />
-            <p className="pr-2">{data.rating}</p>
-            <p className="text-[#919191] text-sm">
-              {data.totalReview}명의 평가
-            </p>
+      {reviewList && reviewList.content.length > 0 && (
+        <div ref={reviewRef} className="pt-10">
+          <h3 className="text-xl font-bold">방문자 리뷰</h3>
+          <div className="flex justify-between pt-1">
+            <div className="flex items-center text-BLACK font-bold">
+              <FaStar size={18} className="text-yellow-500 mx-1" />
+              <p className="pr-2">{data.rating}</p>
+              <p className="text-[#919191] text-sm">
+                {reviewList.totalElements}명의 평가
+              </p>
+            </div>
+            <button
+              className="text-MAIN_GREEN font-bold"
+              onClick={() => {
+                navigate(`/camps/${campsiteId}/reviews`);
+                scrollToTop();
+              }}
+            >
+              리뷰 보기
+            </button>
           </div>
-          {/* @TODO: 클릭 시 리뷰 페이지로 이동하기 */}
-          <button
-            className="text-MAIN_GREEN font-bold"
-            onClick={() => {
-              navigate(`/camps/${campId}/reviews`);
-              scrollToTop();
-            }}
-          >
-            리뷰 보기
-          </button>
+          {/* 로딩중 UI */}
+          {isLoading && <Loading />}
+          <div className="flex gap-5 py-2">
+            {reviewList.content.map((review, index) => (
+              <ReviewItem key={index} review={review} />
+            ))}
+          </div>
         </div>
-
-        <div className="flex gap-5 py-2">
-          {reviews.map((review, index) => (
-            <ReviewItem key={index} review={review} />
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* 캠핑장 운영정책 */}
       <div className="pt-10">

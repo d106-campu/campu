@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     element: <ReviewListPage />,
   },
   {
-    path: "/camps/:campId/reviews/write",
+    path: "/camps/review-write",
     element: <WriteReviewPage />,
   },
   {

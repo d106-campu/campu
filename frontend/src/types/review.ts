@@ -57,9 +57,23 @@ export interface IReviewListReq {
 
 // 캠핑장 평점 조회 Response
 export interface ICampScoreRes {
-  campsiteScore: number;
+  campsiteScore: IScoreDate;
 }
 
+export interface IScoreDate {
+  campsiteName: string;
+  indutyList: string[];
+  score: number;
+}
+
+// 리뷰 등록 Request
+export interface IPostReviewReq {
+  reservationId: number;
+  content: string;
+  score: number;
+}
+
+// 내 리뷰 (마이페이지)
 export interface IMyReview {
   campsiteName: string;
   content: string;

@@ -4,7 +4,7 @@ import ReviewItem from "@/components/@common/Review/ReviewItem";
 const OwnerReview = ({
   selectCampground,
 }: {
-  selectCampground: string | null;
+  selectCampground: number | null;
 }) => {
   const reviewList = data.reviewList;
   return (
