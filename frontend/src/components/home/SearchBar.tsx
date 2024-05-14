@@ -52,6 +52,7 @@ const SearchBar = ({ state }: { state?: string }) => {
     keyword || null
   );
 
+  console.log(searchKeyword);
   const resetCalendar = () => {
     setLocalStartDate(dateStringToDate(startDate));
     setLocalEndDate(dateStringToDate(endDate));

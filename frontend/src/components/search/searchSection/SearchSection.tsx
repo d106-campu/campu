@@ -18,6 +18,8 @@ const SearchSection = () => {
   const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
 
+  console.log("현재 검색하는 키워드", searchBarState.keyword);
+
   // 디폴트 값들 지정
   const weekendDates = dayOfWeekend();
   const startday = searchBarState.startDate || weekendDates.saturday;
@@ -65,16 +67,24 @@ const SearchSection = () => {
           {campsiteOfSearch?.data.campsiteList.content.length === 0 ? (
             <SearchNoResult />
           ) : (
-            campsiteOfSearch?.data.campsiteList.content.map(
-              (camping: ICampsiteSimpleRes, index: number) => (
+            campsiteOfSearch?.data.campsiteList.content
+              .filter((camping: ICampsiteSimpleRes) => {
+                // 검색 키워드가 있는 경우
+                if (searchBarState.keyword) {
+                  return camping.facltNm.includes(searchBarState.keyword);
+                } else {
+                  // 검색 키워드가 없는 경우 전체 리스트
+                  return true;
+                }
+              })
+              .map((camping: ICampsiteSimpleRes, index: number) => (
                 <SearchCampingItem
                   key={camping.id}
                   camping={camping}
                   index={index}
                   selected={setSelectedIndex}
                 />
-              )
-            )
+              ))
           )}
         </div>
       </div>
