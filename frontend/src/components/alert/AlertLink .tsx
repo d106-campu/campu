@@ -26,7 +26,7 @@ const AlertLink = ({ page }: { page?: string }) => {
     setOpenAlert(!openAlert);
   };
 
-  console.log(newNotifyCnt);
+  // console.log(newNotifyCnt);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

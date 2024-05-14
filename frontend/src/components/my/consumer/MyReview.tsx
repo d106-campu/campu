@@ -39,9 +39,8 @@ const MyReview = (): JSX.Element => {
 
   // 날짜 선택에 따른 필터 체인지
   const handleFilterChange = (filter: 'TOTAL' | 'YEAR' | 'MONTH6' | 'MONTH') => {
-    setSelectedFilter(filter);
-    // 필터에 따른 데이터 로드 로직을 추가
     console.log("선택한 필터 :", filter)
+    setSelectedFilter(filter);
     refetch(); // 필터 변경할때마다 다시 리스트 불러오기
   };
 

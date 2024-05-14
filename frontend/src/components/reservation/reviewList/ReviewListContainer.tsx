@@ -1,11 +1,13 @@
 import CampSiteTitle from "@/components/reservation/reviewList/CampSiteTitle";
 import CampSiteRating from "@/components/reservation/reviewList/CampSiteRating";
 import ReviewList from "@/components/reservation/reviewList/ReviewList";
+import BackButton from "@/components/reservation/reviewList/review/BackButton";
 import { useReview } from "@/hooks/review/useReview";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RouteParams } from "@/types/model";
 
 const ReviewListContainer = () => {
+  const navigate = useNavigate();
   const { useGetCampScore } = useReview();
   const { campId } = useParams<RouteParams>();
   const campsiteId = campId ? parseInt(campId, 10) : 0;
@@ -16,9 +18,17 @@ const ReviewListContainer = () => {
   const types = campScore?.data.campsiteScore.indutyList || [];
   const campsiteName = campScore?.data.campsiteScore.campsiteName || "";
 
+  const goToCamp = () => {
+    navigate(`/camps/${campsiteId}`);
+  };
+
   return (
     <div className="max-w-[75%] mx-auto py-2">
-      <CampSiteTitle types={types} campsiteName={campsiteName} />
+      <div onClick={goToCamp} className="flex items-end gap-2 cursor-pointer">
+        <BackButton route={`/camps/${campsiteId}`} />
+        <CampSiteTitle types={types} campsiteName={campsiteName} />
+      </div>
+
       <CampSiteRating rating={score} />
       <ReviewList campsiteId={campsiteId} />
     </div>

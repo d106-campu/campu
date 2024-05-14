@@ -8,7 +8,7 @@ interface IMapModalProps {
   lat: number;
   lng: number;
   facltNm: string;
-  rate: number;
+  rate?: number;
   addr1?: string;
   level?: number;
   toggleModal: () => void;
