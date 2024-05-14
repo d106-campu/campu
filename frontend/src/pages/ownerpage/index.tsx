@@ -12,8 +12,6 @@ const OwnerPage = () => {
     pageable: { size: 100, page: 0 },
   });
 
-  console.log(OwnerCampsiteList?.data.campsiteList.content);
-
   const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map(
     (item) => ({
       id: item.id,
@@ -21,14 +19,11 @@ const OwnerPage = () => {
     })
   );
 
-  console.log(campsiteData);
   return (
     <div>
       <Header page={"owner"} />
-
       <SideTabbar campData={campsiteData!} />
       <OwnerContainer />
-
       <Footer />
     </div>
   );
