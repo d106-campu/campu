@@ -8,26 +8,27 @@ import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
+import com.d106.campu.campsite.domain.jpa.Fclty;
+import com.d106.campu.campsite.domain.jpa.Theme;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteLikeRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.FcltyRepository;
 import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
+import com.d106.campu.campsite.repository.jpa.ThemeRepository;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
-import com.d106.campu.reservation.repository.jpa.ReservationRepository;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
-import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.dto.RoomDto;
-import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
-import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
+import com.d106.campu.user.dto.UserDto.NameAndTel;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.awt.geom.Point2D;
@@ -40,6 +41,8 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -59,13 +62,15 @@ public class CampsiteService {
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
 
-    private final RoomRepository roomRepository;
+    private final FcltyRepository fcltyRepository;
+    private final ThemeRepository themeRepository;
+
     private final QRoomRepository qRoomRepository;
-    private final RoomMapper roomMapper;
 
     private final ReviewRepository reviewRepository;
 
-    private final ReservationRepository reservationRepository;
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     private final SecurityHelper securityHelper;
 
@@ -120,8 +125,6 @@ public class CampsiteService {
 
         // TODO: Time-consuming tasks. Need to optimise.
         List<Campsite> responseList = new java.util.ArrayList<>(responsePage.map((campsite) -> {
-            List<Room> roomList = campsite.getRoomList();
-
             // available at least one room can be reserved on the date range
             campsite.setAvailable(campsiteAvailabilityMap.getOrDefault(campsite.getId(), false));
 
@@ -208,6 +211,45 @@ public class CampsiteService {
         /* TODO: insert campsite location(coordinates), induty, etc. */
 
         return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
+    }
+
+    @Transactional(readOnly = true)
+    public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId, User user) {
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+
+        return CampsiteDto.DetailResponse.builder()
+            .id(campsite.getId())
+            .owner(NameAndTel.builder()
+                .nickName(campsite.getUser().getNickname())
+                .tel(campsite.getUser().getNickname())
+                .build())
+            .facltNm(campsite.getFacltNm())
+            .tel(campsite.getTel())
+            .lineIntro(campsite.getLineIntro())
+            .intro(campsite.getIntro())
+            .allar(campsite.getAllar())
+            .bizrno(campsite.getBizrno())
+            .trsagntNo(campsite.getTrsagntNo())
+            .doNm(campsite.getDoNm())
+            .sigunguNm(campsite.getSigunguNm())
+            .addr1(campsite.getAddr1())
+            .addr2(campsite.getAddr2())
+            .indutyList(List.of(campsite.getIndutyList().split(",")))
+            .themeList(themeRepository.findByCampsiteThemeList_Campsite(campsite).stream().map(Theme::getThemeStr)
+                .toList())
+            .facltList(fcltyRepository.findByCampsiteFcltyList_Campsite(campsite).stream().map(Fclty::getFcltyStr).toList())
+            .score(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0))
+            .campsiteLocation(campsite.getCampsiteLocation())
+            .sitedStnc(campsite.getSitedStnc())
+            .animalCmgCl(campsite.getAnimalCmgCl())
+            .like(user != null && campsiteLikeRepository.existsByCampsiteAndUser(campsite, user))
+            .homepage(campsite.getHomepage())
+            .thumbnailImageUrl(campsite.getThumbnailImageUrl())
+            .mapImageUrl(campsite.getMapImageUrl())
+            .campsiteImageUrlList(campsite.getCampsiteImageList().stream()
+                .map(campsiteImage -> StringUtils.join(baseUrl, campsiteImage.getUrl())).toList())
+            .build();
     }
 
     /**

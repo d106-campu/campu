@@ -113,6 +113,9 @@ public class Campsite extends BaseTime {
     @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
     private List<Room> roomList;
 
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
+    private List<CampsiteFclty> campsiteFcltyList;
+
     @Transient
     @Setter
     private boolean like;

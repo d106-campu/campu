@@ -70,6 +70,13 @@ VALUES (@campsite_1, @user_cheesecat47),
        (@campsite_5, @user_choihojo),
        (@campsite_3, @user_manager);
 
+INSERT INTO `campsite_image` (`id`, `campsite_id`, `url`)
+VALUES ('1', '1', '/file/campsite/1/general/27c0370e-125a-45cc-865d-ccd3b2cdc5af_anna-philine-VAf6-e22Ono-unsplash.jpg'),
+       ('2', '1', '/file/campsite/1/general/7b22d1b3-3b86-4f39-8597-3d9b3d8d8686_joshua-sukoff-wXzuPjvTZf8-unsplash.jpg'),
+       ('3', '1', '/file/campsite/1/general/3b6c8f1a-ce28-43f2-8088-6d5343672625_hugues-de-buyer-mimeure-hGuGRayJrv0-unsplash.jpg'),
+       ('4', '1', '/file/campsite/1/general/a75df483-661f-4649-8ad5-5f716e00a745_scott-goodwill-y8Ngwq34_Ak-unsplash.jpg'),
+       ('5', '1', '/file/campsite/1/general/ec6c8fc7-8e89-4cf1-8391-fd9f1f1a536a_paul-hermann-XJuhZqEE4Go-unsplash.jpg');
+
 -- ----------------------------------------
 --
 -- induty
@@ -126,6 +133,47 @@ VALUES (@campsite_1, @theme_summer),
        (@campsite_5, @theme_sunrise),
        (@campsite_5, @theme_sunset),
        (@campsite_5, @theme_autumn);
+
+-- ----------------------------------------
+--
+-- fclty
+--
+-- ----------------------------------------
+
+INSERT INTO `fclty` (`fclty`)
+VALUES ('TV'), ('난방기구'), ('내부샤워실'), ('내부화장실'), ('냉장고'), ('에어컨'), ('유무선인터넷'), ('취사도구'), ('침대');
+
+SET @fclty_tv = (SELECT id from `fclty` where fclty = 'TV');
+SET @fclty_heater = (SELECT id from `fclty` where fclty = '난방기구');
+SET @fclty_shower = (SELECT id from `fclty` where fclty = '내부샤워실');
+SET @fclty_toilet = (SELECT id from `fclty` where fclty = '내부화장실');
+SET @fclty_fridge = (SELECT id from `fclty` where fclty = '냉장고');
+SET @fclty_airconditioner = (SELECT id from `fclty` where fclty = '에어컨');
+SET @fclty_internet = (SELECT id from `fclty` where fclty = '유무선인터넷');
+SET @fclty_cookingware = (SELECT id from `fclty` where fclty = '취사도구');
+SET @fclty_bed = (SELECT id from `fclty` where fclty = '침대');
+
+INSERT INTO `campsite_fclty` (`campsite_id`, `theme_id`)
+VALUES (@campsite_1, @fclty_tv),
+       (@campsite_1, @fclty_toilet),
+       (@campsite_1, @fclty_airconditioner),
+       (@campsite_2, @fclty_heater),
+       (@campsite_2, @fclty_shower),
+       (@campsite_2, @fclty_tv),
+       (@campsite_2, @fclty_toilet),
+       (@campsite_3, @fclty_shower),
+       (@campsite_3, @fclty_toilet),
+       (@campsite_3, @fclty_cookingware),
+       (@campsite_3, @fclty_tv),
+       (@campsite_4, @fclty_bed),
+       (@campsite_4, @fclty_heater),
+       (@campsite_4, @fclty_tv),
+       (@campsite_4, @fclty_airconditioner),
+       (@campsite_5, @fclty_tv),
+       (@campsite_5, @fclty_shower),
+       (@campsite_5, @fclty_fridge),
+       (@campsite_5, @fclty_airconditioner),
+       (@campsite_5, @fclty_internet);
 
 -- ----------------------------------------
 --
