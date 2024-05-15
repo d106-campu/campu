@@ -20,10 +20,18 @@ import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
+import com.d106.campu.image.service.ImageService;
 import com.d106.campu.owner.dto.OwnerDto.CampsiteUpdateRequest;
+import com.d106.campu.owner.dto.OwnerDto.RoomCreateRequest;
+import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
 import com.d106.campu.owner.exception.code.OwnerExceptionCode;
 import com.d106.campu.reservation.dto.ReservationDto;
 import com.d106.campu.reservation.repository.jpa.QReservationRepository;
+import com.d106.campu.room.domain.jpa.Room;
+import com.d106.campu.room.exception.code.RoomExceptionCode;
+import com.d106.campu.room.mapper.RoomMapper;
+import com.d106.campu.room.repository.jpa.IndutyRepository;
+import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -34,23 +42,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
 public class OwnerService {
 
+    private final ImageService imageService;
     private final CampsiteRepository campsiteRepository;
     private final CampsiteThemeRepository campsiteThemeRepository;
     private final ThemeRepository themeRepository;
     private final CampsiteFcltyRepository campsiteFcltyRepository;
     private final FcltyRepository fcltyRepository;
-
+    private final RoomRepository roomRepository;
+    private final IndutyRepository indutyRepository;
     private final CampsiteMapper campsiteMapper;
-
+    private final RoomMapper roomMapper;
     private final UserRepository userRepository;
-
     private final QReservationRepository qReservationRepository;
-
     private final SecurityHelper securityHelper;
 
     @Transactional
@@ -103,7 +112,7 @@ public class OwnerService {
 
     @Transactional
     public void updateCampsiteDetail(CampsiteUpdateRequest updateRequestDto) {
-        Campsite campsite = getCampsiteById(updateRequestDto);
+        Campsite campsite = getCampsiteById(updateRequestDto.getCampsiteId());
 
         checkOwner(securityHelper.getLoginAccount(), campsite.getUser().getAccount());
 
@@ -133,6 +142,39 @@ public class OwnerService {
         }
     }
 
+    @Transactional
+    public void createRoom(MultipartFile file, RoomCreateRequest createRequestDto) {
+        Campsite campsite = getCampsiteById(createRequestDto.getCampsiteId());
+
+        checkOwner(securityHelper.getLoginAccount(), campsite.getUser().getAccount());
+
+        Room room = roomMapper.toRoom(createRequestDto);
+        room.setCampsite(campsite);
+        room.setInduty(indutyRepository.findByIndutyStr(createRequestDto.getInduty())
+            .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
+        roomRepository.saveAndFlush(room);
+
+        if (file != null && !file.isEmpty()) {
+            imageService.uploadRoomImage(room, file);
+        }
+    }
+
+    @Transactional
+    public void updateRoom(Long roomId, MultipartFile file, RoomUpdateRequest updateRequestDto) {
+        Room room = getRoom(roomId);
+
+        checkOwner(securityHelper.getLoginAccount(), room.getCampsite().getUser().getAccount());
+        room.updateRoomInfo(updateRequestDto);
+        room.setInduty(indutyRepository.findByIndutyStr(updateRequestDto.getInduty())
+            .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
+
+        if (file != null && !file.isEmpty()) {
+            imageService.uploadRoomImage(room, file);
+        } else {
+            room.setImageUrl(null);
+        }
+    }
+
     private void checkOwner(String loginAccount, String ownedAccount) {
         if (!loginAccount.equals(ownedAccount)) {
             throw new UnauthorizedException(CampsiteExceptionCode.FORBIDDEN_CAMPSITE);
@@ -145,8 +187,13 @@ public class OwnerService {
         }
     }
 
-    private Campsite getCampsiteById(CampsiteUpdateRequest updateRequestDto) {
-        return campsiteRepository.findById(updateRequestDto.getCampsiteId())
+    private Room getRoom(Long roomId) {
+        return roomRepository.findById(roomId)
+            .orElseThrow(() -> new NotFoundException(RoomExceptionCode.NOT_FOUND_ROOM));
+    }
+
+    private Campsite getCampsiteById(Long campsiteId) {
+        return campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
     }
 

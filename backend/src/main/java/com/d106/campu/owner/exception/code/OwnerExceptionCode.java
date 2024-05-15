@@ -10,6 +10,7 @@ public enum OwnerExceptionCode implements ExceptionCode {
 
     /* Not found exception */
     BIZRNO_NOT_FOUND("OWNER401", "Bizrno not found"),
+    INDUTY_NOT_FOUND("OWNER402", "Induty not found"),
 
     /* Conflict exception */
     OWNED_BIZRNO("OWNER501", "Duplicated bizrno ");

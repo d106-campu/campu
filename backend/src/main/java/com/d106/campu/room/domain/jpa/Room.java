@@ -2,6 +2,7 @@ package com.d106.campu.room.domain.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
 import com.d106.campu.reservation.domain.jpa.Reservation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,10 +33,12 @@ public class Room extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campsite_id", nullable = false)
     private Campsite campsite;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "induty_id", nullable = false)
     private Induty induty;
@@ -58,6 +61,7 @@ public class Room extends BaseTime {
     @Column(name = "room_cnt", nullable = false)
     private int roomCnt;
 
+    @Setter
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -73,5 +77,14 @@ public class Room extends BaseTime {
     @Transient
     @Setter
     private boolean available;
+
+    public void updateRoomInfo(RoomUpdateRequest updateRequestDto) {
+        this.name = updateRequestDto.getRoomName();
+        this.price = updateRequestDto.getPrice();
+        this.baseNo = updateRequestDto.getBaseNo();
+        this.maxNo = updateRequestDto.getMaxNo();
+        this.extraPrice = updateRequestDto.getExtraPrice();
+        this.toiletCnt = updateRequestDto.isToilet() ? 1 : 0;
+    }
 
 }
