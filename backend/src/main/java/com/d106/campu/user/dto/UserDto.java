@@ -20,7 +20,7 @@ public class UserDto {
 
     @Data
     @Builder
-    public static class NameAndTel {
+    public static class NicknameAndTel {
 
         private String nickName;
         private String tel;
