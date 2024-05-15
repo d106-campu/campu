@@ -19,6 +19,9 @@ const AddCamping = () => {
     } else {
       setIsOpen(!isOpen);
     }
+    if (!isOpen) {
+      setBizrno("");
+    }
   };
 
   const validateBizrno = (value: string) => {

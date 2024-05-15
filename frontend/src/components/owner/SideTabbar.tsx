@@ -62,6 +62,9 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      setBizrno("");
+    }
   };
 
   return (
