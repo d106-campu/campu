@@ -22,6 +22,7 @@ public interface RoomMapper {
     @Mapping(target = "roomCnt", ignore = true)
     @Mapping(target = "supplyList", ignore = true)
     @Mapping(target = "reservationList", ignore = true)
+    @Mapping(target = "emptyNotificationList", ignore = true)
     @Mapping(target = "available", ignore = true)
     @Mapping(target = "toiletCnt", expression = "java(roomCreateRequestDto.isToilet() == true ? 1 : 0)")
     Room toRoom(OwnerDto.RoomCreateRequest roomCreateRequestDto);

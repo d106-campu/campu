@@ -175,6 +175,14 @@ public class OwnerService {
         }
     }
 
+    @Transactional
+    public void deleteRoom(Long roomId) {
+        Room room = getRoom(roomId);
+
+        checkOwner(securityHelper.getLoginAccount(), room.getCampsite().getUser().getAccount());
+        roomRepository.delete(room);
+    }
+
     private void checkOwner(String loginAccount, String ownedAccount) {
         if (!loginAccount.equals(ownedAccount)) {
             throw new UnauthorizedException(CampsiteExceptionCode.FORBIDDEN_CAMPSITE);

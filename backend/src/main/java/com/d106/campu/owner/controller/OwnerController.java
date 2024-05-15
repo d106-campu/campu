@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,5 +83,12 @@ public class OwnerController implements OwnerControllerDoc {
         ownerService.updateRoom(roomId, file, updateRequestDto);
         return new Response();
     }
-    
+
+    @Override
+    @DeleteMapping("/campsite/room/{roomId}")
+    public Response deleteRoom(@PathVariable Long roomId) {
+        ownerService.deleteRoom(roomId);
+        return new Response();
+    }
+
 }

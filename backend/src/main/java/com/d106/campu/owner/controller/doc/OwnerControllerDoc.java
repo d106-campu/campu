@@ -113,6 +113,17 @@ public interface OwnerControllerDoc {
     })
     Response updateRoom(Long roomId, MultipartFile file, @Valid OwnerDto.RoomUpdateRequest updateRequestDto);
 
+    @Operation(summary = "캠핑장 방 삭제", description = "사장님이 캠핑장의 방을 삭제하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 방 삭제 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "캠핑장의 방을 찾을 수 없음", content = @Content)
+    })
+    Response deleteRoom(Long roomId);
+
     class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;
     }
