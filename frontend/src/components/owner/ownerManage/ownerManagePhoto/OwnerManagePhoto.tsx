@@ -1,22 +1,42 @@
+import { RootState } from "@/app/store";
+import { useReservation } from "@/hooks/reservation/useReservation";
+import { createSelector } from "@reduxjs/toolkit";
 import { useRef, useState } from "react";
 import { CiCamera } from "react-icons/ci";
 import { FaMinus } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
+import { useSelector } from "react-redux";
+
+const selectCampsiteInfo = createSelector(
+  (state: RootState) => state.ownerSide.campsiteId,
+  (state: RootState) => state.auth.isLogin,
+  (campsiteId, isLogin) => ({ campsiteId, isLogin })
+);
 
 const OwnerManagePhoto = () => {
+  const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
+  const { useGetCampsite } = useReservation();
+  const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
+
   // 대표 사진
-  const [mainPhoto, setMainPhoto] = useState<string>("");
+  const [mainPhoto, setMainPhoto] = useState<string>(
+    detailCampsiteInfo?.data.campsite.thumbnailImageUrl || ""
+  );
   const mainImgRef = useRef<HTMLInputElement>(null);
   const [mainImage, setMainImage] = useState<File>();
 
   // 배치도 사진
-  const [viewPhoto, setViewPhoto] = useState<string>("");
+  const [viewPhoto, setViewPhoto] = useState<string>(
+    detailCampsiteInfo?.data.campsite.mapImageUrl || ""
+  );
   const viewImgRef = useRef<HTMLInputElement>(null);
   const [viewImage, setViewImage] = useState<File>();
 
   // 추가 사진
   const [otherPhotos, setOtherPhotos] = useState<File[]>([]);
-  const [otherPhoto, setOtherPhoto] = useState<string[]>([]);
+  const [otherPhoto, setOtherPhoto] = useState<string[]>(
+    detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []
+  );
   const otherImgRef = useRef<HTMLInputElement>(null);
 
   const saveMainImgFile = () => {
