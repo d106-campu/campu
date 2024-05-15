@@ -5,6 +5,7 @@ import {
   ICampScoreRes,
   IReviewListReq,
   IPostReviewReq,
+  IReviewRes,
 } from "@/types/review";
 
 // 리뷰 목록 조회
@@ -72,4 +73,24 @@ export const postReview = async ({
   console.log("formData :", formData, formData.values.length);
   const res = await axiosFileInstance.post(`/review`, formData);
   return res.data;
+};
+
+// 리뷰 상세 조회
+export const getReview = async (
+  reviewId: number
+): Promise<APIResponse<IReviewRes>> => {
+  const res = await axiosCommonInstance.get(
+    `/review/campsite/${reviewId}/detail`
+  );
+  return res.data;
+};
+
+// 내 리뷰 삭제 
+export const deleteReview = async (
+  reviewId: number
+): Promise<APISimpleResponse> => {
+  const response = await axiosAuthInstance.delete<APISimpleResponse>(
+    `/review/${reviewId}`
+  );
+  return response.data;
 };
