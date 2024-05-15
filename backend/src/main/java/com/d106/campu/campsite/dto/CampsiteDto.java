@@ -47,7 +47,7 @@ public class CampsiteDto {
     public static class DetailResponse {
 
         private Long id;
-        private UserDto.NameAndTel owner;
+        private UserDto.NicknameAndTel owner;
         private String facltNm;
         private String tel;
         private String lineIntro;
