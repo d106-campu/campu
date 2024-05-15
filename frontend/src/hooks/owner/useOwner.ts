@@ -1,5 +1,13 @@
-import { getOwnerCampsiteList, postBizrno } from "@/services/owner/api";
-import { IBizrnoReq, IOwnerCampsiteReq } from "@/types/owner";
+import {
+  getOwnerCampsiteList,
+  getOwnerReservationList,
+  postBizrno,
+} from "@/services/owner/api";
+import {
+  IBizrnoReq,
+  IOwnerCampsiteReq,
+  IOwnerReservationReq,
+} from "@/types/owner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useOwner = () => {
@@ -16,5 +24,13 @@ export const useOwner = () => {
       mutationFn: () => postBizrno(props),
     });
   };
-  return { useGetOwnerCampsiteList, useAddBizrno };
+
+  // 캠핑장 예약 내역 조회
+  const useGetReservationList = (props: IOwnerReservationReq) => {
+    return useQuery({
+      queryKey: ["ownerReservation", props],
+      queryFn: () => getOwnerReservationList(props),
+    });
+  };
+  return { useGetOwnerCampsiteList, useAddBizrno, useGetReservationList };
 };
