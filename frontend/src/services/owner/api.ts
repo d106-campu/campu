@@ -6,7 +6,7 @@ import { ICampsiteRes } from "@/types/search";
 export const getOwnerCampsiteList = async ({
   pageable,
 }: IOwnerCampsiteReq): Promise<APIResponse<ICampsiteRes>> => {
-  const data = await axiosAuthInstance.get(`/campsite/owner`, {
+  const data = await axiosAuthInstance.get(`/owner/campsite`, {
     params: {
       ...pageable,
     },

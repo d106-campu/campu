@@ -19,6 +19,7 @@ import Toast from "./components/@common/Toast/Toast";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewNotifyCnt } from "./features/notify/notifyCnt";
 import { RootState } from "./app/store";
+import OwnerAddPage from "./pages/owneraddpage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/owner",
     element: <OwnerPage />,
+  },
+  {
+    path: "/owner/add",
+    element: <OwnerAddPage />,
   },
   {
     path: "/search",
