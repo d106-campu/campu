@@ -2,6 +2,7 @@ package com.d106.campu.owner.controller.doc;
 
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.owner.dto.OwnerDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "12. 사장님 관련 API", description = "사장님 권한이 필요한 요청을 처리하는 API")
 public interface OwnerControllerDoc {
 
-    @Operation(summary = "사업자 번호기반 캠핑장 등록", description = "사업자 번호를 기반하여 캠핑장을 등록한다..")
+    @Operation(summary = "사업자 번호기반 캠핑장 등록", description = "사업자 번호를 기반하여 캠핑장을 등록한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "사업자 번호 기반 캠핑장 등록 성공",
             content = @Content(schemaProperties = {
@@ -42,5 +43,17 @@ public interface OwnerControllerDoc {
         @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response getOwnerCampsiteList(Pageable pageable);
+
+    @Operation(summary = "사장님 캠핑장 상세 정보 수정", description = "사장님이 관리하는 캠핑장의 상세정보를 수정하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 상세정보 수정 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })
+        ),
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
+    })
+    Response updateCampsiteDetail(OwnerDto.CampsiteUpdateRequest updateRequestDto);
 
 }
