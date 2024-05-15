@@ -9,4 +9,7 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
     List<Theme> findByCampsiteThemeList_Campsite(Campsite campsite);
 
+    // TODO : To @Query refactor
+    List<Theme> findByThemeStrIn(List<String> themeList);
+
 }

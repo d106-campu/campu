@@ -4,6 +4,7 @@ import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
+import com.d106.campu.owner.dto.OwnerDto;
 import com.d106.campu.owner.service.OwnerService;
 import com.d106.campu.reservation.constant.ReservationConstant;
 import java.time.LocalDate;
@@ -35,6 +36,13 @@ public class OwnerController implements OwnerControllerDoc {
     @GetMapping("/campsite")
     public Response getOwnerCampsiteList(Pageable pageable) {
         return new Response(CampsiteConstant.CAMPSITE_LIST, ownerService.getOwnerCampsiteList(pageable));
+    }
+
+    @Override
+    @PostMapping("/campsite/detail")
+    public Response updateCampsiteDetail(@RequestBody OwnerDto.CampsiteUpdateRequest updateRequestDto) {
+        ownerService.updateCampsiteDetail(updateRequestDto);
+        return new Response();
     }
 
     @Override
