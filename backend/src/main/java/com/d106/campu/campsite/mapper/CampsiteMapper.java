@@ -26,8 +26,8 @@ public interface CampsiteMapper {
     @Mapping(target = "price", ignore = true)
     @Mapping(target = "score", ignore = true)
     @Mapping(target = "campsiteFcltyList", ignore = true)
-    @Mapping(target = "checkin", ignore = true)
-    @Mapping(target = "checkout", ignore = true)
+    @Mapping(source = "checkin", target = "checkin", conditionExpression = "java(createRequestDto.getCheckin() != null)")
+    @Mapping(source = "checkout", target = "checkout", conditionExpression = "java(createRequestDto.getCheckin() != null)")
     Campsite toCampsite(CampsiteDto.CreateRequest createRequestDto);
 
 }

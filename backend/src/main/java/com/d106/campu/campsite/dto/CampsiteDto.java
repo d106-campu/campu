@@ -1,13 +1,14 @@
 package com.d106.campu.campsite.dto;
 
-import com.d106.campu.auth.constant.RegExpression;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
+import com.d106.campu.common.annotation.Tel;
+import com.d106.campu.common.annotation.Time;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class CampsiteDto {
         @Size(max = 16)
         private String facltDivNm;
 
-        @Pattern(regexp = RegExpression.tel)
+        @Tel
         private String tel;
 
         @Size(max = 512)
@@ -139,6 +140,14 @@ public class CampsiteDto {
 
         @Size(max = 16)
         private String animalCmgCl;
+
+        @Time
+        @Parameter(description = "입실 시각. <code>hh:mm</code> 형식.", required = false)
+        private String checkin;
+
+        @Time
+        @Parameter(description = "퇴실 시각. <code>hh:mm</code> 형식.", required = false)
+        private String checkout;
 
     }
 

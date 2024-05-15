@@ -1,7 +1,6 @@
 package com.d106.campu.campsite.service;
 
 import com.d106.campu.auth.constant.RoleName;
-import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.IndutyEnum;
 import com.d106.campu.campsite.constant.ThemeEnum;
@@ -182,27 +181,6 @@ public class CampsiteService {
         return CampsiteLocation.builder().mapX(xAvg / campsiteList.size()).mapY(yAvg / campsiteList.size()).build();
     }
 
-    /**
-     * Regist a campsite.
-     *
-     * @param createRequestDto Campsite information.
-     * @return Saved campsite information.
-     * @throws NotFoundException     If not login status.
-     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
-     */
-    @Transactional
-    public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
-        User user = getUserByAccount();
-        checkUserRoleOwner(user);
-
-        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
-        campsite.setUser(user);
-
-        /* TODO: insert campsite location(coordinates), induty, etc. */
-
-        return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
-    }
-
     @Transactional(readOnly = true)
     public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId, User user) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
@@ -296,16 +274,6 @@ public class CampsiteService {
             room.setTotalPrice(dailyPrice * dateDiff);
             return room;
         });
-    }
-
-    /**
-     * @param user Login user instance.
-     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
-     */
-    private void checkUserRoleOwner(User user) {
-        if (!user.getRole().equals(RoleName.OWNER)) {
-            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
-        }
     }
 
     private User getUserByAccount() {

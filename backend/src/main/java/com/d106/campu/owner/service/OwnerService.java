@@ -3,7 +3,7 @@ package com.d106.campu.owner.service;
 import com.d106.campu.auth.constant.RoleName;
 import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.domain.jpa.Campsite;
-import com.d106.campu.campsite.dto.CampsiteDto.Response;
+import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.ConflictException;
@@ -41,13 +41,28 @@ public class OwnerService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Response> getOwnerCampsiteList(Pageable pageable) {
-        User user = getUser();
-        if (!user.getRole().equals(RoleName.OWNER)) {
-            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
-        }
+    public Page<CampsiteDto.Response> getOwnerCampsiteList(Pageable pageable) {
+        return campsiteRepository.findByUser(pageable, getOwnerUser()).map(campsiteMapper::toCampsiteListResponseDto);
+    }
 
-        return campsiteRepository.findByUser(pageable, user).map(campsiteMapper::toCampsiteListResponseDto);
+    /**
+     * Regist a campsite.
+     *
+     * @param createRequestDto Campsite information.
+     * @return Saved campsite information.
+     * @throws NotFoundException     If not login status.
+     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
+     */
+    @Transactional
+    public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
+        User user = getOwnerUser();
+
+        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
+        campsite.setUser(user);
+
+        /* TODO: insert campsite location(coordinates), induty, etc. */
+
+        return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
     }
 
     private void checkExistedOwner(Campsite campsite) {
@@ -64,6 +79,19 @@ public class OwnerService {
     private User getUser() {
         return userRepository.findByAccount(securityHelper.getLoginAccount())
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+    }
+
+    /**
+     * @return user instance.
+     * @throws NotFoundException
+     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
+     */
+    private User getOwnerUser() {
+        User user = getUser();
+        if (!user.getRole().equals(RoleName.OWNER)) {
+            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
+        }
+        return user;
     }
 
 }
