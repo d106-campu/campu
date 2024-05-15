@@ -73,6 +73,25 @@ export interface IPostReviewReq {
   score: number;
 }
 
+// 리뷰 상세 조회 Response
+export interface IReviewRes {
+  reviewDetail: IReviewData;
+}
+
+export interface IReviewData {
+  campsiteId: number;
+  campsiteName: string;
+  indutyList: string[];
+  reviewId: number;
+  createTime: string;
+  user: IUser;
+  score: number;
+  content: string;
+  visitDate: string;
+  reviewImageList: string[];
+  mine: boolean;
+}
+
 // 내 리뷰 (마이페이지)
 export interface IMyReview {
   campsiteName: string;

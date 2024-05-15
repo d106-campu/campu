@@ -1,4 +1,10 @@
-import { getReviewList, getCampScore, postReview } from "@/services/review/api";
+import {
+  getReviewList,
+  getCampScore,
+  postReview,
+  getReview,
+  deleteReview,
+} from "@/services/review/api";
 import { IReviewListReq } from "@/types/review";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
@@ -35,7 +41,7 @@ export const useReview = () => {
   // 리뷰 등록
   const usePostReview = () => {
     return useMutation({
-      mutationKey: ["user review"],
+      mutationKey: ["post review"],
       mutationFn: postReview,
       onSuccess: (res) => {
         console.log("리뷰 등록 성공", res);
@@ -46,10 +52,34 @@ export const useReview = () => {
     });
   };
 
+  // 리뷰 상세 조회
+  const useGetReview = (reviewId: number) => {
+    return useQuery({
+      queryKey: ["review", reviewId],
+      queryFn: () => getReview(reviewId),
+    });
+  };
+
+  // 내 리뷰 삭제
+  const useDeleteReview = () => {
+    return useMutation({
+      mutationKey: ["delete review"],
+      mutationFn: (reviewId: number) => deleteReview(reviewId),
+      onSuccess: () => {
+        console.log("리뷰 삭제 성공");
+      },
+      onError: (err) => {
+        console.error("리뷰 삭제 실패", err);
+      },
+    });
+  };
+
   return {
     useGetReviewListInfinite,
     useGetReviewList,
     useGetCampScore,
     usePostReview,
+    useGetReview,
+    useDeleteReview,
   };
 };
