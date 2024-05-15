@@ -27,7 +27,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // TODO : 상세환 예외처리 추가
         ResponseFail responseFail;
 
-        if (request.getAttribute(SecurityConstant.NO_TOKEN).equals(SecurityConstant.NO_TOKEN)) {
+        if (request.getAttribute(SecurityConstant.NO_TOKEN) != null && request.getAttribute(SecurityConstant.NO_TOKEN)
+            .equals(SecurityConstant.NO_TOKEN)) {
             responseFail = new ResponseFail(CommonExceptionCode.NO_TOKEN.getCode(),
                 CommonExceptionCode.NO_TOKEN.getMessage());
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

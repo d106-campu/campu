@@ -86,7 +86,18 @@ public class ReviewService {
 
     @Transactional
     public void delete(Long reviewId) {
-        reviewRepository.deleteByIdAndReservation_User_Account(reviewId, securityHelper.getLoginAccount());
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
+            new NotFoundException(ReviewExceptionCode.REVIEW_NOT_FOUND));
+
+        checkReviewUser(review.getReservation().getUser(), securityHelper.getLoginAccount());
+
+        reviewRepository.delete(review);
+    }
+
+    private void checkReviewUser(User user, String loginAccount) {
+        if (!user.getAccount().equals(loginAccount)) {
+            throw new UnauthorizedException(ReviewExceptionCode.UNAUTHORIZED_REVIEW);
+        }
     }
 
     private void checkFileCount(List<MultipartFile> files) {

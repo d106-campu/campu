@@ -36,4 +36,13 @@ public class RoomDto {
 
     }
 
+    @Data
+    @Builder
+    public static class IdAndName {
+
+        private Long id;
+        private String name;
+
+    }
+
 }

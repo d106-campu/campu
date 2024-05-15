@@ -8,8 +8,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CampsiteExceptionCode implements ExceptionCode {
 
+    /* Forbidden exception */
+    FORBIDDEN_CAMPSITE("CAMPSITE201", "Forbidden campsite with no authority"),
+
     /* Not found exception */
-    CAMPSITE_NOT_FOUND("CAMPSITE011", "Invalid campsite");
+    CAMPSITE_NOT_FOUND("CAMPSITE301", "Invalid campsite");
 
     private final String code;
     private final String message;

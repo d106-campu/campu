@@ -11,6 +11,9 @@ public enum ReviewExceptionCode implements ExceptionCode {
     /* Bad Request exception */
     FILE_COUNT_LIMIT("REVIEW001", "File count limit 5"),
 
+    /* Unauthorized exception */
+    UNAUTHORIZED_REVIEW("REVIEW101", "Unauthorized this review"),
+
     /* Not found exception */
     REVIEW_NOT_FOUND("REVIEW401", "Not found review"),
 

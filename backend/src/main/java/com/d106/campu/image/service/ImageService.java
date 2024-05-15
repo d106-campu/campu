@@ -14,6 +14,7 @@ import com.d106.campu.image.mapper.ImageMapper;
 import com.d106.campu.image.repository.ImageRepository;
 import com.d106.campu.review.domain.jpa.Review;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
+import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
@@ -139,6 +140,18 @@ public class ImageService {
             .forEach(review::addReviewImage);
 
         reviewRepository.save(review);
+    }
+
+    @Transactional
+    public void uploadRoomImage(Room room, MultipartFile roomImage) {
+        Path basePath = ImageConstant.CAMPSITE_DIR.resolve(room.getCampsite().getId().toString()).resolve(ImageConstant.ROOM)
+            .resolve(room.getId().toString());
+        createAndCleanDirectory(basePath);
+        String fileName = saveFile(basePath, roomImage);
+        String postfix = String.join("/", room.getCampsite().getId().toString(), ImageConstant.ROOM, room.getId().toString(),
+            fileName);
+        String proRoomImageUrl = StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix);
+        room.setImageUrl(proRoomImageUrl);
     }
 
     private String saveFile(Path dir, MultipartFile file) {

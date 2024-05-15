@@ -1,7 +1,6 @@
 package com.d106.campu.campsite.service;
 
 import com.d106.campu.auth.constant.RoleName;
-import com.d106.campu.auth.exception.code.AuthExceptionCode;
 import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.IndutyEnum;
 import com.d106.campu.campsite.constant.ThemeEnum;
@@ -29,7 +28,7 @@ import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
 import com.d106.campu.user.domain.jpa.User;
-import com.d106.campu.user.dto.UserDto.NameAndTel;
+import com.d106.campu.user.dto.UserDto;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
 import java.awt.geom.Point2D;
@@ -182,27 +181,6 @@ public class CampsiteService {
         return CampsiteLocation.builder().mapX(xAvg / campsiteList.size()).mapY(yAvg / campsiteList.size()).build();
     }
 
-    /**
-     * Regist a campsite.
-     *
-     * @param createRequestDto Campsite information.
-     * @return Saved campsite information.
-     * @throws NotFoundException     If not login status.
-     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
-     */
-    @Transactional
-    public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
-        User user = getUserByAccount();
-        checkUserRoleOwner(user);
-
-        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
-        campsite.setUser(user);
-
-        /* TODO: insert campsite location(coordinates), induty, etc. */
-
-        return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
-    }
-
     @Transactional(readOnly = true)
     public CampsiteDto.DetailResponse getCampsiteDetailById(Long campsiteId, User user) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
@@ -210,7 +188,7 @@ public class CampsiteService {
 
         return CampsiteDto.DetailResponse.builder()
             .id(campsite.getId())
-            .owner(NameAndTel.builder()
+            .owner(UserDto.NicknameAndTel.builder()
                 .nickName(campsite.getUser().getNickname())
                 .tel(campsite.getUser().getNickname())
                 .build())
@@ -226,8 +204,7 @@ public class CampsiteService {
             .addr1(campsite.getAddr1())
             .addr2(campsite.getAddr2())
             .indutyList(List.of(campsite.getIndutyList().split(",")))
-            .themeList(themeRepository.findByCampsiteThemeList_Campsite(campsite).stream().map(Theme::getThemeStr)
-                .toList())
+            .themeList(themeRepository.findByCampsiteThemeList_Campsite(campsite).stream().map(Theme::getThemeStr).toList())
             .facltList(fcltyRepository.findByCampsiteFcltyList_Campsite(campsite).stream().map(Fclty::getFcltyStr).toList())
             .score(reviewRepository.avgScoreByCampsite(campsite).orElse(0.0))
             .campsiteLocation(campsite.getCampsiteLocation())
@@ -238,6 +215,8 @@ public class CampsiteService {
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
             .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(CampsiteImage::getUrl).toList())
+            .checkin(campsite.getCheckin())
+            .checkout(campsite.getCheckout())
             .build();
     }
 
@@ -295,16 +274,6 @@ public class CampsiteService {
             room.setTotalPrice(dailyPrice * dateDiff);
             return room;
         });
-    }
-
-    /**
-     * @param user Login user instance.
-     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
-     */
-    private void checkUserRoleOwner(User user) {
-        if (!user.getRole().equals(RoleName.OWNER)) {
-            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
-        }
     }
 
     private User getUserByAccount() {
