@@ -32,7 +32,7 @@ const WriteReviewContainer = () => {
             )} · ${diffDays(startDate, endDate)}박 `}
           </p>
         </div>
-        <ReviewForm reservationId={reservationId} />
+        <ReviewForm reservationId={reservationId} campsiteId={campsiteId}/>
       </div>
     </>
   );
