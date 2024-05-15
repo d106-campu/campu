@@ -51,6 +51,7 @@ public class Campsite extends BaseTime {
     @Column(name = "line_intro", length = 512)
     private String lineIntro;
 
+    @Setter
     @Column(name = "intro", length = 2048)
     private String intro;
 
@@ -101,7 +102,7 @@ public class Campsite extends BaseTime {
     @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CampsiteImage> campsiteImageList;
 
-    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CampsiteTheme> campsiteThemeList;
 
     @OneToOne(mappedBy = "campsite")
@@ -113,7 +114,7 @@ public class Campsite extends BaseTime {
     @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
     private List<Room> roomList;
 
-    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "campsite", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CampsiteFclty> campsiteFcltyList;
 
     @Transient
@@ -135,6 +136,16 @@ public class Campsite extends BaseTime {
     public void addCampsiteImage(CampsiteImage campsiteImage) {
         this.campsiteImageList.add(campsiteImage);
         campsiteImage.setCampsite(this);
+    }
+
+    public void addCampsiteTheme(CampsiteTheme campsiteTheme) {
+        this.campsiteThemeList.add(campsiteTheme);
+        campsiteTheme.setCampsite(this);
+    }
+
+    public void addCampsiteFclty(CampsiteFclty campsiteFclty) {
+        this.campsiteFcltyList.add(campsiteFclty);
+        campsiteFclty.setCampsite(this);
     }
 
 }

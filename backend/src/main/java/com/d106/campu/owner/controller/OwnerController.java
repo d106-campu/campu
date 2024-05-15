@@ -3,6 +3,7 @@ package com.d106.campu.owner.controller;
 import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
+import com.d106.campu.owner.dto.OwnerDto;
 import com.d106.campu.owner.service.OwnerService;
 import com.d106.campu.reservation.constant.ReservationConstant;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +35,13 @@ public class OwnerController implements OwnerControllerDoc {
     @GetMapping("/campsite")
     public Response getOwnerCampsiteList(Pageable pageable) {
         return new Response(CampsiteConstant.CAMPSITE_LIST, ownerService.getOwnerCampsiteList(pageable));
+    }
+
+    @Override
+    @PostMapping("/campsite/detail")
+    public Response updateCampsiteDetail(@RequestBody OwnerDto.CampsiteUpdateRequest updateRequestDto) {
+        ownerService.updateCampsiteDetail(updateRequestDto);
+        return new Response();
     }
 
     @Override
