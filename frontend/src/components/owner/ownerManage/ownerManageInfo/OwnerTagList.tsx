@@ -10,17 +10,16 @@ interface TagListProps {
 }
 
 const selectCampsiteInfo = createSelector(
-    (state: RootState) => state.ownerSide.campsiteId,
-    (state: RootState) => state.auth.isLogin,
-    (campsiteId, isLogin) => ({ campsiteId, isLogin })
-  );
+  (state: RootState) => state.ownerSide.campsiteId,
+  (state: RootState) => state.auth.isLogin,
+  (campsiteId, isLogin) => ({ campsiteId, isLogin })
+);
 
 const OwnerTagList: React.FC<TagListProps> = ({ tags, onTagToggle }) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
   const { useGetCampsite } = useReservation();
   const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
-  console.log(detailCampsiteInfo?.data.campsite.themeList);
 
   useEffect(() => {
     if (detailCampsiteInfo && detailCampsiteInfo.data.campsite.themeList) {

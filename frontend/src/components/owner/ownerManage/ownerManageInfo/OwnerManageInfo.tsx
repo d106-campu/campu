@@ -43,6 +43,12 @@ const OwnerManageInfo = () => {
     }
   }, [detailCampsiteInfo]);
 
+  useEffect(() => {
+    if (detailCampsiteInfo && detailCampsiteInfo.data.campsite.facltList) {
+      setSelectedFacility(detailCampsiteInfo.data.campsite.facltList);
+    }
+  }, [detailCampsiteInfo]);
+
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(

@@ -1,7 +1,7 @@
 import { RootState } from "@/app/store";
 import { useReservation } from "@/hooks/reservation/useReservation";
 import { createSelector } from "@reduxjs/toolkit";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CiCamera } from "react-icons/ci";
 import { FaMinus } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
@@ -17,6 +17,17 @@ const OwnerManagePhoto = () => {
   const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
   const { useGetCampsite } = useReservation();
   const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
+
+  useEffect(() => {
+    // detailCampsiteInfo가 변경될 때마다 대표 사진과 배치도 사진을 설정
+    if (detailCampsiteInfo) {
+      setMainPhoto(detailCampsiteInfo?.data.campsite.thumbnailImageUrl || "");
+      setViewPhoto(detailCampsiteInfo?.data.campsite.mapImageUrl || "");
+      setOtherPhoto(
+        detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []
+      );
+    }
+  }, [detailCampsiteInfo]);
 
   // 대표 사진
   const [mainPhoto, setMainPhoto] = useState<string>(
@@ -38,6 +49,9 @@ const OwnerManagePhoto = () => {
     detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []
   );
   const otherImgRef = useRef<HTMLInputElement>(null);
+
+  // @TODO: 변수 사용 후 삭제하기
+  console.log(typeof mainImage, typeof viewImage, typeof otherPhotos);
 
   const saveMainImgFile = () => {
     if (mainImgRef.current && mainImgRef.current.files) {
@@ -99,8 +113,6 @@ const OwnerManagePhoto = () => {
   const deletePhoto = (id: number) => {
     setOtherPhoto(otherPhoto.filter((_, index) => index !== id));
   };
-
-  console.log(mainImage, viewImage, otherPhotos);
 
   return (
     <>
