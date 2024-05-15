@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 interface ICampsiteState {
   data: {
     id: number; // 캠핑장 아이디

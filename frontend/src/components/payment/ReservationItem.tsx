@@ -12,24 +12,25 @@ import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
 import { useState } from "react";
 import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
+import formatPhoneNumber from "@/utils/formatPhoneNumber";
 
 const ReservationItem = () => {
   const dispatch = useDispatch();
   const {
     reservationId,
     image,
-    campsite_faclt_nm,
-    campsite_tel,
-    campsite_addr1,
-    campsite_addr2,
+    facltNm,
+    tel,
+    addr1,
+    addr2,
     mapX,
     mapY,
-    rating,
+    score,
     roomName,
     roomInduty,
     supplyList,
     headCnt,
-    price,
+    totalPrice,
     startDate,
     endDate,
     checkIn,
@@ -73,7 +74,7 @@ const ReservationItem = () => {
         <div className="flex justify-between items-center px-5 pt-1">
           <div className="flex justify-center items-center py-2">
             {/* 캠핑장 이름 */}
-            <h2 className="text-2xl font-bold pl-3">{campsite_faclt_nm}</h2>
+            <h2 className="text-2xl font-bold pl-3">{facltNm}</h2>
           </div>
         </div>
       </div>
@@ -86,12 +87,12 @@ const ReservationItem = () => {
             캠핑장 위치
           </h3>
           <p className="pb-[12px] font-bold text-BLACK">
-            {campsite_addr1} {campsite_addr2}
+            {addr1} {addr2}
           </p>
           {image ? (
             <img
               src={image}
-              alt={`${campsite_faclt_nm} ${roomName}`}
+              alt={`${facltNm} ${roomName}`}
               className="w-full h-52 object-cover object-center rounded-xl"
             />
           ) : (
@@ -128,18 +129,24 @@ const ReservationItem = () => {
               <p className="pb-[15px] font-bold text-BLACK">{roomName}</p>
               <h3>가격</h3>
               <p className="pb-[15px] font-bold text-MAIN_RED">
-                {price.toLocaleString("ko-KR")}원
+                {totalPrice.toLocaleString("ko-KR")}원
               </p>
             </div>
             <div>
               <h3>캠핑장 유형</h3>
               <p className="pb-[15px] font-bold text-BLACK">{roomInduty}</p>
-              <h3>입실·퇴실 시간</h3>
-              <p className="pb-[15px] font-bold text-BLACK">
-                {checkIn} - {checkOut}
-              </p>
+              {checkIn && checkOut && (
+                <>
+                  <h3>입실·퇴실 시간</h3>
+                  <p className="pb-[15px] font-bold text-BLACK">
+                    {checkIn} - {checkOut}
+                  </p>
+                </>
+              )}
               <h3>전화번호</h3>
-              <p className="pb-[15px] font-bold text-BLACK">{campsite_tel}</p>
+              <p className="pb-[15px] font-bold text-BLACK">
+                {formatPhoneNumber(tel)}
+              </p>
             </div>
           </div>
           {supplyList && supplyList.length > 0 && (
@@ -171,11 +178,11 @@ const ReservationItem = () => {
         />
         {mapModal && (
           <MapModal
-            lat={mapX}
-            lng={mapY}
-            facltNm={campsite_faclt_nm}
-            addr1={campsite_addr1}
-            rate={rating}
+            lat={mapY}
+            lng={mapX}
+            facltNm={facltNm}
+            addr1={addr1}
+            rate={score}
             level={5}
             toggleModal={toggleMapModal}
           />

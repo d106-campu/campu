@@ -18,24 +18,12 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
 
   const [isAlertActive, setIsAlertActive] = useState(!room.emptyNotification); // 빈자리 알림 상태관리
 
-  // @TODO: 캠프장 정보는 리액트 쿼리로 가져오기
-  const campsite = {
-    campsiteId: 1,
-    facltNm: "캠프유캠푸 캠핑장", // 캠핑장 이름
-    tel: "010-1234-5678", // 캠핑장 전화번호
-    addr1: "경상북도 칠곡군 가산면 금화리 산 49-1", // 캠핑장 주소
-    addr2: "캠프유캠푸 캠핑장", // 캠핑장 상세 주소
-    checkIn: "14:00", // 캠핑장 입실 시간
-    checkOut: "11:00", // 캠핑장 퇴실 시간
-    mapX: 36.1334375, // 위도
-    mapY: 128.3710625, //경도
-    rating: 3, // 별점
-  };
-
+  // Redux 상태 불러오기
+  const campsite = useSelector((state: RootState) => state.campsite.data);
+  const { headCount } = useSelector((state: RootState) => state.headCount);
   const { startDate, endDate } = useSelector(
     (state: RootState) => state.campingDate
   );
-  const { headCount } = useSelector((state: RootState) => state.headCount);
 
   const { usePostAlert, useDeleteAlert } = useReservation();
   const { mutate: postAlert } = usePostAlert({
@@ -100,24 +88,24 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
       image: room.imageUrl,
       roomName: room.name, // 캠핑장 방 이름
       roomInduty: room.induty, // 캠핑 유형
-      price: room.price, // 총 가격
+      totalPrice: room.totalPrice, // 총 가격
       supplyList: room.supplyList,
-      campsite_faclt_nm: campsite.facltNm, // 캠핑장 이름
-      campsite_tel: campsite.tel, // 캠핑장 전화번호
-      campsite_addr1: campsite.addr1, // 캠핑장 주소
-      campsite_addr2: campsite.addr2, // 캠핑장 상세 주소
+      facltNm: campsite.facltNm, // 캠핑장 이름
+      tel: campsite.tel, // 캠핑장 전화번호
+      addr1: campsite.addr1, // 캠핑장 주소
+      addr2: campsite.addr2, // 캠핑장 상세 주소
       mapX: campsite.mapX, // 위도
       mapY: campsite.mapY, // 경도
       checkIn: campsite.checkIn, // 캠핑장 입실 시간
       checkOut: campsite.checkOut, // 캠핑장 퇴실 시간
-      rating: campsite.rating, // 별점
+      score: campsite.score, // 별점
       headCnt: headCount, // 예약 인원
       startDate: startDate, // 캠핑 시작일
       endDate: endDate, // 캠핑 종료일
     };
 
     dispatch(setReservationData(newReservationData));
-    navigate(`/camps/${campsite.campsiteId}/payment`);
+    navigate(`/camps/${campsite.id}/payment`);
     scrollToTop();
   };
 
