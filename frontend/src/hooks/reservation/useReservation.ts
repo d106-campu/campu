@@ -44,10 +44,10 @@ export const useReservation = () => {
   };
 
   // 캠핑장 상세 조회
-  const useSetCampsite = (campsiteId: number) => {
+  const useGetCampsite = (campsiteId: number, isLogin: boolean) => {
     return useQuery({
       queryKey: ["campsite detail", campsiteId],
-      queryFn: () => getCapmsite(campsiteId),
+      queryFn: () => getCapmsite(campsiteId, isLogin),
       enabled: !!campsiteId, // campsiteId가 유효할 때만 쿼리 실행
     });
   };
@@ -56,6 +56,6 @@ export const useReservation = () => {
     useGetRoomListInfinite,
     usePostAlert,
     useDeleteAlert,
-    useSetCampsite,
+    useGetCampsite,
   };
 };

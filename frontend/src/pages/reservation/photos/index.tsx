@@ -8,7 +8,7 @@ const PhotosPage = () => {
   const { main, photos, id, like } = location.state || {}; // state가 없을 경우를 대비해 기본값 설정
   return (
     <>
-      <PhotosHeader campsiteId={id} liked={like} />
+      <PhotosHeader campsiteId={id} like={like} />
       <PhotosContainer main={main} photos={photos} />
       <Footer />
     </>

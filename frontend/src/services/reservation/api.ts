@@ -56,8 +56,11 @@ export const deleteAlert = async (
 
 // 캠핑장 상세 조회
 export const getCapmsite = async (
-  campsiteId: number
+  campsiteId: number,
+  isLogin: boolean
 ): Promise<APIResponse<ICampsiteRes>> => {
-  const res = await axiosCommonInstance.get(`/campsite/${campsiteId}`);
+  // 로그인 상태에 따라 적절한 axios 인스턴스 선택
+  const axiosInstance = isLogin ? axiosAuthInstance : axiosCommonInstance;
+  const res = await axiosInstance.get(`/campsite/${campsiteId}`);
   return res.data;
 };

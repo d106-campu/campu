@@ -6,14 +6,19 @@ import { useParams } from "react-router-dom";
 import { RouteParams } from "@/types/model";
 import { useReservation } from "@/hooks/reservation/useReservation";
 import { useReview } from "@/hooks/review/useReview";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 const CampSiteContainer = () => {
   const { campId } = useParams<RouteParams>();
   const campsiteId = campId ? parseInt(campId, 10) : 0;
 
+  // 로그인 상태 확인
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+
   // 캠핑장 상세 조회
-  const { useSetCampsite } = useReservation();
-  const { data } = useSetCampsite(campsiteId);
+  const { useGetCampsite } = useReservation();
+  const { data } = useGetCampsite(campsiteId, isLogin);
 
   const campsiteData = data?.data?.campsite;
 
