@@ -101,6 +101,18 @@ public interface OwnerControllerDoc {
     })
     Response createRoom(MultipartFile file, @Valid OwnerDto.RoomCreateRequest createRequestDto);
 
+    @Operation(summary = "캠핑장 방 수정", description = "사장님이 캠핑장의 방을 수정하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 방 수정 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })),
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "캠핑장의 방을 찾을 수 없음", content = @Content)
+    })
+    Response updateRoom(Long roomId, MultipartFile file, @Valid OwnerDto.RoomUpdateRequest updateRequestDto);
+
     class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;
     }

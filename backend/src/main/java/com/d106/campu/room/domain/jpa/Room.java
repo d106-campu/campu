@@ -2,6 +2,7 @@ package com.d106.campu.room.domain.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
 import com.d106.campu.reservation.domain.jpa.Reservation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -76,5 +77,14 @@ public class Room extends BaseTime {
     @Transient
     @Setter
     private boolean available;
+
+    public void updateRoomInfo(RoomUpdateRequest updateRequestDto) {
+        this.name = updateRequestDto.getRoomName();
+        this.price = updateRequestDto.getPrice();
+        this.baseNo = updateRequestDto.getBaseNo();
+        this.maxNo = updateRequestDto.getMaxNo();
+        this.extraPrice = updateRequestDto.getExtraPrice();
+        this.toiletCnt = updateRequestDto.isToilet() ? 1 : 0;
+    }
 
 }

@@ -23,10 +23,12 @@ import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.image.service.ImageService;
 import com.d106.campu.owner.dto.OwnerDto.CampsiteUpdateRequest;
 import com.d106.campu.owner.dto.OwnerDto.RoomCreateRequest;
+import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
 import com.d106.campu.owner.exception.code.OwnerExceptionCode;
 import com.d106.campu.reservation.dto.ReservationDto;
 import com.d106.campu.reservation.repository.jpa.QReservationRepository;
 import com.d106.campu.room.domain.jpa.Room;
+import com.d106.campu.room.exception.code.RoomExceptionCode;
 import com.d106.campu.room.mapper.RoomMapper;
 import com.d106.campu.room.repository.jpa.IndutyRepository;
 import com.d106.campu.room.repository.jpa.RoomRepository;
@@ -152,7 +154,25 @@ public class OwnerService {
             .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
         roomRepository.saveAndFlush(room);
 
-        imageService.uploadRoomImage(room, file);
+        if (file != null && !file.isEmpty()) {
+            imageService.uploadRoomImage(room, file);
+        }
+    }
+
+    @Transactional
+    public void updateRoom(Long roomId, MultipartFile file, RoomUpdateRequest updateRequestDto) {
+        Room room = getRoom(roomId);
+
+        checkOwner(securityHelper.getLoginAccount(), room.getCampsite().getUser().getAccount());
+        room.updateRoomInfo(updateRequestDto);
+        room.setInduty(indutyRepository.findByIndutyStr(updateRequestDto.getInduty())
+            .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
+
+        if (file != null && !file.isEmpty()) {
+            imageService.uploadRoomImage(room, file);
+        } else {
+            room.setImageUrl(null);
+        }
     }
 
     private void checkOwner(String loginAccount, String ownedAccount) {
@@ -165,6 +185,11 @@ public class OwnerService {
         if (campsite.getUser() != null) {
             throw new ConflictException(OwnerExceptionCode.OWNED_BIZRNO);
         }
+    }
+
+    private Room getRoom(Long roomId) {
+        return roomRepository.findById(roomId)
+            .orElseThrow(() -> new NotFoundException(RoomExceptionCode.NOT_FOUND_ROOM));
     }
 
     private Campsite getCampsiteById(Long campsiteId) {
@@ -194,4 +219,5 @@ public class OwnerService {
         }
         return user;
     }
+
 }

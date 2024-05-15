@@ -35,4 +35,17 @@ public class OwnerDto {
 
     }
 
+    @Data
+    public static class RoomUpdateRequest {
+
+        private String induty;
+        private String roomName;
+        private Long price;
+        private int baseNo;
+        private int maxNo;
+        private Long extraPrice;
+        private boolean toilet;
+
+    }
+
 }
