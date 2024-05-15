@@ -5,7 +5,7 @@ import { scrollToTop } from "@/utils/scrollToTop";
 import { IReviewList } from "@/types/review";
 import { ICampsiteOwner } from "@/types/reservation";
 import FacilityList from "@/components/reservation/FacilityList";
-import ReviewItem from "@/components/reservation/ReviewItem";
+import SimpleReviewItem from "@/components/reservation/SimpleReviewItem";
 import Loading from "@/components/@common/Loading/Loading";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
@@ -113,7 +113,7 @@ const InfoDetail = ({
           {isReviewsLoading && <Loading />}
           <div className="flex gap-5 py-2">
             {reviewList.content.map((review, index) => (
-              <ReviewItem key={index} review={review} />
+              <SimpleReviewItem key={index} review={review} />
             ))}
           </div>
         </div>

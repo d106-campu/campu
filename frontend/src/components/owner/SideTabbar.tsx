@@ -43,7 +43,7 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
     <>
       <div className="fixed left-12 top-1/3 transform -translate-y-1/3">
         <div className="flex flex-col">
-          {campData.map((campground, index) => (
+          {campData?.map((campground, index) => (
             <button
               key={index}
               onClick={() => handleSelect(campground)}

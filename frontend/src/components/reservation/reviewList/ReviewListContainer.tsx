@@ -35,7 +35,7 @@ const ReviewListContainer = () => {
   };
 
   return (
-    <div className="max-w-[75%] mx-auto py-2">
+    <div className="max-w-[75%] mx-auto pt-2 pb-64">
       <div onClick={goToCamp} className="flex items-end gap-2 cursor-pointer">
         <BackButton route={`/camps/${campsiteId}`} />
         <CampSiteTitle types={types} campsiteName={campsiteName} />
