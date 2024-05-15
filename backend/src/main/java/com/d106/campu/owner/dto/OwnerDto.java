@@ -21,4 +21,18 @@ public class OwnerDto {
 
     }
 
+    @Data
+    public static class RoomCreateRequest {
+
+        private Long campsiteId;
+        private String induty;
+        private String roomName;
+        private Long price;
+        private int baseNo;
+        private int maxNo;
+        private Long extraPrice;
+        private boolean toilet;
+
+    }
+
 }

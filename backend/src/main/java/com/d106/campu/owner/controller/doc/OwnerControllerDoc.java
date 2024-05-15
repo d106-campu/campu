@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 @Validated
 @Tag(name = "12. 사장님 관련 API", description = "사장님 권한이 필요한 요청을 처리하는 API")
@@ -87,6 +88,18 @@ public interface OwnerControllerDoc {
         @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content)
     })
     Response createCampsite(@Valid CampsiteDto.CreateRequest createRequestDto);
+
+    @Operation(summary = "캠핑장 방 등록", description = "사장님이 캠핑장의 방을 등록하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 방 등록 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            })),
+        @ApiResponse(responseCode = "400", description = "캠핑장 정보 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "캠핑장을 찾을 수 없음", content = @Content)
+    })
+    Response createRoom(MultipartFile file, @Valid OwnerDto.RoomCreateRequest createRequestDto);
 
     class CreateCampsiteResponse {
         public CampsiteDto.CreateResponse campsite;

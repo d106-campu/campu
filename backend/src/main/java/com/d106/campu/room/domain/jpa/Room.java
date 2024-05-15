@@ -32,10 +32,12 @@ public class Room extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campsite_id", nullable = false)
     private Campsite campsite;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "induty_id", nullable = false)
     private Induty induty;
@@ -58,6 +60,7 @@ public class Room extends BaseTime {
     @Column(name = "room_cnt", nullable = false)
     private int roomCnt;
 
+    @Setter
     @Column(name = "image_url")
     private String imageUrl;
 
