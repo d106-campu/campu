@@ -7,9 +7,9 @@ import com.d106.campu.campsite.domain.jpa.CampsiteFclty;
 import com.d106.campu.campsite.domain.jpa.CampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.Fclty;
 import com.d106.campu.campsite.domain.jpa.Theme;
+import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.dto.CampsiteDto.Response;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
-import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
 import com.d106.campu.campsite.repository.jpa.CampsiteFcltyRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
@@ -73,8 +73,12 @@ public class OwnerService {
     public List<ReservationDto.ResponseWithUser> getOwnerReservationListByCampsite(Long campsiteId, LocalDate date) {
         Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
             CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+
+        User user = getOwnerUser();
+        checkOwner(user.getAccount(), campsite.getUser().getAccount());
+
         date = (date == null) ? LocalDate.now() : date;
-        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), date);
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, user, date);
     }
 
     /**
