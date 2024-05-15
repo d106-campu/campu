@@ -127,7 +127,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
         <div className="pt-10">
           <h3 className="text-xl font-bold">캠핑장 소개</h3>
           <div className="px-2 pt-1 text-sm text-UNIMPORTANT_TEXT_01">
-            <p className="font-bold pb-1">{data.lineIntro}</p>
+            <p className="font-bold pb-1">🌸🌳 {data.lineIntro} 🌳🌸</p>
             <p className="pl-1 pb-2">{data.intro}</p>
             {data.themeList &&
               data.themeList.map((theme, index) => (
