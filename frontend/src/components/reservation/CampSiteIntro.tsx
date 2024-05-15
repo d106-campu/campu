@@ -7,6 +7,7 @@ import CampSiteLayout from "@/components/reservation//CampSiteLayout";
 import ReadOnlyCalendar from "@/components/@common/Calendar/ReadOnlyCalendar";
 import LikeButton from "@/components/@common/Like/LikeButton";
 import { copyToClipboard } from "@/utils/copyToClipboard";
+import formatPhoneNumber from "@/utils/formatPhoneNumber";
 import phoneIcon from "@/assets/svg/phone.svg";
 import reviewIcon from "@/assets/svg/review.svg";
 import mapIcon from "@/assets/svg/map.svg";
@@ -97,9 +98,11 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
           </div>
           <div className="flex py-2">
             <img src={phoneIcon} className="w-4" />
-            <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.tel}</p>
+            <p className="text-UNIMPORTANT_TEXT_01 pl-3">
+              {formatPhoneNumber(data.tel)}
+            </p>
             <button
-              onClick={() => copyToClipboard(data.tel)}
+              onClick={() => copyToClipboard(formatPhoneNumber(data.tel))}
               className="pl-2 text-MAIN_GREEN font-bold"
             >
               복사하기
