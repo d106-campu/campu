@@ -1,28 +1,17 @@
 import Footer from "@/components/@common/Footer/Footer";
 import PhotosContainer from "@/components/reservation/photos/PhotosContainer";
 import PhotosHeader from "@/components/reservation/photos/PhotosHeader";
+import { useLocation } from "react-router-dom";
 
 const PhotosPage = () => {
+  const location = useLocation();
+  const { main, photos, id, like } = location.state || {}; // state가 없을 경우를 대비해 기본값 설정
   return (
     <>
-      <PhotosHeader campsiteId={campsiteId} liked={liked} />
+      <PhotosHeader campsiteId={id} liked={like} />
       <PhotosContainer main={main} photos={photos} />
       <Footer />
     </>
   );
 };
 export default PhotosPage;
-
-// 더미 데이터 (스토어에서 가져오기)
-const main = mainPhoto;
-const photos: string[] = [photo1, photo2, photo3, photo4, photo5];
-const campsiteId = 1;
-const liked = true;
-
-// 더미 이미지
-import mainPhoto from "@/assets/images/dummy/camping_spot_6.png";
-import photo1 from "@/assets/images/dummy/camping_spot_2.png";
-import photo2 from "@/assets/images/dummy/camping_spot_3.png";
-import photo3 from "@/assets/images/dummy/camping_spot_4.jpg";
-import photo4 from "@/assets/images/dummy/camping_spot_5.jpg";
-import photo5 from "@/assets/images/dummy/camping_spot_1.png";

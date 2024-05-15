@@ -50,9 +50,10 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   return (
     <>
       <CampingPhotos
+        id={data.id}
         main={data.thumbnailImageUrl}
         photos={data.campsiteImageUrlList}
-        id={data.id}
+        like={data.like}
       />
       {/* 캠핑장 유형 */}
       <div className="pt-7">
