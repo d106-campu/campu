@@ -5,6 +5,7 @@ import com.d106.campu.common.response.Response;
 import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
 import com.d106.campu.owner.service.OwnerService;
 import com.d106.campu.reservation.constant.ReservationConstant;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +37,12 @@ public class OwnerController implements OwnerControllerDoc {
 
     @Override
     @GetMapping("/reservation/campsite/{campsiteId}")
-    public Response getOwnerReservationListByCampsite(@PathVariable Long campsiteId) {
-        return new Response(ReservationConstant.RESERVATION_LIST, ownerService.getOwnerReservationListByCampsite(campsiteId));
+    public Response getOwnerReservationListByCampsite(
+        @PathVariable Long campsiteId,
+        @RequestParam(required = false) LocalDate date
+    ) {
+        return new Response(ReservationConstant.RESERVATION_LIST,
+            ownerService.getOwnerReservationListByCampsite(campsiteId, date));
     }
 
 }

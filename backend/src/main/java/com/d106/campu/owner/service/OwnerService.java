@@ -54,10 +54,11 @@ public class OwnerService {
         return campsiteRepository.findByUser(pageable, getOwnerUser()).map(campsiteMapper::toCampsiteListResponseDto);
     }
 
-    public List<ReservationDto.ResponseWithUser> getOwnerReservationListByCampsite(Long campsiteId) {
+    public List<ReservationDto.ResponseWithUser> getOwnerReservationListByCampsite(Long campsiteId, LocalDate date) {
         Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
             CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
-        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), LocalDate.now());
+        date = (date == null) ? LocalDate.now() : date;
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), date);
     }
 
     private User getOwnerUser() {
