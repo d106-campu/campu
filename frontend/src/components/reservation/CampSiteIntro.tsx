@@ -46,7 +46,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   };
 
   const toggleMapModal = () => setMapModal(!mapModal);
-
+  console.log(data.campsiteLocation.mapX, data.campsiteLocation.mapY);
   return (
     <>
       <CampingPhotos
@@ -85,8 +85,8 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
             </button>
             {mapModal && (
               <MapModal
-                lat={data.campsiteLocation.mapX}
-                lng={data.campsiteLocation.mapY}
+                lat={data.campsiteLocation.mapY}
+                lng={data.campsiteLocation.mapX}
                 facltNm={data.facltNm}
                 addr1={data.addr1}
                 rate={data.score}

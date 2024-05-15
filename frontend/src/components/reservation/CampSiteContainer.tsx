@@ -8,6 +8,8 @@ import { useReservation } from "@/hooks/reservation/useReservation";
 import { useReview } from "@/hooks/review/useReview";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import Lottie from "react-lottie";
+import { loadingOptions } from "@/assets/lotties/lottieOptions";
 
 const CampSiteContainer = () => {
   const { campId } = useParams<RouteParams>();
@@ -18,7 +20,7 @@ const CampSiteContainer = () => {
 
   // 캠핑장 상세 조회
   const { useGetCampsite } = useReservation();
-  const { data } = useGetCampsite(campsiteId, isLogin);
+  const { data, isLoading } = useGetCampsite(campsiteId, isLogin);
 
   const campsiteData = data?.data?.campsite;
 
@@ -32,6 +34,19 @@ const CampSiteContainer = () => {
 
   const reviewList = reviewsData?.data?.reviewList || null;
   const totalReview = reviewList?.totalElements || 0;
+
+  // 로딩 중일 때
+  if (isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="text-center mx-auto">
+          <Lottie options={loadingOptions} height={90} width={200} />
+          <p className="text-[#1c93897a] text-lg font-semibold pt-3">로딩 중</p>
+          <p className="text-sm text-GRAY">잠시만 기다려 주세요</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <RefProvider>

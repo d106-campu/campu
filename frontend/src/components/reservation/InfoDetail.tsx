@@ -72,7 +72,9 @@ const InfoDetail = ({
           )}
           {/* @TODO: 면적 및 거리 단위 물어보기 */}
           <p className="py-1">전체 면적 : {data.allar} m²</p>
-          <p className="py-1">사이트 간 거리 : {data.sitedStnc}</p>
+          {data.sitedStnc !== 0 && (
+            <p className="py-1">사이트 간 거리 : {data.sitedStnc}</p>
+          )}
         </div>
       </div>
 
