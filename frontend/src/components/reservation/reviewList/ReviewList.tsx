@@ -30,14 +30,14 @@ const ReviewList = ({ campsiteId }: IReviewListProps) => {
     reviewListData?.pages[0]?.data.reviewList.totalElements || 0;
   return (
     <>
-      {/* 리뷰 */}
+      {/* 리뷰 목록 소제목 */}
       <div className="flex justify-between">
         <h3 className="font-bold text-xl p-2">
           방문자 리뷰
           <span className="text-MAIN_GREEN pl-2">{totalElements}</span>
         </h3>
       </div>
-      <div className="flex flex-wrap justify-start gap-5 my-2 pb-10 h-[calc(100vh-22rem)]">
+      <div className="flex flex-wrap justify-start gap-5 my-2 pb-10">
         {/* 로딩중 UI */}
         {isLoading && <Loading />}
 

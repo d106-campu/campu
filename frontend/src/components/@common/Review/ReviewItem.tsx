@@ -59,6 +59,7 @@ const ReviewItem = ({ review }: { review: IReview }) => {
 
       <div className="p-5 flex flex-col gap-2 text-BLACK">
         <div className="flex justify-between items-center gap-2 text-sm">
+          {/* 프로필 */}
           <div className="flex items-center gap-2">
             <img
               src={review.user.profileImageUrl || profile}
@@ -69,10 +70,12 @@ const ReviewItem = ({ review }: { review: IReview }) => {
               {review.user.nickname}
             </p>
           </div>
+          {/* 별점 */}
           <Rating rating={review.score} size={15} gap="gap-[0.7px]" />
         </div>
-
-        <div className="line-clamp-3">{review.content}</div>
+        {/* 리뷰 내용 */}
+        <div className="line-clamp-2 h-[50px]">{review.content}</div>
+        {/* 작성일 */}
         <p className="text-[#A0A0A0] text-sm text-end">
           {formatSimpleReviewTime(review.createTime)} 작성
         </p>

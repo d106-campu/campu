@@ -7,6 +7,7 @@ import Button from "@/components/@common/Button/Button";
 import Toast from "@/components/@common/Toast/Toast";
 import { useReview } from "@/hooks/review/useReview";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface ISubText {
   text: string;
@@ -15,16 +16,18 @@ interface ISubText {
 
 interface IReviewFormProps {
   reservationId: number;
+  campsiteId: number;
 }
 
-const ReviewForm = ({ reservationId }: IReviewFormProps) => {
-  const { usePostReview } = useReview();
-  const { mutate: postReview } = usePostReview();
-
+const ReviewForm = ({ reservationId, campsiteId }: IReviewFormProps) => {
+  const navigate = useNavigate();
   const [photos, setPhotos] = useState<File[]>([]); // 리뷰 사진
   const [score, setScore] = useState<number>(0); // 리뷰 점수
   const [content, setContent] = useState<string>(""); // 리뷰 내용
   const [subText, setSubText] = useState<ISubText>({ text: "", type: "info" });
+
+  const { usePostReview } = useReview();
+  const { mutate: postReview } = usePostReview();
 
   const handleScriptChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -53,12 +56,17 @@ const ReviewForm = ({ reservationId }: IReviewFormProps) => {
       return;
     }
 
+    const goToReviewList = () => {
+      navigate(`/camps/${campsiteId}/reviews`);
+    };
+
     // API 호출
     postReview(
       { reservationId, content, score, files: photos },
       {
         onSuccess: () => {
           Toast.success("리뷰가 성공적으로 등록되었습니다.");
+          goToReviewList();
         },
         onError: (err) => {
           if (axios.isAxiosError(err)) {

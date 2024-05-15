@@ -1,6 +1,6 @@
-import { getOwnerCampsiteList } from "@/services/owner/api";
-import { IOwnerCampsiteReq } from "@/types/owner";
-import { useQuery } from "@tanstack/react-query";
+import { getOwnerCampsiteList, postBizrno } from "@/services/owner/api";
+import { IBizrnoReq, IOwnerCampsiteReq } from "@/types/owner";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useOwner = () => {
   const useGetOwnerCampsiteList = (props: IOwnerCampsiteReq) => {
@@ -9,5 +9,12 @@ export const useOwner = () => {
       queryFn: () => getOwnerCampsiteList(props),
     });
   };
-  return { useGetOwnerCampsiteList };
+
+  // 사업자번호 등록
+  const useAddBizrno = (props: IBizrnoReq) => {
+    return useMutation({
+      mutationFn: () => postBizrno(props),
+    });
+  };
+  return { useGetOwnerCampsiteList, useAddBizrno };
 };
