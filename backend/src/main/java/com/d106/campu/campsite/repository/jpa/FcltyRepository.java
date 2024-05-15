@@ -9,4 +9,7 @@ public interface FcltyRepository extends JpaRepository<Fclty, Long> {
 
     List<Fclty> findByCampsiteFcltyList_Campsite(Campsite campsite);
 
+    // TODO : To @Query refactor
+    List<Fclty> findByFcltyStrIn(List<String> fcltyList);
+
 }
