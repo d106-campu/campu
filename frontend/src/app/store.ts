@@ -17,6 +17,7 @@ import { headCountReducer } from "@/features/reservation/HeadCountSlice";
 import { campsiteLikeReducer } from "@/features/like/campsiteLikeSlice";
 import { markersReducer } from "@/features/search/markersSlice";
 import { notifyCntReducer } from "@/features/notify/notifyCnt";
+import { campsiteReducer } from "@/features/reservation/campsiteSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -39,6 +40,7 @@ const persistConfig = {
     "campsiteLike",
     "markers",
     "notify",
+    "campsite",
   ],
 };
 
@@ -57,6 +59,7 @@ const rootReducer = combineReducers({
   campsiteLike: campsiteLikeReducer,
   markers: markersReducer,
   notify: notifyCntReducer,
+  campsite: campsiteReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

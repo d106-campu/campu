@@ -19,6 +19,7 @@ export interface IRoomItem {
   maxNo: number;
   price: number;
   extraPrice: number;
+  totalPrice: number;
   roomCnt: number;
   toiletCnt: number;
   supplyList: string[] | null;

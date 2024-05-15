@@ -222,7 +222,7 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
                 room.available ? "text-MAIN_RED" : "text-SUB_RED"
               }`}
             >
-              {room.price.toLocaleString("ko-KR")}원
+              {room.totalPrice.toLocaleString("ko-KR")}원
             </p>
             {!room.available && (
               <p className="text-end font-extrabold text-[#707070]">
