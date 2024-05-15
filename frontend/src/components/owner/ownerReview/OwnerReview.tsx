@@ -9,17 +9,18 @@ const OwnerReview = ({
   const reviewList = data.reviewList;
   const { useGetCampScore } = useReview();
   const { data: campScore } = useGetCampScore(selectCampground!);
-  console.log(campScore);
   return (
     <>
       <div className="py-5">
         <div className="border py-10 rounded-lg">
           <p className="text-center pb-4 font-semibold text-xl">
-            <span className="text-MAIN_GREEN">{selectCampground}</span> 의
-            별점입니다.
+            <span className="text-MAIN_GREEN">
+              {campScore?.data.campsiteScore.campsiteName}
+            </span>
+            의 별점입니다.
           </p>
 
-          <CampSiteRating rating={data.rating} />
+          <CampSiteRating rating={campScore!.data.campsiteScore.score} />
         </div>
         <div className="py-4">
           <div>
