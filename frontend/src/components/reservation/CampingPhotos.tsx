@@ -7,9 +7,10 @@ interface ICampingPhotosProps {
   id: number;
   main: string;
   photos: string[];
+  like: boolean;
 }
 
-const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
+const CampingPhotos = ({ main, photos, id, like }: ICampingPhotosProps) => {
   const navigate = useNavigate();
   const displayedPhotos = photos.slice(0, 4); // 최대 4개의 사진만 가져옴
   const photoNum = displayedPhotos.length;
@@ -29,6 +30,17 @@ const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
       default:
         return "col-span-2";
     }
+  };
+
+  const dataToSend = {
+    main,
+    photos,
+    id,
+    like,
+  };
+
+  const goToPhotos = () => {
+    navigate(`/camps/${id}/photos`, { state: dataToSend });
   };
 
   return (
@@ -65,7 +77,7 @@ const CampingPhotos = ({ main, photos, id }: ICampingPhotosProps) => {
           backgroundColor="bg-[#030303cc]"
           hoverBackgroundColor="hover:bg-[#030303]"
           onClick={() => {
-            navigate(`/camps/${id}/photos`);
+            goToPhotos();
             scrollToTop();
           }}
         />
