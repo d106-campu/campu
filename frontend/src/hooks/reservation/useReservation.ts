@@ -2,9 +2,10 @@ import {
   deleteAlert,
   getRoomList,
   postAlert,
+  getCapmsite,
 } from "@/services/reservation/api";
 import { IAlertPostReq, IRoomListReq } from "@/types/reservation";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const useReservation = () => {
   // 방 목록 조회 (무한 스크롤)
@@ -38,9 +39,23 @@ export const useReservation = () => {
   const useDeleteAlert = () => {
     return useMutation({
       mutationKey: [`room alert delete`],
-      mutationFn: (roomId: number) => deleteAlert(roomId)
+      mutationFn: (roomId: number) => deleteAlert(roomId),
     });
   };
 
-  return { useGetRoomListInfinite, usePostAlert, useDeleteAlert };
+  // 캠핑장 상세 조회
+  const useSetCampsite = (campsiteId: number) => {
+    return useQuery({
+      queryKey: ["campsite detail", campsiteId],
+      queryFn: () => getCapmsite(campsiteId),
+      enabled: !!campsiteId, // campsiteId가 유효할 때만 쿼리 실행
+    });
+  };
+
+  return {
+    useGetRoomListInfinite,
+    usePostAlert,
+    useDeleteAlert,
+    useSetCampsite,
+  };
 };

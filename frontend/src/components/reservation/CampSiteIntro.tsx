@@ -12,27 +12,26 @@ import reviewIcon from "@/assets/svg/review.svg";
 import mapIcon from "@/assets/svg/map.svg";
 import MapModal from "@/components/@common/Map/MapModal";
 import { useState } from "react";
+import { ICampsiteLocation } from "@/types/reservation";
 
-// @TODO: API 명세서 나오면 수정 필요
 interface ICampSiteIntro {
   id: number;
-  campsite_faclt_nm: string;
-  campsite_tel: string;
-  campsite_addr1: string;
-  campsite_addr2: string;
-  mapX: number;
-  mapY: number;
-  rating: number;
-  types: string[];
-  isLiked: boolean;
+  facltNm: string; // 캠핑장명
+  tel: string; // 캠핑장 연락처
+  lineIntro: string; // 한 줄 소개
+  intro: string; // 긴 글 소개
+  addr1: string; // 주소
+  addr2: string | null; // 상세 주소
+  indutyList: string[]; // 캠핑장 유형
+  themeList: string[]; // 캠핑장 테마
+  score: number; // 별점
+  like: boolean; // 좋아요 여부
+  homepage: string | null; // 홈페이지 주소
+  thumbnailImageUrl: string; // 썸네일 이미지
+  mapImageUrl: string | null; // 배치도 이미지
+  campsiteImageUrlList: string[]; // 캠핑장 메인 이미지
+  campsiteLocation: ICampsiteLocation; // 캠핑장 위치
   totalReview: number;
-  main: string;
-  other: string[];
-  layout: string;
-  description: string;
-  detailDescription: string;
-  location: string;
-  thema: string[];
 }
 
 const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
@@ -50,31 +49,33 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
 
   return (
     <>
-      <CampingPhotos main={data.main} photos={data.other} id={data.id} />
+      <CampingPhotos
+        main={data.thumbnailImageUrl}
+        photos={data.campsiteImageUrlList}
+        id={data.id}
+      />
       {/* 캠핑장 유형 */}
       <div className="pt-7">
-        {data.types.map((type, index) => (
+        {data.indutyList.map((induty, index) => (
           <span key={index} className="text-UNIMPORTANT_TEXT_01">
-            {type}
-            {index < data.types.length - 1 && (
+            {induty}
+            {index < data.indutyList.length - 1 && (
               <span className="text-UNIMPORTANT_TEXT_01 p-1">·</span>
             )}
           </span>
         ))}
         {/* 캠핑장 이름 */}
         <div className="flex justify-between items-end">
-          <h1 className="font-bold text-3xl">{data.campsite_faclt_nm}</h1>
+          <h1 className="font-bold text-3xl">{data.facltNm}</h1>
           {/* 좋아요 */}
-          <LikeButton like={data.isLiked} campsiteId={data.id} />
+          <LikeButton like={data.like} campsiteId={data.id} />
         </div>
 
         {/* 캠핑장 필수 정보 */}
         <div className="p-2 text-sm">
           <div className="flex pt-1">
             <img src={mapIcon} className="w-5" />
-            <p className="text-UNIMPORTANT_TEXT_01 pl-2">
-              {data.campsite_addr1}
-            </p>
+            <p className="text-UNIMPORTANT_TEXT_01 pl-2">{data.addr1}</p>
             <button
               onClick={toggleMapModal}
               className="pl-2 text-MAIN_GREEN font-bold"
@@ -83,11 +84,11 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
             </button>
             {mapModal && (
               <MapModal
-                lat={data.mapX}
-                lng={data.mapY}
-                facltNm={data.campsite_faclt_nm}
-                addr1={data.campsite_addr1}
-                rate={data.rating}
+                lat={data.campsiteLocation.mapX}
+                lng={data.campsiteLocation.mapY}
+                facltNm={data.facltNm}
+                addr1={data.addr1}
+                rate={data.score}
                 level={5}
                 toggleModal={toggleMapModal}
               />
@@ -95,9 +96,9 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
           </div>
           <div className="flex py-2">
             <img src={phoneIcon} className="w-4" />
-            <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.campsite_tel}</p>
+            <p className="text-UNIMPORTANT_TEXT_01 pl-3">{data.tel}</p>
             <button
-              onClick={() => copyToClipboard(data.campsite_tel)}
+              onClick={() => copyToClipboard(data.tel)}
               className="pl-2 text-MAIN_GREEN font-bold"
             >
               복사하기
@@ -122,28 +123,37 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
         <div className="pt-10">
           <h3 className="text-xl font-bold">캠핑장 소개</h3>
           <div className="px-2 pt-1 text-sm text-UNIMPORTANT_TEXT_01">
-            <p className="font-bold pb-1">{data.description}</p>
-            <p className="pl-1 pb-2 whitespace-pre">{data.detailDescription}</p>
-            {data.thema &&
-              data.thema.map((tag, index) => (
+            <p className="font-bold pb-1">{data.lineIntro}</p>
+            <p className="pl-1 pb-2">{data.intro}</p>
+            {data.themeList &&
+              data.themeList.map((theme, index) => (
                 <span
                   key={index}
                   className="font-medium text-MAIN_GREEN pl-1 pr-3"
                 >
-                  #{tag}
+                  #{theme}
                 </span>
               ))}
           </div>
         </div>
 
-        <div className="pt-10 flex justify-between">
+        {!data.mapImageUrl && (
+          <h3 className="text-xl font-bold pt-10">내 일정 확인하기</h3>
+        )}
+        <div className="pt-10 flex justify-center">
           {/* 캠핑존 배치도 */}
-          <CampSiteLayout
-            layout={data.layout}
-            campsite_name={data.campsite_faclt_nm}
-          />
+          {data.mapImageUrl && (
+            <CampSiteLayout
+              layout={data.mapImageUrl}
+              campsite_name={data.facltNm}
+            />
+          )}
           {/* 캘린더 */}
-          <div className="w-[50%] h-[420px]">
+          <div
+            className={
+              data.mapImageUrl ? "w-[50%] h-[420px]" : "w-[80%] h-[420px]"
+            }
+          >
             <div className="flex justify-around items-stretch border-2 rounded-xl border-[#C9C9C9] text-BLACK text-center font-bold w-[75%] mx-auto">
               <div className="flex-1 my-auto py-1 rounded-xl">
                 <p className="text-sm text-MAIN_GREEN">입실일</p>
