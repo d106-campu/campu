@@ -21,9 +21,12 @@ import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.owner.dto.OwnerDto.CampsiteUpdateRequest;
 import com.d106.campu.owner.exception.code.OwnerExceptionCode;
+import com.d106.campu.reservation.dto.ReservationDto;
+import com.d106.campu.reservation.repository.jpa.QReservationRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,7 +45,11 @@ public class OwnerService {
     private final FcltyRepository fcltyRepository;
 
     private final CampsiteMapper campsiteMapper;
+
     private final UserRepository userRepository;
+
+    private final QReservationRepository qReservationRepository;
+
     private final SecurityHelper securityHelper;
 
     @Transactional
@@ -58,12 +65,24 @@ public class OwnerService {
 
     @Transactional(readOnly = true)
     public Page<Response> getOwnerCampsiteList(Pageable pageable) {
-        User user = getUser();
+        return campsiteRepository.findByUser(pageable, getOwnerUser()).map(campsiteMapper::toCampsiteListResponseDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationDto.ResponseWithUser> getOwnerReservationListByCampsite(Long campsiteId, LocalDate date) {
+        Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
+            CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+        date = (date == null) ? LocalDate.now() : date;
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), date);
+    }
+
+    private User getOwnerUser() {
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
         if (!user.getRole().equals(RoleName.OWNER)) {
             throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
         }
-
-        return campsiteRepository.findByUser(pageable, user).map(campsiteMapper::toCampsiteListResponseDto);
+        return user;
     }
 
     @Transactional

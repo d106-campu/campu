@@ -3,13 +3,17 @@ package com.d106.campu.owner.controller.doc;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.owner.dto.OwnerDto;
+import com.d106.campu.reservation.dto.ReservationDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
@@ -55,5 +59,25 @@ public interface OwnerControllerDoc {
         @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
     })
     Response updateCampsiteDetail(OwnerDto.CampsiteUpdateRequest updateRequestDto);
+
+    @Operation(summary = "사장님 캠핑장별 예약 목록 조회", description = "사장님이 관리하는 캠핑장별로 <strong>특정 날짜가 포함된 예약 목록을 조회</strong>하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "예약 목록 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = ReservationWithUserListResponse.class)),
+            })
+        ),
+        @ApiResponse(responseCode = "400", description = "조건 유효성 검사 오류", content = @Content),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content)
+    })
+    Response getOwnerReservationListByCampsite(
+        @Parameter(description = "조회하려는 캠핑장 아이디") Long campsiteId,
+        @Parameter(description = "조회하려는 날짜. `yyyy-mm-dd`형식. 입력하지 않으면 기본값은 오늘.") LocalDate date
+    );
+
+    class ReservationWithUserListResponse {
+        public List<ReservationDto.ResponseWithUser> reservationList;
+    }
 
 }
