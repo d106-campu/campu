@@ -1,11 +1,35 @@
 import { useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import TentImage from "@/assets/images/profile.png";
+import { useOwner } from "@/hooks/owner/useOwner";
+import { IBizrnoReq } from "@/types/owner";
+import { RootState } from "@/app/store";
+import { useSelector } from "react-redux";
+import Toast from "../@common/Toast/Toast";
 
 const AddCamping = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [bizrno, setBizrno] = useState<string>("");
+  const { useAddBizrno } = useOwner();
+
   const toggleModal = () => {
-    setIsOpen(!isOpen);
+    if (!isLogin) {
+      Toast.error("로그인이 필요합니다.");
+    } else {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+
+  const postBizrno: IBizrnoReq = {
+    bizrno: bizrno,
+  };
+
+  const { mutate } = useAddBizrno(postBizrno);
+  const handleAddBizrno = () => {
+    mutate();
+    setIsOpen(false); // 모달 닫기
   };
 
   return (
@@ -40,10 +64,15 @@ const AddCamping = () => {
             <p className="text-sm">반갑습니다 사장님 😊</p>
             <p className="py-4">캠핑장 사업자번호 입력하기</p>
             <input
-              className="border rounded-md p-3 text-xs"
-              placeholder="사업자번호 7자리를 입력해주세요."
+              className="border rounded-md p-3 text-xs outline-none"
+              placeholder="사업자번호 000-00-00000"
+              value={bizrno}
+              onChange={(e) => setBizrno(e.target.value)}
             />
-            <button className="bg-MAIN_GREEN text-white p-3 rounded-md text-xs ml-1">
+            <button
+              onClick={handleAddBizrno}
+              className="bg-MAIN_GREEN text-white p-3 rounded-md text-xs ml-1"
+            >
               등록
             </button>
           </div>

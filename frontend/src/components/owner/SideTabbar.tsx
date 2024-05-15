@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { GoPlus } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "@/components/@common/Modal/Modal";
+import { useOwner } from "@/hooks/owner/useOwner";
+import { IBizrnoReq } from "@/types/owner";
 
 interface ICampData {
   id: number;
@@ -16,13 +18,25 @@ interface ISideTabbarProps {
 
 const SideTabbar = ({ campData }: ISideTabbarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [bizrno, setBizrno] = useState<string>("");
   const [isHover, setIsHover] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const { useAddBizrno } = useOwner();
 
   const selectCampsite = useSelector((state: RootState) => ({
     name: state.ownerSide.campsiteName,
     id: state.ownerSide.campsiteId,
   }));
+
+  const postBizrno: IBizrnoReq = {
+    bizrno: bizrno,
+  };
+
+  const { mutate } = useAddBizrno(postBizrno);
+  const handleAddBizrno = () => {
+    mutate();
+    setIsOpen(false); // 모달 닫기
+  };
 
   useEffect(() => {
     if (campData) {
@@ -76,9 +90,14 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
             <p className="py-4">캠핑장 사업자번호 입력하기</p>
             <input
               className="border rounded-md p-3 text-xs"
-              placeholder="사업자번호 7자리를 입력해주세요."
+              placeholder="사업자번호 000-00-00000"
+              value={bizrno}
+              onChange={(e) => setBizrno(e.target.value)}
             />
-            <button className="bg-MAIN_GREEN text-white p-3 rounded-md text-xs ml-1">
+            <button
+              onClick={handleAddBizrno}
+              className="bg-MAIN_GREEN text-white p-3 rounded-md text-xs ml-1"
+            >
               등록
             </button>
           </div>
