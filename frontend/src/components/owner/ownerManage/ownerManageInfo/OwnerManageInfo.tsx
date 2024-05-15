@@ -1,6 +1,16 @@
-import { useState } from "react";
-import TagList from "@/components/home/TagList";
+import { useEffect, useState } from "react";
 import FacilityList from "@/components/owner/ownerManage/ownerManageInfo/FacilityList";
+import { RootState } from "@/app/store";
+import { useSelector } from "react-redux";
+import { useReservation } from "@/hooks/reservation/useReservation";
+import OwnerTagList from "./OwnerTagList";
+import { createSelector } from "@reduxjs/toolkit";
+
+const selectCampsiteInfo = createSelector(
+  (state: RootState) => state.ownerSide.campsiteId,
+  (state: RootState) => state.auth.isLogin,
+  (campsiteId, isLogin) => ({ campsiteId, isLogin })
+);
 
 const OwnerManageInfo = () => {
   const tags = [
@@ -19,10 +29,19 @@ const OwnerManageInfo = () => {
   ];
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // 테마 선택
-  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
-    null
-  ); // 캠핑장 유형 선택
+  const [selectedCampingType, setSelectedCampingType] = useState<
+    string[] | null
+  >(null); // 캠핑장 유형 선택
   const [selectedFacility, setSelectedFacility] = useState<string[]>([]); // 시설 선택
+  const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
+  const { useGetCampsite } = useReservation();
+  const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
+
+  useEffect(() => {
+    if (detailCampsiteInfo && detailCampsiteInfo.data.campsite.indutyList) {
+      setSelectedCampingType(detailCampsiteInfo.data.campsite.indutyList);
+    }
+  }, [detailCampsiteInfo]);
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -42,12 +61,20 @@ const OwnerManageInfo = () => {
     }
   };
 
-  const campingTypes = ["캠핑", "글램핑", "오토캠핑", "카라반"];
+  const campingTypes = ["캠핑", "글램핑", "자동차야영장", "카라반"];
 
   const toggleCampingType = (campingType: string) => {
-    setSelectedCampingType(
-      campingType === selectedCampingType ? null : campingType
-    );
+    if (selectedCampingType && selectedCampingType.includes(campingType)) {
+      setSelectedCampingType(
+        selectedCampingType.filter((type) => type !== campingType)
+      );
+    } else {
+      setSelectedCampingType(
+        selectedCampingType
+          ? [...selectedCampingType, campingType]
+          : [campingType]
+      );
+    }
   };
 
   return (
@@ -62,6 +89,7 @@ const OwnerManageInfo = () => {
               <textarea
                 className="w-full h-30 p-4 border rounded-md outline-none"
                 placeholder="캠핑장에 대한 간단한 소개글을 작성해주세요."
+                value={detailCampsiteInfo?.data.campsite.lineIntro}
               />
             </div>
             {/* 한줄 소개 */}
@@ -70,6 +98,7 @@ const OwnerManageInfo = () => {
               <textarea
                 className="w-full h-30 p-4 border rounded-md outline-none"
                 placeholder="캠핑장에 대한 자세한 소개글을 작성해주세요."
+                value={detailCampsiteInfo?.data.campsite.intro}
               />
             </div>
             {/* 캠핑장 유형 */}
@@ -80,10 +109,10 @@ const OwnerManageInfo = () => {
                   <div
                     key={type}
                     className={`${
-                      selectedCampingType === type
-                        ? "bg-MAIN_GREEN text-white"
-                        : "border border-gray-200 text-gray-500"
-                    } px-4 py-2 rounded-xl`}
+                      selectedCampingType && selectedCampingType.includes(type)
+                        ? " text-MAIN_GREEN border border-MAIN_GREEN"
+                        : "border border-gray-200 text-gray-400"
+                    } px-4 py-2 rounded-xl cursor-pointer`}
                     onClick={() => toggleCampingType(type)}
                   >
                     {type}
@@ -95,7 +124,7 @@ const OwnerManageInfo = () => {
             <div>
               <p className="py-3">캠핑장 테마</p>
               <div className="pb-3">
-                <TagList tags={tags} onTagToggle={toggleTag} />
+                <OwnerTagList tags={tags} onTagToggle={toggleTag} />
               </div>
             </div>
             {/* 시설 및 레저 */}
