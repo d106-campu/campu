@@ -11,6 +11,7 @@ const AddCamping = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bizrno, setBizrno] = useState<string>("");
   const { useAddBizrno } = useOwner();
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
 
   const toggleModal = () => {
     if (!isLogin) {
@@ -20,7 +21,11 @@ const AddCamping = () => {
     }
   };
 
-  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const validateBizrno = (value: string) => {
+    // 사업자번호 형식 검사 (000-00-00000)
+    const regex = /^\d{3}-\d{2}-\d{5}$/;
+    return regex.test(value);
+  };
 
   const postBizrno: IBizrnoReq = {
     bizrno: bizrno,
@@ -28,6 +33,11 @@ const AddCamping = () => {
 
   const { mutate } = useAddBizrno(postBizrno);
   const handleAddBizrno = () => {
+    if (!validateBizrno(bizrno)) {
+      // 유효하지 않은 형식인 경우
+      Toast.error("형식이 올바르지 않습니다.");
+      return;
+    }
     mutate();
     setIsOpen(false); // 모달 닫기
   };

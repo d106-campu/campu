@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "@/components/@common/Modal/Modal";
 import { useOwner } from "@/hooks/owner/useOwner";
 import { IBizrnoReq } from "@/types/owner";
+import Toast from "../@common/Toast/Toast";
 
 interface ICampData {
   id: number;
@@ -31,9 +32,19 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
   const postBizrno: IBizrnoReq = {
     bizrno: bizrno,
   };
+  const validateBizrno = (value: string) => {
+    // 사업자번호 형식 검사 (000-00-00000)
+    const regex = /^\d{3}-\d{2}-\d{5}$/;
+    return regex.test(value);
+  };
 
   const { mutate } = useAddBizrno(postBizrno);
   const handleAddBizrno = () => {
+    if (!validateBizrno(bizrno)) {
+      // 유효하지 않은 형식인 경우
+      Toast.error("형식이 올바르지 않습니다.");
+      return;
+    }
     mutate();
     setIsOpen(false); // 모달 닫기
   };
