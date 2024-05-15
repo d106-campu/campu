@@ -7,6 +7,7 @@ import com.d106.campu.campsite.domain.jpa.CampsiteFclty;
 import com.d106.campu.campsite.domain.jpa.CampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.Fclty;
 import com.d106.campu.campsite.domain.jpa.Theme;
+import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.campsite.dto.CampsiteDto.Response;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
 import com.d106.campu.campsite.mapper.CampsiteMapper;
@@ -72,17 +73,32 @@ public class OwnerService {
     public List<ReservationDto.ResponseWithUser> getOwnerReservationListByCampsite(Long campsiteId, LocalDate date) {
         Campsite campsite = campsiteRepository.findById(campsiteId).orElseThrow(() -> new NotFoundException(
             CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+
+        User user = getOwnerUser();
+        checkOwner(user.getAccount(), campsite.getUser().getAccount());
+
         date = (date == null) ? LocalDate.now() : date;
-        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, getOwnerUser(), date);
+        return qReservationRepository.findReservationListByCampsiteAndOwner(campsite, user, date);
     }
 
-    private User getOwnerUser() {
-        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
-            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
-        if (!user.getRole().equals(RoleName.OWNER)) {
-            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
-        }
-        return user;
+    /**
+     * Regist a campsite.
+     *
+     * @param createRequestDto Campsite information.
+     * @return Saved campsite information.
+     * @throws NotFoundException     If not login status.
+     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
+     */
+    @Transactional
+    public CampsiteDto.CreateResponse createCampsite(CampsiteDto.CreateRequest createRequestDto) throws NotFoundException {
+        User user = getOwnerUser();
+
+        Campsite campsite = campsiteMapper.toCampsite(createRequestDto);
+        campsite.setUser(user);
+
+        /* TODO: insert campsite location(coordinates), induty, etc. */
+
+        return campsiteMapper.toCreateResponseDto(campsiteRepository.save(campsite));
     }
 
     @Transactional
@@ -142,6 +158,19 @@ public class OwnerService {
     private User getUser() {
         return userRepository.findByAccount(securityHelper.getLoginAccount())
             .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+    }
+
+    /**
+     * @return user instance.
+     * @throws NotFoundException
+     * @throws UnauthorizedException If user does not have {@link RoleName#OWNER} role.
+     */
+    private User getOwnerUser() {
+        User user = getUser();
+        if (!user.getRole().equals(RoleName.OWNER)) {
+            throw new UnauthorizedException(AuthExceptionCode.UNAUTHORIZED_USER);
+        }
+        return user;
     }
 
 }

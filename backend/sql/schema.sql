@@ -180,6 +180,8 @@ CREATE TABLE `campsite` (
   `sited_stnc` int(11) DEFAULT NULL COMMENT '사이트간 거리',
   `animal_cmg_cl` varchar(16) DEFAULT NULL COMMENT '애완동물출입',
   `hit` bigint(20) DEFAULT 0 COMMENT '조회수',
+  `checkin` char(5) DEFAULT NUll COMMENT '입실 시간. hh:mm 형식',
+  `checkout` char(5) DEFAULT NUll COMMENT '퇴실 시간. hh:mm 형식',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
   `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
   PRIMARY KEY (`id`),

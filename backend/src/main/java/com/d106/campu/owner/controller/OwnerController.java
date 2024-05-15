@@ -1,6 +1,7 @@
 package com.d106.campu.owner.controller;
 
 import com.d106.campu.campsite.constant.CampsiteConstant;
+import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
 import com.d106.campu.owner.dto.OwnerDto;
@@ -52,6 +53,12 @@ public class OwnerController implements OwnerControllerDoc {
     ) {
         return new Response(ReservationConstant.RESERVATION_LIST,
             ownerService.getOwnerReservationListByCampsite(campsiteId, date));
+    }
+
+    @Override
+    @PostMapping("/campsite")
+    public Response createCampsite(@RequestBody CampsiteDto.CreateRequest createRequestDto) {
+        return new Response(CampsiteConstant.CAMPSITE, ownerService.createCampsite(createRequestDto));
     }
 
 }
