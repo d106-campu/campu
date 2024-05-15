@@ -7,6 +7,7 @@ import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -94,18 +95,23 @@ public class CampsiteDto {
         private String tel;
 
         @Size(max = 512)
+        @Schema(description = "캠핑장 한 줄 소개")
         private String lineIntro;
 
         @Size(max = 2048)
+        @Schema(description = "캠핑장 소개")
         private String intro;
 
         @Digits(integer = 11, fraction = 0)
+        @Schema(description = "총 면적 (숫자만). 단위: m<super>2</super>")
         private int allar;
 
         @Size(max = 32)
+        @Schema(description = "사업자 등록 번호")
         private String bizrno;
 
         @Size(max = 32)
+        @Schema(description = "관광 사업자 번호")
         private String trsagntNo;
 
         @Size(max = 32)
@@ -115,12 +121,15 @@ public class CampsiteDto {
         private String sigunguNm;
 
         @Size(max = 512)
+        @Schema(description = "주소")
         private String addr1;
 
         @Size(max = 512)
+        @Schema(description = "상세 주소")
         private String addr2;
 
         @Size(max = 128)
+        @Schema(description = "캠핑장 유형. '캠핑', '오토캠핑', '카라반', '글램핑'. 복수 가능(CSV형식).")
         private String indutyList;
 
         @Size(max = 1024)
@@ -136,17 +145,21 @@ public class CampsiteDto {
         private String homepage;
 
         @Digits(integer = 11, fraction = 0)
+        @Schema(description = "사이트 간 거리 (숫자만). 단위: m")
         private int sitedStnc;
 
         @Size(max = 16)
+        @Schema(description = "애완동물 동반 가능 여부. '불가능', '' / '가능', '가능(소형견)'")
         private String animalCmgCl;
 
         @Time
-        @Parameter(description = "입실 시각. <code>hh:mm</code> 형식.", required = false)
+        @Parameter(required = false)
+        @Schema(description = "입실 시각. <code>hh:mm</code> 형식.")
         private String checkin;
 
         @Time
-        @Parameter(description = "퇴실 시각. <code>hh:mm</code> 형식.", required = false)
+        @Parameter(required = false)
+        @Schema(description = "퇴실 시각. <code>hh:mm</code> 형식.")
         private String checkout;
 
     }
