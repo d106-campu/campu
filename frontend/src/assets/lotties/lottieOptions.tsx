@@ -1,6 +1,7 @@
 import no_image from "@/assets/lotties/no_image.json";
 import no_result from "@/assets/lotties/no_result.json";
-import rooms_loading from "@/assets/lotties/rooms_loading.json";
+import dot_loading from "@/assets/lotties/dot_loading.json";
+import loading from "@/assets/lotties/loading.json";
 import tent from "@/assets/lotties/tent.json";
 import caravan from "@/assets/lotties/caravan.json";
 
@@ -25,7 +26,16 @@ export const noResultOptions = {
 export const roomsLoadingOptions = {
   loop: true,
   autoplay: true,
-  animationData: rooms_loading,
+  animationData: dot_loading,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+export const loadingOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: loading,
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },

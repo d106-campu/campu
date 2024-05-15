@@ -1,4 +1,4 @@
-import { axiosCommonInstance, axiosFileInstance } from "@/apis/axiosInstance";
+import { axiosAuthInstance, axiosCommonInstance, axiosFileInstance } from "@/apis/axiosInstance";
 import { APIResponse, APISimpleResponse } from "@/types/model";
 import {
   IReviewListRes,
