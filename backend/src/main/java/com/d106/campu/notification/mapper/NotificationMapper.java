@@ -4,7 +4,10 @@ import com.d106.campu.emptynotification.domain.jpa.EmptyNotification;
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
+import com.d106.campu.notification.event.CancelEvent;
 import com.d106.campu.notification.event.EmptyRoomEvent;
+import com.d106.campu.notification.event.PaymentEvent;
+import com.d106.campu.reservation.domain.jpa.Reservation;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -51,6 +54,58 @@ public interface NotificationMapper {
             .build();
     }
 
+    default PaymentEvent toPaymentEvent(Reservation reservation) {
+        final Long buyerId = reservation.getUser().getId();
+        final Long sellerId = reservation.getRoom().getCampsite().getUser().getId();
+        return PaymentEvent.builder()
+            .data(List.of(
+                PaymentEvent.Data.builder()
+                    .userId(buyerId)
+                    .campsiteName(reservation.getRoom().getCampsite().getFacltNm())
+                    .roomName(reservation.getRoom().getName())
+                    .startDate(reservation.getStartDate())
+                    .endDate(reservation.getEndDate())
+                    .headCnt(reservation.getHeadCnt())
+                    .price(reservation.getPrice())
+                    .build(),
+                PaymentEvent.Data.builder()
+                    .userId(sellerId)
+                    .campsiteName(reservation.getRoom().getCampsite().getFacltNm())
+                    .roomName(reservation.getRoom().getName())
+                    .startDate(reservation.getStartDate())
+                    .endDate(reservation.getEndDate())
+                    .headCnt(reservation.getHeadCnt())
+                    .price(reservation.getPrice())
+                    .build()))
+            .build();
+    }
+
+    default CancelEvent toCancelEvent(Reservation reservation) {
+        final Long buyerId = reservation.getUser().getId();
+        final Long sellerId = reservation.getRoom().getCampsite().getUser().getId();
+        return CancelEvent.builder()
+            .data(List.of(
+                PaymentEvent.Data.builder()
+                    .userId(buyerId)
+                    .campsiteName(reservation.getRoom().getCampsite().getFacltNm())
+                    .roomName(reservation.getRoom().getName())
+                    .startDate(reservation.getStartDate())
+                    .endDate(reservation.getEndDate())
+                    .headCnt(reservation.getHeadCnt())
+                    .price(reservation.getPrice())
+                    .build(),
+                PaymentEvent.Data.builder()
+                    .userId(sellerId)
+                    .campsiteName(reservation.getRoom().getCampsite().getFacltNm())
+                    .roomName(reservation.getRoom().getName())
+                    .startDate(reservation.getStartDate())
+                    .endDate(reservation.getEndDate())
+                    .headCnt(reservation.getHeadCnt())
+                    .price(reservation.getPrice())
+                    .build()))
+            .build();
+    }
+
     @Mapping(target = "notificationId", source = "notification.id")
     @Mapping(target = "tel", source = "notification.user.tel")
     @Mapping(target = "userId", source = "notification.user.id")
@@ -76,6 +131,64 @@ public interface NotificationMapper {
                 .url(String.join("/", baseUrl, "camps", emptyRoomEventData.getCampsiteId()))
                 .build())
             .toList();
+    }
+
+    default List<Notification> fromPaymentEventDataListToNotificationList(String baseUrl,
+        List<PaymentEvent.Data> paymentEventDataList) {
+        return List.of(
+            Notification.builder()
+                .message(paymentEventDataList.get(0).getMessage())
+                .name(String.format("%s - %s", paymentEventDataList.get(0).getCampsiteName(),
+                    paymentEventDataList.get(0).getRoomName()))
+                .date(String.format("%s ~ %s ꞏ %s박", paymentEventDataList.get(0).getStartDate(),
+                    paymentEventDataList.get(0).getEndDate(),
+                    ChronoUnit.DAYS.between(paymentEventDataList.get(0).getStartDate(),
+                        paymentEventDataList.get(0).getEndDate())))
+                .no(String.format("%d인 - %d원", paymentEventDataList.get(0).getHeadCnt(),
+                    paymentEventDataList.get(0).getPrice()))
+                .url(String.join("/", baseUrl, "my"))
+                .build(),
+            Notification.builder()
+                .message(paymentEventDataList.get(1).getMessage())
+                .name(String.format("%s - %s", paymentEventDataList.get(1).getCampsiteName(),
+                    paymentEventDataList.get(1).getRoomName()))
+                .date(String.format("%s ~ %s ꞏ %s박", paymentEventDataList.get(1).getStartDate(),
+                    paymentEventDataList.get(1).getEndDate(),
+                    ChronoUnit.DAYS.between(paymentEventDataList.get(1).getStartDate(),
+                        paymentEventDataList.get(1).getEndDate())))
+                .no(String.format("%d인 - %d원", paymentEventDataList.get(1).getHeadCnt(),
+                    paymentEventDataList.get(1).getPrice()))
+                .url(String.join("/", baseUrl, "owner"))
+                .build());
+    }
+
+    default List<Notification> fromCancelEventDataListToNotificationList(String baseUrl,
+        List<CancelEvent.Data> cancelEventDataList) {
+        return List.of(
+            Notification.builder()
+                .message(cancelEventDataList.get(0).getMessage())
+                .name(String.format("%s - %s", cancelEventDataList.get(0).getCampsiteName(),
+                    cancelEventDataList.get(0).getRoomName()))
+                .date(String.format("%s ~ %s ꞏ %s박", cancelEventDataList.get(0).getStartDate(),
+                    cancelEventDataList.get(0).getEndDate(),
+                    ChronoUnit.DAYS.between(cancelEventDataList.get(0).getStartDate(),
+                        cancelEventDataList.get(0).getEndDate())))
+                .no(String.format("%d인 - %d원", cancelEventDataList.get(0).getHeadCnt(),
+                    cancelEventDataList.get(0).getPrice()))
+                .url(String.join("/", baseUrl, "my"))
+                .build(),
+            Notification.builder()
+                .message(cancelEventDataList.get(1).getMessage())
+                .name(String.format("%s - %s", cancelEventDataList.get(1).getCampsiteName(),
+                    cancelEventDataList.get(1).getRoomName()))
+                .date(String.format("%s ~ %s ꞏ %s박", cancelEventDataList.get(1).getStartDate(),
+                    cancelEventDataList.get(1).getEndDate(),
+                    ChronoUnit.DAYS.between(cancelEventDataList.get(1).getStartDate(),
+                        cancelEventDataList.get(1).getEndDate())))
+                .no(String.format("%d인 - %d원", cancelEventDataList.get(1).getHeadCnt(),
+                    cancelEventDataList.get(1).getPrice()))
+                .url(String.join("/", baseUrl, "owner"))
+                .build());
     }
 
 }

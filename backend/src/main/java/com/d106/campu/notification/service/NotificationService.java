@@ -9,7 +9,9 @@ import com.d106.campu.notification.constant.NotificationConstant;
 import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.notification.dto.NotificationDto;
 import com.d106.campu.notification.dto.NotificationDto.PublishEventRequest;
+import com.d106.campu.notification.event.CancelEvent;
 import com.d106.campu.notification.event.EmptyRoomEvent;
+import com.d106.campu.notification.event.PaymentEvent;
 import com.d106.campu.notification.exception.code.NotificationExceptionCode;
 import com.d106.campu.notification.mapper.NotificationMapper;
 import com.d106.campu.notification.repository.jpa.NotificationRepository;
@@ -80,7 +82,7 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public void sendNotification(List<NotificationDto.SaveResponse> saveResponseDtoList) {
+    public void sendSseNotification(List<NotificationDto.SaveResponse> saveResponseDtoList) {
         if (saveResponseDtoList.isEmpty()) {
             return;
         }
@@ -100,12 +102,40 @@ public class NotificationService {
     }
 
     @Transactional
-    public List<NotificationDto.SaveResponse> saveNotification(List<EmptyRoomEvent.Data> emptyRoomEventDataList) {
+    public List<NotificationDto.SaveResponse> saveEmptyRoomNotification(List<EmptyRoomEvent.Data> emptyRoomEventDataList) {
         List<Notification> notificationList = notificationMapper.fromEmptyRoomEventDataListToNotificationList(baseUrl,
             emptyRoomEventDataList);
         AtomicInteger count = new AtomicInteger(0);
         notificationList.forEach(notification -> {
             User user = userRepository.findById(emptyRoomEventDataList.get(count.getAndIncrement()).getUserId())
+                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+            notification.setUser(user);
+        });
+
+        return notificationMapper.toSaveResponseDtoList(notificationRepository.saveAll(notificationList));
+    }
+
+    @Transactional
+    public List<NotificationDto.SaveResponse> savePaymentNotification(List<PaymentEvent.Data> paymentEventDataList) {
+        List<Notification> notificationList = notificationMapper.fromPaymentEventDataListToNotificationList(baseUrl,
+            paymentEventDataList);
+        AtomicInteger count = new AtomicInteger(0);
+        notificationList.forEach(notification -> {
+            User user = userRepository.findById(paymentEventDataList.get(count.getAndIncrement()).getUserId())
+                .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+            notification.setUser(user);
+        });
+
+        return notificationMapper.toSaveResponseDtoList(notificationRepository.saveAll(notificationList));
+    }
+
+    @Transactional
+    public List<NotificationDto.SaveResponse> saveCancelNotification(List<CancelEvent.Data> cancelEventDataList) {
+        List<Notification> notificationList = notificationMapper.fromCancelEventDataListToNotificationList(baseUrl,
+            cancelEventDataList);
+        AtomicInteger count = new AtomicInteger(0);
+        notificationList.forEach(notification -> {
+            User user = userRepository.findById(cancelEventDataList.get(count.getAndIncrement()).getUserId())
                 .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
             notification.setUser(user);
         });

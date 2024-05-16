@@ -49,14 +49,14 @@ public class SmsUtil {
         return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
-    public MultipleMessageSentResponse sendEmptyRoomNotification(List<NotificationDto.SaveResponse> saveResponseDtoList) {
+    public MultipleMessageSentResponse sendSmsNotification(List<NotificationDto.SaveResponse> saveResponseDtoList) {
         List<Message> messageList = saveResponseDtoList.stream()
             .map(saveResponseDto -> {
                 Message message = new Message();
                 message.setFrom(from);
                 message.setTo(saveResponseDto.getTel());
                 message.setText(
-                    NotificationConstant.EMPTY_ROOM_SMS + saveResponseDto.getMessage() + "\n" + saveResponseDto.getUrl());
+                    NotificationConstant.CAMPU_SMS + saveResponseDto.getMessage() + "\n" + saveResponseDto.getUrl());
                 return message;
             })
             .toList();
