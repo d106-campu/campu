@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { testUseOwner } from "@/hooks/owner/testUserOwner"; // 경로 수정해주세용
+import { useOwner } from "@/hooks/owner/useOwner";
 
 interface IRoomItem {
   room: {
@@ -21,7 +21,7 @@ interface IRoomItem {
 }
 
 const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
-  const { useUpdateCampsiteRoom } = testUseOwner();
+  const { useUpdateCampsiteRoom } = useOwner();
   const updateCampsiteRoomMutation = useUpdateCampsiteRoom();
   
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);

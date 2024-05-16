@@ -4,14 +4,14 @@ import { useRef, useState, useEffect } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { testUseOwner } from "@/hooks/owner/testUserOwner"; // 경로 수정해주세용
-import { IRoomCreateReq } from "@/types/testOwner"; // 경로 수정해주세용
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { useOwner } from "@/hooks/owner/useOwner";
+import { IRoomCreateReq } from "@/types/owner";
 
 
 const OwnerManageRoom = () => {
-  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } = testUseOwner();
+  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } = useOwner();
   const campsiteId = useSelector((state: RootState) => state.ownerSide.campsiteId);
   const {
     data: roomListResponse,
