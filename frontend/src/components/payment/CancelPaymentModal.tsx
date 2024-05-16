@@ -26,6 +26,7 @@ const CancelPaymentModal = ({
   // 결제 취소하기
   const { cancelPaymentMutation } = usePayment();
   const handleCancelPayment = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // 이벤트 전파 중단
     if (cancelReason === "") {
       Toast.error("취소사유를 선택해주세요. 필수사항입니다.");
       return;
@@ -37,7 +38,6 @@ const CancelPaymentModal = ({
     };
     cancelPaymentMutation.mutate(cancelData);
     toggleModal();
-    event.stopPropagation();
   };
 
   return (
@@ -59,7 +59,7 @@ const CancelPaymentModal = ({
                 backgroundColor="bg-GRAY"
                 hoverBackgroundColor="hover:bg-[#acacac]"
                 onClick={(event) => {
-                  event.stopPropagation();
+                  event.stopPropagation(); // 이벤트 전파 중단
                   toggleModal();
                 }}
               />
@@ -68,7 +68,7 @@ const CancelPaymentModal = ({
                 backgroundColor="bg-MAIN_PINK"
                 hoverBackgroundColor="hover:bg-MAIN_RED"
                 onClick={(event) => {
-                  event.stopPropagation();
+                  event.stopPropagation(); // 이벤트 전파 중단
                   setIsCancel(!isCancel);
                 }}
               />
@@ -91,7 +91,10 @@ const CancelPaymentModal = ({
                     name="cancelReason"
                     value="일정 변경"
                     className={radioClass}
-                    onChange={(e) => setCancelReason(e.target.value)}
+                    onChange={(event) => {
+                      setCancelReason(event.target.value);
+                      event.stopPropagation();
+                    }}
                   />
                   <label htmlFor="reason1" className="ml-2 block text-sm">
                     일정 변경
@@ -104,7 +107,10 @@ const CancelPaymentModal = ({
                     name="cancelReason"
                     value="날씨 문제"
                     className={radioClass}
-                    onChange={(e) => setCancelReason(e.target.value)}
+                    onChange={(event) => {
+                      setCancelReason(event.target.value);
+                      event.stopPropagation();
+                    }}
                   />
                   <label htmlFor="reason2" className="ml-2 block text-sm">
                     날씨 문제
@@ -117,7 +123,10 @@ const CancelPaymentModal = ({
                     name="cancelReason"
                     value="개인적인 사정"
                     className={radioClass}
-                    onChange={(e) => setCancelReason(e.target.value)}
+                    onChange={(event) => {
+                      setCancelReason(event.target.value);
+                      event.stopPropagation();
+                    }}
                   />
                   <label htmlFor="reason3" className="ml-2 block text-sm">
                     개인적인 사정
@@ -130,7 +139,10 @@ const CancelPaymentModal = ({
                     name="cancelReason"
                     value="건강 문제"
                     className={radioClass}
-                    onChange={(e) => setCancelReason(e.target.value)}
+                    onChange={(event) => {
+                      setCancelReason(event.target.value);
+                      event.stopPropagation();
+                    }}
                   />
                   <label htmlFor="reason4" className="ml-2 block text-sm">
                     건강 문제
@@ -143,7 +155,10 @@ const CancelPaymentModal = ({
                     name="cancelReason"
                     value="다른 예약과 중복"
                     className={radioClass}
-                    onChange={(e) => setCancelReason(e.target.value)}
+                    onChange={(event) => {
+                      setCancelReason(event.target.value);
+                      event.stopPropagation();
+                    }}
                   />
                   <label htmlFor="reason5" className="ml-2 block text-sm">
                     다른 예약과 중복
@@ -156,7 +171,10 @@ const CancelPaymentModal = ({
                     name="cancelReason"
                     value="기타"
                     className={radioClass}
-                    onChange={(e) => setCancelReason(e.target.value)}
+                    onChange={(event) => {
+                      setCancelReason(event.target.value);
+                      event.stopPropagation();
+                    }}
                   />
                   <label htmlFor="reason6" className="ml-2 block text-sm">
                     기타
@@ -170,7 +188,7 @@ const CancelPaymentModal = ({
                 backgroundColor="bg-GRAY"
                 hoverBackgroundColor="hover:bg-[#acacac]"
                 onClick={(event) => {
-                  event.stopPropagation();
+                  event.stopPropagation(); // 이벤트 전파 중단
                   toggleModal();
                 }}
               />
@@ -179,7 +197,7 @@ const CancelPaymentModal = ({
                 backgroundColor="bg-MAIN_PINK"
                 hoverBackgroundColor="hover:bg-MAIN_RED"
                 onClick={(event) => {
-                  event.stopPropagation();
+                  event.stopPropagation(); // 이벤트 전파 중단
                   handleCancelPayment(event);
                 }}
               />

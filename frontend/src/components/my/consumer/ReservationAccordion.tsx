@@ -65,7 +65,16 @@ const ReservationAccordion = ({
     }
   }, [isOpen]);
 
-  const handleOpen = () => {
+  const handleOpen = (event: React.MouseEvent) => {
+    // 라디오 버튼 클릭 시 아코디언이 열리고 닫히지 않도록
+    const target = event.target as HTMLElement;
+    if (
+      target.tagName === "INPUT" &&
+      (target as HTMLInputElement).type === "radio"
+    ) {
+      return;
+    }
+
     setIsOpen(!isOpen);
     toggleDetails(index); // 클릭 시 토글 상태를 부모 컴포넌트에 알림
   };
