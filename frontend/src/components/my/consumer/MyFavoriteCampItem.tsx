@@ -4,6 +4,8 @@ import { IMyFavoritCampRes } from '@/types/my'
 import Modal from '@/components/@common/Modal/Modal';
 import { useMy } from '@/hooks/my/useMy';
 import Toast from '@/components/@common/Toast/Toast';
+import { FaArrowRightToBracket } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 interface MyFavoriteCampItemProps {
   camp: IMyFavoritCampRes;
@@ -16,6 +18,7 @@ const MyFavoriteCampItem = ({
   onRemove,
   refetchCamps,
 }:MyFavoriteCampItemProps) => {
+  const navigate = useNavigate();
   // 좋아요 상태 관리, 처음에는 항상 좋아요 상태(true)
   const [isLiked, setIsLiked] = useState<boolean>(true);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false); // 좋아요 취소 확인 모달 상태 관리
@@ -33,10 +36,10 @@ const MyFavoriteCampItem = ({
     useDeleteLike.mutate(camp.campsiteId, {
       onSuccess: () => {
         console.log("취소합니다 누름@")
-        setIsLiked(false);  // 좋아요 상태를 비활성화로 변경
-        onRemove(camp.campsiteId); // 관심 캠핑장에서 제거한다.
-        setShowConfirmModal(false); // 모달 닫기
-        refetchCamps();  // 성공 후 캠핑장 리스트 재조회
+        setIsLiked(false); // 좋아요 상태를 비활성화로 변경
+        onRemove(camp.campsiteId);
+        setShowConfirmModal(false);
+        refetchCamps();
         Toast.success('성공적으로 찜을 취소했습니다.')
       },
       onError: (error) => {
@@ -48,7 +51,7 @@ const MyFavoriteCampItem = ({
 
   return (
     <div className="flex justify-center">
-      <div key={camp.campsiteId} className="relative px-2 py-2 w-full shadow-lg rounded-xl">
+      <div key={camp.campsiteId} className="relative px-2 py-2 w-full shadow-lg rounded-xl transition-transform duration-500 transform hover:scale-105">
         <img
           src={camp.thumbnailImageUrl}
           alt={camp.campsiteName}
@@ -92,7 +95,17 @@ const MyFavoriteCampItem = ({
         <div className="w-full pt-2 px-1">
           {/* 캠핑장 이름 + 별점 */}
           <div className="w-full flex justify-between">
-            <h1 className="font-bold">{camp.campsiteName} 캠핑장</h1>
+            <div className='flex'>
+              <h1 className="font-bold">{camp.campsiteName}</h1>
+              <button
+                className='pl-2'
+                onClick={() =>
+                  navigate(`/camps/${camp.campsiteId}`)
+                }
+              >
+                <FaArrowRightToBracket />
+              </button>
+            </div>
             <div className="flex items-center">
               <FaStar className="text-yellow-500 mx-1" />
               <p>{camp.score}</p>

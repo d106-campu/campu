@@ -32,9 +32,9 @@ const axiosFileInstance = axios.create({
       ? ""
       : import.meta.env.VITE_IMAGE_BASE_URL_PROD,
   withCredentials: true, // 쿠키 전송을 위해 필요한 크레덴셜
-  // headers: {
-  //   "Content-Type": "multipart/form-data",
-  // },
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
 });
 
 // 요청 인터셉터

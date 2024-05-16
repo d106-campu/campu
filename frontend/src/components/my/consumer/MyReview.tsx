@@ -6,8 +6,10 @@ import Rating from "@/components/@common/Review/Rating";
 import { IMyReivewMyReservationRes, } from '@/types/my';
 import { useMy } from '@/hooks/my/useMy';
 import Toast from '@/components/@common/Toast/Toast';
+import { useNavigate } from 'react-router-dom';
 
 const MyReview = (): JSX.Element => {
+  const navigate = useNavigate();
   const { useMyReviews, useDeleteReview } = useMy();
   const [selectedFilter, setSelectedFilter] = useState<'TOTAL' | 'YEAR' | 'MONTH6' | 'MONTH'>('TOTAL');  // 날짜 선택 상태 관리
   const [reviews, setReviews] = useState<IMyReivewMyReservationRes[]>([]); // 리뷰 데이터 상태 관리
@@ -23,10 +25,10 @@ const MyReview = (): JSX.Element => {
   // 내가쓴리뷰 데이터 API 조회
   useEffect(() => {
     if (data?.reviewList?.content) {
-      console.log("내가 쓴 리뷰 데이터 가져옴")
+      console.log("내가 쓴 리뷰 데이터 가져옴", data.reviewList.content)
       setReviews(data.reviewList.content);
     } else {
-      console.log('데이터에 접근 못하는중')
+      console.log('내가쓴리뷰 비어있음')
     }
   }, [data]);
   
@@ -122,7 +124,7 @@ const MyReview = (): JSX.Element => {
       </div>
 
       {/* 리뷰 리스트 -> 첫 렌더링 3개 -> 이후 더보기 */}
-      <div className='max-h-[500px] overflow-y-auto relative'>
+      <div className='max-h-[500px] overflow-y-auto relative transition-transform duration-500 transform hover:scale-105'>
         {reviews.slice(0, viewCount).map((review, index) => (
         <div className=' mx-auto shadow-lg rounded-xl p-1 pb-3 mb-5 outline-none'>
           <div key={index} className='flex justify-around'>
@@ -130,7 +132,14 @@ const MyReview = (): JSX.Element => {
             <div className='w-[50%] flex flex-col justify-center items-start pl-3'>
               <div className='flex'>
                 <h1 className='text-lg'>{review.reservation.campsiteName}</h1>
-                <button className='pl-2'><FaArrowRightToBracket /></button>
+                <button
+                  className='pl-2'
+                  onClick={() =>
+                    navigate(`/camps/${review.reservation.campsiteId}/reviews`)
+                  }
+                >
+                  <FaArrowRightToBracket />
+                </button>
               </div>
               <div className='flex pb-2'>
                 <Rating rating={review.review.score} size={25} gap="gap-[0.7px]" />
@@ -146,12 +155,12 @@ const MyReview = (): JSX.Element => {
               <div className='flex flex-col items-end justify-center'>             
               <button
                 onClick={() => handleDeleteReview(review.review.reviewId)}
-                className='flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2'
+                className='flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2 transition-transform duration-500 transform hover:scale-110'
               >
-                <p className='text-xs p-1'>삭 제</p>
+                <p className='text-xs p-1 '>삭 제</p>
               </button>
               {review.review.imageUrl ? (
-                  <img src={review.review.imageUrl} alt="리뷰사진" className='w-[300px] h-[150px] rounded-lg object-cover object-center'/>
+                  <img src={review.review.imageUrl} alt="리뷰사진" className='w-[300px] h-[150px] rounded-lg object-cover object-center shadow-md'/>
                 ) : (
                   <div className="flex flex-col justify-center h-auto border rounded-2xl">
                     <Lottie options={noImageOptions} height={150} width={280} speed={0.5} />
