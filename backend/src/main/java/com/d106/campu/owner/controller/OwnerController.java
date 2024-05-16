@@ -3,6 +3,7 @@ package com.d106.campu.owner.controller;
 import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.owner.constant.RoomConstant;
 import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
 import com.d106.campu.owner.dto.OwnerDto;
 import com.d106.campu.owner.dto.OwnerDto.RoomCreateRequest;
@@ -74,6 +75,12 @@ public class OwnerController implements OwnerControllerDoc {
         @RequestPart RoomCreateRequest createRequestDto) {
         ownerService.createRoom(file, createRequestDto);
         return new Response();
+    }
+
+    @Override
+    @GetMapping("/campsite/{campsiteId}")
+    public Response getRoomList(@PathVariable Long campsiteId) {
+        return new Response(RoomConstant.ROOM_LIST, ownerService.getRoomList(campsiteId));
     }
 
     @Override

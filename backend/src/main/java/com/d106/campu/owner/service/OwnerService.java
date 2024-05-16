@@ -21,6 +21,7 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.image.service.ImageService;
+import com.d106.campu.owner.dto.OwnerDto;
 import com.d106.campu.owner.dto.OwnerDto.CampsiteUpdateRequest;
 import com.d106.campu.owner.dto.OwnerDto.RoomCreateRequest;
 import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
@@ -157,6 +158,11 @@ public class OwnerService {
         if (file != null && !file.isEmpty()) {
             imageService.uploadRoomImage(room, file);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<OwnerDto.RoomResponse> getRoomList(Long campsiteId) {
+        return roomMapper.toOwnerRoomResponse(roomRepository.findByCampsite_Id(campsiteId));
     }
 
     @Transactional

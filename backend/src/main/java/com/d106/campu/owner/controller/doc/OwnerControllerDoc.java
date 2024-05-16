@@ -101,6 +101,18 @@ public interface OwnerControllerDoc {
     })
     Response createRoom(MultipartFile file, @Valid OwnerDto.RoomCreateRequest createRequestDto);
 
+    @Operation(summary = "캠핑장 방 목록 조회", description = "사장님이 캠핑장의 방의 목록을 조회하는 API를 호출한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "캠핑장 방 목록 조회 성공",
+            content = @Content(schemaProperties = {
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = RoomListResponse.class)),
+            })),
+        @ApiResponse(responseCode = "401", description = "권한 없음", content = @Content),
+        @ApiResponse(responseCode = "404", description = "캠핑장을 찾을 수 없음", content = @Content)
+    })
+    Response getRoomList(Long campsiteId);
+
     @Operation(summary = "캠핑장 방 수정", description = "사장님이 캠핑장의 방을 수정하는 API를 호출한다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "캠핑장 방 수정 성공",
@@ -130,6 +142,10 @@ public interface OwnerControllerDoc {
 
     class ReservationWithUserListResponse {
         public List<ReservationDto.ResponseWithUser> reservationList;
+    }
+
+    class RoomListResponse {
+        public List<OwnerDto.RoomResponse> roomList;
     }
 
 }

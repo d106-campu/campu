@@ -48,4 +48,19 @@ public class OwnerDto {
 
     }
 
+    @Data
+    public static class RoomResponse {
+
+        private Long roomId;
+        private String imageUrl;
+        private String induty;
+        private String roomName;
+        private int baseNo;
+        private int maxNo;
+        private Long price;
+        private Long extraPrice;
+        private boolean toilet;
+
+    }
+
 }
