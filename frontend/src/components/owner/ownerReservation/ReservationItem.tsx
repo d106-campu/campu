@@ -1,4 +1,3 @@
-import dummyImage from "@/assets/images/dummyCamping.png";
 import { IReservationSimpleRes } from "@/types/owner";
 
 const ReservationItem = ({
@@ -16,7 +15,10 @@ const ReservationItem = ({
 
         <div className="flex justify-evenly items-center">
           <div>
-            <img src={dummyImage} className="flex rounded-md h-28" />
+            <img
+              src={reservation.room.imageUrl!}
+              className="flex rounded-md h-28"
+            />
           </div>
           <div>
             <div className="flex py-2">

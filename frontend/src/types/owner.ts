@@ -19,6 +19,7 @@ export interface IOwnerReservationReq {
 export interface IRoomInfo {
   id: number;
   name: string;
+  imageUrl?: string | null;
 }
 
 export interface IcustomerInfo {
@@ -71,6 +72,7 @@ export interface ICampsiteAddReq {
 // 캠핑장 일반사진 Response
 export interface ICampsiteAddRes {
   generalImageList: string[];
+}
 
 // 캠핑장 방 등록 요청
 export interface IRoomCreateReq {
