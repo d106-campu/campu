@@ -186,6 +186,7 @@ const usePayment = () => {
         const cancelPayment = data.data.cancelPayment;
         console.log("결제 취소 완료: ", cancelPayment);
         Toast.success("결제가 성공적으로 취소되었습니다.");
+        dispatch(updateStatus("proceeding"));
       },
       onError: (error: Error) => {
         console.error(`결제 취소 실패: ${error.message}`);

@@ -1,6 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { updateStatus } from "@/features/reservation/ReservationSlice";
 import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
 import { diffDays } from "@/utils/diffDays";
 import Button from "@/components/@common/Button/Button";
@@ -14,10 +13,9 @@ import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
 import formatPhoneNumber from "@/utils/formatPhoneNumber";
 import usePayment from "@/hooks/payment/usePayment";
-import { IPaymentPrepareReq } from "@/types/payment";
+import { IPaymentCancelReq, IPaymentPrepareReq } from "@/types/payment";
 
 const ReservationItem = () => {
-  const dispatch = useDispatch();
   // Redux 상태 불러오기
   const {
     image,
@@ -40,9 +38,15 @@ const ReservationItem = () => {
     checkOut,
   } = useSelector((state: RootState) => state.reservation.data);
   const status = useSelector((state: RootState) => state.reservation.status);
+  const impUid = useSelector(
+    (state: RootState) => state.reservation.data.impUid
+  );
+  const reservationId = useSelector(
+    (state: RootState) => state.reservation.data.reservationId
+  );
   const nickname = useSelector((state: RootState) => state.auth.nickname);
 
-  const { preparePaymentMutation } = usePayment();
+  const { preparePaymentMutation, cancelPaymentMutation } = usePayment();
 
   const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
   const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
@@ -61,6 +65,16 @@ const ReservationItem = () => {
     };
     console.log(data);
     preparePaymentMutation.mutate(data);
+  };
+
+  const handleCancelPayment = () => {
+    const cancelData: IPaymentCancelReq = {
+      reservationId: reservationId,
+      impUid: impUid,
+      reason: "테스트 결제 환불",
+    };
+
+    cancelPaymentMutation.mutate(cancelData);
   };
 
   return (
@@ -198,7 +212,7 @@ const ReservationItem = () => {
             toggleModal={toggleMapModal}
           />
         )}
-        {status === "proceeding" ? (
+        {status !== "proceeding" ? (
           <Button
             width="w-[40%]"
             text=""
@@ -222,7 +236,7 @@ const ReservationItem = () => {
             fontWeight="none"
             backgroundColor="bg-SUB_PINK"
             hoverBackgroundColor="hover:bg-HOVER_PINK"
-            onClick={() => dispatch(updateStatus("proceeding"))}
+            onClick={handleCancelPayment}
           />
         )}
       </div>
