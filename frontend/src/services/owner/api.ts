@@ -1,6 +1,11 @@
 import { axiosAuthInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
-import { IBizrnoReq, IOwnerCampsiteReq } from "@/types/owner";
+import {
+  IBizrnoReq,
+  IOwnerCampsiteReq,
+  IOwnerReservationReq,
+  IOwnerReservationRes,
+} from "@/types/owner";
 import { ICampsiteRes } from "@/types/search";
 
 export const getOwnerCampsiteList = async ({
@@ -23,3 +28,18 @@ export const postBizrno = async (
   return data.data;
 };
 
+// 캠핑장 예약 내역 조회
+export const getOwnerReservationList = async ({
+  campsiteId,
+  date,
+}: IOwnerReservationReq): Promise<APIResponse<IOwnerReservationRes>> => {
+  const data = await axiosAuthInstance.get(
+    `/owner/reservation/campsite/${campsiteId}`,
+    {
+      params: {
+        date: date,
+      },
+    }
+  );
+  return data.data;
+};

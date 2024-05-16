@@ -7,6 +7,7 @@ import Modal from "@/components/@common/Modal/Modal";
 import { useOwner } from "@/hooks/owner/useOwner";
 import { IBizrnoReq } from "@/types/owner";
 import Toast from "../@common/Toast/Toast";
+import { createSelector } from "@reduxjs/toolkit";
 
 interface ICampData {
   id: number;
@@ -17,17 +18,18 @@ interface ISideTabbarProps {
   campData: ICampData[];
 }
 
+const selectCampsiteInfo = createSelector(
+  (state: RootState) => state.ownerSide.campsiteId,
+  (campsiteId) => ({ campsiteId })
+);
+
 const SideTabbar = ({ campData }: ISideTabbarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bizrno, setBizrno] = useState<string>("");
   const [isHover, setIsHover] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { useAddBizrno } = useOwner();
-
-  const selectCampsite = useSelector((state: RootState) => ({
-    name: state.ownerSide.campsiteName,
-    id: state.ownerSide.campsiteId,
-  }));
+  const { campsiteId } = useSelector(selectCampsiteInfo);
 
   const postBizrno: IBizrnoReq = {
     bizrno: bizrno,
@@ -76,7 +78,7 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
               key={index}
               onClick={() => handleSelect(campground)}
               className={`${
-                selectCampsite.id === campground.id
+                campsiteId === campground.id
                   ? "bg-MAIN_GREEN text-white border border-MAIN_GREEN"
                   : "text-gray-400 border border-gray-400"
               }  text-sm py-2 px-4 rounded-lg mb-2`}
