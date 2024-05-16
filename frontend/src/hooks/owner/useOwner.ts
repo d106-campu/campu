@@ -160,15 +160,15 @@ export const useOwner = () => {
 
   // 캠핑장 상세 수정
   const useUpdateDetail = (props: IEditDetailReq) => {
+    const queryClient = useQueryClient();
     return useMutation({
       mutationFn: () => updateDatailCampsite(props),
-      onSuccess: (res) => {
-        console.log("수정완", res);
-        Toast.success("기본 정보가 수정되었습니다.");
-        // console.log("확인 1:", props.campsiteId);
-        // console.log("확인 2:", props.intro);
-        // console.log("확인 3:", props.themeList);
-        // console.log("확인 4:", props.fcltyList);
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["campsite detail", props.campsiteId],
+        });
+        console.log("정보 수정 완");
+        Toast.success("수정이 완료되었습니다.")
       },
       onError: (err) => {
         console.error("수정실패", err);

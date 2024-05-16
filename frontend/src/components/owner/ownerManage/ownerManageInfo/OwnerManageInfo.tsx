@@ -35,13 +35,13 @@ const OwnerManageInfo = () => {
   const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
   const { useGetCampsite } = useReservation();
   const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
-  const [detailIntro, setDetailIntro] = useState<string>(
-    detailCampsiteInfo?.data.campsite.intro || ""
-  );
+  const [detailIntro, setDetailIntro] = useState<string>("");
 
   useEffect(() => {
     if (detailCampsiteInfo && detailCampsiteInfo.data.campsite.facltList) {
       setSelectedFacility(detailCampsiteInfo.data.campsite.facltList);
+      setDetailIntro(detailCampsiteInfo?.data.campsite.intro);
+      setSelectedTags(detailCampsiteInfo?.data.campsite.themeList);
     }
   }, [detailCampsiteInfo]);
 
