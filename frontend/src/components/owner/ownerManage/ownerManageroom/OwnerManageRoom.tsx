@@ -56,7 +56,6 @@ const OwnerManageRoom = () => {
     }
   };
 
-  // 방 등록 테스트 -> test로 만들어놓은 hooks-services-type 참고하여 import 수정해야함
   const handleSubmit = () => {
     if (image && campsiteId) {
       const createRequestDto: IRoomCreateReq = {

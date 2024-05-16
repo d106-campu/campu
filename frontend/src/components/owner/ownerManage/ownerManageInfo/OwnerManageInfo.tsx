@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { useReservation } from "@/hooks/reservation/useReservation";
 import OwnerTagList from "./OwnerTagList";
 import { createSelector } from "@reduxjs/toolkit";
+import { IEditDetailReq } from "@/types/owner";
+import { useOwner } from "@/hooks/owner/useOwner";
 
 const selectCampsiteInfo = createSelector(
   (state: RootState) => state.ownerSide.campsiteId,
@@ -29,19 +31,13 @@ const OwnerManageInfo = () => {
   ];
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // 테마 선택
-  const [selectedCampingType, setSelectedCampingType] = useState<
-    string[] | null
-  >(null); // 캠핑장 유형 선택
   const [selectedFacility, setSelectedFacility] = useState<string[]>([]); // 시설 선택
   const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
   const { useGetCampsite } = useReservation();
   const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
-
-  useEffect(() => {
-    if (detailCampsiteInfo && detailCampsiteInfo.data.campsite.indutyList) {
-      setSelectedCampingType(detailCampsiteInfo.data.campsite.indutyList);
-    }
-  }, [detailCampsiteInfo]);
+  const [detailIntro, setDetailIntro] = useState<string>(
+    detailCampsiteInfo?.data.campsite.intro || ""
+  );
 
   useEffect(() => {
     if (detailCampsiteInfo && detailCampsiteInfo.data.campsite.facltList) {
@@ -67,19 +63,21 @@ const OwnerManageInfo = () => {
     }
   };
 
-  const campingTypes = ["캠핑", "글램핑", "자동차야영장", "카라반"];
+  const createRequestDto: IEditDetailReq = {
+    campsiteId: campsiteId!,
+    intro: detailIntro,
+    themeList: selectedTags,
+    fcltyList: selectedFacility,
+  };
 
-  const toggleCampingType = (campingType: string) => {
-    if (selectedCampingType && selectedCampingType.includes(campingType)) {
-      setSelectedCampingType(
-        selectedCampingType.filter((type) => type !== campingType)
-      );
-    } else {
-      setSelectedCampingType(
-        selectedCampingType
-          ? [...selectedCampingType, campingType]
-          : [campingType]
-      );
+  const { useUpdateDetail } = useOwner();
+  const { mutate } = useUpdateDetail(createRequestDto);
+
+  const handleSubmit = () => {
+    console.log("시설", selectedFacility);
+    console.log("소개", detailIntro);
+    if (campsiteId) {
+      mutate();
     }
   };
 
@@ -91,11 +89,17 @@ const OwnerManageInfo = () => {
           <div className="text-sm px-2 py-4">
             {/* 한줄 소개 */}
             <div>
-              <p className="pb-3">한줄 소개</p>
+              <div className="flex items-center justify-between pb-3">
+                <p>한줄 소개</p>
+                <p className="px-4 text-xs text-gray-500">
+                  한줄 소개는 수정이 불가능합니다.
+                </p>
+              </div>
               <textarea
                 className="w-full h-30 p-4 border rounded-md outline-none"
                 placeholder="캠핑장에 대한 간단한 소개글을 작성해주세요."
                 value={detailCampsiteInfo?.data.campsite.lineIntro}
+                readOnly
               />
             </div>
             {/* 한줄 소개 */}
@@ -104,27 +108,9 @@ const OwnerManageInfo = () => {
               <textarea
                 className="w-full h-30 p-4 border rounded-md outline-none"
                 placeholder="캠핑장에 대한 자세한 소개글을 작성해주세요."
-                value={detailCampsiteInfo?.data.campsite.intro}
+                value={detailIntro}
+                onChange={(e) => setDetailIntro(e.target.value)}
               />
-            </div>
-            {/* 캠핑장 유형 */}
-            <div>
-              <p className="py-3">캠핑장 유형</p>
-              <div className="flex space-x-2 p-2">
-                {campingTypes.map((type) => (
-                  <div
-                    key={type}
-                    className={`${
-                      selectedCampingType && selectedCampingType.includes(type)
-                        ? " text-MAIN_GREEN border border-MAIN_GREEN"
-                        : "border border-gray-200 text-gray-400"
-                    } px-4 py-2 rounded-xl cursor-pointer`}
-                    onClick={() => toggleCampingType(type)}
-                  >
-                    {type}
-                  </div>
-                ))}
-              </div>
             </div>
             {/* 캠핑장 테마 */}
             <div>
@@ -147,7 +133,12 @@ const OwnerManageInfo = () => {
         </div>
         {/* post 버튼 */}
         <div className="flex justify-end p-4 text-sm">
-          <button className="bg-gray-300 px-4 py-2 rounded-md">저장하기</button>
+          <button
+            onClick={handleSubmit}
+            className="bg-MAIN_GREEN text-white px-4 py-2 rounded-md"
+          >
+            저장하기
+          </button>
         </div>
       </div>
     </>
