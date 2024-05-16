@@ -1,10 +1,10 @@
 package com.d106.campu.payment.service;
 
-import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.util.SecurityHelper;
+import com.d106.campu.notification.mapper.NotificationMapper;
 import com.d106.campu.payment.dto.PaymentDto;
 import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.constant.ReservationConstant;
@@ -36,6 +36,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,9 +49,10 @@ public class PaymentService {
     private final ReservationCancelRepository reservationCancelRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
-    private final CampsiteRepository campsiteRepository;
     private final SecurityHelper securityHelper;
     private final ReservationMapper reservationMapper;
+    private final NotificationMapper notificationMapper;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private IamportClient iamportClient;
 
@@ -141,6 +143,7 @@ public class PaymentService {
         reservation.getReservationPayment().setImpUid(completeRequest.getImpUid());
         reservation.setStatus(PaymentStatus.SUCCESS);
 
+        applicationEventPublisher.publishEvent(notificationMapper.toPaymentEvent(reservation));
         return reservationMapper.toCompleteResponseDto(reservationRepository.save(reservation));
     }
 
@@ -174,6 +177,7 @@ public class PaymentService {
         reservation.cancelPayment(reservationCancel);
         reservation.setStatus(PaymentStatus.CANCEL);
 
+        applicationEventPublisher.publishEvent(notificationMapper.toCancelEvent(reservation));
         return reservationMapper.toCancelResponseDto(reservationRepository.save(reservation));
     }
 
