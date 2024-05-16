@@ -71,4 +71,20 @@ export interface ICampsiteAddReq {
 // 캠핑장 일반사진 Response
 export interface ICampsiteAddRes {
   generalImageList: string[];
+
+// 캠핑장 방 등록 요청
+export interface IRoomCreateReq {
+  campsiteId: number;
+  induty: string;
+  roomName: string;
+  price: number;
+  baseNo: number;
+  maxNo: number;
+  extraPrice: number;
+  toilet: boolean;
+}
+
+// 캠핑장 방 등록 응답
+export interface IRoomCreateRes {
+  result: string;
 }

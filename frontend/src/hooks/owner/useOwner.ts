@@ -5,11 +5,13 @@ import {
   updateAddImage,
   updateMapImage,
   updateThumnailImage,
+  postCampsiteRoom,
 } from "@/services/owner/api";
 import {
   IBizrnoReq,
   IOwnerCampsiteReq,
   IOwnerReservationReq,
+  IRoomCreateReq,
 } from "@/types/owner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -84,6 +86,22 @@ export const useOwner = () => {
       },
     });
   };
+  
+    // 캠핑장 방 등록
+  const usePostCampsiteRoom = () => {
+    return useMutation({
+      mutationKey: ["postCampRoom"],
+      // mutationFn: postCampsiteRoom,
+      mutationFn: ({ file, createRequestDto }: { file: File, createRequestDto: IRoomCreateReq }) =>
+        postCampsiteRoom(file, createRequestDto),
+      onSuccess: (res) => {
+        console.log("캠핑장 방 등록 성공", res);
+      },
+      onError: (err) => {
+        console.error("캠핑장 방 등록 실패", err);
+      },
+    });
+  };
 
   return {
     useGetOwnerCampsiteList,
@@ -92,5 +110,6 @@ export const useOwner = () => {
     useThumbnailMutation,
     useMapImageMutation,
     useAddImageMutation,
+    usePostCampsiteRoom,
   };
 };

@@ -5,21 +5,30 @@ import { useRef, useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { testUseOwner } from "@/hooks/owner/testUserOwner"; // 경로 수정해주세용
+import { IRoomCreateReq } from "@/types/testOwner"; // 경로 수정해주세용
+import { useEffect } from "react";
 
 const OwnerManageRoom = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [photo, setPhoto] = useState<string>("");
   const imgRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File>();
-  const [standardeople, setStandardPeople] = useState<number>(2); // 기준인원 계산
-  const [maxPeople, setMaxPeople] = useState<number>(4); // 최대 인원 계산
-  const [isToilet, setIsToilet] = useState<boolean>(true); // 화장실 유무
+  // const [standardeople, setStandardPeople] = useState<number>(2); // 기준인원 계산
+  // const [maxPeople, setMaxPeople] = useState<number>(4); // 최대 인원 계산
+
+  const [roomName, setRoomName] = useState<string>(""); // 추가 방 이름
+  const [price, setPrice] = useState<number>(0); // 가격
+  const [baseNo, setBaseNo] = useState<number>(2); // 기준 인원
+  const [maxNo, setMaxNo] = useState<number>(4); // 최대 인원
+  const [extraPrice, setExtraPrice] = useState<number>(0); // 추가 인원 가격
+  const [toilet, setIsToilet] = useState<boolean>(true); // 화장실 유무
+  const { usePostCampsiteRoom } = testUseOwner();
+  const postCampsiteRoomMutation = usePostCampsiteRoom();
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-
-  console.log(image?.type);
 
   const saveImgFile = () => {
     if (imgRef.current && imgRef.current.files) {
@@ -36,10 +45,31 @@ const OwnerManageRoom = () => {
     }
   };
 
+  // 방 등록 테스트 -> test로 만들어놓은 hooks-services-type 참고하여 import 수정해야함
+  const handleSubmit = () => {
+    if (image) {
+      const createRequestDto: IRoomCreateReq = {
+        campsiteId: 1,
+        induty: selectedCampingType || "카라반",
+        roomName,
+        price,
+        baseNo,
+        maxNo,
+        extraPrice,
+        toilet,
+      };
+
+      console.log("보내는 induty :", createRequestDto.induty)
+      // 캠핑장 방 등록 API 연결 뮤테이틑
+      postCampsiteRoomMutation.mutate({ file: image, createRequestDto });
+      toggleModal(); // 모달 닫기
+    } else {
+      console.error("이미지 파일을 선택하세요.");
+    }
+  };
+
   const campingTypes = ["캠핑", "글램핑", "오토캠핑", "카라반"];
-  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
-    null
-  );
+  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(null);
 
   const toggleCampingType = (campingType: string) => {
     setSelectedCampingType(
@@ -47,22 +77,26 @@ const OwnerManageRoom = () => {
     );
   };
 
+  useEffect(() => {
+    console.log("선택한 유형 타입 :", selectedCampingType);
+  }, [selectedCampingType]);
+
   const increaseStandard = () => {
-    if (standardeople < maxPeople) {
-      setStandardPeople(standardeople + 1);
+    if (baseNo < maxNo) {
+      setBaseNo(baseNo + 1);
     }
   };
   const decreaseStandard = () => {
-    if (standardeople > 1) {
-      setStandardPeople(standardeople - 1);
+    if (baseNo > 1) {
+      setBaseNo(baseNo - 1);
     }
   };
   const increaseMax = () => {
-    setMaxPeople(maxPeople + 1);
+    setMaxNo(maxNo + 1);
   };
   const decreaseMax = () => {
-    if (maxPeople > standardeople) {
-      setMaxPeople(maxPeople - 1);
+    if (maxNo > baseNo) {
+      setMaxNo(maxNo - 1);
     }
   };
 
@@ -128,13 +162,11 @@ const OwnerManageRoom = () => {
                 <div className="flex items-center justify-between">
                   <p className="p-3 text-gray-500">방 유형</p>
                   <div className="flex space-x-2 p-2">
-                    {campingTypes.map((type) => (
+                  {campingTypes.map((type) => (
                       <div
                         key={type}
                         className={`${
-                          selectedCampingType === type
-                            ? "border border-MAIN_GREEN text-MAIN_GREEN font-semibold"
-                            : "border border-gray-200 text-gray-500"
+                          selectedCampingType === type ? "border border-MAIN_GREEN text-MAIN_GREEN font-semibold" : "border border-gray-200 text-gray-500"
                         } px-4 py-1 rounded-md`}
                         onClick={() => toggleCampingType(type)}
                       >
@@ -146,12 +178,21 @@ const OwnerManageRoom = () => {
                 {/* 방 이름 */}
                 <div className="flex items-center">
                   <p className="p-3 whitespace-nowrap text-gray-500">방 이름</p>
-                  <input className="p-2 border-b outline-none w-full"></input>
+                  <input
+                    className="p-2 border-b outline-none w-full"
+                    value={roomName}
+                    onChange={(e) => setRoomName(e.target.value)}
+                  />
                 </div>
                 {/* 방 가격 */}
                 <div className="flex items-center">
                   <p className="p-3 whitespace-nowrap text-gray-500">방 가격</p>
-                  <input className="p-2 border-b outline-none w-full"></input>
+                  <input
+                    type="number"
+                    className="p-2 border-b outline-none w-full"
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                  />
                 </div>
                 {/* 인원 */}
                 <div className="flex pr-4 items-center justify-between">
@@ -161,7 +202,7 @@ const OwnerManageRoom = () => {
                       onClick={decreaseStandard}
                       className="text-MAIN_GREEN cursor-pointer"
                     />
-                    <p className="p-3">{standardeople}</p>
+                    <p className="p-3">{baseNo}</p>
                     <AiOutlinePlusCircle
                       onClick={increaseStandard}
                       className="text-MAIN_GREEN cursor-pointer"
@@ -173,7 +214,7 @@ const OwnerManageRoom = () => {
                       onClick={decreaseMax}
                       className="text-MAIN_GREEN cursor-pointer"
                     />
-                    <p className="p-3">{maxPeople}</p>
+                    <p className="p-3">{maxNo}</p>
                     <AiOutlinePlusCircle
                       onClick={increaseMax}
                       className="text-MAIN_GREEN cursor-pointer"
@@ -185,7 +226,12 @@ const OwnerManageRoom = () => {
                   <p className="p-3 whitespace-nowrap text-gray-500">
                     추가 인원 가격
                   </p>
-                  <input className="p-2 border-b outline-none w-full"></input>
+                  <input
+                    type="number"
+                    className="p-2 border-b outline-none w-full"
+                    value={extraPrice}
+                    onChange={(e) => setExtraPrice(Number(e.target.value))}
+                  />
                 </div>
                 {/* 화장실 유무 */}
                 <div className="flex items-center justify-start">
@@ -195,7 +241,7 @@ const OwnerManageRoom = () => {
                   <div className="flex items-center text-sm">
                     <div
                       className={`border border-MAIN_GREEN px-6 py-1 rounded-tl rounded-bl cursor-pointer ${
-                        isToilet
+                        toilet
                           ? "bg-MAIN_GREEN text-white"
                           : "text-MAIN_GREEN"
                       }`}
@@ -205,7 +251,7 @@ const OwnerManageRoom = () => {
                     </div>
                     <div
                       className={`border border-MAIN_GREEN px-6 py-1 rounded-tr rounded-br cursor-pointer ${
-                        !isToilet
+                        !toilet
                           ? "bg-MAIN_GREEN text-white"
                           : "text-MAIN_GREEN"
                       }`}
@@ -218,7 +264,10 @@ const OwnerManageRoom = () => {
 
                 {/* post 버튼 */}
                 <div className="pt-8">
-                  <button className="bg-MAIN_GREEN text-white text-sm w-full rounded-md py-2">
+                  <button
+                    className="bg-MAIN_GREEN text-white text-sm w-full rounded-md py-2"
+                    onClick={handleSubmit}
+                  >
                     등록하기
                   </button>
                 </div>
