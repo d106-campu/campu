@@ -265,7 +265,10 @@ const ReservationAccordion = ({
                     backgroundColor="bg-SUB_PINK"
                     hoverTextColor="text-MAIN_GREEN"
                     hoverBackgroundColor="hover:bg-HOVER_PINK"
-                    onClick={toggleCancelPaymentModal}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleCancelPaymentModal();
+                    }}
                   />
                 )}
                 {/* 결제 취소 모달 */}

@@ -25,7 +25,7 @@ const CancelPaymentModal = ({
 
   // 결제 취소하기
   const { cancelPaymentMutation } = usePayment();
-  const handleCancelPayment = () => {
+  const handleCancelPayment = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (cancelReason === "") {
       Toast.error("취소사유를 선택해주세요. 필수사항입니다.");
       return;
@@ -37,6 +37,7 @@ const CancelPaymentModal = ({
     };
     cancelPaymentMutation.mutate(cancelData);
     toggleModal();
+    event.stopPropagation();
   };
 
   return (
@@ -57,13 +58,19 @@ const CancelPaymentModal = ({
                 text="아니요"
                 backgroundColor="bg-GRAY"
                 hoverBackgroundColor="hover:bg-[#acacac]"
-                onClick={toggleModal}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleModal();
+                }}
               />
               <Button
                 text="취소할게요"
                 backgroundColor="bg-MAIN_PINK"
                 hoverBackgroundColor="hover:bg-MAIN_RED"
-                onClick={() => setIsCancel(!isCancel)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsCancel(!isCancel);
+                }}
               />
             </div>
           </>
@@ -162,13 +169,19 @@ const CancelPaymentModal = ({
                 text="취소하기"
                 backgroundColor="bg-GRAY"
                 hoverBackgroundColor="hover:bg-[#acacac]"
-                onClick={toggleModal}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleModal();
+                }}
               />
               <Button
                 text="확인"
                 backgroundColor="bg-MAIN_PINK"
                 hoverBackgroundColor="hover:bg-MAIN_RED"
-                onClick={handleCancelPayment}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleCancelPayment(event);
+                }}
               />
             </div>
           </>
