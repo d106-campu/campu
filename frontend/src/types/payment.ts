@@ -44,10 +44,10 @@ export interface IPaymentComplete {
   reservationId: number;
   room: IRoom;
   headCnt: number;
-  price: number;
   startDate: string;
   endDate: string;
   status: string;
+  price: number;
   amount: number;
 }
 
