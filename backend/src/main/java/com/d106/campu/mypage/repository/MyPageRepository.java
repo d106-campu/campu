@@ -58,6 +58,7 @@ public class MyPageRepository {
             campsite.id, campsite.facltNm, campsite.addr1, campsite.thumbnailImageUrl,
             room.id, room.name, room.supplyList,
             reservation.id, reservation.headCnt, reservation.price, reservation.startDate, reservation.endDate,
+            reservation.reservationPayment.impUid,
             campsiteLocation.mapX, campsiteLocation.mapY,
             review.id
         };
@@ -120,6 +121,7 @@ public class MyPageRepository {
                     .build())
                 .reservation(ReservationResponse.builder()
                     .reservationId(tuple.get(reservation.id))
+                    .impUid(tuple.get(reservation.reservationPayment.impUid))
                     .headCnt(tuple.get(reservation.headCnt))
                     .price(tuple.get(reservation.price))
                     .startDate(tuple.get(reservation.startDate))
