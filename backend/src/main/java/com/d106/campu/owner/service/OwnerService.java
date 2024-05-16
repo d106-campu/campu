@@ -21,6 +21,7 @@ import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.image.service.ImageService;
+import com.d106.campu.owner.dto.OwnerDto;
 import com.d106.campu.owner.dto.OwnerDto.CampsiteUpdateRequest;
 import com.d106.campu.owner.dto.OwnerDto.RoomCreateRequest;
 import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
@@ -150,7 +151,7 @@ public class OwnerService {
 
         Room room = roomMapper.toRoom(createRequestDto);
         room.setCampsite(campsite);
-        room.setInduty(indutyRepository.findByIndutyStr(createRequestDto.getInduty())
+        room.setInduty(indutyRepository.findByIndutyStr(createRequestDto.getInduty().getName())
             .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
         roomRepository.saveAndFlush(room);
 
@@ -159,13 +160,18 @@ public class OwnerService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<OwnerDto.RoomResponse> getRoomList(Long campsiteId) {
+        return roomMapper.toOwnerRoomResponse(roomRepository.findByCampsite_Id(campsiteId));
+    }
+
     @Transactional
     public void updateRoom(Long roomId, MultipartFile file, RoomUpdateRequest updateRequestDto) {
         Room room = getRoom(roomId);
 
         checkOwner(securityHelper.getLoginAccount(), room.getCampsite().getUser().getAccount());
         room.updateRoomInfo(updateRequestDto);
-        room.setInduty(indutyRepository.findByIndutyStr(updateRequestDto.getInduty())
+        room.setInduty(indutyRepository.findByIndutyStr(updateRequestDto.getInduty().getName())
             .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
 
         if (file != null && !file.isEmpty()) {
@@ -173,6 +179,14 @@ public class OwnerService {
         } else {
             room.setImageUrl(null);
         }
+    }
+
+    @Transactional
+    public void deleteRoom(Long roomId) {
+        Room room = getRoom(roomId);
+
+        checkOwner(securityHelper.getLoginAccount(), room.getCampsite().getUser().getAccount());
+        roomRepository.delete(room);
     }
 
     private void checkOwner(String loginAccount, String ownedAccount) {

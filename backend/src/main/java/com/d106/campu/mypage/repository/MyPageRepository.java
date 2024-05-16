@@ -15,6 +15,7 @@ import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReviewReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.RoomResponse;
+import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.review.domain.jpa.QReviewImage;
@@ -58,12 +59,14 @@ public class MyPageRepository {
             campsite.id, campsite.facltNm, campsite.addr1, campsite.thumbnailImageUrl,
             room.id, room.name, room.supplyList,
             reservation.id, reservation.headCnt, reservation.price, reservation.startDate, reservation.endDate,
+            reservation.reservationPayment.impUid,
             campsiteLocation.mapX, campsiteLocation.mapY,
             review.id
         };
 
         BooleanBuilder predicate = new BooleanBuilder();
         predicate.and(user.account.eq(account));
+        predicate.and(reservation.status.eq(PaymentStatus.SUCCESS));
 
         if (useType.equals(UseType.AFTER)) {
             if (dateType.equals(DateType.MONTH)) {
@@ -120,6 +123,7 @@ public class MyPageRepository {
                     .build())
                 .reservation(ReservationResponse.builder()
                     .reservationId(tuple.get(reservation.id))
+                    .impUid(tuple.get(reservation.reservationPayment.impUid))
                     .headCnt(tuple.get(reservation.headCnt))
                     .price(tuple.get(reservation.price))
                     .startDate(tuple.get(reservation.startDate))

@@ -3,6 +3,7 @@ package com.d106.campu.campsite.dto;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.common.annotation.Tel;
 import com.d106.campu.common.annotation.Time;
+import com.d106.campu.image.dto.ImageDto;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -71,7 +72,7 @@ public class CampsiteDto {
         private String homepage;
         private String thumbnailImageUrl;
         private String mapImageUrl;
-        private List<String> campsiteImageUrlList;
+        private List<ImageDto.UploadListResponse> campsiteImageUrlList;
         private String checkin;
         private String checkout;
 

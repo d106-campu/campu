@@ -50,15 +50,15 @@ public interface PaymentControllerDoc {
     Response cancelPayment(PaymentDto.CancelRequest cancelRequestDto);
 
     class PaymentPrepareResponse {
-        public PaymentDto.PrepareResponse prepareResponse;
+        public PaymentDto.PrepareResponse preparePayment;
     }
 
     class PaymentCompleteResponse {
-        public PaymentDto.CompleteResponse completeResponse;
+        public PaymentDto.CompleteResponse completePayment;
     }
 
     class PaymentCancelResponse {
-        public PaymentDto.CancelResponse cancelResponse;
+        public PaymentDto.CancelResponse cancelPayment;
     }
 
 }

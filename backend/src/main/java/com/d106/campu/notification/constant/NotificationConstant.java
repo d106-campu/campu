@@ -10,6 +10,6 @@ public class NotificationConstant {
     public static final String NOTIFICATION_LIST = "notificationList";
     public static final String MY_PAGE_URL = "/mypage";
     public static final String CAMPSITE_URL = "/camps";
-    public static final String EMPTY_ROOM_SMS = "[campu]\n ";
+    public static final String CAMPU_SMS = "[campu]\n ";
 
 }

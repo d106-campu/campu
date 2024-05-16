@@ -5,7 +5,6 @@ import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.constant.IndutyEnum;
 import com.d106.campu.campsite.constant.ThemeEnum;
 import com.d106.campu.campsite.domain.jpa.Campsite;
-import com.d106.campu.campsite.domain.jpa.CampsiteImage;
 import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.campsite.domain.jpa.CampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.Fclty;
@@ -20,10 +19,13 @@ import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
 import com.d106.campu.campsite.repository.jpa.ThemeRepository;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
+import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
+import com.d106.campu.image.mapper.ImageMapper;
 import com.d106.campu.review.repository.jpa.ReviewRepository;
 import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.room.repository.jpa.QRoomRepository;
@@ -60,6 +62,7 @@ public class CampsiteService {
     private final QCampsiteRepository qCampsiteRepository;
     private final CampsiteLikeRepository campsiteLikeRepository;
     private final CampsiteMapper campsiteMapper;
+    private final ImageMapper imageMapper;
 
     private final FcltyRepository fcltyRepository;
     private final ThemeRepository themeRepository;
@@ -214,7 +217,7 @@ public class CampsiteService {
             .homepage(campsite.getHomepage())
             .thumbnailImageUrl(campsite.getThumbnailImageUrl())
             .mapImageUrl(campsite.getMapImageUrl())
-            .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(CampsiteImage::getUrl).toList())
+            .campsiteImageUrlList(campsite.getCampsiteImageList().stream().map(imageMapper::toUploadListResponse).toList())
             .checkin(campsite.getCheckin())
             .checkout(campsite.getCheckout())
             .build();
@@ -254,6 +257,11 @@ public class CampsiteService {
     @Transactional(readOnly = true)
     public Page<RoomDto.Response> getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
         User user, Pageable pageable) {
+
+        if (startDate.isAfter(endDate)) {
+            throw new ConflictException(CommonExceptionCode.INACCESSIBLE_DATA);
+        }
+
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 

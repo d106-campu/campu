@@ -14,6 +14,7 @@ public class EmptyRoomEvent {
     @Getter
     @Builder
     public static class Data {
+        private Long emptyNotificationId;
         private final String message = "빈자리가 났어요!";
         private Long userId;
         private String campsiteId;
