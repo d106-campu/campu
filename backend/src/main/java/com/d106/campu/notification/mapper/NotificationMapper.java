@@ -36,6 +36,7 @@ public interface NotificationMapper {
     @Mapping(target = "notificationId", source = "id")
     NotificationDto.ListResponse toListResponseDto(Notification notification);
 
+    @Mapping(target = "emptyNotificationId", source = "emptyNotification.id")
     @Mapping(target = "userId", source = "emptyNotification.user.id")
     @Mapping(target = "campsiteId", source = "emptyNotification.room.campsite.id")
     @Mapping(target = "campsiteName", source = "emptyNotification.room.campsite.facltNm")
@@ -85,7 +86,7 @@ public interface NotificationMapper {
         final Long sellerId = reservation.getRoom().getCampsite().getUser().getId();
         return CancelEvent.builder()
             .data(List.of(
-                PaymentEvent.Data.builder()
+                CancelEvent.Data.builder()
                     .userId(buyerId)
                     .campsiteName(reservation.getRoom().getCampsite().getFacltNm())
                     .roomName(reservation.getRoom().getName())
@@ -94,7 +95,7 @@ public interface NotificationMapper {
                     .headCnt(reservation.getHeadCnt())
                     .price(reservation.getPrice())
                     .build(),
-                PaymentEvent.Data.builder()
+                CancelEvent.Data.builder()
                     .userId(sellerId)
                     .campsiteName(reservation.getRoom().getCampsite().getFacltNm())
                     .roomName(reservation.getRoom().getName())

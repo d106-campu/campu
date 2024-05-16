@@ -1,6 +1,7 @@
 package com.d106.campu.common.event.listener;
 
 import com.d106.campu.common.util.SmsUtil;
+import com.d106.campu.emptynotification.service.EmptyNotificationService;
 import com.d106.campu.notification.dto.NotificationDto.SaveResponse;
 import com.d106.campu.notification.event.CancelEvent;
 import com.d106.campu.notification.event.EmptyRoomEvent;
@@ -18,6 +19,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class EventListener {
 
     private final NotificationService notificationService;
+    private final EmptyNotificationService emptyNotificationService;
     private final SmsUtil smsUtil;
 
     @Async
@@ -25,9 +27,13 @@ public class EventListener {
     public void saveAndSendEmptyRoomNotification(EmptyRoomEvent emptyRoomEvent) {
         // TODO: 지난 날짜에 대한 알림을 보내지 않도록 처리
         // TODO: 알림 보내고 나서 보낸 여부를 체크하든가 EmptyNotification을 삭제하든가 할 필요가 있음
+        List<Long> emptyNotificationIdList = emptyRoomEvent.getData().stream()
+            .map(EmptyRoomEvent.Data::getEmptyNotificationId)
+            .toList();
         List<SaveResponse> saveResponseDtoList = notificationService.saveEmptyRoomNotification(emptyRoomEvent.getData());
         notificationService.sendSseNotification(saveResponseDtoList);
         smsUtil.sendSmsNotification(saveResponseDtoList);
+        emptyNotificationService.deleteEmptyNotification(emptyNotificationIdList);
     }
 
     @Async

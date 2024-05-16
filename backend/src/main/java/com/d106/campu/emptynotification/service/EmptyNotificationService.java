@@ -10,12 +10,14 @@ import com.d106.campu.emptynotification.dto.EmptyNotificationDto.CreateRequest;
 import com.d106.campu.emptynotification.exception.code.EmptyNotificationExceptionCode;
 import com.d106.campu.emptynotification.mapper.EmptyNotificationMapper;
 import com.d106.campu.emptynotification.repository.jpa.EmptyNotificationRepository;
+import com.d106.campu.emptynotification.repository.jpa.QEmptyNotificationRepository;
 import com.d106.campu.room.domain.jpa.Room;
 import com.d106.campu.room.exception.code.RoomExceptionCode;
 import com.d106.campu.room.repository.jpa.RoomRepository;
 import com.d106.campu.user.domain.jpa.User;
 import com.d106.campu.user.exception.code.UserExceptionCode;
 import com.d106.campu.user.repository.jpa.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class EmptyNotificationService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final EmptyNotificationRepository emptyNotificationRepository;
+    private final QEmptyNotificationRepository qEmptyNotificationRepository;
     private final EmptyNotificationMapper emptyNotificationMapper;
     private final SecurityHelper securityHelper;
 
@@ -52,6 +55,11 @@ public class EmptyNotificationService {
             .orElseThrow(() -> new NotFoundException(RoomExceptionCode.NOT_FOUND_ROOM));
 
         emptyNotificationRepository.deleteByUserAndRoom(user, room);
+    }
+
+    @Transactional
+    public void deleteEmptyNotification(List<Long> emptyNotificationIdList) {
+        qEmptyNotificationRepository.deleteAllByIdIn(emptyNotificationIdList);
     }
 
     private void checkLimitCount(User user) {
