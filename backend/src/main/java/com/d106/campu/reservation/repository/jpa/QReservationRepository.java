@@ -5,10 +5,10 @@ import com.d106.campu.campsite.domain.jpa.QCampsite;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.reservation.dto.ReservationDto;
 import com.d106.campu.room.domain.jpa.QRoom;
-import com.d106.campu.room.dto.RoomDto.IdAndName;
+import com.d106.campu.room.dto.RoomDto;
 import com.d106.campu.user.domain.jpa.QUser;
 import com.d106.campu.user.domain.jpa.User;
-import com.d106.campu.user.dto.UserDto.NicknameAndTel;
+import com.d106.campu.user.dto.UserDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -34,8 +34,8 @@ public class QReservationRepository {
     public List<ReservationDto.ResponseWithUser> findReservationListByCampsiteAndOwner(Campsite targetCampsite, User owner,
         LocalDate today) {
         Expression<?>[] projection = new Expression[]{
-            reservation.id, room.id, room.name, reservation.user.nickname, reservation.user.tel, reservation.headCnt,
-            reservation.startDate, reservation.endDate, reservation.status,
+            reservation.id, room.id, room.name, room.imageUrl, reservation.user.nickname, reservation.user.tel,
+            reservation.headCnt, reservation.startDate, reservation.endDate, reservation.status,
         };
 
         BooleanBuilder predicates = new BooleanBuilder()
@@ -57,11 +57,12 @@ public class QReservationRepository {
         return tuples.stream()
             .map(tuple -> ReservationDto.ResponseWithUser.builder()
                 .id(tuple.get(reservation.id))
-                .room(IdAndName.builder()
+                .room(RoomDto.IdNameImage.builder()
                     .id(tuple.get(room.id))
                     .name(tuple.get(room.name))
+                    .imageUrl(tuple.get(room.imageUrl))
                     .build())
-                .customer(NicknameAndTel.builder()
+                .customer(UserDto.NicknameAndTel.builder()
                     .nickName(tuple.get(reservation.user.nickname))
                     .tel(tuple.get(reservation.user.tel))
                     .build())
