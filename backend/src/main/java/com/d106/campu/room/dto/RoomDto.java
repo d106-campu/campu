@@ -38,10 +38,11 @@ public class RoomDto {
 
     @Data
     @Builder
-    public static class IdAndName {
+    public static class IdNameImage {
 
         private Long id;
         private String name;
+        private String imageUrl;
 
     }
 
