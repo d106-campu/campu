@@ -1,14 +1,17 @@
 package com.d106.campu.image.service;
 
+import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.CampsiteImage;
 import com.d106.campu.campsite.exception.code.CampsiteExceptionCode;
+import com.d106.campu.campsite.repository.jpa.CampsiteImageRepository;
 import com.d106.campu.campsite.repository.jpa.CampsiteRepository;
 import com.d106.campu.common.exception.InvalidException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.image.constant.ImageConstant;
+import com.d106.campu.image.dto.ImageDto;
 import com.d106.campu.image.exception.code.ImageExceptionCode;
 import com.d106.campu.image.mapper.ImageMapper;
 import com.d106.campu.image.repository.ImageRepository;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class ImageService {
 
@@ -42,6 +47,7 @@ public class ImageService {
 
     private final UserRepository userRepository;
     private final CampsiteRepository campsiteRepository;
+    private final CampsiteImageRepository campsiteImageRepository;
     private final ImageRepository imageRepository;
     private final ReviewRepository reviewRepository;
     private final ImageMapper imageMapper;
@@ -99,7 +105,8 @@ public class ImageService {
     }
 
     @Transactional
-    public List<String> uploadCampsiteGeneralImageList(Long campsiteId, List<MultipartFile> generalImageList) {
+    public List<ImageDto.UploadListResponse> uploadCampsiteGeneralImageList(Long campsiteId,
+        List<MultipartFile> generalImageList) {
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
         // TODO: existsBy... 메서드를 사용하도록 수정
@@ -119,8 +126,47 @@ public class ImageService {
             .forEach(campsite::addCampsiteImage);
 
         return campsiteRepository.save(campsite).getCampsiteImageList().stream()
-            .map(CampsiteImage::getUrl)
-            .toList();
+            .map(imageMapper::toUploadListResponse).toList();
+    }
+
+    @Transactional
+    public List<ImageDto.UploadListResponse> updateCampsiteGeneralImageList(Long campsiteId,
+        ImageDto.UploadListRequest uploadListRequest, List<MultipartFile> generalImageList) {
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+        if (!StringUtils.equals(campsite.getUser().getAccount(), securityHelper.getLoginAccount())) {
+            throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
+        }
+
+        List<CampsiteImage> deleteImageList = campsiteImageRepository.findAllById(uploadListRequest.getImageIdList());
+        imageRepository.deleteAllByIdIn(uploadListRequest.getImageIdList());
+        deleteCampsiteImage(deleteImageList);
+
+        Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
+        generalImageList.stream()
+            .map(file -> saveFile(basePath, file))
+            .map(fileName -> String.join("/", campsite.getId().toString(), ImageConstant.GENERAL, fileName))
+            .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
+            .map(imageMapper::toCampsiteImage)
+            .forEach(campsite::addCampsiteImage);
+
+        return campsiteRepository.save(campsite).getCampsiteImageList().stream()
+            .map(imageMapper::toUploadListResponse).toList();
+    }
+
+    private void deleteCampsiteImage(List<CampsiteImage> deleteImageList) {
+        String keyword = CampsiteConstant.CAMPSITE;
+        for (CampsiteImage campsiteImage : deleteImageList) {
+            String url = campsiteImage.getUrl();
+            int startIndex = url.indexOf(keyword) + keyword.length() + 1;
+            String result = url.substring(startIndex);
+            Path deletePath = ImageConstant.CAMPSITE_DIR.resolve(result);
+            try {
+                Files.delete(deletePath);
+            } catch (IOException e) {
+                throw new InvalidException(CommonExceptionCode.INVALID_PARAM);
+            }
+        }
     }
 
     @Transactional

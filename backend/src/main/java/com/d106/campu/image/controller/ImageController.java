@@ -3,10 +3,12 @@ package com.d106.campu.image.controller;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.image.constant.ImageConstant;
 import com.d106.campu.image.controller.doc.ImageControllerDoc;
+import com.d106.campu.image.dto.ImageDto;
 import com.d106.campu.image.service.ImageService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +50,15 @@ public class ImageController implements ImageControllerDoc {
         @RequestPart("generalImageList") List<MultipartFile> generalImageList) {
         return new Response(ImageConstant.GENERAL_IMAGE_LIST,
             imageService.uploadCampsiteGeneralImageList(campsiteId, generalImageList));
+    }
+
+    @Override
+    @PatchMapping(value = "/campsite/{campsiteId}/general", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response updateCampsiteGeneralImageList(@PathVariable("campsiteId") Long campsiteId,
+        @RequestPart(value = "deleteImageList", required = false) ImageDto.UploadListRequest uploadListRequest,
+        @RequestPart(value = "insertImageList", required = false) List<MultipartFile> generalImageList) {
+        return new Response(ImageConstant.GENERAL_IMAGE_LIST,
+            imageService.updateCampsiteGeneralImageList(campsiteId, uploadListRequest, generalImageList));
     }
 
 }

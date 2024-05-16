@@ -3,6 +3,7 @@ package com.d106.campu.image.controller.doc;
 import com.d106.campu.common.annotation.Image;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.image.constant.ImageExtension;
+import com.d106.campu.image.dto.ImageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,6 +67,18 @@ public interface ImageControllerDoc {
             }))
     })
     Response uploadCampsiteGeneralImageList(@NotNull Long campsiteId, List<MultipartFile> generalImageList);
+
+    @Operation(summary = "캠핑장 일반 이미지 업데이트", description = "캠핑장 일반 이미지를 업데이트한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "성공시 업데이트한 캠핑장 일반 이미지 URL을 반환한다.",
+            content = @Content(schemaProperties = {
+
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = ListGeneralResponse.class)),
+            }))
+    })
+    Response updateCampsiteGeneralImageList(@NotNull Long campsiteId, ImageDto.UploadListRequest uploadListRequest,
+        List<MultipartFile> generalImageList);
 
     class ProfileResponse {
         public String profileImage;
