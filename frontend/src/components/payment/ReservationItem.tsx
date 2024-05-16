@@ -212,7 +212,7 @@ const ReservationItem = () => {
             toggleModal={toggleMapModal}
           />
         )}
-        {status !== "proceeding" ? (
+        {status === "proceeding" ? (
           <Button
             width="w-[40%]"
             text=""

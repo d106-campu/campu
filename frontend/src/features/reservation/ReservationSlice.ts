@@ -64,9 +64,13 @@ const reservationSlice = createSlice({
     setReservationData: (state, action) => {
       state.data = { ...state.data, ...action.payload };
     },
+    resetReservationData: (state) => {
+      state.data = initialState.data;
+      state.status = initialState.status;
+    },
   },
 });
 
-export const { setReservationData, updateStatus } = reservationSlice.actions;
+export const { setReservationData, updateStatus, resetReservationData } = reservationSlice.actions;
 
 export const reservationReducer = reservationSlice.reducer;
