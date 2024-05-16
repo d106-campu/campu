@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import {
@@ -33,12 +33,15 @@ const ReadOnlyCalendar = () => {
     format(startDate ?? today, "yyyy년 MM월")
   );
 
+  // startDate가 변경되었을 때만 currentMonth를 업데이트
+  useEffect(() => {
+    if (startDate) {
+      setCurrentMonth(format(startDate, "yyyy년 MM월"));
+    }
+  }, [storeStartDate]);
+
   // 실제 날짜 연산을 수행할 때 필요한 Date 객체 생성
-  const firstDayCurrentMonth = parse(
-    currentMonth,
-    "yyyy년 MM월",
-    startDate || today
-  );
+  const firstDayCurrentMonth = parse(currentMonth, "yyyy년 MM월", today);
 
   // 시작 날짜와 종료 날짜 사이의 모든 날짜를 포함하는 배열을 생성
   const days = eachDayOfInterval({
@@ -89,7 +92,7 @@ const ReadOnlyCalendar = () => {
     const isBeforeToday = isBefore(day, today);
 
     return [
-      isToday(day) && "text-[#46A14F] font",
+      isToday(day) && "text-[#46A14F]",
       isBeforeToday && "text-GRAY", // 오늘 날짜 이전은 회색으로 표시
       startDate && isEqual(day, startDate) && "bg-[#9DD8A3] text-black",
       endDate && isEqual(day, endDate) && "bg-[#9DD8A3] text-black",
