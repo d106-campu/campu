@@ -2,13 +2,16 @@ import {
   getOwnerCampsiteList,
   getOwnerReservationList,
   postBizrno,
+  updateAddImage,
+  updateMapImage,
+  updateThumnailImage,
 } from "@/services/owner/api";
 import {
   IBizrnoReq,
   IOwnerCampsiteReq,
   IOwnerReservationReq,
 } from "@/types/owner";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useOwner = () => {
   // 사장님 캠핑장 조회
@@ -33,5 +36,61 @@ export const useOwner = () => {
       queryFn: () => getOwnerReservationList(props),
     });
   };
-  return { useGetOwnerCampsiteList, useAddBizrno, useGetReservationList };
+
+  // 캠핑장 대표사진
+  const useThumbnailMutation = (campsiteId: number) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationKey: ["thumbnailImage", campsiteId],
+      mutationFn: (file: File) => updateThumnailImage(campsiteId, file),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["campsite detail", campsiteId],
+        });
+        console.log("대표사진 변경");
+      },
+      onError: (err) => {
+        console.log(err, "사진 변경 실패");
+      },
+    });
+  };
+
+  // 캠핑장 배치도사진
+  const useMapImageMutation = (campsiteId: number) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationKey: ["mapImage", campsiteId],
+      mutationFn: (file: File) => updateMapImage(campsiteId, file),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["campsite detail", campsiteId],
+        });
+        console.log("배치도 사진 변경");
+      },
+    });
+  };
+
+  // 캠핑장 일반 사진
+  const useAddImageMutation = (campsiteId: number) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationKey: ["mapImage", campsiteId],
+      mutationFn: (file: File[]) => updateAddImage(campsiteId, file),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["campsite detail", campsiteId],
+        });
+        console.log("배치도 사진 변경");
+      },
+    });
+  };
+
+  return {
+    useGetOwnerCampsiteList,
+    useAddBizrno,
+    useGetReservationList,
+    useThumbnailMutation,
+    useMapImageMutation,
+    useAddImageMutation,
+  };
 };

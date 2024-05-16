@@ -153,8 +153,8 @@ export interface IPageableMyReservation {
 // 내 예약내역 요청 pageable
 export interface IPageableMyReservationReq {
   pageable: IPageableMyReservation;
-  dateType: 'MONTH' | 'MONTH6' | 'YEAR' | 'TOTAL';
-  useType: 'BEFORE' | 'AFTER';
+  dateType: "MONTH" | "MONTH6" | "YEAR" | "TOTAL";
+  useType: "BEFORE" | "AFTER";
 }
 
 // 내 예약내역 campsite 응답
@@ -201,7 +201,7 @@ export interface IMyReservationContentRes {
   content: IMyReservationAllRes[];
 }
 
-// 예약내역 목록 응답 
+// 예약내역 목록 응답
 export interface IMyReservationListRes {
   reservationList: IMyReservationContentRes;
 }
