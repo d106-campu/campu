@@ -4,14 +4,14 @@ import { useRef, useState, useEffect } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { testUseOwner } from "@/hooks/owner/testUserOwner"; // 경로 수정해주세용
-import { IRoomCreateReq } from "@/types/testOwner"; // 경로 수정해주세용
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { useOwner } from "@/hooks/owner/useOwner";
+import { IRoomCreateReq } from "@/types/owner";
 
 
 const OwnerManageRoom = () => {
-  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } = testUseOwner();
+  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } = useOwner();
   const campsiteId = useSelector((state: RootState) => state.ownerSide.campsiteId);
   const {
     data: roomListResponse,
@@ -56,7 +56,6 @@ const OwnerManageRoom = () => {
     }
   };
 
-  // 방 등록 테스트 -> test로 만들어놓은 hooks-services-type 참고하여 import 수정해야함
   const handleSubmit = () => {
     if (image && campsiteId) {
       const createRequestDto: IRoomCreateReq = {
