@@ -4,6 +4,7 @@ import dot_loading from "@/assets/lotties/dot_loading.json";
 import loading from "@/assets/lotties/loading.json";
 import tent from "@/assets/lotties/tent.json";
 import caravan from "@/assets/lotties/caravan.json";
+import warning from "@/assets/lotties/warning.json";
 
 export const noImageOptions = {
   loop: true,
@@ -54,6 +55,15 @@ export const caravanOptions = {
   loop: true,
   autoplay: true,
   animationData: caravan,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+export const warningOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: warning,
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },

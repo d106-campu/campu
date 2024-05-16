@@ -4,6 +4,8 @@ import { FiMapPin } from "react-icons/fi";
 import ReservationSection from "@/components/@common/Reservation/ReservationSection";
 import Button from "@/components/@common/Button/Button";
 import { IMyReservationAllRes } from "@/types/my";
+import { IPaymentCancelReq } from "@/types/payment";
+import usePayment from "@/hooks/payment/usePayment";
 
 interface IReservationAccordionProps {
   reservation: IMyReservationAllRes;
@@ -43,6 +45,20 @@ const ReservationAccordion = ({
     );
   };
   const nights = calculateNights();
+
+  // 결제 취소하기
+  const { cancelPaymentMutation } = usePayment();
+  console.log("reservationId", reservation.reservation.reservationId);
+  console.log("impUid", reservation.reservation.impUid);
+  const handleCancelPayment = () => {
+    const cancelData: IPaymentCancelReq = {
+      reservationId: reservation.reservation.reservationId,
+      impUid: reservation.reservation.impUid,
+      reason: "테스트 결제 환불",
+    };
+
+    cancelPaymentMutation.mutate(cancelData);
+  };
 
   return (
     <div
@@ -182,7 +198,7 @@ const ReservationAccordion = ({
                   backgroundColor="bg-SUB_PINK"
                   hoverTextColor="text-MAIN_GREEN"
                   hoverBackgroundColor="hover:bg-HOVER_PINK"
-                  // @TODO : 예약취소 API 연결 필요 (삭제)
+                  onClick={handleCancelPayment}
                 />
               )}
               {reservation.reservation.status === "reservation" && (

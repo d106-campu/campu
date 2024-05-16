@@ -175,6 +175,7 @@ export interface IMyReservationRoom {
 // 내 예약내역 reservation 응답
 export interface IMyReservationReservation {
   reservationId: number;
+  impUid: string;
   headCnt: number;
   price: number;
   startDate: string;
