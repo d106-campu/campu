@@ -1,4 +1,4 @@
-import { axiosAuthInstance, axiosFileInstance } from "@/apis/axiosInstance";
+import { axiosAuthInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
 import {
   IBizrnoReq,
