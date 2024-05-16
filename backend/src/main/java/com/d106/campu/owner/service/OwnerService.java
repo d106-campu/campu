@@ -151,7 +151,7 @@ public class OwnerService {
 
         Room room = roomMapper.toRoom(createRequestDto);
         room.setCampsite(campsite);
-        room.setInduty(indutyRepository.findByIndutyStr(createRequestDto.getInduty())
+        room.setInduty(indutyRepository.findByIndutyStr(createRequestDto.getInduty().getName())
             .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
         roomRepository.saveAndFlush(room);
 
@@ -171,7 +171,7 @@ public class OwnerService {
 
         checkOwner(securityHelper.getLoginAccount(), room.getCampsite().getUser().getAccount());
         room.updateRoomInfo(updateRequestDto);
-        room.setInduty(indutyRepository.findByIndutyStr(updateRequestDto.getInduty())
+        room.setInduty(indutyRepository.findByIndutyStr(updateRequestDto.getInduty().getName())
             .orElseThrow(() -> new NotFoundException(OwnerExceptionCode.INDUTY_NOT_FOUND)));
 
         if (file != null && !file.isEmpty()) {

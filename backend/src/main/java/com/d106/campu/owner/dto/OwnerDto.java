@@ -1,5 +1,6 @@
 package com.d106.campu.owner.dto;
 
+import com.d106.campu.campsite.constant.IndutyEnum;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.Builder;
@@ -25,7 +26,7 @@ public class OwnerDto {
     public static class RoomCreateRequest {
 
         private Long campsiteId;
-        private String induty;
+        private IndutyEnum induty;
         private String roomName;
         private Long price;
         private int baseNo;
@@ -38,7 +39,7 @@ public class OwnerDto {
     @Data
     public static class RoomUpdateRequest {
 
-        private String induty;
+        private IndutyEnum induty;
         private String roomName;
         private Long price;
         private int baseNo;
@@ -53,7 +54,7 @@ public class OwnerDto {
 
         private Long roomId;
         private String imageUrl;
-        private String induty;
+        private IndutyEnum induty;
         private String roomName;
         private int baseNo;
         private int maxNo;

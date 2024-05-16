@@ -16,4 +16,13 @@ public enum IndutyEnum {
         return this.name;
     }
 
+    public static IndutyEnum of(String name) {
+        for (IndutyEnum i : values()) {
+            if (i.getName().equals(name)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
 }
