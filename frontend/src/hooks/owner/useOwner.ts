@@ -2,11 +2,13 @@ import {
   getOwnerCampsiteList,
   getOwnerReservationList,
   postBizrno,
+  postCampsiteRoom,
 } from "@/services/owner/api";
 import {
   IBizrnoReq,
   IOwnerCampsiteReq,
   IOwnerReservationReq,
+  IRoomCreateReq,
 } from "@/types/owner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -32,5 +34,22 @@ export const useOwner = () => {
       queryFn: () => getOwnerReservationList(props),
     });
   };
-  return { useGetOwnerCampsiteList, useAddBizrno, useGetReservationList };
+
+  // 캠핑장 방 등록
+  const usePostCampsiteRoom = () => {
+    return useMutation({
+      mutationKey: ["postCampRoom"],
+      // mutationFn: postCampsiteRoom,
+      mutationFn: ({ file, createRequestDto }: { file: File, createRequestDto: IRoomCreateReq }) =>
+        postCampsiteRoom(file, createRequestDto),
+      onSuccess: (res) => {
+        console.log("캠핑장 방 등록 성공", res);
+      },
+      onError: (err) => {
+        console.error("캠핑장 방 등록 실패", err);
+      },
+    });
+  };
+
+  return { useGetOwnerCampsiteList, useAddBizrno, useGetReservationList, usePostCampsiteRoom };
 };

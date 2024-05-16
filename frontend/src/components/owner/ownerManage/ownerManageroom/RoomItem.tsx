@@ -29,9 +29,9 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
     setIsOpen(!isOpen);
   };
 
-  console.log(image?.type);
-
+  
   const saveImgFile = () => {
+    console.log(image?.type);
     if (imgRef.current && imgRef.current.files) {
       const file: File | undefined = imgRef.current.files[0];
       setImage(file);
