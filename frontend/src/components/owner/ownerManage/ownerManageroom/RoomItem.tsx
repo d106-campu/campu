@@ -29,7 +29,7 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
     setIsOpen(!isOpen);
   };
 
-  console.log(image?.type);
+  // console.log(image?.type);
 
   const saveImgFile = () => {
     if (imgRef.current && imgRef.current.files) {
