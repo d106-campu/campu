@@ -44,6 +44,7 @@ public class MyPageDto {
     public static class ReservationResponse {
 
         private Long reservationId;
+        private String impUid;
         private Integer headCnt;
         private Long price;
         private LocalDate startDate;
