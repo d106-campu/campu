@@ -27,7 +27,7 @@ public class ReservationDto {
     public static class ResponseWithUser {
 
         private Long id;
-        private RoomDto.IdAndName room;
+        private RoomDto.IdNameImage room;
         private UserDto.NicknameAndTel customer;
         private int headCnt;
         private LocalDate startDate;
