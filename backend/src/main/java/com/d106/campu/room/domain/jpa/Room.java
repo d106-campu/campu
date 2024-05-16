@@ -2,6 +2,7 @@ package com.d106.campu.room.domain.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.emptynotification.domain.jpa.EmptyNotification;
 import com.d106.campu.owner.dto.OwnerDto.RoomUpdateRequest;
 import com.d106.campu.reservation.domain.jpa.Reservation;
 import jakarta.persistence.Column;
@@ -71,8 +72,11 @@ public class Room extends BaseTime {
     @Column(name = "supply_list")
     private String supplyList;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reservation> reservationList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<EmptyNotification> emptyNotificationList;
 
     @Transient
     @Setter

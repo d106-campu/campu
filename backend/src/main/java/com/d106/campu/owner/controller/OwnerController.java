@@ -3,6 +3,7 @@ package com.d106.campu.owner.controller;
 import com.d106.campu.campsite.constant.CampsiteConstant;
 import com.d106.campu.campsite.dto.CampsiteDto;
 import com.d106.campu.common.response.Response;
+import com.d106.campu.owner.constant.RoomConstant;
 import com.d106.campu.owner.controller.doc.OwnerControllerDoc;
 import com.d106.campu.owner.dto.OwnerDto;
 import com.d106.campu.owner.dto.OwnerDto.RoomCreateRequest;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,11 +78,24 @@ public class OwnerController implements OwnerControllerDoc {
     }
 
     @Override
+    @GetMapping("/campsite/{campsiteId}")
+    public Response getRoomList(@PathVariable Long campsiteId) {
+        return new Response(RoomConstant.ROOM_LIST, ownerService.getRoomList(campsiteId));
+    }
+
+    @Override
     @PatchMapping(value = "/campsite/room/{roomId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response updateRoom(@PathVariable Long roomId, @RequestPart(required = false) MultipartFile file,
         @RequestPart RoomUpdateRequest updateRequestDto) {
         ownerService.updateRoom(roomId, file, updateRequestDto);
         return new Response();
     }
-    
+
+    @Override
+    @DeleteMapping("/campsite/room/{roomId}")
+    public Response deleteRoom(@PathVariable Long roomId) {
+        ownerService.deleteRoom(roomId);
+        return new Response();
+    }
+
 }
