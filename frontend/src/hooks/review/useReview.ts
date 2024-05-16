@@ -15,9 +15,9 @@ export const useReview = () => {
       queryKey: ["reviews", props.campsiteId, props.size],
       queryFn: ({ pageParam }) => getReviewList({ ...props, page: pageParam }),
       initialPageParam: 0, // 페이지는 0부터 시작하도록 설정
-      getNextPageParam: (lastPage, allPages) => {
-        if (lastPage.data.reviewList.last) return undefined;
-        return allPages.length + 1;
+      getNextPageParam: (lastPage) => {
+        const { last, number } = lastPage.data.reviewList;
+        return last ? undefined : number + 1;
       },
     });
   };

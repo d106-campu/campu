@@ -60,12 +60,14 @@ const ReadOnlyCalendar = () => {
     "col-start-7",
   ];
 
-  const previousMonth = () => {
+  const previousMonth = (event: React.MouseEvent) => {
+    event.stopPropagation(); // 이벤트 전파 중지
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
     setCurrentMonth(format(firstDayNextMonth, "yyyy년 MM월"));
   };
 
-  const nextMonth = () => {
+  const nextMonth = (event: React.MouseEvent) => {
+    event.stopPropagation(); // 이벤트 전파 중지
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, "yyyy년 MM월"));
   };
