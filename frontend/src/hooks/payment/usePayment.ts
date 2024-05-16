@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
-import { preparePayment, completePayment } from "@/services/payment/api";
+import {
+  preparePayment,
+  completePayment,
+  cancelPayment,
+} from "@/services/payment/api";
 import { APIResponse } from "@/types/model";
 import {
+  IPaymentCancelReq,
+  IPaymentCancelRes,
   IPaymentCompleteReq,
   IPaymentCompleteRes,
   IPaymentPrepare,
@@ -167,7 +173,35 @@ const usePayment = () => {
   // useCompletePayment 훅을 호출하여 반환된 객체를 사용
   const completePaymentMutation = useCompletePayment();
 
-  return { preparePaymentMutation, completePaymentMutation };
+  // 결제 취소 요청
+  const useCancelPayment = (): UseMutationResult<
+    APIResponse<IPaymentCancelRes>,
+    Error,
+    IPaymentCancelReq
+  > => {
+    return useMutation({
+      mutationKey: ["cancel Payment"],
+      mutationFn: cancelPayment,
+      onSuccess: (data) => {
+        const cancelPayment = data.data.cancelPayment;
+        console.log("결제 취소 완료: ", cancelPayment);
+        Toast.success("결제가 성공적으로 취소되었습니다.");
+      },
+      onError: (error: Error) => {
+        console.error(`결제 취소 실패: ${error.message}`);
+        Toast.error("결제 취소에 실패했습니다. 다시 시도해주세요");
+      },
+    });
+  };
+
+  // useCancelPayment 훅을 호출하여 반환된 객체를 사용
+  const cancelPaymentMutation = useCancelPayment();
+
+  return {
+    preparePaymentMutation,
+    completePaymentMutation,
+    cancelPaymentMutation,
+  };
 };
 
 export default usePayment;
