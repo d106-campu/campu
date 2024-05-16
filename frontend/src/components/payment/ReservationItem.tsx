@@ -13,7 +13,8 @@ import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
 import formatPhoneNumber from "@/utils/formatPhoneNumber";
 import usePayment from "@/hooks/payment/usePayment";
-import { IPaymentCancelReq, IPaymentPrepareReq } from "@/types/payment";
+import { IPaymentPrepareReq } from "@/types/payment";
+import CancelPaymentModal from "./CancelPaymentModal";
 
 const ReservationItem = () => {
   // Redux 상태 불러오기
@@ -46,13 +47,18 @@ const ReservationItem = () => {
   );
   const nickname = useSelector((state: RootState) => state.auth.nickname);
 
-  const { preparePaymentMutation, cancelPaymentMutation } = usePayment();
+  const { preparePaymentMutation } = usePayment();
 
   const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
   const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
 
   const [mapModal, setMapModal] = useState<boolean>(false); // 지도 모달 상태관리
   const toggleMapModal = () => setMapModal(!mapModal);
+
+  // 결제 취소하기
+  const [cancelPaymentModal, setCancelPaymentModal] = useState<boolean>(false); // 결제 취소 모달 상태관리
+  const toggleCancelPaymentModal = () =>
+    setCancelPaymentModal(!cancelPaymentModal);
 
   const handlePayment = () => {
     // 결제 요청
@@ -65,16 +71,6 @@ const ReservationItem = () => {
     };
     console.log(data);
     preparePaymentMutation.mutate(data);
-  };
-
-  const handleCancelPayment = () => {
-    const cancelData: IPaymentCancelReq = {
-      reservationId: reservationId,
-      impUid: impUid,
-      reason: "테스트 결제 환불",
-    };
-
-    cancelPaymentMutation.mutate(cancelData);
   };
 
   return (
@@ -236,7 +232,14 @@ const ReservationItem = () => {
             fontWeight="none"
             backgroundColor="bg-SUB_PINK"
             hoverBackgroundColor="hover:bg-HOVER_PINK"
-            onClick={handleCancelPayment}
+            onClick={toggleCancelPaymentModal}
+          />
+        )}
+        {cancelPaymentModal && (
+          <CancelPaymentModal
+            toggleModal={toggleCancelPaymentModal}
+            reservationId={reservationId}
+            impUid={impUid}
           />
         )}
       </div>

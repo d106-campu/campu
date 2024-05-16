@@ -4,8 +4,8 @@ import { FiMapPin } from "react-icons/fi";
 import ReservationSection from "@/components/@common/Reservation/ReservationSection";
 import Button from "@/components/@common/Button/Button";
 import { IMyReservationAllRes } from "@/types/my";
-import { IPaymentCancelReq } from "@/types/payment";
-import usePayment from "@/hooks/payment/usePayment";
+import { useState } from "react";
+import CancelPaymentModal from "@/components/payment/CancelPaymentModal";
 
 interface IReservationAccordionProps {
   reservation: IMyReservationAllRes;
@@ -47,18 +47,9 @@ const ReservationAccordion = ({
   const nights = calculateNights();
 
   // 결제 취소하기
-  const { cancelPaymentMutation } = usePayment();
-  console.log("reservationId", reservation.reservation.reservationId);
-  console.log("impUid", reservation.reservation.impUid);
-  const handleCancelPayment = () => {
-    const cancelData: IPaymentCancelReq = {
-      reservationId: reservation.reservation.reservationId,
-      impUid: reservation.reservation.impUid,
-      reason: "테스트 결제 환불",
-    };
-
-    cancelPaymentMutation.mutate(cancelData);
-  };
+  const [cancelPaymentModal, setCancelPaymentModal] = useState<boolean>(false); // 결제 취소 모달 상태관리
+  const toggleCancelPaymentModal = () =>
+    setCancelPaymentModal(!cancelPaymentModal);
 
   return (
     <div
@@ -192,13 +183,20 @@ const ReservationAccordion = ({
               {reservation.reservation.status === "cancle" && (
                 <Button
                   width="w-[300px]"
-                  text="예약 취소하기"
+                  text="결제 취소하기"
                   textColor="text-[#3A2929]"
                   fontWeight="none"
                   backgroundColor="bg-SUB_PINK"
                   hoverTextColor="text-MAIN_GREEN"
                   hoverBackgroundColor="hover:bg-HOVER_PINK"
-                  onClick={handleCancelPayment}
+                  onClick={toggleCancelPaymentModal}
+                />
+              )}
+              {cancelPaymentModal && (
+                <CancelPaymentModal
+                  toggleModal={toggleCancelPaymentModal}
+                  reservationId={reservation.reservation.reservationId}
+                  impUid={reservation.reservation.impUid}
                 />
               )}
               {reservation.reservation.status === "reservation" && (
