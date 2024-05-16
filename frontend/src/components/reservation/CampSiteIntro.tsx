@@ -47,7 +47,7 @@ const CampSiteIntro = ({ data }: { data: ICampSiteIntro }) => {
   };
 
   const toggleMapModal = () => setMapModal(!mapModal);
-  console.log(data.campsiteLocation.mapX, data.campsiteLocation.mapY);
+
   return (
     <>
       <CampingPhotos

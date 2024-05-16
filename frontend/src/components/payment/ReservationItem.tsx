@@ -12,31 +12,37 @@ import { FaRegFaceSmile, FaRegFaceSmileWink } from "react-icons/fa6";
 import { useState } from "react";
 import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
+import formatPhoneNumber from "@/utils/formatPhoneNumber";
+import usePayment from "@/hooks/payment/usePayment";
+import { IPaymentPrepareReq } from "@/types/payment";
 
 const ReservationItem = () => {
   const dispatch = useDispatch();
+  // Redux 상태 불러오기
   const {
-    reservationId,
     image,
-    campsite_faclt_nm,
-    campsite_tel,
-    campsite_addr1,
-    campsite_addr2,
+    facltNm,
+    tel,
+    addr1,
+    addr2,
     mapX,
     mapY,
-    rating,
+    score,
+    roomId,
     roomName,
     roomInduty,
     supplyList,
     headCnt,
-    price,
+    totalPrice,
     startDate,
     endDate,
     checkIn,
     checkOut,
   } = useSelector((state: RootState) => state.reservation.data);
   const status = useSelector((state: RootState) => state.reservation.status);
-  const nickname = "캐치캠핑핑핑"; // @TODO: 스토어에서 닉네임 가져오기
+  const nickname = useSelector((state: RootState) => state.auth.nickname);
+
+  const { preparePaymentMutation } = usePayment();
 
   const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
   const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
@@ -45,17 +51,23 @@ const ReservationItem = () => {
   const toggleMapModal = () => setMapModal(!mapModal);
 
   const handlePayment = () => {
-    // @TODO: 백으로 예약 아이디 넘기기
-    console.log(reservationId);
-    // 결제 로직 수행 후 상태 업데이트
-    dispatch(updateStatus("complete"));
+    // 결제 요청
+    const data: IPaymentPrepareReq = {
+      roomId: roomId,
+      headCnt: headCnt,
+      price: totalPrice,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    console.log(data);
+    preparePaymentMutation.mutate(data);
   };
 
   return (
     <div className="relative">
       <div className="pl-3 pb-2">
         <h1 className="text-2xl font-bold">
-          {status === "proceeding" ? "예약 진행 중" : "예약 완료"}
+          {status === "proceeding" ? "예약 정보 확인" : "예약 완료"}
         </h1>
         <p className="flex items-center gap-1 text-MAIN_GREEN text-sm">
           {status === "proceeding" ? proceedingMessage : completeMessage}
@@ -73,7 +85,7 @@ const ReservationItem = () => {
         <div className="flex justify-between items-center px-5 pt-1">
           <div className="flex justify-center items-center py-2">
             {/* 캠핑장 이름 */}
-            <h2 className="text-2xl font-bold pl-3">{campsite_faclt_nm}</h2>
+            <h2 className="text-2xl font-bold pl-3">{facltNm}</h2>
           </div>
         </div>
       </div>
@@ -86,12 +98,12 @@ const ReservationItem = () => {
             캠핑장 위치
           </h3>
           <p className="pb-[12px] font-bold text-BLACK">
-            {campsite_addr1} {campsite_addr2}
+            {addr1} {addr2}
           </p>
           {image ? (
             <img
               src={image}
-              alt={`${campsite_faclt_nm} ${roomName}`}
+              alt={`${facltNm} ${roomName}`}
               className="w-full h-52 object-cover object-center rounded-xl"
             />
           ) : (
@@ -128,18 +140,24 @@ const ReservationItem = () => {
               <p className="pb-[15px] font-bold text-BLACK">{roomName}</p>
               <h3>가격</h3>
               <p className="pb-[15px] font-bold text-MAIN_RED">
-                {price.toLocaleString("ko-KR")}원
+                {totalPrice.toLocaleString("ko-KR")}원
               </p>
             </div>
             <div>
               <h3>캠핑장 유형</h3>
               <p className="pb-[15px] font-bold text-BLACK">{roomInduty}</p>
-              <h3>입실·퇴실 시간</h3>
-              <p className="pb-[15px] font-bold text-BLACK">
-                {checkIn} - {checkOut}
-              </p>
+              {checkIn && checkOut && (
+                <>
+                  <h3>입실·퇴실 시간</h3>
+                  <p className="pb-[15px] font-bold text-BLACK">
+                    {checkIn} - {checkOut}
+                  </p>
+                </>
+              )}
               <h3>전화번호</h3>
-              <p className="pb-[15px] font-bold text-BLACK">{campsite_tel}</p>
+              <p className="pb-[15px] font-bold text-BLACK">
+                {formatPhoneNumber(tel)}
+              </p>
             </div>
           </div>
           {supplyList && supplyList.length > 0 && (
@@ -171,11 +189,11 @@ const ReservationItem = () => {
         />
         {mapModal && (
           <MapModal
-            lat={mapX}
-            lng={mapY}
-            facltNm={campsite_faclt_nm}
-            addr1={campsite_addr1}
-            rate={rating}
+            lat={mapY}
+            lng={mapX}
+            facltNm={facltNm}
+            addr1={addr1}
+            rate={score}
             level={5}
             toggleModal={toggleMapModal}
           />
