@@ -14,6 +14,7 @@ import {
   setReservationData,
   updateStatus,
 } from "@/features/reservation/ReservationSlice";
+import Toast from "@/components/@common/Toast/Toast";
 
 const usePayment = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const usePayment = () => {
         console.log("IMP 초기화 성공");
       } else {
         console.error("IMP 객체를 초기화할 수 없습니다.");
+        return;
       }
     }
   }, []);
@@ -47,7 +49,9 @@ const usePayment = () => {
       mutationFn: preparePayment,
       onSuccess: (data) => {
         const preparePayment = data.data.preparePayment;
-        console.log("결제 정보: ", preparePayment);
+        console.log(`결제 정보:  ${preparePayment}`);
+
+        // 예약 아이디 업데이트
         dispatch(
           setReservationData({
             reservationId: preparePayment.reservationId,
@@ -60,7 +64,7 @@ const usePayment = () => {
         setPreparePaymentData(preparePayment); // 결제 준비 데이터 상태 업데이트
       },
       onError: (error: Error) => {
-        console.error("결제 준비 실패: ", error.message);
+        console.error(`결제 준비 실패: ${error.message}`);
       },
     });
   };
@@ -81,8 +85,7 @@ const usePayment = () => {
       return;
     }
 
-    console.log("결제창 열기");
-    console.log("결제 정보: ", preparePayment);
+    console.log(`결제창 열기 - 결제 정보: ${preparePayment}`);
 
     // 결제 정보
     IMP.request_pay(
@@ -99,14 +102,13 @@ const usePayment = () => {
         buyer_postcode: preparePayment.buyerPostcode, // 구매자 우편번호
       },
       async (rsp: any) => {
-        console.log("결제 응답 시작: "); // 콜백 함수 시작 로그
-        console.log("결제 응답: ", rsp); // 결제 응답 확인
+        console.log(`결제 응답 시작: 결제 응답 - ${rsp} `); // 콜백 함수 시작 로그 - 결제 응답 확인
         if (rsp.error_code != null) {
-          return alert(`결제 실패: ${rsp.error_msg}`);
+          console.log(`결제 실패: ${rsp.error_msg}`);
+          return Toast.error("결제에 실패했습니다. 다시 시도해주세요");
         }
 
-        console.log("중간 과정");
-        console.log(rsp.imp_uid);
+        console.log(`중간 과정 : ${rsp.imp_uid}`);
 
         // API 서버에 결제 정보 확인 요청 (completePaymentMutation 객체의 mutate 메서드를 사용)
         completePaymentMutation.mutate({
@@ -129,11 +131,12 @@ const usePayment = () => {
       mutationFn: completePayment,
       onSuccess: (data) => {
         const completeResponse = data.data.completePayment;
-        console.log("결제 완료 정보: ", completeResponse);
+        console.log(`결제 완료 정보: ${completeResponse}`);
 
         // 결제 정보가 같은지 확인
         if (completeResponse.amount === completeResponse.price) {
-          alert("결제 성공");
+          Toast.success("캠핑장 예약 및 결제가 정상적으로 완료되었습니다.");
+          // 필요한 정보만 업데이트
           dispatch(
             setReservationData({
               impUid: completeResponse.impUid,
@@ -152,11 +155,11 @@ const usePayment = () => {
           );
           dispatch(updateStatus("complete"));
         } else {
-          alert("결제 실패");
+          Toast.error("결제에 실패했습니다. 다시 시도해주세요");
         }
       },
       onError: (error: Error) => {
-        console.error("오류:", error.message);
+        console.error(`오류: ${error.message}`);
       },
     });
   };
