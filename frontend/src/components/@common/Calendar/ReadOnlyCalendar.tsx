@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import {
@@ -110,12 +110,6 @@ const ReadOnlyCalendar = () => {
       .filter(Boolean)
       .join(" ");
   };
-
-  useEffect(() => {
-    if (startDate) {
-      setCurrentMonth(format(startDate, "yyyy년 MM월"));
-    }
-  }, [startDate]);
 
   return (
     <div className="text-SUB_BLACK max-w-[80%] mx-auto pt-5">
