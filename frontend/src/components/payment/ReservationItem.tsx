@@ -13,11 +13,13 @@ import { useState } from "react";
 import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
 import formatPhoneNumber from "@/utils/formatPhoneNumber";
+import usePayment from "@/hooks/payment/usePayment";
+import { IPaymentPrepareReq } from "@/types/payment";
 
 const ReservationItem = () => {
   const dispatch = useDispatch();
+  // Redux 상태 불러오기
   const {
-    reservationId,
     image,
     facltNm,
     tel,
@@ -26,6 +28,7 @@ const ReservationItem = () => {
     mapX,
     mapY,
     score,
+    roomId,
     roomName,
     roomInduty,
     supplyList,
@@ -37,7 +40,9 @@ const ReservationItem = () => {
     checkOut,
   } = useSelector((state: RootState) => state.reservation.data);
   const status = useSelector((state: RootState) => state.reservation.status);
-  const nickname = "캐치캠핑핑핑"; // @TODO: 스토어에서 닉네임 가져오기
+  const nickname = useSelector((state: RootState) => state.auth.nickname);
+
+  const { preparePaymentMutation } = usePayment();
 
   const proceedingMessage = `${nickname}님, 예약 정보를 확인 후 결제를 진행해주세요`;
   const completeMessage = `${nickname}님, 예약이 정상적으로 완료되었습니다! 즐거운 캠핑되세요`;
@@ -46,17 +51,23 @@ const ReservationItem = () => {
   const toggleMapModal = () => setMapModal(!mapModal);
 
   const handlePayment = () => {
-    // @TODO: 백으로 예약 아이디 넘기기
-    console.log(reservationId);
-    // 결제 로직 수행 후 상태 업데이트
-    dispatch(updateStatus("complete"));
+    // 결제 요청
+    const data: IPaymentPrepareReq = {
+      roomId: roomId,
+      headCnt: headCnt,
+      price: totalPrice,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    console.log(data);
+    preparePaymentMutation.mutate(data);
   };
 
   return (
     <div className="relative">
       <div className="pl-3 pb-2">
         <h1 className="text-2xl font-bold">
-          {status === "proceeding" ? "예약 진행 중" : "예약 완료"}
+          {status === "proceeding" ? "예약 정보 확인" : "예약 완료"}
         </h1>
         <p className="flex items-center gap-1 text-MAIN_GREEN text-sm">
           {status === "proceeding" ? proceedingMessage : completeMessage}

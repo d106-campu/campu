@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface IReservationState {
   data: {
+    impUid: string;
     reservationId: number; // 예약 아이디
     image: string | null; // 방 사진
     facltNm: string; // 캠핑장 이름
@@ -11,6 +12,8 @@ interface IReservationState {
     mapX: number; // 위도
     mapY: number; // 경도
     score: number; // 별점
+    campsiteId: number; // 캠핑장 아이디
+    roomId: number; // 예약 방 아이디
     roomName: string; // 캠핑장 방 이름
     roomInduty: string; // 캠핑 유형
     supplyList: string[] | null;
@@ -26,6 +29,7 @@ interface IReservationState {
 
 const initialState: IReservationState = {
   data: {
+    impUid: "",
     reservationId: 0,
     image: "",
     facltNm: "",
@@ -35,6 +39,8 @@ const initialState: IReservationState = {
     mapX: 36.1071305028147,
     mapY: 128.4169500162442,
     score: 0,
+    campsiteId: 0,
+    roomId: 0,
     roomName: "",
     roomInduty: "",
     supplyList: [],

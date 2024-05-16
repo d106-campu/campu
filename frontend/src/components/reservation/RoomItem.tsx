@@ -84,6 +84,7 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
   const makeReservation = () => {
     // 예약 정보 업데이트
     const newReservationData = {
+      roomId: room.id,
       id: room.id,
       image: room.imageUrl,
       roomName: room.name, // 캠핑장 방 이름

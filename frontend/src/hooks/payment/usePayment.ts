@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { preparePayment, completePayment } from "@/services/payment/api";
 import { APIResponse } from "@/types/model";
 import {
@@ -8,11 +9,32 @@ import {
   IPaymentPrepareRes,
 } from "@/types/payment";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import {
+  setReservationData,
+  updateStatus,
+} from "@/features/reservation/ReservationSlice";
 
 const usePayment = () => {
-  // window 객체에서 IMP 가져오기
-  const IMP = window.IMP;
-  IMP.init("imp60623737"); // 고객사 식별코드로 SDK 초기화
+  const dispatch = useDispatch();
+  const [IMP, setIMP] = useState<any>(null);
+  const [preparePaymentData, setPreparePaymentData] =
+    useState<IPaymentPrepare | null>(null);
+
+  // useEffect를 사용하여 결제 준비 데이터와 IMP 객체가 모두 준비되었을 때만 결제 요청을 수행
+  useEffect(() => {
+    // window 객체에서 IMP 가져오기
+    if (typeof window !== "undefined") {
+      const imp = window.IMP;
+      if (imp) {
+        imp.init("imp60623737"); // 고객사 식별코드로 SDK 초기화
+        setIMP(imp);
+        console.log("IMP 초기화 성공");
+      } else {
+        console.error("IMP 객체를 초기화할 수 없습니다.");
+      }
+    }
+  }, []);
 
   // 결제 준비 요청 (API 서버)
   const usePreparePayment = (): UseMutationResult<
@@ -24,9 +46,18 @@ const usePayment = () => {
       mutationKey: ["prepare Payment"],
       mutationFn: preparePayment,
       onSuccess: (data) => {
-        const preparePayment = data.data.prepareResponse;
+        const preparePayment = data.data.preparePayment;
         console.log("결제 정보: ", preparePayment);
-        requestPay(preparePayment); // 결제 서버에 결제 요청
+        dispatch(
+          setReservationData({
+            reservationId: preparePayment.reservationId,
+          })
+        );
+        if (!preparePayment) {
+          console.error("결제 준비 데이터가 없습니다.");
+          return;
+        }
+        setPreparePaymentData(preparePayment); // 결제 준비 데이터 상태 업데이트
       },
       onError: (error: Error) => {
         console.error("결제 준비 실패: ", error.message);
@@ -34,10 +65,27 @@ const usePayment = () => {
     });
   };
 
+  // usePreparePayment 훅을 호출하여 반환된 객체를 사용
+  const preparePaymentMutation = usePreparePayment();
+
   // 결제창 열기 - 결제 요청 (결제 서버)
+  useEffect(() => {
+    if (preparePaymentData && IMP) {
+      requestPay(preparePaymentData);
+    }
+  }, [preparePaymentData, IMP]);
+
   const requestPay = (preparePayment: IPaymentPrepare) => {
+    if (!IMP) {
+      console.error("IMP 객체를 초기화할 수 없습니다.");
+      return;
+    }
+
+    console.log("결제창 열기");
+    console.log("결제 정보: ", preparePayment);
+
+    // 결제 정보
     IMP.request_pay(
-      // 결제 정보
       {
         pg: preparePayment.pg, // "${PG사 코드}.${상점 ID}"
         pay_method: preparePayment.payMethod, // 결제 방법
@@ -50,7 +98,9 @@ const usePayment = () => {
         buyer_addr: preparePayment.buyerAddr, // 구매자 주소
         buyer_postcode: preparePayment.buyerPostcode, // 구매자 우편번호
       },
-      (rsp: any) => {
+      async (rsp: any) => {
+        console.log("결제 응답 시작: "); // 콜백 함수 시작 로그
+        console.log("결제 응답: ", rsp); // 결제 응답 확인
         if (rsp.error_code != null) {
           return alert(`결제 실패: ${rsp.error_msg}`);
         }
@@ -60,7 +110,7 @@ const usePayment = () => {
 
         // API 서버에 결제 정보 확인 요청 (completePaymentMutation 객체의 mutate 메서드를 사용)
         completePaymentMutation.mutate({
-          reservationId: rsp.merchant_uid,
+          reservationId: String(preparePayment.reservationId),
           impUid: rsp.imp_uid,
           merchantUid: rsp.merchant_uid,
         });
@@ -78,11 +128,29 @@ const usePayment = () => {
       mutationKey: ["complete Payment"],
       mutationFn: completePayment,
       onSuccess: (data) => {
-        const completeResponse = data.data.completeResponse;
+        const completeResponse = data.data.completePayment;
         console.log("결제 완료 정보: ", completeResponse);
+
         // 결제 정보가 같은지 확인
         if (completeResponse.amount === completeResponse.price) {
           alert("결제 성공");
+          dispatch(
+            setReservationData({
+              impUid: completeResponse.impUid,
+              reservationId: completeResponse.reservationId,
+              image: completeResponse.room.campsite.thumbnailImageUrl,
+              facltNm: completeResponse.room.campsite.facltNm,
+              addr1: completeResponse.room.campsite.addr1,
+              addr2: completeResponse.room.campsite.addr2,
+              roomId: completeResponse.room.id,
+              roomName: completeResponse.room.name,
+              headCnt: completeResponse.headCnt,
+              totalPrice: completeResponse.price,
+              startDate: completeResponse.startDate,
+              endDate: completeResponse.endDate,
+            })
+          );
+          dispatch(updateStatus("complete"));
         } else {
           alert("결제 실패");
         }
@@ -96,7 +164,7 @@ const usePayment = () => {
   // useCompletePayment 훅을 호출하여 반환된 객체를 사용
   const completePaymentMutation = useCompletePayment();
 
-  return { usePreparePayment, useCompletePayment };
+  return { preparePaymentMutation, completePaymentMutation };
 };
 
 export default usePayment;
