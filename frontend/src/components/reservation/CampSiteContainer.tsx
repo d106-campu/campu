@@ -1,14 +1,17 @@
+import Lottie from "react-lottie";
+import { RootState } from "@/app/store";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import CampsiteIntro from "@/components/reservation/CampSiteIntro";
 import ReservationContainer from "@/components/reservation/ReservationContainer";
 import InfoDetail from "@/components/reservation/InfoDetail";
 import { RefProvider } from "@/context/RefContext";
-import { useParams } from "react-router-dom";
+import { ICampsite } from "@/types/reservation";
 import { RouteParams } from "@/types/model";
-import { useReservation } from "@/hooks/reservation/useReservation";
 import { useReview } from "@/hooks/review/useReview";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
-import Lottie from "react-lottie";
+import { useReservation } from "@/hooks/reservation/useReservation";
+import { setCampsiteData } from "@/features/reservation/campsiteSlice";
 import { loadingOptions } from "@/assets/lotties/lottieOptions";
 
 const CampSiteContainer = () => {
@@ -34,6 +37,43 @@ const CampSiteContainer = () => {
 
   const reviewList = reviewsData?.data?.reviewList || null;
   const totalReview = reviewList?.totalElements || 0;
+
+  // Redux 디스패치 사용
+  const dispatch = useDispatch();
+
+  const selectCampsiteData = (data: ICampsite) => {
+    const {
+      id,
+      facltNm,
+      tel,
+      addr1,
+      addr2,
+      campsiteLocation,
+      score,
+      checkin,
+      checkout,
+    } = data;
+    return {
+      id,
+      facltNm,
+      tel,
+      addr1,
+      addr2,
+      mapX: campsiteLocation.mapX,
+      mapY: campsiteLocation.mapY,
+      score,
+      checkIn: checkin,
+      checkOut: checkout,
+    };
+  };
+
+  useEffect(() => {
+    if (campsiteData) {
+      // 필요한 데이터만 Redux 스토어에 저장
+      const selectedData = selectCampsiteData(campsiteData);
+      dispatch(setCampsiteData(selectedData));
+    }
+  }, [campsiteData, dispatch]);
 
   // 로딩 중일 때
   if (isLoading) {

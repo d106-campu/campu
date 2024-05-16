@@ -19,6 +19,7 @@ export interface IOwnerReservationReq {
 export interface IRoomInfo {
   id: number;
   name: string;
+  imageUrl?: string | null;
 }
 
 export interface IcustomerInfo {
@@ -38,6 +39,39 @@ export interface IReservationSimpleRes {
 // 예약내역 Response
 export interface IOwnerReservationRes {
   reservationList: IReservationSimpleRes[];
+}
+
+// 캠핑장 대표사진 수정 Request
+export interface ICampsiteThumbnailReq {
+  campsiteId: number;
+  thumbnailImage: string;
+}
+
+// 캠핑장 대표사진 Response
+export interface ICampsiteThumbnailRes {
+  thumbnailImage: string;
+}
+
+// 캠핑장 배치도 수정 Request
+export interface ICampsiteMapReq {
+  campsiteId: number;
+  mapImage: string;
+}
+
+// 캠핑장 배치도 Response
+export interface ICampsiteMapRes {
+  mapImage: string;
+}
+
+// 캠핑장 일반사진 수정 Request
+export interface ICampsiteAddReq {
+  campsiteId: number;
+  generalImageList: string[];
+}
+
+// 캠핑장 일반사진 Response
+export interface ICampsiteAddRes {
+  generalImageList: string[];
 }
 
 // 캠핑장 방 등록 요청

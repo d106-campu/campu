@@ -55,7 +55,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
               {/* 각 방에 대한 RoomItem 렌더링 */}
               {roomListData.pages.map((item) =>
                 item.data.roomList.content.map((room) => (
-                  <RoomItem key={room.id} room={{ ...room }} />
+                  <RoomItem key={room.id} room={room} />
                 ))
               )}
             </>

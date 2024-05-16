@@ -1,4 +1,5 @@
 import { RootState } from "@/app/store";
+import { useOwner } from "@/hooks/owner/useOwner";
 import { useReservation } from "@/hooks/reservation/useReservation";
 import { createSelector } from "@reduxjs/toolkit";
 import { useEffect, useRef, useState } from "react";
@@ -17,6 +18,11 @@ const OwnerManagePhoto = () => {
   const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
   const { useGetCampsite } = useReservation();
   const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
+  const { useThumbnailMutation, useMapImageMutation } = useOwner();
+
+  const { mutate: thumbnailMutate } = useThumbnailMutation(campsiteId!);
+  const { mutate: mapImageMutate } = useMapImageMutation(campsiteId!);
+  // const { mutate: addImageMutate } = useAddImageMutation(campsiteId!);
 
   useEffect(() => {
     // detailCampsiteInfo가 변경될 때마다 대표 사진과 배치도 사진을 설정
@@ -47,7 +53,7 @@ const OwnerManagePhoto = () => {
   const [otherPhotos, setOtherPhotos] = useState<File[]>([]);
   const [otherPhoto, setOtherPhoto] = useState<string[]>(
     detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []
-  );
+  ); // 화면
   const otherImgRef = useRef<HTMLInputElement>(null);
 
   // @TODO: 변수 사용 후 삭제하기
@@ -58,12 +64,7 @@ const OwnerManagePhoto = () => {
       const file: File | undefined = mainImgRef.current.files[0];
       setMainImage(file);
       if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          const result: string | null = reader.result as string;
-          setMainPhoto(result);
-        };
+        thumbnailMutate(file);
       }
     }
   };
@@ -73,19 +74,15 @@ const OwnerManagePhoto = () => {
       const file: File | undefined = viewImgRef.current.files[0];
       setViewImage(file);
       if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          const result: string | null = reader.result as string;
-          setViewPhoto(result);
-        };
+        mapImageMutate(file);
       }
     }
   };
 
   const saveOtherImgFiles = () => {
     if (otherImgRef.current && otherImgRef.current.files) {
-      const newPhotos: string[] = [];
+      const newPhotos: File[] = [];
+      const newPhotoURLs: string[] = [];
 
       for (let i = 0; i < otherImgRef.current.files.length; i++) {
         const file: File = otherImgRef.current.files[i];
@@ -95,13 +92,11 @@ const OwnerManagePhoto = () => {
         reader.readAsDataURL(file);
 
         reader.onloadend = () => {
-          const result: string | null = reader.result as string;
-          newPhotos.push(result);
-
-          if (otherImgRef.current && otherImgRef.current.files) {
-            if (i === otherImgRef.current.files.length - 1) {
-              // 마지막 파일이 로드되면 한 번에 업데이트
-              setOtherPhoto((prevPhotos) => [...prevPhotos, ...newPhotos]);
+          if (reader.result) {
+            newPhotoURLs.push(reader.result.toString());
+            if (i === otherImgRef.current!.files!.length - 1) {
+              setOtherPhotos((prevPhotos) => [...prevPhotos, ...newPhotos]);
+              setOtherPhoto((prevURLs) => [...prevURLs, ...newPhotoURLs]);
             }
           }
         };
@@ -112,6 +107,11 @@ const OwnerManagePhoto = () => {
   // 이미지 삭제
   const deletePhoto = (id: number) => {
     setOtherPhoto(otherPhoto.filter((_, index) => index !== id));
+  };
+
+  const handleSaveImages = () => {
+    console.log("보낼사진", otherPhotos);
+    console.log("화면상 등록한 사진", otherPhoto);
   };
 
   return (
@@ -152,7 +152,9 @@ const OwnerManagePhoto = () => {
                   className="hidden w-full h-full cursor-pointer"
                 ></input>
               </label>
-              <p className="text-xs pt-4">캠핑장의 대표 사진을 등록해주세요.</p>
+              <p className="text-xs pt-4">
+                클릭하여 캠핑장의 대표 사진을 등록 / 수정
+              </p>
             </div>
 
             {/* 배치도 사진 */}
@@ -186,7 +188,7 @@ const OwnerManagePhoto = () => {
                 ></input>
               </label>
               <p className="text-xs pt-4">
-                캠핑장의 배치도 사진을 등록해주세요.
+                클릭하여 캠핑장의 배치도 사진을 등록 / 수정
               </p>
             </div>
           </div>
@@ -234,11 +236,11 @@ const OwnerManagePhoto = () => {
                 ))}
             </div>
           </ul>
-        </div>
-
-        {/* post 버튼 */}
-        <div className="flex justify-end p-4 text-sm">
-          <button className="bg-gray-300 px-4 py-2 rounded-md">저장하기</button>
+          <div className="text-end">
+            <button onClick={() => handleSaveImages()} className="text-sm">
+              추가 사진 저장하기
+            </button>
+          </div>
         </div>
       </div>
     </>
