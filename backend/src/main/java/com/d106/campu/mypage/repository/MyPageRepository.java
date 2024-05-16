@@ -15,6 +15,7 @@ import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReviewReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.RoomResponse;
+import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.review.domain.jpa.QReviewImage;
@@ -65,6 +66,7 @@ public class MyPageRepository {
 
         BooleanBuilder predicate = new BooleanBuilder();
         predicate.and(user.account.eq(account));
+        predicate.and(reservation.status.eq(PaymentStatus.SUCCESS));
 
         if (useType.equals(UseType.AFTER)) {
             if (dateType.equals(DateType.MONTH)) {
