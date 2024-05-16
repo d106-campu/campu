@@ -1,5 +1,7 @@
 import { FaBell } from "react-icons/fa";
 import { IEmptyNotification } from "@/types/my";
+import { FaArrowRightToBracket } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 interface IFreeAlertListProps {
   alerts: IEmptyNotification[];
@@ -18,17 +20,29 @@ const FreeAlertList = ({
   handleShowLessAlerts,
   totalMyAlerts
 }: IFreeAlertListProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className='grid grid-cols-1 gap-4'>
       {alerts.map((alert, index) => (
-        <div key={index} className="w-full flex justify-center p-2 pb-3 shadow-lg rounded-xl bg-white">
+        <div key={index} className="w-full flex justify-center p-2 pb-3 shadow-lg rounded-xl bg-white transition-transform duration-500 transform hover:scale-105">
           <div className="w-[45%] px-1">
             <div className="flex flex-col">
-              <h2 className="text-lg">{alert.room.campsite.campsiteName}</h2>
+              <div className="flex">
+                <h2 className="text-lg">{alert.room.campsite.campsiteName}</h2>
+                <button
+                  className='pl-2'
+                  onClick={() =>
+                    navigate(`/camps/${alert.room.campsite.campsiteId}`)
+                  }
+                >
+                  <FaArrowRightToBracket />
+                </button>
+              </div>
               <img
                 src={alert.room.campsite.thumbnailImageUrl}
                 alt={alert.room.campsite.campsiteName}
-                className="w-[300px] h-[150px] object-cover object-center rounded-lg mt-2"
+                className="w-[300px] h-[150px] object-cover object-center rounded-lg mt-2 shadow-md"
               />
             </div>
           </div>
@@ -47,17 +61,17 @@ const FreeAlertList = ({
                 </p>
               </div>
             </div>
-            <div className="flex justify-between items-center py-2">
+            <div className="flex justify-between items-center py-1">
               <div>
                 <h1 className="text-GRAY">사이트</h1>
                 <p className="text-MAIN_GREEN font-bold">{alert.room.roomName}</p>
               </div>
-              <div>
+              <div className="mt-5">
                 <button
                   className="flex items-center bg-SUB_YELLOW hover:bg-yellow-200 rounded-lg px-2 py-1"
                   onClick={() => handleCancelAlert(alert.room.roomId)}
                 >
-                  <FaBell className="text-yellow-500"/>
+                  <FaBell className="text-yellow-400"/>
                   <span className="text-gray-600 hover:text-MAIN_GREEN pl-2">빈자리 알림 취소</span>
                 </button>
               </div>
