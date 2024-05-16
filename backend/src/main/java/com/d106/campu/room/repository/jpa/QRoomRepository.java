@@ -2,6 +2,7 @@ package com.d106.campu.room.repository.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.emptynotification.domain.jpa.QEmptyNotification;
+import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.room.domain.jpa.QRoom;
 import com.d106.campu.room.dto.RoomDto;
@@ -81,9 +82,11 @@ public class QRoomRepository {
             room.id,
             new CaseBuilder()
                 .when(
-                    reservation.startDate.eq(startDate)
+                    (reservation.startDate.eq(startDate)
                         .or(reservation.startDate.gt(startDate).and(reservation.startDate.lt(endDate)))
-                        .or(reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate))))
+                        .or(reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate)))
+                    ).and(reservation.status.eq(PaymentStatus.SUCCESS))
+                )
                 .then(1)
                 .otherwise(0)
                 .sum()

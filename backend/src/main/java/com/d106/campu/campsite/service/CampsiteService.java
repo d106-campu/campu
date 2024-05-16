@@ -19,8 +19,10 @@ import com.d106.campu.campsite.repository.jpa.QCampsiteRepository;
 import com.d106.campu.campsite.repository.jpa.ThemeRepository;
 import com.d106.campu.common.constant.DoNmEnum;
 import com.d106.campu.common.constant.SigunguEnum;
+import com.d106.campu.common.exception.ConflictException;
 import com.d106.campu.common.exception.NotFoundException;
 import com.d106.campu.common.exception.UnauthorizedException;
+import com.d106.campu.common.exception.code.CommonExceptionCode;
 import com.d106.campu.common.response.Response;
 import com.d106.campu.common.util.SecurityHelper;
 import com.d106.campu.image.mapper.ImageMapper;
@@ -255,6 +257,11 @@ public class CampsiteService {
     @Transactional(readOnly = true)
     public Page<RoomDto.Response> getCampsiteRoomList(long campsiteId, LocalDate startDate, LocalDate endDate, int headCnt,
         User user, Pageable pageable) {
+
+        if (startDate.isAfter(endDate)) {
+            throw new ConflictException(CommonExceptionCode.INACCESSIBLE_DATA);
+        }
+
         Campsite campsite = campsiteRepository.findById(campsiteId)
             .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
 
