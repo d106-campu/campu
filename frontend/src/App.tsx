@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewNotifyCnt } from "./features/notify/notifyCnt";
 import { RootState } from "./app/store";
 import OwnerAddPage from "./pages/owneraddpage";
+import ErrorPage from "./pages/error";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: "/camps/:campId/payment",
     element: <PaymentPage />,
+  },
+  {
+    path: '/*',
+    element: <ErrorPage />,
   },
 ]);
 
