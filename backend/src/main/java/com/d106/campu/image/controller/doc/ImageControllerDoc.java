@@ -80,6 +80,36 @@ public interface ImageControllerDoc {
     Response updateCampsiteGeneralImageList(@NotNull Long campsiteId, ImageDto.UploadListRequest uploadListRequest,
         List<MultipartFile> generalImageList);
 
+    @Operation(summary = "캠핑장 일반 이미지 모두 삭제", description = "캠핑장 일반 이미지를 모두 삭제한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "성공시 일반 이미지를 모두 삭제한다.",
+            content = @Content(schemaProperties = {
+
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            }))
+    })
+    Response deleteAll(Long campsiteId);
+
+    @Operation(summary = "프로필 이미지 삭제", description = "프로필 이미지를 삭제한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "성공시 프로필 이미지를 삭제한다.",
+            content = @Content(schemaProperties = {
+
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            }))
+    })
+    Response deleteProfileImage();
+
+    @Operation(summary = "캠핑장 대표 이미지 삭제", description = "캠핑장 대표 이미지를 삭제한다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "성공시 캠핑장 대표 이미지를 삭제한다.",
+            content = @Content(schemaProperties = {
+
+                @SchemaProperty(name = "result", schema = @Schema(defaultValue = "ok", description = "요청 성공")),
+            }))
+    })
+    Response deleteThumbnailImage(Long campsiteId);
+
     class ProfileResponse {
         public String profileImage;
     }

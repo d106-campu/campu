@@ -8,6 +8,7 @@ import com.d106.campu.image.service.ImageService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,6 +60,27 @@ public class ImageController implements ImageControllerDoc {
         @RequestPart(value = "insertImageList", required = false) List<MultipartFile> generalImageList) {
         return new Response(ImageConstant.GENERAL_IMAGE_LIST,
             imageService.updateCampsiteGeneralImageList(campsiteId, uploadListRequest, generalImageList));
+    }
+
+    @Override
+    @DeleteMapping(value = "/campsite/{campsiteId}/general", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response deleteAll(@PathVariable("campsiteId") Long campsiteId) {
+        imageService.deleteAll(campsiteId);
+        return new Response();
+    }
+
+    @Override
+    @DeleteMapping(value = "/user/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response deleteProfileImage() {
+        imageService.deleteProfileImage();
+        return new Response();
+    }
+
+    @Override
+    @DeleteMapping(value = "/campsite/{campsiteId}/thumbnail", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response deleteThumbnailImage(@PathVariable("campsiteId") Long campsiteId) {
+        imageService.deleteThumbnailImage(campsiteId);
+        return new Response();
     }
 
 }

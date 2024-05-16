@@ -154,6 +154,35 @@ public class ImageService {
             .map(imageMapper::toUploadListResponse).toList();
     }
 
+    @Transactional
+    public void deleteAll(Long campsiteId) {
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+        if (!StringUtils.equals(campsite.getUser().getAccount(), securityHelper.getLoginAccount())) {
+            throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
+        }
+
+        imageRepository.deleteAllByCampsite_Id(campsite.getId());
+    }
+
+    @Transactional
+    public void deleteProfileImage() {
+        User user = userRepository.findByAccount(securityHelper.getLoginAccount())
+            .orElseThrow(() -> new NotFoundException(UserExceptionCode.USER_NOT_FOUND));
+        user.setProfileImageUrl(null);
+    }
+
+    @Transactional
+    public void deleteThumbnailImage(Long campsiteId) {
+        Campsite campsite = campsiteRepository.findById(campsiteId)
+            .orElseThrow(() -> new NotFoundException(CampsiteExceptionCode.CAMPSITE_NOT_FOUND));
+        if (!StringUtils.equals(campsite.getUser().getAccount(), securityHelper.getLoginAccount())) {
+            throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
+        }
+
+        campsite.setThumbnailImageUrl(null);
+    }
+
     private void deleteCampsiteImage(List<CampsiteImage> deleteImageList) {
         String keyword = CampsiteConstant.CAMPSITE;
         for (CampsiteImage campsiteImage : deleteImageList) {
