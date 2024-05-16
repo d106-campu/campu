@@ -1,11 +1,10 @@
 import { axiosAuthInstance, axiosFileInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
 import {
-  ICampsiteMapReq,
-  ICampsiteMapRes,
-  ICampsiteThumbnailReq,
-  ICampsiteThumbnailRes,
+  IBizrnoReq,
   IOwnerCampsiteReq,
+  IOwnerReservationReq,
+  IOwnerReservationRes,
 } from "@/types/owner";
 import { ICampsiteRes } from "@/types/search";
 
@@ -21,30 +20,27 @@ export const getOwnerCampsiteList = async ({
   return data.data;
 };
 
-// 캠핑장 대표 이미지 업로드
-export const postThumbnailImage = async ({
-  campsiteId,
-  thumbnailImage,
-}: ICampsiteThumbnailReq): Promise<APIResponse<ICampsiteThumbnailRes>> => {
-  const formData = new FormData();
-  formData.append("thumbnailImage", thumbnailImage);
-  const data = await axiosFileInstance.post(
-    `/image/campsite/${campsiteId}/thumbnail`,
-    formData
-  );
+// 사업자번호 등록
+export const postBizrno = async (
+  props: IBizrnoReq
+): Promise<APIResponse<string>> => {
+  const data = await axiosAuthInstance.post(`/owner/bizrno`, props);
+  console.log("사업자번호 등록 성공:", data.data);
   return data.data;
 };
 
-// 캠핑장 대표 배치도 업로드
-export const postMapImage = async ({
+// 캠핑장 예약 내역 조회
+export const getOwnerReservationList = async ({
   campsiteId,
-  mapImage,
-}: ICampsiteMapReq): Promise<APIResponse<ICampsiteMapRes>> => {
-  const formData = new FormData();
-  formData.append("mapImage", mapImage);
-  const data = await axiosFileInstance.post(
-    `/image/campsite/${campsiteId}/map`,
-    formData
+  date,
+}: IOwnerReservationReq): Promise<APIResponse<IOwnerReservationRes>> => {
+  const data = await axiosAuthInstance.get(
+    `/owner/reservation/campsite/${campsiteId}`,
+    {
+      params: {
+        date: date,
+      },
+    }
   );
   return data.data;
 };

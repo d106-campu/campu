@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { GoPlus } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "@/components/@common/Modal/Modal";
+import { useOwner } from "@/hooks/owner/useOwner";
+import { IBizrnoReq } from "@/types/owner";
+import Toast from "../@common/Toast/Toast";
+import { createSelector } from "@reduxjs/toolkit";
 
 interface ICampData {
   id: number;
@@ -14,15 +18,38 @@ interface ISideTabbarProps {
   campData: ICampData[];
 }
 
+const selectCampsiteInfo = createSelector(
+  (state: RootState) => state.ownerSide.campsiteId,
+  (campsiteId) => ({ campsiteId })
+);
+
 const SideTabbar = ({ campData }: ISideTabbarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [bizrno, setBizrno] = useState<string>("");
   const [isHover, setIsHover] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const { useAddBizrno } = useOwner();
+  const { campsiteId } = useSelector(selectCampsiteInfo);
 
-  const selectCampsite = useSelector((state: RootState) => ({
-    name: state.ownerSide.campsiteName,
-    id: state.ownerSide.campsiteId,
-  }));
+  const postBizrno: IBizrnoReq = {
+    bizrno: bizrno,
+  };
+  const validateBizrno = (value: string) => {
+    // 사업자번호 형식 검사 (000-00-00000)
+    const regex = /^\d{3}-\d{2}-\d{5}$/;
+    return regex.test(value);
+  };
+
+  const { mutate } = useAddBizrno(postBizrno);
+  const handleAddBizrno = () => {
+    if (!validateBizrno(bizrno)) {
+      // 유효하지 않은 형식인 경우
+      Toast.error("형식이 올바르지 않습니다.");
+      return;
+    }
+    mutate();
+    setIsOpen(false); // 모달 닫기
+  };
 
   useEffect(() => {
     if (campData) {
@@ -37,6 +64,9 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      setBizrno("");
+    }
   };
 
   return (
@@ -48,7 +78,7 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
               key={index}
               onClick={() => handleSelect(campground)}
               className={`${
-                selectCampsite.id === campground.id
+                campsiteId === campground.id
                   ? "bg-MAIN_GREEN text-white border border-MAIN_GREEN"
                   : "text-gray-400 border border-gray-400"
               }  text-sm py-2 px-4 rounded-lg mb-2`}
@@ -76,9 +106,14 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
             <p className="py-4">캠핑장 사업자번호 입력하기</p>
             <input
               className="border rounded-md p-3 text-xs"
-              placeholder="사업자번호 7자리를 입력해주세요."
+              placeholder="사업자번호 000-00-00000"
+              value={bizrno}
+              onChange={(e) => setBizrno(e.target.value)}
             />
-            <button className="bg-MAIN_GREEN text-white p-3 rounded-md text-xs ml-1">
+            <button
+              onClick={handleAddBizrno}
+              className="bg-MAIN_GREEN text-white p-3 rounded-md text-xs ml-1"
+            >
               등록
             </button>
           </div>

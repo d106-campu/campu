@@ -5,35 +5,37 @@ export interface IOwnerCampsiteReq {
   pageable: IPageableSimpleReq;
 }
 
-// 캠핑장 대표사진 Requset
-export interface ICampsiteThumbnailReq {
+// 사업자번호 등록 Request
+export interface IBizrnoReq {
+  bizrno: string;
+}
+
+// 예약내역 Request
+export interface IOwnerReservationReq {
   campsiteId: number;
-  thumbnailImage: File;
+  date?: string;
 }
 
-// 캠핑장 대표사진 Response
-export interface ICampsiteThumbnailRes {
-  thumbnailImage: string;
+export interface IRoomInfo {
+  id: number;
+  name: string;
 }
 
-// 캠핑장 배치도사진 Request
-export interface ICampsiteMapReq {
-  campsiteId: number;
-  mapImage: string;
+export interface IcustomerInfo {
+  nickname: string;
+  tel: string;
+}
+export interface IReservationSimpleRes {
+  id: number;
+  room: IRoomInfo;
+  customer: IcustomerInfo;
+  headCnt: number;
+  startDate: string;
+  endDate: string;
+  status: string;
 }
 
-// 캠핑장 배치도사진 Response
-export interface ICampsiteMapRes {
-  mapImage: string;
-}
-
-// 캠핑장 일반 사진 Request
-export interface ICampsiteImageReq {
-  campsiteId: number;
-  generalImageList : string[];
-}
-
-// 캠핑장 일반사진 Response
-export interface ICampsiteImageRes {
-  generalImageList: string[];
+// 예약내역 Response
+export interface IOwnerReservationRes {
+  reservationList: IReservationSimpleRes[];
 }
