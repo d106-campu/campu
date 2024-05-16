@@ -1,15 +1,24 @@
 import { GoPlus } from "react-icons/go";
-import dummy from "@/assets/images/dummyCamping3.png";
 import RoomItem from "@/components/owner/ownerManage/ownerManageroom/RoomItem";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { testUseOwner } from "@/hooks/owner/testUserOwner"; // 경로 수정해주세용
 import { IRoomCreateReq } from "@/types/testOwner"; // 경로 수정해주세용
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+
 
 const OwnerManageRoom = () => {
+  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } = testUseOwner();
+  const campsiteId = useSelector((state: RootState) => state.ownerSide.campsiteId);
+  const {
+    data: roomListResponse,
+    isLoading: isRoomListLoading,
+    refetch: refetchRoomList,
+  } = useCampsiteRoomList({ campsiteId: campsiteId || 0 });
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [photo, setPhoto] = useState<string>("");
   const imgRef = useRef<HTMLInputElement>(null);
@@ -18,13 +27,15 @@ const OwnerManageRoom = () => {
   // const [maxPeople, setMaxPeople] = useState<number>(4); // 최대 인원 계산
 
   const [roomName, setRoomName] = useState<string>(""); // 추가 방 이름
-  const [price, setPrice] = useState<number>(0); // 가격
+  const [price, setPrice] = useState<string>(''); // 가격
   const [baseNo, setBaseNo] = useState<number>(2); // 기준 인원
   const [maxNo, setMaxNo] = useState<number>(4); // 최대 인원
-  const [extraPrice, setExtraPrice] = useState<number>(0); // 추가 인원 가격
+  const [extraPrice, setExtraPrice] = useState<string>(''); // 추가 인원 가격
   const [toilet, setIsToilet] = useState<boolean>(true); // 화장실 유무
-  const { usePostCampsiteRoom } = testUseOwner();
+
   const postCampsiteRoomMutation = usePostCampsiteRoom();
+  const deleteCampsiteRoomMutation = useDeleteCampsiteRoom();
+  const roomList = roomListResponse?.data?.roomList || [];
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -47,25 +58,45 @@ const OwnerManageRoom = () => {
 
   // 방 등록 테스트 -> test로 만들어놓은 hooks-services-type 참고하여 import 수정해야함
   const handleSubmit = () => {
-    if (image) {
+    if (image && campsiteId) {
       const createRequestDto: IRoomCreateReq = {
-        campsiteId: 1,
-        induty: selectedCampingType || "카라반",
+        campsiteId,
+        induty: selectedCampingType || "캠핑",
         roomName,
-        price,
+        price: Number(price),
         baseNo,
         maxNo,
-        extraPrice,
+        extraPrice: Number(extraPrice),
         toilet,
       };
 
       console.log("보내는 induty :", createRequestDto.induty)
-      // 캠핑장 방 등록 API 연결 뮤테이틑
-      postCampsiteRoomMutation.mutate({ file: image, createRequestDto });
+      // 캠핑장 방 등록 API 연결 뮤테이트
+      postCampsiteRoomMutation.mutate({ file: image, createRequestDto }, {
+        onSuccess: () => {
+          console.log("방 등록 성공했음");
+          refetchRoomList(); // 등록 성공 시 방 목록 다시 리패치
+          toggleModal();
+        },
+        onError: (error) => {
+          console.error("방 등록 실패했음", error);
+        }
+      });
       toggleModal(); // 모달 닫기
     } else {
       console.error("이미지 파일을 선택하세요.");
     }
+  };
+
+  // 방 삭제 테스트
+  const handleDelete = (roomId: number) => {
+    deleteCampsiteRoomMutation.mutate({roomId},
+      {
+        onSuccess: () => {
+          refetchRoomList(); // 삭제 성공 시 목록 다시 리패치
+        },
+      }
+    );
   };
 
   const campingTypes = ["캠핑", "글램핑", "오토캠핑", "카라반"];
@@ -78,7 +109,7 @@ const OwnerManageRoom = () => {
   };
 
   useEffect(() => {
-    console.log("선택한 유형 타입 :", selectedCampingType);
+    console.log("선택한 유형 타입 확인 :", selectedCampingType);
   }, [selectedCampingType]);
 
   const increaseStandard = () => {
@@ -100,6 +131,10 @@ const OwnerManageRoom = () => {
     }
   };
 
+  if (isRoomListLoading) {
+    return <div>로딩중입니다. 잠시만 기다려주세요 😃</div>;
+  }
+
   return (
     <>
       <div>
@@ -113,8 +148,8 @@ const OwnerManageRoom = () => {
 
         <div>
           {/* 각 방에 대한 RoomItem 렌더링 */}
-          {dummyRooms.map((room) => (
-            <RoomItem key={room.id} room={room} />
+          {roomList.map((room) => (
+            <RoomItem key={room.roomId} room={room} onDelete={handleDelete} refetch={refetchRoomList}/>
           ))}
         </div>
       </div>
@@ -166,7 +201,7 @@ const OwnerManageRoom = () => {
                       <div
                         key={type}
                         className={`${
-                          selectedCampingType === type ? "border border-MAIN_GREEN text-MAIN_GREEN font-semibold" : "border border-gray-200 text-gray-500"
+                          selectedCampingType === type ? "border border-MAIN_GREEN text-MAIN_GREEN font-semibold cursor-pointer" : "border border-gray-200 text-gray-500 cursor-pointer"
                         } px-4 py-1 rounded-md`}
                         onClick={() => toggleCampingType(type)}
                       >
@@ -191,7 +226,7 @@ const OwnerManageRoom = () => {
                     type="number"
                     className="p-2 border-b outline-none w-full"
                     value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
+                    onChange={(e) => setPrice(e.target.value)}
                   />
                 </div>
                 {/* 인원 */}
@@ -230,7 +265,7 @@ const OwnerManageRoom = () => {
                     type="number"
                     className="p-2 border-b outline-none w-full"
                     value={extraPrice}
-                    onChange={(e) => setExtraPrice(Number(e.target.value))}
+                    onChange={(e) => setExtraPrice(e.target.value)}
                   />
                 </div>
                 {/* 화장실 유무 */}
@@ -281,40 +316,3 @@ const OwnerManageRoom = () => {
 };
 
 export default OwnerManageRoom;
-
-// 더미 데이터
-const dummyRooms = [
-  {
-    id: 1,
-    name: "A구역 (벚꽃캠핑존)",
-    image: dummy,
-    price: "50,000",
-    type: "캠핑",
-    minPeople: 2,
-    maxPeople: 4,
-    addPrice: 10000,
-    toilet: true,
-  },
-  {
-    id: 2,
-    name: "B구역 (키즈놀이터존)",
-    image: dummy,
-    price: "50,000",
-    type: "캠핑",
-    minPeople: 2,
-    maxPeople: 4,
-    addPrice: 10000,
-    toilet: false,
-  },
-  {
-    id: 3,
-    name: "C구역 (주차장  근처)",
-    image: dummy,
-    price: "50,000",
-    type: "캠핑",
-    minPeople: 2,
-    maxPeople: 4,
-    addPrice: 10000,
-    toilet: false,
-  },
-];
