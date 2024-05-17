@@ -1,15 +1,15 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IProfileImageState {
   isProfileImage: string;
 }
 
 const initialState: IProfileImageState = {
-  isProfileImage : '',
+  isProfileImage: "",
 };
 
 const profileImageSlice = createSlice({
-  name: 'profileImage',
+  name: "profileImage",
   initialState,
   reducers: {
     setIsProfileImage: (state, action: PayloadAction<string>) => {
@@ -19,4 +19,4 @@ const profileImageSlice = createSlice({
 });
 
 export const { setIsProfileImage } = profileImageSlice.actions;
-export const profileImageReducer  = profileImageSlice.reducer;
+export const profileImageReducer = profileImageSlice.reducer;

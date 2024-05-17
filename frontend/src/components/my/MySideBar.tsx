@@ -23,13 +23,8 @@ const MySideBar = ({
   useEffect(() => {
     if (profileData?.profileImageUrl) {
       // const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
-      console.log(
-        "사이드바 환경변수 주소 :",
-        import.meta.env.VITE_IMAGE_BASE_URL_PROD
-      );
       const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImage(fullImageUrl);
-      console.log("사이드바 이미지 :", fullImageUrl);
     }
   }, [profileData]);
 

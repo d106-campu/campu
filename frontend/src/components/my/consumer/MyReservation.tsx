@@ -61,7 +61,6 @@ const MyReservation = (): JSX.Element => {
 
   // 예약 현황 또는 이용 완료에 대한 선택 타입
   const handleUseTypeChange = (type: "BEFORE" | "AFTER") => {
-    console.log("선택한 useType 확인 :", type);
     setUseType(type);
     if (type === "BEFORE") {
       setSelectedFilter("TOTAL"); // 예약 현황일 때는 항상 TOTAL로 설정

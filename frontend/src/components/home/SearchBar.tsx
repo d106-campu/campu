@@ -52,7 +52,7 @@ const SearchBar = ({ state }: { state?: string }) => {
     keyword || null
   );
 
-  console.log(searchKeyword);
+  console.log(typeof searchKeyword);
   const resetCalendar = () => {
     setLocalStartDate(dateStringToDate(startDate));
     setLocalEndDate(dateStringToDate(endDate));
@@ -75,7 +75,6 @@ const SearchBar = ({ state }: { state?: string }) => {
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchKeyword(value);
-    console.log("저장하려는 값", value, "타입", typeof value);
     dispatch(setKeyword(value));
   };
 

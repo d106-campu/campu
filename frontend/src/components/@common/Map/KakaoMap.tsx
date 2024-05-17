@@ -23,15 +23,12 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
     if (locations) {
       initMap();
     } else {
-      // locations이 비어 있을 때 기본 위치로 지도 설정
       const container = mapRef.current;
       if (!container) return;
-
       const options = {
         center: new window.kakao.maps.LatLng(37.413294, 127.269311),
         level: 12,
       };
-
       new window.kakao.maps.Map(container, options);
     }
   }, [locations]);
@@ -39,7 +36,6 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
   const initMap = () => {
     const container = mapRef.current;
     if (!container) return;
-
     const options = {
       center:
         mapY && mapX
