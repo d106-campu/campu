@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import { IEmptyNotification } from "@/types/my";
 import FreeAlertList from "@/components/my/freeAlert/FreeAlertList";
 import Modal from "@/components/@common/Modal/Modal";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
 import { useMy } from "@/hooks/my/useMy";
 import Toast from "@/components/@common/Toast/Toast";
 
-const FreeAlert = (): JSX.Element => {
+interface FreeAlertProps {
+  nickname: string;
+}
+
+const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
   const { useMyAlertsQuery, useDeleteAlert } = useMy();
-  const nickname = useSelector((state: RootState) => state.auth.nickname); // 닉네임
   const [visibleAlerts, setVisibleAlerts] = useState<IEmptyNotification[]>([]);
   const [viewCount, setIsViewCount] = useState<number>(2); // 처음 보여줄 빈자리 알림 개수 관리
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
@@ -18,13 +19,6 @@ const FreeAlert = (): JSX.Element => {
   // 데이터가 로드되었을 때 초기 목록 설정 (2개씩 잘라서 보여줌)
   useEffect(() => {
     if (useMyAlertsQuery.data) {
-      console.log(
-        "빈자리 알림 데이터 :",
-        useMyAlertsQuery.data.data.emptyNotificationList
-      );
-      useMyAlertsQuery.data.data.emptyNotificationList.forEach((arr, index) => {
-        console.log(`항목 ${index}의 roomId 값 :`, arr.room.roomId);
-      });
       setVisibleAlerts(
         useMyAlertsQuery.data.data.emptyNotificationList.slice(0, viewCount)
       );

@@ -3,6 +3,7 @@ import MyReview from "@/components/my/consumer/MyReview";
 import MyFavoriteCamp from "@/components/my/consumer/MyFavoriteCamp";
 import FreeAlert from "@/components/my/freeAlert/FreeAlert";
 import MyProfile from "@/components/my/profile/MyProfile";
+import { useUser } from "@/hooks/user/useUser";
 
 interface IConsumerContainerProps {
   selectedComponent: string;
@@ -11,6 +12,10 @@ interface IConsumerContainerProps {
 const ConsumerContainer = ({
   selectedComponent,
 }: IConsumerContainerProps): JSX.Element => {
+  const { userProfileQuery } = useUser();
+  const profileData = userProfileQuery.data?.data.myProfile;
+  const nickname = profileData?.nickname || "닉네임 없음";
+
   const renderComponent = () => {
     switch (selectedComponent) {
       case "MyReservation":
@@ -18,9 +23,9 @@ const ConsumerContainer = ({
       case "MyReview":
         return <MyReview />;
       case "MyFavoriteCamp":
-        return <MyFavoriteCamp />;
+        return <MyFavoriteCamp nickname={nickname}/>;
       case "FreeAlert":
-        return <FreeAlert />;
+        return <FreeAlert nickname={nickname}/>;
       case "MyProfile":
         return <MyProfile phoneVerified={false} />;
       default:
