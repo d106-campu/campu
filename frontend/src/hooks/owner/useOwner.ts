@@ -11,6 +11,7 @@ import {
   updateCampsiteRoom,
   deleteCampsiteRoom,
   updateDatailCampsite,
+  updateGeneralImages,
 } from "@/services/owner/api";
 import {
   IBizrnoReq,
@@ -21,6 +22,7 @@ import {
   IRoomCreateReq,
   IRoomDeleteReq,
   IRoomUpdateReq,
+  IGeneralImageUpdateReq,
 } from "@/types/owner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -95,6 +97,21 @@ export const useOwner = () => {
       },
     });
   };
+
+  // 캠핑장 일반 사진 업데이트 훅
+  const useUpdateGeneralImages = () => {
+    return useMutation({
+      mutationKey: ["updateGeneralImages"],
+      mutationFn: (props: IGeneralImageUpdateReq) => updateGeneralImages(props),
+      onSuccess: (res) => {
+        console.log("캠핑장 일반 사진 수정함 :", res);
+      },
+      onError: (err) => {
+        console.error("캠핑장 일반 사진 수정 실패", err);
+      },
+    });
+  };
+
   // 캠핑장 방 목록 조회
   const useCampsiteRoomList = (props: IOwnerRoomListReq) => {
     return useQuery({
@@ -185,6 +202,7 @@ export const useOwner = () => {
     useMapImageMutation,
     useAddImageMutation,
     usePostCampsiteRoom,
+    useUpdateGeneralImages,
     useCampsiteRoomList,
     useUpdateCampsiteRoom,
     useDeleteCampsiteRoom,

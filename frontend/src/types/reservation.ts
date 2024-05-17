@@ -93,9 +93,15 @@ export interface ICampsite {
   homepage: string | null; // 홈페이지 주소
   thumbnailImageUrl: string; // 썸네일 이미지
   mapImageUrl: string | null; // 배치도 이미지
-  campsiteImageUrlList: string[]; // 캠핑장 메인 이미지
+  campsiteImageUrlList: ICampsiteImage[]; // 캠핑장 메인 이미지
   checkin: string | null; // 체크인 시간
   checkout: string | null; // 체크아웃 시간
+}
+
+// 캠핑장 일반 이미지 타입
+export interface ICampsiteImage {
+  imageId: number;
+  url: string;
 }
 
 // 캠핑장 위치 정보

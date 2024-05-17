@@ -21,6 +21,7 @@ const MySideBar = ({
   const [profileImage, setProfileImage] = useState("");
 
   useEffect(() => {
+    userProfileQuery.refetch();
     if (profileData?.profileImageUrl) {
       // const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
       console.log(
@@ -30,8 +31,10 @@ const MySideBar = ({
       const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImage(fullImageUrl);
       console.log("사이드바 이미지 :", fullImageUrl);
+    } else {
+      setProfileImage(profileDefaultImage);
     }
-  }, [profileData]);
+  }, [profileData?.profileImageUrl]);
 
   const handleComponentChange = (componentName: string) => {
     dispatch(setSelectedComp(componentName));

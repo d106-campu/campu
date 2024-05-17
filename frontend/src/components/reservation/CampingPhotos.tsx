@@ -2,11 +2,12 @@ import { useNavigate } from "react-router-dom";
 import Button from "@/components/@common/Button/Button";
 import { PiImage } from "react-icons/pi";
 import { scrollToTop } from "@/utils/scrollToTop";
+import { ICampsiteImage } from "@/types/reservation";
 
 interface ICampingPhotosProps {
   id: number;
   main: string;
-  photos: string[];
+  photos: ICampsiteImage[];
   like: boolean;
 }
 
@@ -60,7 +61,7 @@ const CampingPhotos = ({ main, photos, id, like }: ICampingPhotosProps) => {
           displayedPhotos.map((photo, index) => (
             <img
               key={index}
-              src={photo}
+              src={photo.url}
               alt={`캠핑장 추가 사진 ${index}`}
               className={`${photoGrid(
                 index
