@@ -9,11 +9,11 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const useReservation = () => {
   // 방 목록 조회 (무한 스크롤)
-  const useGetRoomListInfinite = (props: IRoomListReq) => {
+  const useGetRoomListInfinite = (props: IRoomListReq, isLogin: boolean) => {
     return useInfiniteQuery({
       queryKey: ["rooms", props],
       queryFn: ({ pageParam }) => {
-        return getRoomList({ ...props, page: pageParam });
+        return getRoomList({ ...props, page: pageParam }, isLogin);
       },
       initialPageParam: 0, // 페이지는 0부터 시작하도록 설정
       getNextPageParam: (lastPage) => {
