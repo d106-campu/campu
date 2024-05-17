@@ -73,7 +73,8 @@ const MyController = () => {
   const [localHeadCount, setLocalHeadCount] = useState<number>(headCount);
 
   // 인원수 증감 함수
-  const increasePeople = () => setLocalHeadCount(localHeadCount + 1);
+  const increasePeople = () =>
+    localHeadCount < 6 && setLocalHeadCount(localHeadCount + 1);
   const decreasePeople = () =>
     localHeadCount > 1 && setLocalHeadCount(localHeadCount - 1);
 
