@@ -163,11 +163,15 @@ export interface IMyReservationCampsite {
   campsiteName: string;
   address: string;
   thumbnailImageUrl: string;
+  tel: string;
+  checkin: string | null;
+  checkout: string | null;
 }
 
 // 내 예약내역 room 응답
 export interface IMyReservationRoom {
   roomId: number;
+  induty: string;
   roomName: string;
   supplyList: string[];
 }
