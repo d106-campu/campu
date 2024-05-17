@@ -4,7 +4,7 @@ import { MdOutlinePersonOutline } from "react-icons/md";
 import { LuSearch } from "react-icons/lu";
 import SearchRegion from "@/components/@common/Search/SearchRegion";
 import { RegionList } from "@/components/@common/Search/RegionList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
@@ -78,6 +78,20 @@ const SearchBar = ({ state }: { state?: string }) => {
     dispatch(setKeyword(value));
   };
 
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      goToSearchPage();
+    }
+  };
+
+  // form 태그를 사용하지않을 때 -> 키보드 "엔터" 감지
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
   const goToSearchPage = () => {
     navigate("/search");
   };
@@ -149,7 +163,7 @@ const SearchBar = ({ state }: { state?: string }) => {
         <div className="flex w-full items-center border bg-white rounded-md p-3 max-h-11">
           <LuSearch />
           <input
-            className="ml-2 placeholder-black text-xs border-none outline-none focus:ring-0"
+            className="ml-2 w-full placeholder-black text-xs border-none outline-none focus:ring-0"
             placeholder="키워드로 캠핑장을 검색해보세요"
             value={keyword || ""}
             onChange={handleKeywordChange}
