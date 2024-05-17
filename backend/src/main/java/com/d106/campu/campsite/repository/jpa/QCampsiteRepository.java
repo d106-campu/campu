@@ -7,6 +7,7 @@ import com.d106.campu.campsite.domain.jpa.QCampsiteLocation;
 import com.d106.campu.campsite.domain.jpa.QCampsiteTheme;
 import com.d106.campu.campsite.domain.jpa.QTheme;
 import com.d106.campu.campsite.dto.CampsiteDto;
+import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.room.domain.jpa.QRoom;
@@ -206,9 +207,11 @@ public class QCampsiteRepository {
                 room.id,
                 new CaseBuilder()
                     .when(
-                        reservation.startDate.eq(startDate)
+                        (reservation.startDate.eq(startDate)
                             .or(reservation.startDate.gt(startDate).and(reservation.startDate.lt(endDate)))
-                            .or(reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate))))
+                            .or(reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate)))
+                        ).and(reservation.status.eq(PaymentStatus.SUCCESS))
+                    )
                     .then(1)
                     .otherwise(0)
                     .sum()
