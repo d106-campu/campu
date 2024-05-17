@@ -10,6 +10,10 @@ export interface IBizrnoReq {
   bizrno: string;
 }
 
+export interface IBizrnoRes {
+  result: string
+}
+
 // 예약내역 Request
 export interface IOwnerReservationReq {
   campsiteId: number;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import TentImage from "@/assets/images/profile.png";
 import { useOwner } from "@/hooks/owner/useOwner";
-import { IBizrnoReq } from "@/types/owner";
+// import { IBizrnoReq } from "@/types/owner";
 import { RootState } from "@/app/store";
 import { useSelector } from "react-redux";
 import Toast from "../@common/Toast/Toast";
@@ -24,17 +24,15 @@ const AddCamping = () => {
     }
   };
 
+  console.log(bizrno);
+
   const validateBizrno = (value: string) => {
     // 사업자번호 형식 검사 (000-00-00000)
     const regex = /^\d{3}-\d{2}-\d{5}$/;
     return regex.test(value);
   };
 
-  const postBizrno: IBizrnoReq = {
-    bizrno: bizrno,
-  };
-
-  const { mutate } = useAddBizrno(postBizrno);
+  const { mutate } = useAddBizrno(bizrno);
   const handleAddBizrno = () => {
     if (!validateBizrno(bizrno)) {
       // 유효하지 않은 형식인 경우
