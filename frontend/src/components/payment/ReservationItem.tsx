@@ -1,6 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { updateStatus } from "@/features/reservation/ReservationSlice";
 import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
 import { diffDays } from "@/utils/diffDays";
 import Button from "@/components/@common/Button/Button";
@@ -15,9 +14,9 @@ import { tentOptions } from "@/assets/lotties/lottieOptions";
 import formatPhoneNumber from "@/utils/formatPhoneNumber";
 import usePayment from "@/hooks/payment/usePayment";
 import { IPaymentPrepareReq } from "@/types/payment";
+import CancelPaymentModal from "./CancelPaymentModal";
 
 const ReservationItem = () => {
-  const dispatch = useDispatch();
   // Redux 상태 불러오기
   const {
     image,
@@ -40,6 +39,12 @@ const ReservationItem = () => {
     checkOut,
   } = useSelector((state: RootState) => state.reservation.data);
   const status = useSelector((state: RootState) => state.reservation.status);
+  const impUid = useSelector(
+    (state: RootState) => state.reservation.data.impUid
+  );
+  const reservationId = useSelector(
+    (state: RootState) => state.reservation.data.reservationId
+  );
   const nickname = useSelector((state: RootState) => state.auth.nickname);
 
   const { preparePaymentMutation } = usePayment();
@@ -49,6 +54,11 @@ const ReservationItem = () => {
 
   const [mapModal, setMapModal] = useState<boolean>(false); // 지도 모달 상태관리
   const toggleMapModal = () => setMapModal(!mapModal);
+
+  // 결제 취소하기
+  const [cancelPaymentModal, setCancelPaymentModal] = useState<boolean>(false); // 결제 취소 모달 상태관리
+  const toggleCancelPaymentModal = () =>
+    setCancelPaymentModal(!cancelPaymentModal);
 
   const handlePayment = () => {
     // 결제 요청
@@ -222,7 +232,14 @@ const ReservationItem = () => {
             fontWeight="none"
             backgroundColor="bg-SUB_PINK"
             hoverBackgroundColor="hover:bg-HOVER_PINK"
-            onClick={() => dispatch(updateStatus("proceeding"))}
+            onClick={toggleCancelPaymentModal}
+          />
+        )}
+        {cancelPaymentModal && (
+          <CancelPaymentModal
+            toggleModal={toggleCancelPaymentModal}
+            reservationId={reservationId}
+            impUid={impUid}
           />
         )}
       </div>

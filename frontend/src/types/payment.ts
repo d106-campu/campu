@@ -65,3 +65,27 @@ export interface ICampsite {
   addr2: string;
   thumbnailImageUrl: string;
 }
+
+// 결제 취소 Request
+export interface IPaymentCancelReq {
+  reservationId: number;
+  impUid: string;
+  reason: string;
+}
+
+// 결제 취소 Response
+export interface IPaymentCancelRes {
+  cancelPayment: IPaymentCance;
+}
+
+export interface IPaymentCance {
+  impUid: string;
+  reservationId: number;
+  room: IRoom;
+  headCnt: number;
+  price: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  amount: number;
+}

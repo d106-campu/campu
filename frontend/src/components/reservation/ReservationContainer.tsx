@@ -24,7 +24,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
     isLoading,
   } = useGetRoomListInfinite({
     campsiteId: campsiteId,
-    size: 5,
+    size: 1,
     headCnt: headCount,
     startDate: startDate,
     endDate: endDate,
@@ -50,7 +50,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
         <div className="w-[95%] mx-auto">
           {/* 로딩중 UI */}
           {isLoading && <Loading />}
-          {roomListData?.pages ? (
+          {roomListData?.pages && (
             <>
               {/* 각 방에 대한 RoomItem 렌더링 */}
               {roomListData.pages.map((item) =>
@@ -58,8 +58,12 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
                   <RoomItem key={room.id} room={room} />
                 ))
               )}
+              {/* 최하단에 작은 div요소 만들어 ref에 setTarget적용 */}
+              {console.log("지금")}
+              <div ref={setTarget} className="h-[1rem]" />
             </>
-          ) : (
+          )}
+          {totalElements === 0 && (
             <>
               {/* 검색결과가 없을 때 UI */}
               <div className="pt-10 flex items-center justify-center gap-10">
@@ -78,8 +82,6 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
             </>
           )}
         </div>
-        {/* 최하단에 작은 div요소 만들어 ref에 setTarget적용 */}
-        <div ref={setTarget} className="h-[1rem]" />
       </div>
     </>
   );

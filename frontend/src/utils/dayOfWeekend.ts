@@ -15,8 +15,3 @@ export const dayOfWeekend = () => {
 
   return { saturday: saturdayFormatted, sunday: sundayFormatted };
 };
-
-// 사용 방법
-// const weekendDates = dayOfWeekeend(); 함수 호출
-// 토요일:  weekendDates.saturday
-// 일요일:  weekendDates.sunday

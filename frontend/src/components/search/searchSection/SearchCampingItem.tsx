@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const SearchCampingItem = ({
   camping,
@@ -18,6 +19,11 @@ const SearchCampingItem = ({
   const markers = useSelector((state: RootState) => state.markers.facltNm);
   const isAvailable = camping.available;
   const facltNmColor = markers === camping.facltNm ? " bg-SUB_GREEN_01" : "";
+  const navigate = useNavigate();
+
+  const goToDetail = () => {
+    navigate(`/camps/${camping.id}`);
+  };
 
   useEffect(() => {
     if (markers === camping.facltNm) {
@@ -83,7 +89,10 @@ const SearchCampingItem = ({
             >
               {camping.price.toLocaleString("ko-KR")} ~
             </div>
-            <button className="bg-white border border-MAIN_GREEN px-4 rounded-md text-MAIN_GREEN text-xs">
+            <button
+              onClick={goToDetail}
+              className="bg-white border border-MAIN_GREEN px-4 rounded-md text-MAIN_GREEN text-xs"
+            >
               상세보기
             </button>
           </div>
