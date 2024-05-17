@@ -24,6 +24,7 @@ import Toast from "@/components/@common/Toast/Toast";
 
 const usePayment = () => {
   const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [IMP, setIMP] = useState<any>(null);
   const [preparePaymentData, setPreparePaymentData] =
     useState<IPaymentPrepare | null>(null);
@@ -107,6 +108,7 @@ const usePayment = () => {
         buyer_addr: preparePayment.buyerAddr, // 구매자 주소
         buyer_postcode: preparePayment.buyerPostcode, // 구매자 우편번호
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async (rsp: any) => {
         console.log(`결제 응답 시작: 결제 응답 - ${rsp} `); // 콜백 함수 시작 로그 - 결제 응답 확인
         if (rsp.error_code != null) {

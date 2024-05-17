@@ -1,4 +1,4 @@
-import MainImage from "@/assets/images/MainImage.jpg";
+import MainImage from "@/assets/images/home/MainImage.jpg";
 import SearchBar from "@/components/home/SearchBar";
 import MyCamping from "@/components/home/myCamping/MyCamping";
 import Recommend from "@/components/home/recommend/Recommend";

@@ -1,15 +1,15 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IComponentState {
   value: string;
 }
 
 const initialState: IComponentState = {
-  value : 'MyReservation',
+  value: "MyReservation",
 };
 
 const selectedCompSlice = createSlice({
-  name: 'selectedComp',
+  name: "selectedComp",
   initialState,
   reducers: {
     setSelectedComp: (state, action: PayloadAction<string>) => {

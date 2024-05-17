@@ -18,8 +18,6 @@ const SearchSection = () => {
   const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
 
-  console.log("현재 검색하는 키워드", searchBarState.keyword);
-
   // 디폴트 값들 지정
   const weekendDates = dayOfWeekend();
   const startday = searchBarState.startDate || weekendDates.saturday;

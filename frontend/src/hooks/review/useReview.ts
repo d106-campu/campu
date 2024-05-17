@@ -43,9 +43,6 @@ export const useReview = () => {
     return useMutation({
       mutationKey: ["post review"],
       mutationFn: postReview,
-      onSuccess: (res) => {
-        console.log("리뷰 등록 성공", res);
-      },
       onError: (err) => {
         console.error("리뷰 등록 실패", err);
       },
@@ -65,9 +62,6 @@ export const useReview = () => {
     return useMutation({
       mutationKey: ["delete review"],
       mutationFn: (reviewId: number) => deleteReview(reviewId),
-      onSuccess: () => {
-        console.log("리뷰 삭제 성공");
-      },
       onError: (err) => {
         console.error("리뷰 삭제 실패", err);
       },

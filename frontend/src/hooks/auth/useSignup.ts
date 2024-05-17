@@ -19,12 +19,14 @@ export const useSignup = () => {
   const dispatch = useDispatch();
 
   // 아이디 중복 검사
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const checkId = (account: string) => useQuery({
     queryKey: ['당신의 아이디 확인! :', account],
     queryFn: () => checkIdDuplicate(account)
   });
 
   // 닉네임 중복 검사
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const checkNickname = (nickname: string) => useQuery({
     queryKey: ['당신의 닉네임 확인! :', nickname],
     queryFn: () => checkNicknameDuplicate(nickname)
