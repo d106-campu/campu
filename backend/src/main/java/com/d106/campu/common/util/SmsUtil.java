@@ -44,7 +44,8 @@ public class SmsUtil {
 
         message.setFrom(from);
         message.setTo(to);
-        message.setText(AuthConstant.TEL_AUTH_SEND_MESSAGE + verificationCode);
+        message.setSubject(NotificationConstant.CAMPU_SMS + " " + AuthConstant.TEL_AUTH_SEND_MESSAGE);
+        message.setText(String.valueOf(verificationCode));
 
         return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
