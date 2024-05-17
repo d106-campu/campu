@@ -138,9 +138,11 @@ public class ImageService {
             throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
         }
 
-        List<CampsiteImage> deleteImageList = campsiteImageRepository.findAllById(uploadListRequest.getImageIdList());
-        imageRepository.deleteAllByIdIn(uploadListRequest.getImageIdList());
-        deleteCampsiteImage(deleteImageList);
+        if (!uploadListRequest.getImageIdList().isEmpty()) {
+            List<CampsiteImage> deleteImageList = campsiteImageRepository.findAllById(uploadListRequest.getImageIdList());
+            imageRepository.deleteAllByIdIn(uploadListRequest.getImageIdList());
+            deleteCampsiteImage(deleteImageList);
+        }
 
         Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
         generalImageList.stream()
