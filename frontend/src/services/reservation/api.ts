@@ -17,16 +17,21 @@ export const postLikes = async (
 };
 
 // 방 목록 조회
-export const getRoomList = async (params: {
-  campsiteId: number;
-  page: number;
-  size: number;
-  headCnt: number;
-  startDate: string;
-  endDate: string;
-}): Promise<APIResponse<IRoomListRes>> => {
+export const getRoomList = async (
+  params: {
+    campsiteId: number;
+    page: number;
+    size: number;
+    headCnt: number;
+    startDate: string;
+    endDate: string;
+  },
+  isLogin: boolean
+): Promise<APIResponse<IRoomListRes>> => {
   const { campsiteId, page, size, headCnt, startDate, endDate } = params;
-  const res = await axiosCommonInstance.get(`/campsite/${campsiteId}/room`, {
+  // 로그인 상태에 따라 적절한 axios 인스턴스 선택
+  const axiosInstance = isLogin ? axiosAuthInstance : axiosCommonInstance;
+  const res = await axiosInstance.get(`/campsite/${campsiteId}/room`, {
     params: { page, size, headCnt, startDate, endDate },
   });
   return res.data;
