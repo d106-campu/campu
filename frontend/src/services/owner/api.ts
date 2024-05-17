@@ -1,7 +1,8 @@
 import { axiosAuthInstance, axiosFileInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
 import {
-  IBizrnoReq,
+  IBizrnoRes,
+  // IBizrnoReq,
   ICampsiteMapRes,
   ICampsiteThumbnailRes,
   IEditDetailReq,
@@ -34,9 +35,14 @@ export const getOwnerCampsiteList = async ({
 
 // 사업자번호 등록
 export const postBizrno = async (
-  props: IBizrnoReq
-): Promise<APIResponse<string>> => {
-  const data = await axiosAuthInstance.post(`/owner/bizrno`, props);
+  bizrno: string
+): Promise<APIResponse<IBizrnoRes>> => {
+  console.log(bizrno);
+  const data = await axiosAuthInstance.post(`/owner/bizrno`, null, {
+    params: {
+      bizrno,
+    },
+  });
   console.log("사업자번호 등록 성공:", data.data);
   return data.data;
 };

@@ -13,7 +13,7 @@ import {
   updateDatailCampsite,
 } from "@/services/owner/api";
 import {
-  IBizrnoReq,
+  // IBizrnoReq,
   IEditDetailReq,
   IOwnerCampsiteReq,
   IOwnerReservationReq,
@@ -34,9 +34,15 @@ export const useOwner = () => {
   };
 
   // 사업자번호 등록
-  const useAddBizrno = (props: IBizrnoReq) => {
+  const useAddBizrno = (bizrno: string) => {
     return useMutation({
-      mutationFn: () => postBizrno(props),
+      mutationFn: () => postBizrno(bizrno),
+      onSuccess: () => {
+        console.log("사업자 성공", bizrno);
+      },
+      onError: (err) => {
+        console.log(err, "사업자 실패");
+      },
     });
   };
 
@@ -168,7 +174,7 @@ export const useOwner = () => {
           queryKey: ["campsite detail", props.campsiteId],
         });
         console.log("정보 수정 완");
-        Toast.success("수정이 완료되었습니다.")
+        Toast.success("수정이 완료되었습니다.");
       },
       onError: (err) => {
         console.error("수정실패", err);
