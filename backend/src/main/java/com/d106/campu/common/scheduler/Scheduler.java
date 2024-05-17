@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @RequiredArgsConstructor
 @Component
@@ -27,7 +28,9 @@ public class Scheduler {
     public void sendNotificationForEmptyRoom() {
         log.info("Scheduler: sendNotificationForEmptyRoom()");
         List<EmptyNotification> emptyNotificationList = reservationService.getEmptyNotificationList();
-        applicationEventPublisher.publishEvent(notificationMapper.toEmptyRoomEvent(emptyNotificationList));
+        if (!CollectionUtils.isEmpty(emptyNotificationList)) {
+            applicationEventPublisher.publishEvent(notificationMapper.toEmptyRoomEvent(emptyNotificationList));
+        }
     }
 
 }

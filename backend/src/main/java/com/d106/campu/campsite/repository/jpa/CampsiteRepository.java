@@ -18,8 +18,8 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
     @Query("""
         SELECT c
         FROM campsite c
-            LEFT JOIN FETCH c.campsiteLocation loc
-            LEFT JOIN FETCH c.roomList r
+            LEFT JOIN c.campsiteLocation loc
+            LEFT JOIN c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
             AND r.maxNo >= :headCnt
         """)
@@ -31,8 +31,8 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
     @Query("""
         SELECT c
         FROM campsite c
-            LEFT JOIN FETCH c.campsiteLocation loc
-            LEFT JOIN FETCH c.roomList r
+            LEFT JOIN c.campsiteLocation loc
+            LEFT JOIN c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
             AND (c.indutyList IS NOT NULL) AND (c.indutyList LIKE %:induty%)
             AND r.maxNo >= :headCnt
@@ -46,7 +46,7 @@ public interface CampsiteRepository extends JpaRepository<Campsite, Long> {
         SELECT c
         FROM campsite c
             LEFT JOIN c.campsiteLocation loc
-            LEFT JOIN FETCH c.roomList r
+            LEFT JOIN c.roomList r
         WHERE (:doNm IS NULL OR c.doNm = :doNm) AND (:sigunguNm IS NULL OR c.sigunguNm = :sigunguNm)
             AND c IN (
                 SELECT ct.campsite

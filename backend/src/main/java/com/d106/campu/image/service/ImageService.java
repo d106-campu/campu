@@ -35,6 +35,7 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -138,17 +139,21 @@ public class ImageService {
             throw new InvalidException(CommonExceptionCode.UNAUTHORIZED);
         }
 
-        List<CampsiteImage> deleteImageList = campsiteImageRepository.findAllById(uploadListRequest.getImageIdList());
-        imageRepository.deleteAllByIdIn(uploadListRequest.getImageIdList());
-        deleteCampsiteImage(deleteImageList);
+        if (!CollectionUtils.isEmpty(uploadListRequest.getImageIdList())) {
+            List<CampsiteImage> deleteImageList = campsiteImageRepository.findAllById(uploadListRequest.getImageIdList());
+            imageRepository.deleteAllByIdIn(uploadListRequest.getImageIdList());
+            deleteCampsiteImage(deleteImageList);
+        }
 
-        Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
-        generalImageList.stream()
-            .map(file -> saveFile(basePath, file))
-            .map(fileName -> String.join("/", campsite.getId().toString(), ImageConstant.GENERAL, fileName))
-            .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
-            .map(imageMapper::toCampsiteImage)
-            .forEach(campsite::addCampsiteImage);
+        if (!CollectionUtils.isEmpty(generalImageList)) {
+            Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
+            generalImageList.stream()
+                .map(file -> saveFile(basePath, file))
+                .map(fileName -> String.join("/", campsite.getId().toString(), ImageConstant.GENERAL, fileName))
+                .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
+                .map(imageMapper::toCampsiteImage)
+                .forEach(campsite::addCampsiteImage);
+        }
 
         return campsiteRepository.save(campsite).getCampsiteImageList().stream()
             .map(imageMapper::toUploadListResponse).toList();
@@ -190,10 +195,12 @@ public class ImageService {
             int startIndex = url.indexOf(keyword) + keyword.length() + 1;
             String result = url.substring(startIndex);
             Path deletePath = ImageConstant.CAMPSITE_DIR.resolve(result);
-            try {
-                Files.delete(deletePath);
-            } catch (IOException e) {
-                throw new InvalidException(CommonExceptionCode.INVALID_PARAM);
+            if (Files.exists(deletePath)) {
+                try {
+                    Files.delete(deletePath);
+                } catch (IOException e) {
+                    log.warn("Failed to delete file: {}", deletePath, e);
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import com.d106.campu.notification.event.PaymentEvent;
 import com.d106.campu.reservation.domain.jpa.Reservation;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -129,7 +130,7 @@ public interface NotificationMapper {
                 .date(String.format("%s ~ %s ꞏ %s박", emptyRoomEventData.getStartDate(), emptyRoomEventData.getEndDate(),
                     ChronoUnit.DAYS.between(emptyRoomEventData.getStartDate(), emptyRoomEventData.getEndDate())))
                 .no(String.format("기준 %d인 (최대 %d인)", emptyRoomEventData.getBaseNo(), emptyRoomEventData.getMaxNo()))
-                .url(String.join("/", baseUrl, "camps", emptyRoomEventData.getCampsiteId()))
+                .url(StringUtils.join("/", "camps", "/", emptyRoomEventData.getCampsiteId()))
                 .build())
             .toList();
     }
@@ -147,7 +148,7 @@ public interface NotificationMapper {
                         paymentEventDataList.get(0).getEndDate())))
                 .no(String.format("%d인 - %d원", paymentEventDataList.get(0).getHeadCnt(),
                     paymentEventDataList.get(0).getPrice()))
-                .url(String.join("/", baseUrl, "my"))
+                .url(StringUtils.join("/", "my"))
                 .build(),
             Notification.builder()
                 .message(paymentEventDataList.get(1).getMessage())
@@ -159,7 +160,7 @@ public interface NotificationMapper {
                         paymentEventDataList.get(1).getEndDate())))
                 .no(String.format("%d인 - %d원", paymentEventDataList.get(1).getHeadCnt(),
                     paymentEventDataList.get(1).getPrice()))
-                .url(String.join("/", baseUrl, "owner"))
+                .url(StringUtils.join("/", "owner"))
                 .build());
     }
 
@@ -176,7 +177,7 @@ public interface NotificationMapper {
                         cancelEventDataList.get(0).getEndDate())))
                 .no(String.format("%d인 - %d원", cancelEventDataList.get(0).getHeadCnt(),
                     cancelEventDataList.get(0).getPrice()))
-                .url(String.join("/", baseUrl, "my"))
+                .url(StringUtils.join("/", "my"))
                 .build(),
             Notification.builder()
                 .message(cancelEventDataList.get(1).getMessage())
@@ -188,7 +189,7 @@ public interface NotificationMapper {
                         cancelEventDataList.get(1).getEndDate())))
                 .no(String.format("%d인 - %d원", cancelEventDataList.get(1).getHeadCnt(),
                     cancelEventDataList.get(1).getPrice()))
-                .url(String.join("/", baseUrl, "owner"))
+                .url(StringUtils.join("/", "owner"))
                 .build());
     }
 

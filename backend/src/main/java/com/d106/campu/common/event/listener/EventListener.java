@@ -55,12 +55,12 @@ public class EventListener {
     /**
      * 커밋이 없는 테스트 환경에서 사용한다.
      */
-    @Async
-    @org.springframework.context.event.EventListener(classes = {EmptyRoomEvent.class})
-    public void testSaveAndSendNotification(EmptyRoomEvent emptyRoomEvent) {
-        List<SaveResponse> saveResponseDtoList = notificationService.saveEmptyRoomNotification(emptyRoomEvent.getData());
-        notificationService.sendSseNotification(saveResponseDtoList);
-        smsUtil.sendSmsNotification(saveResponseDtoList);
-    }
+//    @Async
+//    @org.springframework.context.event.EventListener(classes = {EmptyRoomEvent.class})
+//    public void testSaveAndSendNotification(EmptyRoomEvent emptyRoomEvent) {
+//        List<SaveResponse> saveResponseDtoList = notificationService.saveEmptyRoomNotification(emptyRoomEvent.getData());
+//        notificationService.sendSseNotification(saveResponseDtoList);
+//        smsUtil.sendSmsNotification(saveResponseDtoList);
+//    }
 
 }
