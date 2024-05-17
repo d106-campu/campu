@@ -8,6 +8,7 @@ import warning from "@/assets/lotties/warning.json";
 import error from "@/assets/lotties/error.json";
 import bell from "@/assets/lotties/bell.json";
 import write from "@/assets/lotties/write.json";
+import heart from "@/assets/lotties/heart.json";
 
 export const noImageOptions = {
   loop: true,
@@ -94,6 +95,15 @@ export const writeOptions = {
   loop: true,
   autoplay: true,
   animationData: write,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+export const heartOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: heart,
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },

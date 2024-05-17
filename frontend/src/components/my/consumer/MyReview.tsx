@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FaArrowRightToBracket } from "react-icons/fa6";
 import Lottie from "react-lottie";
 import {
   noImageOptions,
@@ -12,6 +11,8 @@ import { IMyReivewMyReservationRes } from "@/types/my";
 import { useMy } from "@/hooks/my/useMy";
 import Toast from "@/components/@common/Toast/Toast";
 import { useNavigate } from "react-router-dom";
+import { RiArrowRightSLine, RiDeleteBin5Fill } from "react-icons/ri";
+import { formatSimpleReviewTime } from "@/utils/formatDateTime";
 
 const MyReview = (): JSX.Element => {
   const navigate = useNavigate();
@@ -142,44 +143,44 @@ const MyReview = (): JSX.Element => {
       {reviews.length > 0 ? (
         <>
           {/* 리뷰 리스트 -> 첫 렌더링 3개 -> 이후 더보기 */}
-          <div className="max-h-[500px] overflow-y-auto relative transition-transform duration-500 transform hover:scale-105">
+          <div className="max-h-[500px] w-full overflow-y-auto relative">
             {reviews.slice(0, viewCount).map((review, index) => (
-              <div className=" mx-auto shadow-lg rounded-xl p-1 pb-3 mb-5 outline-none">
+              <div className="w-[90%] mx-auto shadow-lg rounded-xl p-1 pb-3 mb-5 outline-none text-BLACK">
                 <div key={index} className="flex justify-around">
                   {/* 좌측 리뷰 내용 */}
                   <div className="w-[50%] flex flex-col justify-center items-start pl-3">
-                    <div className="flex">
-                      <h1 className="text-lg">
-                        {review.reservation.campsiteName}
-                      </h1>
+                    <div className="w-full flex justify-between">
                       <button
-                        className="pl-2"
+                        className="flex items-center gap-1 pl-2 text-lg font-bold"
                         onClick={() =>
                           navigate(
                             `/camps/${review.reservation.campsiteId}/reviews`
                           )
                         }
                       >
-                        <FaArrowRightToBracket />
+                        {review.reservation.campsiteName}
+                        <RiArrowRightSLine />
                       </button>
-                    </div>
-                    <div className="flex pb-2">
-                      <Rating
-                        rating={review.review.score}
-                        size={25}
-                        gap="gap-[0.7px]"
-                      />
-                      <p className="pl-2 text-GRAY my-auto">
-                        {new Date(
-                          review.review.createTime
-                        ).toLocaleDateString()}
+                      {/* 작성일 */}
+                      <p className="pl-2 text-sm text-GRAY my-auto">
+                        {formatSimpleReviewTime(review.review.createTime)} 작성
                       </p>
                     </div>
-                    <p className="text-sm line-clamp-3">
-                      {review.review.content}
-                    </p>
-                    <div className="flex justify-center p-1 mt-2 w-[50%] rounded-2xl bg-gray-100">
-                      <p className="text-gray-700">
+                    {/* 별점 */}
+                    <div className="flex gap-2 text-sm items-end p-2">
+                      <Rating
+                        rating={review.review.score}
+                        size={20}
+                        gap="gap-[0.7px]"
+                      />
+                      <p className="text-[#A0A0A0]">{review.review.score}점</p>
+                    </div>
+                    <div className="flex flex-col justify-between">
+                      {/* 내용 */}
+                      <p className="text-sm line-clamp-3 p-2">
+                        {review.review.content}
+                      </p>
+                      <p className="text-MAIN_GREEN flex justify-center px-10 py-1 mt-2 rounded-2xl bg-SUB_GREEN_01">
                         {review.reservation.roomName}
                       </p>
                     </div>
@@ -191,9 +192,12 @@ const MyReview = (): JSX.Element => {
                         onClick={() =>
                           handleDeleteReview(review.review.reviewId)
                         }
-                        className="flex justify-end mr-1 mb-1 hover:bg-gray-200 border border-gray-200 rounded-full px-2 transition-transform duration-500 transform hover:scale-110"
+                        className="flex justify-end mr-1 mb-1 rounded-full px-2 transition-transform duration-500 transform hover:scale-110"
                       >
-                        <p className="text-xs p-1 ">삭 제</p>
+                        <RiDeleteBin5Fill
+                          size={25}
+                          className="text-[#A0A0A0] hover:text-MAIN_PINK cursor-pointer pb-1"
+                        />
                       </button>
                       {review.review.imageUrl ? (
                         <img
@@ -202,11 +206,11 @@ const MyReview = (): JSX.Element => {
                           className="w-[300px] h-[150px] rounded-lg object-cover object-center shadow-md"
                         />
                       ) : (
-                        <div className="flex flex-col justify-center h-auto border rounded-2xl">
+                        <div className="w-[300px] h-[150px] flex flex-col justify-center border rounded-lg">
                           <Lottie
                             options={noImageOptions}
-                            height={150}
-                            width={280}
+                            height={100}
+                            width={180}
                             speed={0.5}
                           />
                           <p className="text-UNIMPORTANT_TEXT_02 text-center text-sm">

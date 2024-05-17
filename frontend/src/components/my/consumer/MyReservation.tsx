@@ -4,6 +4,12 @@ import ReservationAccordion from "@/components/my/consumer/ReservationAccordion"
 import { IMyReservationAllRes } from "@/types/my";
 import { useMy } from "@/hooks/my/useMy";
 import MapModal from "@/components/@common/Map/MapModal";
+import Lottie from "react-lottie";
+import {
+  caravanOptions,
+  loadingOptions,
+  warningOptions,
+} from "@/assets/lotties/lottieOptions";
 
 const MyReservation = (): JSX.Element => {
   const { useMyReservations } = useMy();
@@ -102,41 +108,6 @@ const MyReservation = (): JSX.Element => {
     setMapModalOpen(false);
   };
 
-  // 로딩 중일 때 처리
-  if (isLoading) {
-    return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
-  }
-
-  // 데이터 에러 발생 시 처리
-  if (isError) {
-    return <div>내 예약내역을 가져오지 못했습니다. 😭</div>;
-  }
-
-  // 내 예약내역이 하나도 없을 때 처리
-  if (data?.reservationList?.content.length === 0) {
-    // console.error("내 예약내역 리스트가 비어있음 !");
-    return (
-      <>
-        <div>
-          <div className="flex justify-between">
-            <h1 className="text-lg font-bold pb-5">예약 내역</h1>
-            <div className="flex">
-              <button className="p-2 hover:text-MAIN_GREEN">예약 현황</button>
-              <button className="p-2 hover:text-MAIN_GREEN">이용 완료</button>
-            </div>
-          </div>
-          <div className="text-center">
-            <h1 className="">
-              아직 예약한 <span className="text-MAIN_GREEN">캠핑장</span>이
-              없어요 😃
-            </h1>
-            <h1 className="text-sm text-GRAY pt-2">캠핑장을 예약해보세요!</h1>
-          </div>
-        </div>
-      </>
-    );
-  }
-
   return (
     <div className="min-h-[calc(100vh-10rem)]">
       {/* 예약 내역 헤더 */}
@@ -199,24 +170,111 @@ const MyReservation = (): JSX.Element => {
         </div>
       )}
 
+      {isLoading && (
+        <>
+          {/* 로딩중 처리 */}
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div>
+              <Lottie options={loadingOptions} height={200} width={300} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-base font-bold text-[#A0A0A0]">로딩 중...</h3>
+              <p>잠시만 기다려주세요 😀</p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {isError && (
+        <>
+          {/* 데이터 에러 발생 시 처리 */}
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div>
+              <Lottie options={warningOptions} height={180} width={250} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-lg text-BLACK font-bold">
+                다시 시도해주세요
+              </h3>
+              <p className="pt-2">예약내역을 가져오지 못했습니다. 😭</p>
+              <p className="">불편을 드려 죄송합니다.</p>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* 아코디언 */}
-      <div className="max-h-[500px] overflow-y-auto">
-        <div className="w-[90%] mx-auto">
-          {data?.reservationList?.content
-            .slice(0, viewCount)
-            .map((reservation, index) => (
-              <ReservationAccordion
-                key={index}
-                index={index}
-                reservation={reservation}
-                expanded={expanded[index]}
-                toggleDetails={() => toggleDetails(index)}
-                openMapModal={openMapModal}
-                refetchReservations={refetch}
+      {data &&
+      data.reservationList &&
+      data.reservationList.content &&
+      data.reservationList.content.length > 0 ? (
+        <>
+          <div className="max-h-[500px] overflow-y-auto">
+            <div className="w-[90%] mx-auto">
+              {data?.reservationList?.content
+                .slice(0, viewCount)
+                .map((reservation, index) => (
+                  <ReservationAccordion
+                    key={index}
+                    index={index}
+                    reservation={reservation}
+                    expanded={expanded[index]}
+                    toggleDetails={() => toggleDetails(index)}
+                    openMapModal={openMapModal}
+                    refetchReservations={refetch}
+                  />
+                ))}
+            </div>
+          </div>
+          {/* 내역 더보기 토글 버튼 */}
+          <div className="flex justify-center my-4">
+            {viewCount > initialViewCount && (
+              <Button
+                text="줄이기"
+                textColor="text-black"
+                backgroundColor="none"
+                hoverTextColor="text-MAIN_GREEN"
+                hoverBackgroundColor="none"
+                onClick={showLessReservations}
               />
-            ))}
-        </div>
-      </div>
+            )}
+            {viewCount < (data?.reservationList?.content.length || 0) && (
+              <Button
+                text="더보기"
+                textColor="text-black"
+                backgroundColor="none"
+                hoverTextColor="text-MAIN_GREEN"
+                hoverBackgroundColor="none"
+                onClick={showMoreReservations}
+              />
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* 빈자리 알림이 없을 때 처리 */}
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div className="m-5 overflow-hidden rounded-xl">
+              <Lottie
+                options={caravanOptions}
+                height={250}
+                width={700}
+                speed={0.3}
+              />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-base text-BLACK">
+                아직 <span className="text-MAIN_GREEN">캠핑 내역</span>이 없어요
+                😥
+              </h3>
+              <p className="pt-2">
+                캠푸에서 마음에 드는 캠핑장을 예약해보세요 !
+              </p>
+              <p>캠핑 스타일과 테마별 인기 캠핑장을 추천해드려요</p>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* 지도 보기 렌더링 */}
       {mapModalOpen && (
@@ -230,30 +288,6 @@ const MyReservation = (): JSX.Element => {
           toggleModal={closeMapModal}
         />
       )}
-
-      {/* 내역 더보기 토글 버튼 */}
-      <div className="flex justify-center my-4">
-        {viewCount > initialViewCount && (
-          <Button
-            text="줄이기"
-            textColor="text-black"
-            backgroundColor="none"
-            hoverTextColor="text-MAIN_GREEN"
-            hoverBackgroundColor="none"
-            onClick={showLessReservations}
-          />
-        )}
-        {viewCount < (data?.reservationList?.content.length || 0) && (
-          <Button
-            text="더보기"
-            textColor="text-black"
-            backgroundColor="none"
-            hoverTextColor="text-MAIN_GREEN"
-            hoverBackgroundColor="none"
-            onClick={showMoreReservations}
-          />
-        )}
-      </div>
     </div>
   );
 };
