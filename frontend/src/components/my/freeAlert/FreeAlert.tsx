@@ -92,7 +92,7 @@ const FreeAlert = (): JSX.Element => {
           );
           setShowConfirmModal(false); // 모달 닫기
           setSelectedRoomId(null);
-          Toast.success("성공적으로 알림을 취소했습니다.");
+          Toast.info("빈자리 알림이 정상적으로 취소되었습니다 😊");
         },
         onError: (error) => {
           console.error("빈자리 알림 삭제 실패:", error);

@@ -24,7 +24,7 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
     isLoading,
   } = useGetRoomListInfinite({
     campsiteId: campsiteId,
-    size: 1,
+    size: 5,
     headCnt: headCount,
     startDate: startDate,
     endDate: endDate,

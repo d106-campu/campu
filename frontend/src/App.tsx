@@ -112,7 +112,7 @@ function App() {
         if (data.data.notification === "success") {
           console.log("SSE 최초 연결 알림");
         } else {
-          Toast.info("새로운 알림이 있습니다!");
+          Toast.info("🔔 새로운 알림이 있습니다!");
           dispatch(addNewNotifyCnt());
         }
       });

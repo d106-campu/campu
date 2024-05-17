@@ -6,6 +6,7 @@ import tent from "@/assets/lotties/tent.json";
 import caravan from "@/assets/lotties/caravan.json";
 import warning from "@/assets/lotties/warning.json";
 import error from "@/assets/lotties/error.json";
+import bell from "@/assets/lotties/bell.json";
 
 export const noImageOptions = {
   loop: true,
@@ -74,6 +75,15 @@ export const errorOptions = {
   loop: true,
   autoplay: true,
   animationData: error,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+export const bellOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: bell,
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },
