@@ -46,7 +46,7 @@ const ReservationAccordion = ({
   const [cancelPaymentModal, setCancelPaymentModal] = useState<boolean>(false); // 결제 취소 모달 상태관리
   const toggleCancelPaymentModal = () => {
     setCancelPaymentModal(!cancelPaymentModal);
-  }
+  };
 
   // Ref와 상태를 사용한 아코디언 동작 구현
   const [isOpen, setIsOpen] = useState<boolean>(expanded);
@@ -163,7 +163,7 @@ const ReservationAccordion = ({
                 <div className="w-[2.5%] border-r-[1px] mr-6" />
 
                 {/* 우측 예약 세부 사항 */}
-                <div className="w-[50%] p-4 h-auto text-gray-400">
+                <div className="w-[50%] p-4 pt-6 text-gray-400">
                   <h3>날짜</h3>
                   <p className="pb-[15px] font-bold text-BLACK">
                     {`${formatDate(
@@ -191,7 +191,7 @@ const ReservationAccordion = ({
                         원
                       </p>
                     </div>
-                    {/* @TODO: 백한테 요청하기 */}
+
                     <div>
                       <h3>캠핑장 유형</h3>
                       <p className="pb-[15px] font-bold text-BLACK">
