@@ -121,7 +121,7 @@ const MyFavoriteCampItem = ({
             <h3 className="text-xl font-bold pt-5">좋아요 취소</h3>
             <div className="text-sm pt-2">
               <p>좋아요 취소 시 찜한 캠핑장에서 삭제됩니다.</p>
-              <p>정말 쫗아요를 취소하시겠습니까?</p>
+              <p>정말 좋아요를 취소하시겠습니까?</p>
             </div>
           </div>
           <div className="flex justify-evenly pt-5">
