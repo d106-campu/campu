@@ -43,7 +43,7 @@ export const ChangePhoneModal = ({
           if (!/^\d{11}$/.test(value)) {
             message = "휴대폰 번호는 11자리 숫자여야 합니다.";
           } else if (isPhoneAvailable) {
-            console.log("중복 통과 못했음 ㅋ");
+            // console.log("중복 통과 못했음 ㅋ");
             message = "이미 등록된 휴대전화 번호입니다.";
           } else {
             message = "인증번호 전송 버튼을 눌러주세요 !";

@@ -35,7 +35,7 @@ const OwnerManagePhoto = () => {
       setMainPhoto(detailCampsiteInfo?.data.campsite.thumbnailImageUrl || "");
       setViewPhoto(detailCampsiteInfo?.data.campsite.mapImageUrl || "");
       setOtherPhoto(detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []);
-      console.log("일반 이미지 조회되는 형태 확인 :", detailCampsiteInfo?.data.campsite.campsiteImageUrlList )
+      // console.log("일반 이미지 조회되는 형태 확인 :", detailCampsiteInfo?.data.campsite.campsiteImageUrlList )
     }
   }, [detailCampsiteInfo]);
 

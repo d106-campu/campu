@@ -45,7 +45,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
   };
 
   const saveImgFile = () => {
-    console.log(image?.type);
+    // console.log(image?.type);
     if (imgRef.current && imgRef.current.files) {
       const file: File | undefined = imgRef.current.files[0];
       setImage(file);

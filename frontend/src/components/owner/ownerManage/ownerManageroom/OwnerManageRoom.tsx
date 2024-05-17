@@ -1,6 +1,6 @@
 import { GoPlus } from "react-icons/go";
 import RoomItem from "@/components/owner/ownerManage/ownerManageroom/RoomItem";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Modal from "@/components/@common/Modal/Modal";
 import { CiCamera } from "react-icons/ci";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
@@ -71,13 +71,13 @@ const OwnerManageRoom = () => {
         toilet,
       };
 
-      console.log("보내는 induty :", createRequestDto.induty);
+      // console.log("보내는 induty :", createRequestDto.induty);
       // 캠핑장 방 등록 API 연결 뮤테이트
       postCampsiteRoomMutation.mutate(
         { file: image, createRequestDto },
         {
           onSuccess: () => {
-            console.log("방 등록 성공했음");
+            // console.log("방 등록 성공했음");
             refetchRoomList(); // 등록 성공 시 방 목록 다시 리패치
             toggleModal();
           },
@@ -114,10 +114,6 @@ const OwnerManageRoom = () => {
       campingType === selectedCampingType ? null : campingType
     );
   };
-
-  useEffect(() => {
-    console.log("선택한 유형 타입 확인 :", selectedCampingType);
-  }, [selectedCampingType]);
 
   const increaseStandard = () => {
     if (baseNo < maxNo) {

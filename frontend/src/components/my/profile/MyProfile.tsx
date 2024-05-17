@@ -63,7 +63,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
   // 프로필 조회 API 요청 진행
   useEffect(() => {
     if (userProfileQuery.isSuccess && userProfileQuery.data) {
-      console.log("프로필 조회 성공");
+      // console.log("프로필 조회 성공");
       const {
         account = "",
         nickname = "",
@@ -77,16 +77,9 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
 
   // 프로필이미지 추출
   useEffect(() => {
-    console.log("프로필 사진 :", profileData?.profileImageUrl);
+    // console.log("프로필 사진 :", profileData?.profileImageUrl);
     if (profileData?.profileImageUrl) {
-      const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
-      console.log(
-        "프로필페이지 환경변수 주소 :",
-        import.meta.env.VITE_IMAGE_BASE_URL_PROD
-      );
       const fullImageUrl = `${profileData.profileImageUrl}`;
-      // const fullImageUrl = profileData.profileImageUrl;
-      console.log(imageBaseURL);
       setProfileImageUrl(fullImageUrl);
     }
   }, [profileData]);

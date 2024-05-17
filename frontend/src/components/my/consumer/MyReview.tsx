@@ -49,7 +49,7 @@ const MyReview = (): JSX.Element => {
   const handleFilterChange = (
     filter: "TOTAL" | "YEAR" | "MONTH6" | "MONTH"
   ) => {
-    console.log("선택한 필터 :", filter);
+    // console.log("선택한 필터 :", filter);
     setSelectedFilter(filter);
     refetch(); // 필터 변경할때마다 다시 리스트 불러오기
   };

@@ -37,9 +37,9 @@ const usePayment = (onCancelSuccess?: () => void) => {
       if (imp) {
         imp.init("imp60623737"); // 고객사 식별코드로 SDK 초기화
         setIMP(imp);
-        console.log("IMP 초기화 성공");
+        // console.log("IMP 초기화 성공");
       } else {
-        console.error("IMP 객체를 초기화할 수 없습니다.");
+        // console.error("IMP 객체를 초기화할 수 없습니다.");
         return;
       }
     }
@@ -56,7 +56,7 @@ const usePayment = (onCancelSuccess?: () => void) => {
       mutationFn: preparePayment,
       onSuccess: (data) => {
         const preparePayment = data.data.preparePayment;
-        console.log(`결제 정보:  ${preparePayment}`);
+        // console.log(`결제 정보:  ${preparePayment}`);
 
         // 예약 아이디 업데이트
         dispatch(
@@ -65,7 +65,7 @@ const usePayment = (onCancelSuccess?: () => void) => {
           })
         );
         if (!preparePayment) {
-          console.error("결제 준비 데이터가 없습니다.");
+          // console.error("결제 준비 데이터가 없습니다.");
           return;
         }
         setPreparePaymentData(preparePayment); // 결제 준비 데이터 상태 업데이트
@@ -88,11 +88,11 @@ const usePayment = (onCancelSuccess?: () => void) => {
 
   const requestPay = (preparePayment: IPaymentPrepare) => {
     if (!IMP) {
-      console.error("IMP 객체를 초기화할 수 없습니다.");
+      // console.error("IMP 객체를 초기화할 수 없습니다.");
       return;
     }
 
-    console.log(`결제창 열기 - 결제 정보: ${preparePayment}`);
+    // console.log(`결제창 열기 - 결제 정보: ${preparePayment}`);
 
     // 결제 정보
     IMP.request_pay(
@@ -110,13 +110,13 @@ const usePayment = (onCancelSuccess?: () => void) => {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async (rsp: any) => {
-        console.log(`결제 응답 시작: 결제 응답 - ${rsp} `); // 콜백 함수 시작 로그 - 결제 응답 확인
+        // console.log(`결제 응답 시작: 결제 응답 - ${rsp} `); // 콜백 함수 시작 로그 - 결제 응답 확인
         if (rsp.error_code != null) {
           console.log(`결제 실패: ${rsp.error_msg}`);
           return Toast.error("결제에 실패했습니다. 다시 시도해주세요");
         }
 
-        console.log(`중간 과정 : ${rsp.imp_uid}`);
+        // console.log(`중간 과정 : ${rsp.imp_uid}`);
 
         // API 서버에 결제 정보 확인 요청 (completePaymentMutation 객체의 mutate 메서드를 사용)
         completePaymentMutation.mutate({
@@ -139,7 +139,7 @@ const usePayment = (onCancelSuccess?: () => void) => {
       mutationFn: completePayment,
       onSuccess: (data) => {
         const completeResponse = data.data.completePayment;
-        console.log(`결제 완료 정보: ${completeResponse}`);
+        // console.log(`결제 완료 정보: ${completeResponse}`);
 
         // 결제 정보가 같은지 확인
         if (completeResponse.amount === completeResponse.price) {
@@ -184,9 +184,9 @@ const usePayment = (onCancelSuccess?: () => void) => {
     return useMutation({
       mutationKey: ["cancel Payment"],
       mutationFn: cancelPayment,
-      onSuccess: (data) => {
-        const cancelPayment = data.data.cancelPayment;
-        console.log("결제 취소 완료: ", cancelPayment);
+      onSuccess: () => {
+        // const cancelPayment = data.data.cancelPayment;
+        // console.log("결제 취소 완료: ", cancelPayment);
         Toast.success("결제가 성공적으로 취소되었습니다.");
         dispatch(updateStatus("proceeding"));
         if (onCancelSuccess) {

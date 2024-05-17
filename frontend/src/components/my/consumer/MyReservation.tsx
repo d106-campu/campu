@@ -54,7 +54,7 @@ const MyReservation = (): JSX.Element => {
   const handleDateTypeChange = (
     filter: "MONTH" | "MONTH6" | "YEAR" | "TOTAL"
   ) => {
-    console.log("보내는 DateType 확인 :", filter);
+    // console.log("보내는 DateType 확인 :", filter);
     setSelectedFilter(filter);
     refetch();
   };
