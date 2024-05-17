@@ -31,7 +31,7 @@ const RatingForm = ({ score, setScore }: IRatingFormProps) => {
             step="0.5"
             value={score}
             onChange={handleRatingChange}
-            className="form-input text-center border-none focus:outline-none px-1 w-16"
+            className="form-input text-center border-none focus:outline-none px-1 w-16 focus:ring-0 focus:border-none"
           />
         </div>
         <Rating rating={score} size={25} gap={"gap-1"} />

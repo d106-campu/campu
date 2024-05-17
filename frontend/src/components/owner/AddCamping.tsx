@@ -75,7 +75,7 @@ const AddCamping = () => {
             <p className="text-sm">반갑습니다 사장님 😊</p>
             <p className="py-4">캠핑장 사업자번호 입력하기</p>
             <input
-              className="border rounded-md p-3 text-xs outline-none"
+              className="border rounded-md p-3 text-xs outline-none focus:ring-0 focus:border-gray-500 focus:outline-none"
               placeholder="사업자번호 000-00-00000"
               value={bizrno}
               onChange={(e) => setBizrno(e.target.value)}
