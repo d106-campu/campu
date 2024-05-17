@@ -15,6 +15,7 @@ import com.d106.campu.mypage.dto.MyPageDto.ReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReviewReservationResponse;
 import com.d106.campu.mypage.dto.MyPageDto.ReviewResponse;
 import com.d106.campu.mypage.dto.MyPageDto.RoomResponse;
+import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.review.domain.jpa.QReview;
 import com.d106.campu.review.domain.jpa.QReviewImage;
@@ -56,7 +57,8 @@ public class MyPageRepository {
 
         Expression<?>[] projections = new Expression[]{
             campsite.id, campsite.facltNm, campsite.addr1, campsite.thumbnailImageUrl,
-            room.id, room.name, room.supplyList,
+            campsite.checkin, campsite.checkout, campsite.tel,
+            room.id, room.name, room.supplyList, room.induty.indutyStr,
             reservation.id, reservation.headCnt, reservation.price, reservation.startDate, reservation.endDate,
             reservation.reservationPayment.impUid,
             campsiteLocation.mapX, campsiteLocation.mapY,
@@ -65,6 +67,7 @@ public class MyPageRepository {
 
         BooleanBuilder predicate = new BooleanBuilder();
         predicate.and(user.account.eq(account));
+        predicate.and(reservation.status.eq(PaymentStatus.SUCCESS));
 
         if (useType.equals(UseType.AFTER)) {
             if (dateType.equals(DateType.MONTH)) {
@@ -113,9 +116,13 @@ public class MyPageRepository {
                     .campsiteName(tuple.get(campsite.facltNm))
                     .address(tuple.get(campsite.addr1))
                     .thumbnailImageUrl(tuple.get(campsite.thumbnailImageUrl))
+                    .checkin(tuple.get(campsite.checkin))
+                    .checkout(tuple.get(campsite.checkout))
+                    .tel(tuple.get(campsite.tel))
                     .build())
                 .room(RoomResponse.builder()
                     .roomId(tuple.get(room.id))
+                    .induty(tuple.get(room.induty.indutyStr))
                     .roomName(tuple.get(room.name))
                     .supplyList(tuple.get(room.supplyList))
                     .build())

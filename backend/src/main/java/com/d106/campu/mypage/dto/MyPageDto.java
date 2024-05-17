@@ -28,6 +28,9 @@ public class MyPageDto {
         private String campsiteName;
         private String address;
         private String thumbnailImageUrl;
+        private String tel;
+        private String checkin;
+        private String checkout;
     }
 
     @Builder
@@ -35,6 +38,7 @@ public class MyPageDto {
     public static class RoomResponse {
 
         private Long roomId;
+        private String induty;
         private String roomName;
         private String supplyList;
     }
