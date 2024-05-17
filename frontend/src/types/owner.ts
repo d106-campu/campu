@@ -10,6 +10,10 @@ export interface IBizrnoReq {
   bizrno: string;
 }
 
+export interface IBizrnoRes {
+  result: string
+}
+
 // 예약내역 Request
 export interface IOwnerReservationReq {
   campsiteId: number;
@@ -64,13 +68,14 @@ export interface ICampsiteMapRes {
 }
 
 // 캠핑장 일반사진 수정 Request
-export interface ICampsiteAddReq {
+export interface IGeneralImageUpdateReq {
   campsiteId: number;
-  generalImageList: string[];
+  deleteImageList: { imageIdList: number[] };
+  insertImageList: File[];
 }
 
-// 캠핑장 일반사진 Response
-export interface ICampsiteAddRes {
+// 캠핑장 일반사진 수정 Response
+export interface IGeneralImageUpdateRes {
   generalImageList: string[];
 }
 

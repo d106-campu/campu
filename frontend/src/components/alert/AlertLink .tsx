@@ -4,6 +4,7 @@ import { useNotify } from "@/hooks/notify/useNotify";
 import { useDispatch, useSelector } from "react-redux";
 import { resetNewNotifyCnt } from "@/features/notify/notifyCnt";
 import { RootState } from "@/app/store";
+import Toast from "../@common/Toast/Toast";
 
 const AlertLink = ({ page }: { page?: string }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
@@ -23,10 +24,12 @@ const AlertLink = ({ page }: { page?: string }) => {
   const toggleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     dispatch(resetNewNotifyCnt());
-    setOpenAlert(!openAlert);
+    if (notifyList!.data.notificationList.content.length > 0) {
+      setOpenAlert(!openAlert);
+    } else {
+      Toast.info("알림함이 비었습니다.");
+    }
   };
-
-  // console.log(newNotifyCnt);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

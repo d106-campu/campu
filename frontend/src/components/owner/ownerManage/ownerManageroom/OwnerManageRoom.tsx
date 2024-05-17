@@ -9,10 +9,12 @@ import { RootState } from "@/app/store";
 import { useOwner } from "@/hooks/owner/useOwner";
 import { IRoomCreateReq } from "@/types/owner";
 
-
 const OwnerManageRoom = () => {
-  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } = useOwner();
-  const campsiteId = useSelector((state: RootState) => state.ownerSide.campsiteId);
+  const { useCampsiteRoomList, usePostCampsiteRoom, useDeleteCampsiteRoom } =
+    useOwner();
+  const campsiteId = useSelector(
+    (state: RootState) => state.ownerSide.campsiteId
+  );
   const {
     data: roomListResponse,
     isLoading: isRoomListLoading,
@@ -27,10 +29,10 @@ const OwnerManageRoom = () => {
   // const [maxPeople, setMaxPeople] = useState<number>(4); // 최대 인원 계산
 
   const [roomName, setRoomName] = useState<string>(""); // 추가 방 이름
-  const [price, setPrice] = useState<string>(''); // 가격
+  const [price, setPrice] = useState<string>(""); // 가격
   const [baseNo, setBaseNo] = useState<number>(2); // 기준 인원
   const [maxNo, setMaxNo] = useState<number>(4); // 최대 인원
-  const [extraPrice, setExtraPrice] = useState<string>(''); // 추가 인원 가격
+  const [extraPrice, setExtraPrice] = useState<string>(""); // 추가 인원 가격
   const [toilet, setIsToilet] = useState<boolean>(true); // 화장실 유무
 
   const postCampsiteRoomMutation = usePostCampsiteRoom();
@@ -69,18 +71,21 @@ const OwnerManageRoom = () => {
         toilet,
       };
 
-      console.log("보내는 induty :", createRequestDto.induty)
+      console.log("보내는 induty :", createRequestDto.induty);
       // 캠핑장 방 등록 API 연결 뮤테이트
-      postCampsiteRoomMutation.mutate({ file: image, createRequestDto }, {
-        onSuccess: () => {
-          console.log("방 등록 성공했음");
-          refetchRoomList(); // 등록 성공 시 방 목록 다시 리패치
-          toggleModal();
-        },
-        onError: (error) => {
-          console.error("방 등록 실패했음", error);
+      postCampsiteRoomMutation.mutate(
+        { file: image, createRequestDto },
+        {
+          onSuccess: () => {
+            console.log("방 등록 성공했음");
+            refetchRoomList(); // 등록 성공 시 방 목록 다시 리패치
+            toggleModal();
+          },
+          onError: (error) => {
+            console.error("방 등록 실패했음", error);
+          },
         }
-      });
+      );
       toggleModal(); // 모달 닫기
     } else {
       console.error("이미지 파일을 선택하세요.");
@@ -89,7 +94,8 @@ const OwnerManageRoom = () => {
 
   // 방 삭제 테스트
   const handleDelete = (roomId: number) => {
-    deleteCampsiteRoomMutation.mutate({roomId},
+    deleteCampsiteRoomMutation.mutate(
+      { roomId },
       {
         onSuccess: () => {
           refetchRoomList(); // 삭제 성공 시 목록 다시 리패치
@@ -99,7 +105,9 @@ const OwnerManageRoom = () => {
   };
 
   const campingTypes = ["캠핑", "글램핑", "오토캠핑", "카라반"];
-  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(null);
+  const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
+    null
+  );
 
   const toggleCampingType = (campingType: string) => {
     setSelectedCampingType(
@@ -148,7 +156,12 @@ const OwnerManageRoom = () => {
         <div>
           {/* 각 방에 대한 RoomItem 렌더링 */}
           {roomList.map((room) => (
-            <RoomItem key={room.roomId} room={room} onDelete={handleDelete} refetch={refetchRoomList}/>
+            <RoomItem
+              key={room.roomId}
+              room={room}
+              onDelete={handleDelete}
+              refetch={refetchRoomList}
+            />
           ))}
         </div>
       </div>
@@ -196,11 +209,13 @@ const OwnerManageRoom = () => {
                 <div className="flex items-center justify-between">
                   <p className="p-3 text-gray-500">방 유형</p>
                   <div className="flex space-x-2 p-2">
-                  {campingTypes.map((type) => (
+                    {campingTypes.map((type) => (
                       <div
                         key={type}
                         className={`${
-                          selectedCampingType === type ? "border border-MAIN_GREEN text-MAIN_GREEN font-semibold cursor-pointer" : "border border-gray-200 text-gray-500 cursor-pointer"
+                          selectedCampingType === type
+                            ? "border border-MAIN_GREEN text-MAIN_GREEN font-semibold cursor-pointer"
+                            : "border border-gray-200 text-gray-500 cursor-pointer"
                         } px-4 py-1 rounded-md`}
                         onClick={() => toggleCampingType(type)}
                       >
@@ -213,7 +228,7 @@ const OwnerManageRoom = () => {
                 <div className="flex items-center">
                   <p className="p-3 whitespace-nowrap text-gray-500">방 이름</p>
                   <input
-                    className="p-2 border-b outline-none w-full"
+                    className="p-2 border-b border-gray-300 outline-none w-full focus:ring-0 focus:border-gray-300 rounded-md"
                     value={roomName}
                     onChange={(e) => setRoomName(e.target.value)}
                   />
@@ -223,7 +238,7 @@ const OwnerManageRoom = () => {
                   <p className="p-3 whitespace-nowrap text-gray-500">방 가격</p>
                   <input
                     type="number"
-                    className="p-2 border-b outline-none w-full"
+                    className="p-2  border-b border-gray-300 outline-none w-full focus:ring-0 focus:border-gray-300 rounded-md"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                   />
@@ -262,7 +277,7 @@ const OwnerManageRoom = () => {
                   </p>
                   <input
                     type="number"
-                    className="p-2 border-b outline-none w-full"
+                    className="p-2  border-b border-gray-300 outline-none w-full focus:ring-0 focus:border-gray-300 rounded-md"
                     value={extraPrice}
                     onChange={(e) => setExtraPrice(e.target.value)}
                   />
@@ -275,9 +290,7 @@ const OwnerManageRoom = () => {
                   <div className="flex items-center text-sm">
                     <div
                       className={`border border-MAIN_GREEN px-6 py-1 rounded-tl rounded-bl cursor-pointer ${
-                        toilet
-                          ? "bg-MAIN_GREEN text-white"
-                          : "text-MAIN_GREEN"
+                        toilet ? "bg-MAIN_GREEN text-white" : "text-MAIN_GREEN"
                       }`}
                       onClick={() => setIsToilet(true)}
                     >
@@ -285,9 +298,7 @@ const OwnerManageRoom = () => {
                     </div>
                     <div
                       className={`border border-MAIN_GREEN px-6 py-1 rounded-tr rounded-br cursor-pointer ${
-                        !toilet
-                          ? "bg-MAIN_GREEN text-white"
-                          : "text-MAIN_GREEN"
+                        !toilet ? "bg-MAIN_GREEN text-white" : "text-MAIN_GREEN"
                       }`}
                       onClick={() => setIsToilet(false)}
                     >

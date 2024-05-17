@@ -13,8 +13,6 @@ const MyCamping = () => {
     pageable: { page: 0, size: 4 },
   });
 
-  console.log(myCampsiteList?.campsiteList);
-
   const goToMy = () => {
     navigate("/my");
   };

@@ -4,7 +4,7 @@ import { MdOutlinePersonOutline } from "react-icons/md";
 import { LuSearch } from "react-icons/lu";
 import SearchRegion from "@/components/@common/Search/SearchRegion";
 import { RegionList } from "@/components/@common/Search/RegionList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,11 @@ import {
   setPeople,
   setStartDate,
 } from "@/features/search/searchBarSlice";
+import {
+  setEndDate as setCampingEndDate,
+  setStartDate as setCampingStartDate,
+} from "@/features/reservation/campingDateSlice";
+import { setHeadCount } from "@/features/reservation/HeadCountSlice";
 import Modal from "../@common/Modal/Modal";
 import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 import Calendar from "../@common/Calendar/Calendar";
@@ -52,7 +57,7 @@ const SearchBar = ({ state }: { state?: string }) => {
     keyword || null
   );
 
-  console.log(searchKeyword);
+  console.log(typeof searchKeyword);
   const resetCalendar = () => {
     setLocalStartDate(dateStringToDate(startDate));
     setLocalEndDate(dateStringToDate(endDate));
@@ -63,21 +68,36 @@ const SearchBar = ({ state }: { state?: string }) => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
       dispatch(setPeople(numberOfPeople - 1));
+      dispatch(setHeadCount(numberOfPeople - 1));
     }
   };
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
       dispatch(setPeople(numberOfPeople + 1));
+      dispatch(setHeadCount(numberOfPeople + 1));
     }
   };
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchKeyword(value);
-    console.log("저장하려는 값", value, "타입", typeof value);
     dispatch(setKeyword(value));
   };
+
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      goToSearchPage();
+    }
+  };
+
+  // form 태그를 사용하지않을 때 -> 키보드 "엔터" 감지
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   const goToSearchPage = () => {
     navigate("/search");
@@ -90,6 +110,8 @@ const SearchBar = ({ state }: { state?: string }) => {
     if (formattedStartDate !== null && formattedEndDate !== null) {
       dispatch(setStartDate(formattedStartDate));
       dispatch(setEndDate(formattedEndDate));
+      dispatch(setCampingStartDate(formattedStartDate));
+      dispatch(setCampingEndDate(formattedEndDate));
     }
   };
 
@@ -150,7 +172,7 @@ const SearchBar = ({ state }: { state?: string }) => {
         <div className="flex w-full items-center border bg-white rounded-md p-3 max-h-11">
           <LuSearch />
           <input
-            className="ml-2 outline-none placeholder-black text-xs"
+            className="ml-2 w-full placeholder-black text-xs border-none outline-none focus:ring-0"
             placeholder="키워드로 캠핑장을 검색해보세요"
             value={keyword || ""}
             onChange={handleKeywordChange}

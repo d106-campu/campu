@@ -18,8 +18,6 @@ const SearchSection = () => {
   const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
 
-  console.log("현재 검색하는 키워드", searchBarState.keyword);
-
   // 디폴트 값들 지정
   const weekendDates = dayOfWeekend();
   const startday = searchBarState.startDate || weekendDates.saturday;
@@ -42,13 +40,26 @@ const SearchSection = () => {
 
   useEffect(() => {
     if (campsiteOfSearch) {
-      dispatch(addCampingData(campsiteOfSearch.data.campsiteList.content));
+      const filteredCampsites =
+        campsiteOfSearch.data.campsiteList.content.filter(
+          (camping: ICampsiteSimpleRes) => {
+            // 검색 키워드가 있는 경우
+            if (searchBarState.keyword) {
+              return camping.facltNm.includes(searchBarState.keyword);
+            } else {
+              // 검색 키워드가 없는 경우 전체 리스트
+              return true;
+            }
+          }
+        );
+
+      dispatch(addCampingData(filteredCampsites));
       if (campsiteOfSearch.data.mapCoordinates) {
         dispatch(addMapXData(campsiteOfSearch.data.mapCoordinates.center.mapX));
         dispatch(addMapYData(campsiteOfSearch.data.mapCoordinates.center.mapY));
       }
     }
-  }, [campsiteOfSearch]);
+  }, [campsiteOfSearch, searchBarState.keyword]);
 
   useEffect(() => {
     containerRef.current?.scrollTo({

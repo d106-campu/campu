@@ -23,7 +23,7 @@ interface IRoomItem {
 const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
   const { useUpdateCampsiteRoom } = useOwner();
   const updateCampsiteRoomMutation = useUpdateCampsiteRoom();
-  
+
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [photo, setPhoto] = useState<string>(`${room.imageUrl}`);
@@ -39,7 +39,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
   const [selectedCampingType, setSelectedCampingType] = useState<string | null>(
     `${room.induty}`
   );
-  
+
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -98,7 +98,6 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
     setShowDeleteModal(false);
   };
 
-
   const toggleCampingType = (campingType: string) => {
     setSelectedCampingType(
       campingType === selectedCampingType ? null : campingType
@@ -143,11 +142,22 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
           </div>
           <div className="flex items-end justify-between">
             <div className="text-sm py-2">
-              <p>등록 유형 : <span className="text-MAIN_GREEN">{room.induty}</span></p>
               <p>
-                기준인원 : <span className="text-MAIN_GREEN">{room.baseNo}</span> 명 / 최대인원 : <span className="text-MAIN_GREEN">{room.maxNo}</span> 명
+                등록 유형 :{" "}
+                <span className="text-MAIN_GREEN">{room.induty}</span>
               </p>
-              <p>인원 추가 가격 : <span className="text-red-500">{room.extraPrice.toLocaleString()}원</span></p>
+              <p>
+                기준인원 :{" "}
+                <span className="text-MAIN_GREEN">{room.baseNo}</span> 명 /
+                최대인원 : <span className="text-MAIN_GREEN">{room.maxNo}</span>{" "}
+                명
+              </p>
+              <p>
+                인원 추가 가격 :{" "}
+                <span className="text-red-500">
+                  {room.extraPrice.toLocaleString()}원
+                </span>
+              </p>
               <p>개별 화장실 유무 : {room.toilet ? "유" : "무"}</p>
             </div>
             <div>
@@ -230,7 +240,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
                 <div className="flex items-center">
                   <p className="p-3 whitespace-nowrap text-gray-500">방 이름</p>
                   <input
-                    className="p-2 border-b outline-none w-full"
+                    className="p-2  border-b border-gray-300 outline-none w-full focus:ring-0 focus:border-gray-300 rounded-md"
                     value={roomName}
                     onChange={(e) => setRoomName(e.target.value)}
                   ></input>
@@ -239,7 +249,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
                 <div className="flex items-center">
                   <p className="p-3 whitespace-nowrap text-gray-500">방 가격</p>
                   <input
-                    className="p-2 border-b outline-none w-full"
+                    className="p-2  border-b border-gray-300 outline-none w-full focus:ring-0 focus:border-gray-300 rounded-md"
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                   ></input>
@@ -277,7 +287,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
                     추가 인원 가격
                   </p>
                   <input
-                    className="p-2 border-b outline-none w-full"
+                    className="p-2  border-b border-gray-300 outline-none w-full focus:ring-0 focus:border-gray-300 rounded-md"
                     value={extraPrice}
                     onChange={(e) => setExtraPrice(Number(e.target.value))}
                   ></input>
@@ -290,9 +300,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
                   <div className="flex items-center text-sm">
                     <div
                       className={`border border-MAIN_GREEN px-6 py-1 rounded-tl rounded-bl cursor-pointer ${
-                        toilet
-                          ? "bg-MAIN_GREEN text-white"
-                          : "text-MAIN_GREEN"
+                        toilet ? "bg-MAIN_GREEN text-white" : "text-MAIN_GREEN"
                       }`}
                       onClick={() => setToilet(true)}
                     >
@@ -300,9 +308,7 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
                     </div>
                     <div
                       className={`border border-MAIN_GREEN px-6 py-1 rounded-tr rounded-br cursor-pointer ${
-                        !toilet
-                          ? "bg-MAIN_GREEN text-white"
-                          : "text-MAIN_GREEN"
+                        !toilet ? "bg-MAIN_GREEN text-white" : "text-MAIN_GREEN"
                       }`}
                       onClick={() => setToilet(false)}
                     >
@@ -336,7 +342,10 @@ const RoomItem = ({ room, onDelete, refetch }: IRoomItem) => {
         >
           <div className="text-center p-1">
             <div className="pt-4">
-              <p>이 캠핑장 방을 <span className='text-red-500'>삭제</span>하시겠어요?</p>
+              <p>
+                이 캠핑장 방을 <span className="text-red-500">삭제</span>
+                하시겠어요?
+              </p>
             </div>
             <div className="mt-4 flex justify-around">
               <button

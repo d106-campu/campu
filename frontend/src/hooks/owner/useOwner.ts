@@ -11,9 +11,10 @@ import {
   updateCampsiteRoom,
   deleteCampsiteRoom,
   updateDatailCampsite,
+  updateGeneralImages,
 } from "@/services/owner/api";
 import {
-  IBizrnoReq,
+  // IBizrnoReq,
   IEditDetailReq,
   IOwnerCampsiteReq,
   IOwnerReservationReq,
@@ -21,6 +22,7 @@ import {
   IRoomCreateReq,
   IRoomDeleteReq,
   IRoomUpdateReq,
+  IGeneralImageUpdateReq,
 } from "@/types/owner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -34,9 +36,15 @@ export const useOwner = () => {
   };
 
   // 사업자번호 등록
-  const useAddBizrno = (props: IBizrnoReq) => {
+  const useAddBizrno = (bizrno: string) => {
     return useMutation({
-      mutationFn: () => postBizrno(props),
+      mutationFn: () => postBizrno(bizrno),
+      onSuccess: () => {
+        console.log("사업자 성공", bizrno);
+      },
+      onError: (err) => {
+        console.log(err, "사업자 실패");
+      },
     });
   };
 
@@ -95,6 +103,21 @@ export const useOwner = () => {
       },
     });
   };
+
+  // 캠핑장 일반 사진 업데이트 훅
+  const useUpdateGeneralImages = () => {
+    return useMutation({
+      mutationKey: ["updateGeneralImages"],
+      mutationFn: (props: IGeneralImageUpdateReq) => updateGeneralImages(props),
+      onSuccess: (res) => {
+        console.log("캠핑장 일반 사진 수정함 :", res);
+      },
+      onError: (err) => {
+        console.error("캠핑장 일반 사진 수정 실패", err);
+      },
+    });
+  };
+
   // 캠핑장 방 목록 조회
   const useCampsiteRoomList = (props: IOwnerRoomListReq) => {
     return useQuery({
@@ -168,7 +191,7 @@ export const useOwner = () => {
           queryKey: ["campsite detail", props.campsiteId],
         });
         console.log("정보 수정 완");
-        Toast.success("수정이 완료되었습니다.")
+        Toast.success("수정이 완료되었습니다.");
       },
       onError: (err) => {
         console.error("수정실패", err);
@@ -185,6 +208,7 @@ export const useOwner = () => {
     useMapImageMutation,
     useAddImageMutation,
     usePostCampsiteRoom,
+    useUpdateGeneralImages,
     useCampsiteRoomList,
     useUpdateCampsiteRoom,
     useDeleteCampsiteRoom,

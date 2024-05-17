@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
 import { setIsLogin } from "@/features/login/authSlice";
-import logo from "@/assets/images/temp_log2.png";
+import logo from "@/assets/images/logo/logo1.png";
+import authlogo from "@/assets/images/logo/logo2.png";
 import profileDefaultImage from "@/assets/images/profile.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import HeaderLink from "@/components/@common/HeaderLink/HeaderLink";
@@ -20,17 +21,19 @@ const Header = ({ page }: { page?: string }) => {
   const { userProfileQuery } = useUser();
   const profileData = userProfileQuery.data?.data.myProfile;
   const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
-  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
   const role = useSelector((state: RootState) => state.auth.role);
 
   // 프로필이미지 추출
   useEffect(() => {
+    userProfileQuery.refetch();
     if (profileData?.profileImageUrl) {
       const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImageUrl(fullImageUrl);
       // console.log("이미지 주소 확인:", fullImageUrl);
+    } else {
+      setProfileImageUrl(profileDefaultImage);
     }
-  }, [profileData, imageBaseURL]);
+  }, [profileData?.profileImageUrl]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -64,7 +67,12 @@ const Header = ({ page }: { page?: string }) => {
         page === "login" ? "bg-white/0 fixed top-0 left-0 z-10 text-white" : ""
       } ${page === "main" ? " bg-white/80 z-10" : ""}`}
     >
-      <img src={logo} alt="logo" className="w-24 cursor-pointer" />
+      <img
+        onClick={() => navigate("/")}
+        src={page === "login" ? authlogo : logo}
+        alt="logo"
+        className="w-20 cursor-pointer"
+      />
       <div className="grid grid-cols-5 flex-grow max-w-2xl">
         <HeaderLink
           label="홈"

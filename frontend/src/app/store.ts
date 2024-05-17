@@ -8,7 +8,6 @@ import { ownerTabReducer } from "@/features/owner/OwnerTabSlice";
 import { authReducer } from "@/features/login/authSlice";
 import { campingMapReducer } from "@/features/search/campingMapSlice";
 import { selectedCompReducer } from "@/features/mypage/componentSlice";
-import { favoriteCampsReducer } from "@/features/mypage/myFavorite";
 import { reservationReducer } from "@/features/reservation/ReservationSlice";
 import { profileImageReducer } from "@/features/mypage/myProfileSlice";
 import { campingDateReducer } from "@/features/reservation/campingDateSlice";
@@ -30,7 +29,6 @@ const persistConfig = {
     "auth",
     "campingMap",
     "selectedComp",
-    "favoriteCamps",
     "profileImage",
     "reservation",
     "searchBar",
@@ -50,7 +48,6 @@ const rootReducer = combineReducers({
   auth: authReducer,
   campingMap: campingMapReducer,
   selectedComp: selectedCompReducer,
-  favoriteCamps: favoriteCampsReducer,
   profileImage: profileImageReducer,
   reservation: reservationReducer,
   campingDate: campingDateReducer,

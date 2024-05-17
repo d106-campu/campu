@@ -44,6 +44,11 @@ const Modal = ({
     }, 250);
   };
 
+  // 모달 내용 클릭 시 이벤트 전파 중단
+  const handleContentClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
   // isBackgroundColorDark 값에 따라 색상 변경
   const actualIconColor =
     iconColor || (isBackgroundColorDark ? "black" : "white");
@@ -63,12 +68,13 @@ const Modal = ({
         ${isBackgroundColorDark ? "bg-black/70" : "bg-white/50"} ${opacity}`}
         onClick={handleClose}
       />
-      {/* 모달창*/}
+      {/* 모달창 */}
       <div
         className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100]
         ${width} ${padding} ${margin} ${rounded} ${actualContentBackgroundColor} ${actualTextColor} ${opacity}
         ${isRendering ? "animate-modalOpen" : "animate-modalClose"}
         `}
+        onClick={handleContentClick} // 여기에서 이벤트 전파 중단
       >
         {/* 닫기 버튼 */}
         {hasIcon ? (

@@ -5,6 +5,8 @@ import {
   IPaymentPrepareReq,
   IPaymentCompleteReq,
   IPaymentCompleteRes,
+  IPaymentCancelReq,
+  IPaymentCancelRes,
 } from "@/types/payment";
 
 // 결제 준비 요청
@@ -24,7 +26,7 @@ export const completePayment = async (
 };
 
 // 결제 취소 요청
-export const cancelPayment = async (data: any) => {
+export const cancelPayment = async (data: IPaymentCancelReq):Promise<APIResponse<IPaymentCancelRes>> => {
   const res = await axiosAuthInstance.delete("/payment/cancel", { data });
   return res.data;
 };

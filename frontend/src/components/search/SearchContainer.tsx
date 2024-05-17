@@ -16,7 +16,6 @@ const SearchContainer = () => {
     lat: campsite.campsiteLocation?.mapY || null,
     lng: campsite.campsiteLocation?.mapX || null,
   }));
-  console.log(mapX, mapY);
 
   return (
     <>

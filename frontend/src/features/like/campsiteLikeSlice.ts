@@ -14,6 +14,7 @@ const campsiteLikeSlice = createSlice({
   name: "campsiteLike",
   initialState,
   reducers: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     toggleLikeRequest(_, __: PayloadAction<number>) {
       // 좋아요 토글 요청, 사가에서 처리됨
     },
