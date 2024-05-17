@@ -11,7 +11,7 @@ interface ICancelModalProps {
   toggleModal: () => void;
   reservationId: number;
   impUid: string;
-  refetchReservations: () => void;
+  refetchReservations?: () => void;
 }
 
 const CancelPaymentModal = ({
