@@ -18,7 +18,7 @@ import mapIcon from "@/assets/svg/map.svg";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import MapModal from "@/components/@common/Map/MapModal";
 import { useState } from "react";
-import { ICampsiteLocation } from "@/types/reservation";
+import { ICampsiteLocation, ICampsiteImage } from "@/types/reservation";
 import {
   setEndDate,
   setStartDate,
@@ -42,7 +42,7 @@ interface ICampSiteIntro {
   homepage: string | null; // 홈페이지 주소
   thumbnailImageUrl: string; // 썸네일 이미지
   mapImageUrl: string | null; // 배치도 이미지
-  campsiteImageUrlList: string[]; // 캠핑장 메인 이미지
+  campsiteImageUrlList: ICampsiteImage[]; // 캠핑장 메인 이미지
   campsiteLocation: ICampsiteLocation; // 캠핑장 위치
   totalReview: number;
 }

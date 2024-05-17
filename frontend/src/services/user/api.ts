@@ -74,3 +74,9 @@ export const updateProfileImage = async (
   );
   return response.data;
 };
+
+export const updateDefaultImage = async (
+): Promise<APIResponse<{ result: string }>> => {
+  const response = await axiosAuthInstance.delete("/image/user/profile")
+  return response.data
+}

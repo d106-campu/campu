@@ -21,17 +21,19 @@ const Header = ({ page }: { page?: string }) => {
   const { userProfileQuery } = useUser();
   const profileData = userProfileQuery.data?.data.myProfile;
   const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
-  const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
   const role = useSelector((state: RootState) => state.auth.role);
 
   // 프로필이미지 추출
   useEffect(() => {
+    userProfileQuery.refetch();
     if (profileData?.profileImageUrl) {
       const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImageUrl(fullImageUrl);
       // console.log("이미지 주소 확인:", fullImageUrl);
+    } else {
+      setProfileImageUrl(profileDefaultImage);
     }
-  }, [profileData, imageBaseURL]);
+  }, [profileData?.profileImageUrl]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");

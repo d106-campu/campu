@@ -20,6 +20,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
     userProfileQuery,
     updateNickNameMutation,
     updateProfileImageMutation,
+    updateDefaultImageMutation,
   } = useUser();
   const profileData = userProfileQuery.data?.data.myProfile;
   const [profileImageUrl, setProfileImageUrl] = useState(profileDefaultImage);
@@ -235,8 +236,16 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
   // "기본 사진" 버튼 클릭 시
   const handleSetDefaultImage = () => {
     hasCustomImageRef.current = false; // 사용자가 이미지를 기본으로 변경했음을 추적
-    // @TODO: 기본사진은 따로 delete 요청 추가할 예정
-    // dispatch(setIsProfileImage(profileDefaultImage)); // 기본 이미지로 설정
+    updateDefaultImageMutation.mutate(undefined, {
+      onSuccess: () => {
+        setProfileImageUrl(profileDefaultImage); // 기본 이미지로 변경
+        console.log("기본 사진으로 변경 딸깍!!!");
+        userProfileQuery.refetch();
+      },
+      onError: (error) => {
+        console.error("기본 사진으로 변경 실패:", error.message);
+      },
+    });
   };
 
   // 유효성 검사 Field에 대해 값들을 처리
