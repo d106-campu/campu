@@ -1,4 +1,6 @@
+import { RootState } from "@/app/store";
 import { TiArrowRightThick } from "react-icons/ti";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const GoOwner = () => {
@@ -9,8 +11,11 @@ const GoOwner = () => {
     window.scrollTo(0, 0);
   };
 
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const role = useSelector((state: RootState) => state.auth.role);
+
   const goToOwnerPage = () => {
-    navigate("/owner");
+    navigate(isLogin && role !== "USER" ? "/owner" : "/owner/add");
   };
   return (
     <>
