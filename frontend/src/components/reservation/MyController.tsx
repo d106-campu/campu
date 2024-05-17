@@ -24,14 +24,18 @@ const MyController = () => {
   // 모달 상태관리
   const [scheduleModal, setScheduleModal] = useState<boolean>(false);
   const [headCountModal, setHeadCountModal] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const toggleScheduleModal = () => {
     setScheduleModal(!scheduleModal); // 모달 토글
     setLocalStartDate(dateStringToDate(startDate)); // 저장 안하고 닫으면 초기화
     setLocalEndDate(dateStringToDate(endDate));
   };
+
   const toggleHeadCountModal = () => {
     setHeadCountModal(!headCountModal); // 모달 토글
     setLocalHeadCount(headCount); // 저장 안하고 닫으면 초기화
+    setErrorMessage(""); // 모달 열 때 에러 메시지 초기화
   };
 
   const dispatch = useDispatch();
@@ -73,9 +77,21 @@ const MyController = () => {
   const [localHeadCount, setLocalHeadCount] = useState<number>(headCount);
 
   // 인원수 증감 함수
-  const increasePeople = () => setLocalHeadCount(localHeadCount + 1);
-  const decreasePeople = () =>
-    localHeadCount > 1 && setLocalHeadCount(localHeadCount - 1);
+  const increasePeople = () => {
+    if (localHeadCount < 6) {
+      setLocalHeadCount(localHeadCount + 1);
+      setErrorMessage(""); // 에러 메시지 초기화
+    } else {
+      setErrorMessage("최대 인원수는 6명입니다.");
+    }
+  };
+
+  const decreasePeople = () => {
+    if (localHeadCount > 1) {
+      setLocalHeadCount(localHeadCount - 1);
+      setErrorMessage(""); // 에러 메시지 초기화
+    }
+  };
 
   // 인원수 스토어에 저장
   const headCountSubmit = () => {
@@ -181,13 +197,22 @@ const MyController = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => setLocalHeadCount(headCount)}
-              className="flex items-center gap-2 cursor-pointer p-2"
-            >
-              <FaArrowRotateRight color="C9C9C9" />
-              <span className="text-GRAY">인원수 초기화</span>
-            </button>
+            <div className="flex justify-between items-end">
+              <button
+                onClick={() => setLocalHeadCount(headCount)}
+                className="flex items-center gap-2 cursor-pointer p-2"
+              >
+                <FaArrowRotateRight color="C9C9C9" />
+                <span className="text-GRAY">인원수 초기화</span>
+              </button>
+              <div>
+                {errorMessage && (
+                  <p className="text-MAIN_PINK text-sm pb-1 px-3">
+                    {errorMessage}
+                  </p>
+                )}
+              </div>
+            </div>
             <Button
               width="w-full"
               height="h-12"

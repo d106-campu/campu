@@ -21,6 +21,11 @@ import {
   setPeople,
   setStartDate,
 } from "@/features/search/searchBarSlice";
+import {
+  setEndDate as setCampingEndDate,
+  setStartDate as setCampingStartDate,
+} from "@/features/reservation/campingDateSlice";
+import { setHeadCount } from "@/features/reservation/HeadCountSlice";
 import Modal from "../@common/Modal/Modal";
 import CalendarSubmit from "../@common/Calendar/CalendarSubmit";
 import Calendar from "../@common/Calendar/Calendar";
@@ -63,12 +68,14 @@ const SearchBar = ({ state }: { state?: string }) => {
     if (numberOfPeople > 1) {
       setNumberOfPeople(numberOfPeople - 1);
       dispatch(setPeople(numberOfPeople - 1));
+      dispatch(setHeadCount(numberOfPeople - 1));
     }
   };
   const handleIncrease = () => {
     if (numberOfPeople < 6) {
       setNumberOfPeople(numberOfPeople + 1);
       dispatch(setPeople(numberOfPeople + 1));
+      dispatch(setHeadCount(numberOfPeople + 1));
     }
   };
 
@@ -103,6 +110,8 @@ const SearchBar = ({ state }: { state?: string }) => {
     if (formattedStartDate !== null && formattedEndDate !== null) {
       dispatch(setStartDate(formattedStartDate));
       dispatch(setEndDate(formattedEndDate));
+      dispatch(setCampingStartDate(formattedStartDate));
+      dispatch(setCampingEndDate(formattedEndDate));
     }
   };
 
