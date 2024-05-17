@@ -96,8 +96,7 @@ const OwnerManageInfo = () => {
                 </p>
               </div>
               <textarea
-                className="w-full h-30 p-4 border rounded-md outline-none"
-                placeholder="캠핑장에 대한 간단한 소개글을 작성해주세요."
+                className="w-full h-30 p-4 border rounded-md outline-none focus:ring-0 focus:border-gray-500"
                 value={detailCampsiteInfo?.data.campsite.lineIntro}
                 readOnly
               />
@@ -106,7 +105,7 @@ const OwnerManageInfo = () => {
             <div>
               <p className="py-3">소개</p>
               <textarea
-                className="w-full h-30 p-4 border rounded-md outline-none"
+                className="w-full h-30 p-4 border rounded-md outline-none focus:ring-0 focus:border-gray-500"
                 placeholder="캠핑장에 대한 자세한 소개글을 작성해주세요."
                 value={detailIntro}
                 onChange={(e) => setDetailIntro(e.target.value)}

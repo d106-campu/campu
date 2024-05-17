@@ -43,7 +43,7 @@ const ChangeProfilePositiveFBM = [
   "새 비밀번호가 설정되었습니다.",
   "새 비밀번호와 일치합니다.",
   "닉네임이 변경되었습니다 !",
-]
+];
 const InputField = ({
   // input 속성 필드
   label,
@@ -79,9 +79,11 @@ const InputField = ({
     ? "text-MAIN_GREEN"
     : errorTextColor;
 
-  const isChangeErrorPostiveFeedback = ChangeProfilePositiveFBM.includes(changeError);
+  const isChangeErrorPostiveFeedback =
+    ChangeProfilePositiveFBM.includes(changeError);
   const ProfileCustomErrorColor = isChangeErrorPostiveFeedback
-    ? "text-MAIN_GREEN" : errorTextColor;
+    ? "text-MAIN_GREEN"
+    : errorTextColor;
 
   return (
     <div>
@@ -100,7 +102,7 @@ const InputField = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`${width} ${height} ${inputPadding} ${border} ${borderColor} ${rounded} ${outline} ${inputTextSize} `}
+          className={`${width} ${height} ${inputPadding} ${border} ${borderColor} ${rounded} ${outline} ${inputTextSize} focus:ring-0 focus:border-gray-100 focus:outline-none`}
           maxLength={maxLength}
           {...props}
         />
@@ -111,7 +113,9 @@ const InputField = ({
           </div>
         )}
       </div>
-      <h1 className={`${ProfileCustomErrorColor} text-center text-xs py-2`}>{changeError}</h1>
+      <h1 className={`${ProfileCustomErrorColor} text-center text-xs py-2`}>
+        {changeError}
+      </h1>
     </div>
   );
 };

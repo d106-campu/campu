@@ -74,7 +74,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
 
   // 프로필이미지 추출
   useEffect(() => {
-    console.log("프로필 사진 :", profileData?.profileImageUrl)
+    console.log("프로필 사진 :", profileData?.profileImageUrl);
     if (profileData?.profileImageUrl) {
       const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
       console.log(
@@ -278,7 +278,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
             <h1 className="pb-2">아이디</h1>
             <input
               type="text"
-              className="w-full h-[35px] pl-2 outline-none border-2 rounded-md bg-gray-100"
+              className="w-full h-[35px] pl-2 outline-none border-gray-300 rounded-md bg-gray-100 "
               disabled // 수정 불가능하게 막기
               value={values.account || ""}
             />
@@ -306,7 +306,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
             </div>
             <input
               type="text"
-              className={`w-full h-[35px] pl-2 outline-none border-2 rounded-md ${
+              className={`w-full h-[35px] pl-2 outline-none focus:outline-none focus:ring-0 focus:border-gray-300 border-gray-300 rounded-md ${
                 isEditingNickname ? "" : "pointer-events-none"
               }`}
               disabled={!isEditingNickname}
@@ -316,6 +316,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
             />
             <p
               className={`pl-2 pt-2 text-xs flex justify-end items-center ${
+                // eslint-disable-next-line no-constant-condition
                 nicknameMessage === "사용 가능한 닉네임입니다." ||
                 "닉네임이 변경되었습니다 !"
                   ? "text-MAIN_GREEN"
@@ -385,7 +386,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
         <div className="flex items-center justify-start">
           <input
             type="text"
-            className="w-[25%] h-[35px] pl-2 outline-none border-2 rounded-md"
+            className="w-[25%] h-[35px] pl-2 outline-none rounded-md focus:outline-none focus:ring-0 focus:border-gray-300 border-gray-300"
             disabled
             value={values.tel || ""}
           />
