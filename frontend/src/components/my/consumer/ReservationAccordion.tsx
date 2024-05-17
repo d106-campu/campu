@@ -9,6 +9,7 @@ import Lottie from "react-lottie";
 import { tentOptions } from "@/assets/lotties/lottieOptions";
 import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
 import { diffDays } from "@/utils/diffDays";
+import formatPhoneNumber from "@/utils/formatPhoneNumber";
 
 interface IReservationAccordionProps {
   reservation: IMyReservationAllRes;
@@ -188,24 +189,26 @@ const ReservationAccordion = ({
                       </p>
                     </div>
                     {/* @TODO: 백한테 요청하기 */}
-                    {/* <div>
-                    <h3>캠핑장 유형</h3>
-                    <p className="pb-[15px] font-bold text-BLACK">
-                      {roomInduty}
-                    </p>
-                    {checkIn && checkOut && (
-                      <>
-                        <h3>입실·퇴실 시간</h3>
-                        <p className="pb-[15px] font-bold text-BLACK">
-                          {checkIn} - {checkOut}
-                        </p>
-                      </>
-                    )}
-                    <h3>전화번호</h3>
-                    <p className="pb-[15px] font-bold text-BLACK">
-                      {formatPhoneNumber(tel)}
-                    </p>
-                  </div> */}
+                    <div>
+                      <h3>캠핑장 유형</h3>
+                      <p className="pb-[15px] font-bold text-BLACK">
+                        {reservation.room.induty}
+                      </p>
+                      {reservation.campsite.checkin &&
+                        reservation.campsite.checkout && (
+                          <>
+                            <h3>입실·퇴실 시간</h3>
+                            <p className="pb-[15px] font-bold text-BLACK">
+                              {reservation.campsite.checkin} -{" "}
+                              {reservation.campsite.checkout}
+                            </p>
+                          </>
+                        )}
+                      <h3>전화번호</h3>
+                      <p className="pb-[15px] font-bold text-BLACK">
+                        {formatPhoneNumber(reservation.campsite.tel)}
+                      </p>
+                    </div>
                   </div>
                   {reservation.room.supplyList &&
                     reservation.room.supplyList.length > 0 && (
