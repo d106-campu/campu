@@ -144,13 +144,15 @@ public class ImageService {
             deleteCampsiteImage(deleteImageList);
         }
 
-        Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
-        generalImageList.stream()
-            .map(file -> saveFile(basePath, file))
-            .map(fileName -> String.join("/", campsite.getId().toString(), ImageConstant.GENERAL, fileName))
-            .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
-            .map(imageMapper::toCampsiteImage)
-            .forEach(campsite::addCampsiteImage);
+        if (!generalImageList.isEmpty()) {
+            Path basePath = ImageConstant.CAMPSITE_DIR.resolve(campsite.getId().toString()).resolve(ImageConstant.GENERAL);
+            generalImageList.stream()
+                .map(file -> saveFile(basePath, file))
+                .map(fileName -> String.join("/", campsite.getId().toString(), ImageConstant.GENERAL, fileName))
+                .map(postfix -> StringUtils.join(baseUrl, ImageConstant.CAMPSITE_URL, postfix))
+                .map(imageMapper::toCampsiteImage)
+                .forEach(campsite::addCampsiteImage);
+        }
 
         return campsiteRepository.save(campsite).getCampsiteImageList().stream()
             .map(imageMapper::toUploadListResponse).toList();
