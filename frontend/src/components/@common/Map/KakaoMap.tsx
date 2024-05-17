@@ -1,6 +1,6 @@
 import { IMapProps } from "@/types/map";
 import { useEffect, useRef } from "react";
-import MarkerImage from "@/assets/images/Marker.png";
+import MarkerImage from "@/assets/images/home/Marker.png";
 import Star from "@/assets/images/Star.png";
 import { useDispatch } from "react-redux";
 import { toggleMarker } from "@/features/search/markersSlice";
