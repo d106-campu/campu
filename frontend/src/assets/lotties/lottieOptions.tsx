@@ -4,11 +4,8 @@ import dot_loading from "@/assets/lotties/dot_loading.json";
 import loading from "@/assets/lotties/loading.json";
 import tent from "@/assets/lotties/tent.json";
 import caravan from "@/assets/lotties/caravan.json";
-<<<<<<< fe/feat/#368-payment-delete-api
 import warning from "@/assets/lotties/warning.json";
-=======
 import error from "@/assets/lotties/error.json";
->>>>>>> frontend
 
 export const noImageOptions = {
   loop: true,
@@ -64,17 +61,19 @@ export const caravanOptions = {
   },
 };
 
-<<<<<<< fe/feat/#368-payment-delete-api
 export const warningOptions = {
   loop: true,
   autoplay: true,
   animationData: warning,
-=======
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
 export const errorOptions = {
   loop: true,
   autoplay: true,
   animationData: error,
->>>>>>> frontend
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },
