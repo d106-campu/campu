@@ -5,6 +5,7 @@ import {
   updateUserPassword,
   updateUserPhone,
   updateProfileImage,
+  updateDefaultImage,
 } from "@/services/user/api";
 import {
   IUserNickNameUpdate,
@@ -54,12 +55,25 @@ export const useUser = () => {
     mutationFn: (file: File) => updateProfileImage(file),
     onSuccess: () => {
       userProfileQuery.refetch();
-      Toast.success("프로필 이미지가 수정되었습니다.");
+      Toast.success('프로필 이미지가 수정되었습니다.');
     },
     onError: (error) => {
-      console.error("프로필 이미지 수정 실패:", error);
-      Toast.error("프로필 이미지 수정에 실패했습니다.");
+      console.error('프로필 이미지 못바꿨음:', error);
+      Toast.error('프로필 이미지 수정에 실패했습니다.');
+    }
+  });
+
+  // 프로필 기본 이미지로 업데이트
+  const updateDefaultImageMutation = useMutation({
+    mutationFn: updateDefaultImage,
+    onSuccess: () => {
+      userProfileQuery.refetch();
+      Toast.success('기본 이미지로 변경되었습니다.');
     },
+    onError: (error) => {
+      console.error('프로필 기본 이미지로 변경 실패:', error);
+      Toast.error('기본 이미지로 변경에 실패했습니다.');
+    }
   });
 
   return {
@@ -68,5 +82,6 @@ export const useUser = () => {
     updatePasswordMutation,
     updatePhoneMutation,
     updateProfileImageMutation,
+    updateDefaultImageMutation,
   };
 };

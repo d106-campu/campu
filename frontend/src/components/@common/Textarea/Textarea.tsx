@@ -71,7 +71,7 @@ const Textarea = ({
           value={value} // 외부에서 받은 value 사용
           disabled={disabled}
           onChange={onChange}
-          className={`w-full h-6 text-sm resize-none outline-none overflow-y-hidden bg-inherit whitespace-pre-wrap`}
+          className={`w-full h-6 text-sm resize-none outline-none overflow-y-hidden bg-inherit whitespace-pre-wrap focus:ring-0 focus:border-none border-none`}
           maxLength={maxLength}
           placeholder={placeholder}
         />

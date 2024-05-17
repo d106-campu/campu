@@ -14,24 +14,28 @@ const selectCampsiteInfo = createSelector(
   (campsiteId, isLogin) => ({ campsiteId, isLogin })
 );
 
+interface ICampsiteImage {
+  imageId: number;
+  url: string;
+}
+
 const OwnerManagePhoto = () => {
   const { campsiteId, isLogin } = useSelector(selectCampsiteInfo);
   const { useGetCampsite } = useReservation();
   const { data: detailCampsiteInfo } = useGetCampsite(campsiteId!, isLogin);
-  const { useThumbnailMutation, useMapImageMutation } = useOwner();
+  const { useThumbnailMutation, useMapImageMutation, useUpdateGeneralImages } = useOwner();
 
   const { mutate: thumbnailMutate } = useThumbnailMutation(campsiteId!);
   const { mutate: mapImageMutate } = useMapImageMutation(campsiteId!);
-  // const { mutate: addImageMutate } = useAddImageMutation(campsiteId!);
+  const { mutate: updateGeneralImages } = useUpdateGeneralImages();
 
   useEffect(() => {
     // detailCampsiteInfo가 변경될 때마다 대표 사진과 배치도 사진을 설정
     if (detailCampsiteInfo) {
       setMainPhoto(detailCampsiteInfo?.data.campsite.thumbnailImageUrl || "");
       setViewPhoto(detailCampsiteInfo?.data.campsite.mapImageUrl || "");
-      setOtherPhoto(
-        detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []
-      );
+      setOtherPhoto(detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []);
+      console.log("일반 이미지 조회되는 형태 확인 :", detailCampsiteInfo?.data.campsite.campsiteImageUrlList )
     }
   }, [detailCampsiteInfo]);
 
@@ -51,13 +55,11 @@ const OwnerManagePhoto = () => {
 
   // 추가 사진
   const [otherPhotos, setOtherPhotos] = useState<File[]>([]);
-  const [otherPhoto, setOtherPhoto] = useState<string[]>(
+  const [otherPhoto, setOtherPhoto] = useState<ICampsiteImage[]>(
     detailCampsiteInfo?.data.campsite.campsiteImageUrlList || []
   ); // 화면
   const otherImgRef = useRef<HTMLInputElement>(null);
-
-  // @TODO: 변수 사용 후 삭제하기
-  console.log(typeof mainImage, typeof viewImage, typeof otherPhotos);
+  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
 
   const saveMainImgFile = () => {
     if (mainImgRef.current && mainImgRef.current.files) {
@@ -67,6 +69,7 @@ const OwnerManagePhoto = () => {
         thumbnailMutate(file);
       }
     }
+    console.log(typeof mainImage)
   };
 
   const saveViewImgFile = () => {
@@ -77,23 +80,23 @@ const OwnerManagePhoto = () => {
         mapImageMutate(file);
       }
     }
+    console.log(typeof viewImage)
   };
 
   const saveOtherImgFiles = () => {
     if (otherImgRef.current && otherImgRef.current.files) {
       const newPhotos: File[] = [];
-      const newPhotoURLs: string[] = [];
-
+      const newPhotoURLs: ICampsiteImage[] = [];
+  
       for (let i = 0; i < otherImgRef.current.files.length; i++) {
         const file: File = otherImgRef.current.files[i];
-
-        setOtherPhotos((prevPhotos) => [...prevPhotos, file]);
+        newPhotos.push(file);
+  
         const reader = new FileReader();
         reader.readAsDataURL(file);
-
         reader.onloadend = () => {
           if (reader.result) {
-            newPhotoURLs.push(reader.result.toString());
+            newPhotoURLs.push({ imageId: Date.now(), url: reader.result.toString() });
             if (i === otherImgRef.current!.files!.length - 1) {
               setOtherPhotos((prevPhotos) => [...prevPhotos, ...newPhotos]);
               setOtherPhoto((prevURLs) => [...prevURLs, ...newPhotoURLs]);
@@ -102,16 +105,35 @@ const OwnerManagePhoto = () => {
         };
       }
     }
-  };
+  }; 
 
   // 이미지 삭제
   const deletePhoto = (id: number) => {
+    const imageId = otherPhoto[id]?.imageId;
+    if (imageId !== undefined) {
+      setDeletedImageIds((prev) => [...prev, imageId]);
+    }
     setOtherPhoto(otherPhoto.filter((_, index) => index !== id));
   };
 
   const handleSaveImages = () => {
-    console.log("보낼사진", otherPhotos);
-    console.log("화면상 등록한 사진", otherPhoto);
+    const insertImageList = otherPhotos;
+
+    updateGeneralImages(
+      {
+        campsiteId: campsiteId!,
+        deleteImageList: { imageIdList: deletedImageIds },
+        insertImageList,
+      },
+      {
+        onSuccess: (res) => {
+          console.log("캠핑장 일반 사진 업데이트 성공", res);
+        },
+        onError: (err) => {
+          console.error("캠핑장 일반 사진 업데이트 실패", err);
+        },
+      }
+    );
   };
 
   return (
@@ -221,7 +243,7 @@ const OwnerManagePhoto = () => {
                 otherPhoto.map((image, index) => (
                   <li key={index}>
                     <div className="w-24 h-24 overflow-hidden rounded-lg relative border">
-                      <img src={image} className="w-24 h-24 object-cover"></img>
+                      <img src={image.url} className="w-24 h-24 object-cover"></img>
                       <div
                         onClick={(e) => {
                           e.preventDefault();

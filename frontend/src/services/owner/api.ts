@@ -1,7 +1,8 @@
 import { axiosAuthInstance, axiosFileInstance } from "@/apis/axiosInstance";
 import { APIResponse } from "@/types/model";
 import {
-  IBizrnoReq,
+  IBizrnoRes,
+  // IBizrnoReq,
   ICampsiteMapRes,
   ICampsiteThumbnailRes,
   IEditDetailReq,
@@ -17,6 +18,8 @@ import {
   IRoomDeleteRes,
   IRoomUpdateReq,
   IRoomUpdateRes,
+  IGeneralImageUpdateReq,
+  IGeneralImageUpdateRes,
 } from "@/types/owner";
 import { ICampsiteRes } from "@/types/search";
 
@@ -34,9 +37,14 @@ export const getOwnerCampsiteList = async ({
 
 // 사업자번호 등록
 export const postBizrno = async (
-  props: IBizrnoReq
-): Promise<APIResponse<string>> => {
-  const data = await axiosAuthInstance.post(`/owner/bizrno`, props);
+  bizrno: string
+): Promise<APIResponse<IBizrnoRes>> => {
+  console.log(bizrno);
+  const data = await axiosAuthInstance.post(`/owner/bizrno`, null, {
+    params: {
+      bizrno,
+    },
+  });
   console.log("사업자번호 등록 성공:", data.data);
   return data.data;
 };
@@ -103,6 +111,44 @@ export const updateAddImage = async (
   return data.data;
 };
 
+// 캠핑장 일반 사진 업데이트 수정
+export const updateGeneralImages = async ({
+  campsiteId,
+  deleteImageList,
+  insertImageList,
+}: IGeneralImageUpdateReq): Promise<APIResponse<IGeneralImageUpdateRes>> => {
+  const formData = new FormData();
+
+  formData.append("deleteImageList", JSON.stringify(deleteImageList));
+
+  // 추가할 이미지 리스트 각각 하나씩 추가
+  insertImageList.forEach((image) => {
+    if (image instanceof File) {
+      formData.append("insertImageList", image);
+    } else {
+      console.error("추가이미지 오브젝트 생성 실패함 :", image);
+    }
+  });
+
+  console.log("삭제한 이미지 확인 :", deleteImageList)
+  console.log("추가한 이미지 확인 :", insertImageList)
+  console.log("캠프사이트 Id :", campsiteId)
+
+  // FormData의 모든 키-값 쌍을 출력
+  for (const pair of formData.entries()) {
+    console.log(`${pair[0]}: ${pair[1]}`);
+  }
+
+  const res = await axiosFileInstance.patch(
+    `/image/campsite/${campsiteId}/general`,
+    formData
+  );
+  
+  return res.data;
+};
+
+
+// 캠핑장 방 정보 조회
 export const getCampsiteRoomList = async ({
   campsiteId,
 }: IOwnerRoomListReq): Promise<APIResponse<IOwnerRoomListRes>> => {
