@@ -11,12 +11,14 @@ interface ICancelModalProps {
   toggleModal: () => void;
   reservationId: number;
   impUid: string;
+  refetchReservations: () => void;
 }
 
 const CancelPaymentModal = ({
   toggleModal,
   reservationId,
   impUid,
+  refetchReservations,
 }: ICancelModalProps) => {
   const [isCancel, setIsCancel] = useState<boolean>(false);
   const [cancelReason, setCancelReason] = useState<string>("");
@@ -24,11 +26,11 @@ const CancelPaymentModal = ({
     "h-4 w-4 text-MAIN_PINK border-gray-300 focus:ring-MAIN_PINK focus:ring-1";
 
   // 결제 취소하기
-  const { cancelPaymentMutation } = usePayment();
+  const { cancelPaymentMutation } = usePayment(refetchReservations);
   const handleCancelPayment = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 전파 중단
     if (cancelReason === "") {
-      Toast.error("취소사유를 선택해주세요. 필수사항입니다.");
+      Toast.error("취소 사유를 선택해주세요. 필수사항입니다.");
       return;
     }
     const cancelData: IPaymentCancelReq = {
@@ -36,8 +38,15 @@ const CancelPaymentModal = ({
       impUid: impUid,
       reason: cancelReason,
     };
-    cancelPaymentMutation.mutate(cancelData);
-    toggleModal();
+    cancelPaymentMutation.mutate(cancelData, {
+      onSuccess: () => {
+        toggleModal();
+      },
+      onError: (error) => {
+        console.error("결제 취소 중 오류 발생:", error);
+        Toast.error("결제 취소에 실패했습니다. 다시 시도해주세요.");
+      },
+    });
   };
 
   return (
