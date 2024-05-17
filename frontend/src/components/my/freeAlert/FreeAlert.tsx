@@ -4,6 +4,9 @@ import FreeAlertList from "@/components/my/freeAlert/FreeAlertList";
 import Modal from "@/components/@common/Modal/Modal";
 import { useMy } from "@/hooks/my/useMy";
 import Toast from "@/components/@common/Toast/Toast";
+import Lottie from "react-lottie";
+import { bellOptions } from "@/assets/lotties/lottieOptions";
+import Button from "@/components/@common/Button/Button";
 
 interface FreeAlertProps {
   nickname: string;
@@ -140,32 +143,39 @@ const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
       {/* 빈자리 취소 시 모달 호출 */}
       {showConfirmModal && (
         <Modal
-          width="w-1/3"
-          title="빈자리 알림 취소 확인"
+          width="w-[35%]"
           hasIcon={false}
           onClose={() => setShowConfirmModal(false)}
         >
-          <div className="text-center p-1">
-            <div className="pt-4">
-              <p>
-                이 캠핑장에 대한 빈자리 알림을{" "}
-                <span className="text-red-400">취소</span>하시겠어요?
-              </p>
+          <div className="flex flex-col items-center text-center text-BLACK">
+            <div className="bg-SUB_YELLOW w-[160px] h-[160px] flex items-center rounded-full">
+              <Lottie options={bellOptions} height={120} width={120} />
             </div>
-            <div className="mt-4 flex justify-around">
-              <button
-                className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
-                onClick={confirmCancelAlert}
-              >
-                <span>취소합니다</span>
-              </button>
-              <button
-                className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
-                onClick={() => setShowConfirmModal(false)}
-              >
-                <span>아니요</span>
-              </button>
+            <h3 className="text-xl font-bold pt-5">빈자리 알림 취소</h3>
+            <div className="text-sm pt-2">
+              <p>빈자리 알림 취소 시 알림 및 문자를 받을 수 없어요.</p>
+              <p>정말 빈자리 알림을 취소하시겠습니까?</p>
             </div>
+          </div>
+          <div className="flex justify-evenly pt-5">
+            <Button
+              text="아니요"
+              backgroundColor="bg-GRAY"
+              hoverBackgroundColor="hover:bg-[#acacac]"
+              onClick={(event) => {
+                event.stopPropagation(); // 이벤트 전파 중단
+                setShowConfirmModal(false);
+              }}
+            />
+            <Button
+              text="취소할게요"
+              backgroundColor="bg-MAIN_PINK"
+              hoverBackgroundColor="hover:bg-MAIN_RED"
+              onClick={(event) => {
+                event.stopPropagation(); // 이벤트 전파 중단
+                confirmCancelAlert;
+              }}
+            />
           </div>
         </Modal>
       )}
