@@ -27,7 +27,9 @@ public class Scheduler {
     public void sendNotificationForEmptyRoom() {
         log.info("Scheduler: sendNotificationForEmptyRoom()");
         List<EmptyNotification> emptyNotificationList = reservationService.getEmptyNotificationList();
-        applicationEventPublisher.publishEvent(notificationMapper.toEmptyRoomEvent(emptyNotificationList));
+        if (!emptyNotificationList.isEmpty()) {
+            applicationEventPublisher.publishEvent(notificationMapper.toEmptyRoomEvent(emptyNotificationList));
+        }
     }
 
 }
