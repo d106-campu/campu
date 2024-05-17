@@ -41,7 +41,7 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
       {
         onSuccess: () => {
           setIsAlertActive(!isAlertActive);
-          Toast.success("빈자리 알림이 등록되었습니다 😊");
+          Toast.info("빈자리 알림이 등록되었습니다 😊");
         },
         onError: (err) => {
           if (axios.isAxiosError(err)) {
@@ -72,7 +72,7 @@ const RoomItem = ({ room }: { room: IRoomItem }) => {
     deleteRoomAlert(roomId, {
       onSuccess: () => {
         setIsAlertActive(!isAlertActive);
-        Toast.success("빈자리 알림이 취소되었습니다 😊");
+        Toast.info("빈자리 알림이 취소되었습니다 😊");
       },
       onError: () => {
         Toast.error("빈자리 알림 취소에 실패했습니다. 다시 시도해주세요.");
