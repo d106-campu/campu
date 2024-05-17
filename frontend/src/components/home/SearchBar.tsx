@@ -149,7 +149,7 @@ const SearchBar = ({ state }: { state?: string }) => {
         <div className="flex w-full items-center border bg-white rounded-md p-3 max-h-11">
           <LuSearch />
           <input
-            className="ml-2 outline-none placeholder-black text-xs"
+            className="ml-2 placeholder-black text-xs border-none outline-none focus:ring-0"
             placeholder="키워드로 캠핑장을 검색해보세요"
             value={keyword || ""}
             onChange={handleKeywordChange}
