@@ -18,35 +18,42 @@ const FacilityList = ({ facilities, pet }: IFacilityListProps) => {
   const facilityImages: { [key: string]: string } = {
     에어컨: Aircon,
     침대: Bed,
-    취사도구: Cooker,
+    바베큐장: Cooker,
     난방기구: Heater,
     냉장고: Refrigerator,
-    내부샤워실: Shower,
-    내부화장실: Toilet,
+    샤워실: Shower,
+    화장실: Toilet,
     TV: Tv,
-    유무선인터넷: Wifi,
-    // 반려동물 허용: Pet,
+    와이파이: Wifi,
   };
+
+  const facilityNames: { [key: string]: string } = {
+    내부샤워실: "샤워실",
+    내부화장실: "화장실",
+    유무선인터넷: "와이파이",
+    취사도구: "바베큐장",
+  };
+
   return (
     <div className="flex justify-start items-end gap-2">
       {facilities.map((facility) => {
-        const imageSrc = facilityImages[facility];
+        const displayName = facilityNames[facility] || facility;
+        const imageSrc = facilityImages[displayName];
         return (
           <div key={facility} className="p-3 flex flex-col items-center">
-            <img src={imageSrc} alt={facility} className="mb-2" />
-            <p className="text-center">{facility}</p>
+            <img src={imageSrc} alt={displayName} className="mb-2" />
+            <p className="text-center">{displayName}</p>
           </div>
         );
       })}
       {pet && (
-        <>
-          <div className="p-3 flex flex-col items-center">
-            <img src={Pet} alt="반려동물 허용" className="mb-2" />
-            <p className="text-center">반려동물</p>
-          </div>
-        </>
+        <div className="p-3 flex flex-col items-center">
+          <img src={Pet} alt="반려동물 허용" className="mb-2" />
+          <p className="text-center">반려동물</p>
+        </div>
       )}
     </div>
   );
 };
+
 export default FacilityList;

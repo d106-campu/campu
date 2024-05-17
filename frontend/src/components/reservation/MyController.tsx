@@ -83,7 +83,7 @@ const MyController = () => {
   };
 
   useEffect(() => {
-    // @TODO: 백에 방 조회 API 요청 다시 보내기
+    // 백에 방 조회 API 요청 다시 보내기
   }, [startDate, endDate, headCount]);
 
   return (
