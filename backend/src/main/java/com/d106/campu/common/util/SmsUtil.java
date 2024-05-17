@@ -55,15 +55,13 @@ public class SmsUtil {
                 Message message = new Message();
                 message.setFrom(from);
                 message.setTo(saveResponseDto.getTel());
+                message.setSubject(NotificationConstant.CAMPU_SMS + " " + saveResponseDto.getMessage());
                 message.setText(
-                    NotificationConstant.CAMPU_SMS + saveResponseDto.getMessage() + "\n" + saveResponseDto.getUrl());
+                    "▶ " + saveResponseDto.getName() + "\n" + "▶ " + saveResponseDto.getDate() + "\n" + "▶ "
+                        + saveResponseDto.getNo() + "\n" + saveResponseDto.getUrl());
                 return message;
             })
             .toList();
-
-        if (messageList.isEmpty()) {
-            return null;
-        }
 
         log.info("Send SMS notification for empty room");
         return this.messageService.sendMany(new MultipleMessageSendingRequest(messageList));
