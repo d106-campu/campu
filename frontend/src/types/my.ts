@@ -169,12 +169,13 @@ export interface IMyReservationCampsite {
 export interface IMyReservationRoom {
   roomId: number;
   roomName: string;
-  supplyList: string;
+  supplyList: string[];
 }
 
 // 내 예약내역 reservation 응답
 export interface IMyReservationReservation {
   reservationId: number;
+  impUid: string;
   headCnt: number;
   price: number;
   startDate: string;

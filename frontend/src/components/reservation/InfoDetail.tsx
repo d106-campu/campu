@@ -70,10 +70,9 @@ const InfoDetail = ({
               입실 · 퇴실 시간 : {data.checkin} - {data.checkout}
             </p>
           )}
-          {/* @TODO: 면적 및 거리 단위 물어보기 */}
           <p className="py-1">전체 면적 : {data.allar} m²</p>
           {data.sitedStnc !== 0 && (
-            <p className="py-1">사이트 간 거리 : {data.sitedStnc}</p>
+            <p className="py-1">사이트 간 거리 : {data.sitedStnc} m</p>
           )}
         </div>
       </div>
@@ -124,7 +123,7 @@ const InfoDetail = ({
         <h3 className="text-xl font-bold pb-2">캠핑장 운영정책</h3>
 
         {/* 아코디언 */}
-        <div className="rounded-2xl border">
+        <div className="rounded-2xl border cursor-pointer">
           <div className="w-full">
             <div
               className="p-2 mx-3 flex justify-between border-b-[1px] cusrsor-pointer"
