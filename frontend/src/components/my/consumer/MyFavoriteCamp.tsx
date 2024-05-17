@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
 import MyFavoriteCampItem from "@/components/my/consumer/MyFavoriteCampItem";
 import { useMy } from "@/hooks/my/useMy";
 import { IMyFavoritCampRes } from "@/types/my";
 
-const MyFavoriteCamp = (): JSX.Element => {
+interface MyFavoriteCampProps {
+  nickname: string;
+}
+
+const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
   const initialCampsToShow = 4; // 초기에 보여줄 관심 캠핑장 카드 수
   const [visibleCamps, setVisibleCamps] = useState<IMyFavoritCampRes[]>([]); // 현재 화면에 보여줄 캠핑장 개수 상태 관리
   const { useFavoriteCampsList } = useMy();
   const { data, isLoading, isError, refetch } = useFavoriteCampsList({
     pageable: { page: 0, size: 100 },
   });
-  const nickname = useSelector((state: RootState) => state.auth.nickname);
 
   useEffect(() => {
     if (data?.campsiteList?.content) {

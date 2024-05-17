@@ -22,7 +22,7 @@ import {
 } from "@/features/reservation/ReservationSlice";
 import Toast from "@/components/@common/Toast/Toast";
 
-const usePayment = () => {
+const usePayment = (onCancelSuccess?: () => void) => {
   const dispatch = useDispatch();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [IMP, setIMP] = useState<any>(null);
@@ -189,6 +189,9 @@ const usePayment = () => {
         console.log("결제 취소 완료: ", cancelPayment);
         Toast.success("결제가 성공적으로 취소되었습니다.");
         dispatch(updateStatus("proceeding"));
+        if (onCancelSuccess) {
+          onCancelSuccess(); // 성공 시 콜백 함수 호출
+        }
       },
       onError: (error: Error) => {
         console.error(`결제 취소 실패: ${error.message}`);

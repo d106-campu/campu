@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import profileDefaultImage from "@/assets/images/profile.png";
 import Button from "@/components/@common/Button/Button";
 import { IUserProfileUpdate } from "@/types/user";
@@ -10,12 +11,14 @@ import {
 } from "@/constants/constants";
 import { useUser } from "@/hooks/user/useUser";
 import { checkNicknameDuplicate } from "@/services/auth/api";
+import { setNickname } from "@/features/login/authSlice";
 
 interface IMyProfileProps {
   phoneVerified: boolean;
 }
 
 const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
+  const dispatch = useDispatch();
   const {
     userProfileQuery,
     updateNickNameMutation,
@@ -67,8 +70,8 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
         tel = "",
       } = userProfileQuery.data.data.myProfile;
       setValues((v) => ({ ...v, account, nickname, tel }));
+      dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
       // console.log("프로필 사진 :", profileData?.profileImageUrl)
-      // dispatch(setNickname(nickname)); // 조회 성공 후 리덕스스토어에 닉네임 업데이트해줌
     }
   }, [userProfileQuery.data, userProfileQuery.isSuccess]);
 
@@ -107,7 +110,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
             {
               onSuccess: () => {
                 console.log("닉네임 변경 성공@@");
-                // dispatch(setNickname(values.nickname));
+                dispatch(setNickname(values.nickname));
                 setIsEditingNickname(false); // 편집 상태 해제
                 setNicknameMessage("");
                 setErrors((prev) => ({

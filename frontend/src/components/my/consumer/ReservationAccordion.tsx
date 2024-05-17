@@ -23,6 +23,7 @@ interface IReservationAccordionProps {
     addr1: string,
     level: number
   ) => void;
+  refetchReservations: () => void;
 }
 
 const ReservationAccordion = ({
@@ -31,6 +32,7 @@ const ReservationAccordion = ({
   toggleDetails,
   index,
   openMapModal,
+  refetchReservations,
 }: IReservationAccordionProps): JSX.Element => {
   const navigate = useNavigate();
   const dataToSend = {
@@ -42,8 +44,9 @@ const ReservationAccordion = ({
 
   // 결제 취소하기
   const [cancelPaymentModal, setCancelPaymentModal] = useState<boolean>(false); // 결제 취소 모달 상태관리
-  const toggleCancelPaymentModal = () =>
+  const toggleCancelPaymentModal = () => {
     setCancelPaymentModal(!cancelPaymentModal);
+  }
 
   // Ref와 상태를 사용한 아코디언 동작 구현
   const [isOpen, setIsOpen] = useState<boolean>(expanded);
@@ -289,6 +292,7 @@ const ReservationAccordion = ({
                     toggleModal={toggleCancelPaymentModal}
                     reservationId={reservation.reservation.reservationId}
                     impUid={reservation.reservation.impUid}
+                    refetchReservations={refetchReservations}
                   />
                 )}
                 {reservation.reservation.status === "reservation" && (

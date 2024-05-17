@@ -212,6 +212,7 @@ const MyReservation = (): JSX.Element => {
                 expanded={expanded[index]}
                 toggleDetails={() => toggleDetails(index)}
                 openMapModal={openMapModal}
+                refetchReservations={refetch}
               />
             ))}
         </div>
