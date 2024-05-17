@@ -69,6 +69,7 @@ const OwnerManagePhoto = () => {
         thumbnailMutate(file);
       }
     }
+    console.log(typeof mainImage)
   };
 
   const saveViewImgFile = () => {
@@ -79,6 +80,7 @@ const OwnerManagePhoto = () => {
         mapImageMutate(file);
       }
     }
+    console.log(typeof viewImage)
   };
 
   const saveOtherImgFiles = () => {
