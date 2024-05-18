@@ -1,6 +1,8 @@
+import { ICampsiteImage } from "@/types/reservation";
+
 interface IPhotoContainerProps {
   main: string;
-  photos: string[];
+  photos: ICampsiteImage[];
 }
 
 const PhotosContainer = ({ main, photos }: IPhotoContainerProps) => {
@@ -18,7 +20,7 @@ const PhotosContainer = ({ main, photos }: IPhotoContainerProps) => {
         photos.map((photo, index) => (
           <img
             key={index}
-            src={photo}
+            src={photo.url}
             alt={`캠핑장 추가 사진 ${index}`}
             className="object-cover object-center w-full h-full rounded-lg"
           />
