@@ -17,7 +17,7 @@ const RecommendItem = ({ item }: { item: ICampsiteSimpleRes }) => {
       <div
         onClick={goToDetail}
         key={item.id}
-        className="px-2 py-4 w-[33%] relative"
+        className="px-2 py-4 w-[33%] relative cursor-pointer"
       >
         <img
           src={item.thumbnailImageUrl}

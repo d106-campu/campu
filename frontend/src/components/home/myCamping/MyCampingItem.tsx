@@ -16,7 +16,7 @@ const MyCampingItem = ({ camping }: { camping: IMyFavoritCampRes }) => {
     <div
       onClick={goToDetail}
       key={camping.campsiteId}
-      className="px-2 py-5 w-[25%] relative"
+      className="px-2 py-5 w-[25%] relative cursor-pointer"
     >
       <img
         src={camping.thumbnailImageUrl}
