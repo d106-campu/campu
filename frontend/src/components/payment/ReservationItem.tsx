@@ -15,8 +15,13 @@ import formatPhoneNumber from "@/utils/formatPhoneNumber";
 import usePayment from "@/hooks/payment/usePayment";
 import { IPaymentPrepareReq } from "@/types/payment";
 import CancelPaymentModal from "./CancelPaymentModal";
+import { useUser } from "@/hooks/user/useUser";
 
 const ReservationItem = () => {
+  const { userProfileQuery } = useUser();
+  const profileData = userProfileQuery.data?.data.myProfile;
+  const nickname = profileData?.nickname || "";
+
   // Redux 상태 불러오기
   const {
     image,
@@ -45,7 +50,7 @@ const ReservationItem = () => {
   const reservationId = useSelector(
     (state: RootState) => state.reservation.data.reservationId
   );
-  const nickname = useSelector((state: RootState) => state.auth.nickname);
+  // const nickname = useSelector((state: RootState) => state.auth.nickname);
 
   const { preparePaymentMutation } = usePayment();
 
