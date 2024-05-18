@@ -160,7 +160,7 @@ const ReservationAccordion = ({
                 </div>
 
                 {/* 구분선 */}
-                <div className="w-[2.5%] border-r-[1px] mr-6" />
+                <div className="w-[2.5%] border-r-[1px] mr-6 my-3" />
 
                 {/* 우측 예약 세부 사항 */}
                 <div className="w-[50%] p-4 pt-6 text-gray-400">

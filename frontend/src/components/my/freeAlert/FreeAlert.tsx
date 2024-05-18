@@ -21,7 +21,7 @@ interface FreeAlertProps {
 const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
   const { useMyAlertsQuery, useDeleteAlert } = useMy();
   const [visibleAlerts, setVisibleAlerts] = useState<IEmptyNotification[]>([]);
-  const [viewCount, setIsViewCount] = useState<number>(2); // 처음 보여줄 빈자리 알림 개수 관리
+  const [viewCount, setIsViewCount] = useState<number>(3); // 처음 보여줄 빈자리 알림 개수 관리
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null); // roomId 식별번호 (삭제 시 사용)
 
@@ -69,14 +69,14 @@ const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
 
   // 더보기
   const handleShowMoreAlerts = () => {
-    const newCount = Math.min(viewCount + 2, emptyNotificationList.length);
+    const newCount = Math.min(viewCount + 3, emptyNotificationList.length);
     setIsViewCount(newCount);
     setVisibleAlerts(emptyNotificationList.slice(0, newCount));
   };
 
   // 줄이기
   const handleShowLessAlerts = () => {
-    const newCount = Math.max(viewCount - 2, 2);
+    const newCount = Math.max(viewCount - 3, 3);
     setIsViewCount(newCount);
     setVisibleAlerts(emptyNotificationList.slice(0, newCount));
   };

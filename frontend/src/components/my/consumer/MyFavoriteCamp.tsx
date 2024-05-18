@@ -3,6 +3,7 @@ import MyFavoriteCampItem from "@/components/my/consumer/MyFavoriteCampItem";
 import { useMy } from "@/hooks/my/useMy";
 import { IMyFavoritCampRes } from "@/types/my";
 import { FaRegFaceSmileWink } from "react-icons/fa6";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Lottie from "react-lottie";
 import {
   heartOptions,
@@ -15,7 +16,7 @@ interface MyFavoriteCampProps {
 }
 
 const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
-  const initialCampsToShow = 4; // 초기에 보여줄 관심 캠핑장 카드 수
+  const initialCampsToShow = 6; // 초기에 보여줄 관심 캠핑장 카드 수
   const [visibleCamps, setVisibleCamps] = useState<IMyFavoritCampRes[]>([]); // 현재 화면에 보여줄 캠핑장 개수 상태 관리
   const { useFavoriteCampsList } = useMy();
   const { data, isLoading, isError, refetch } = useFavoriteCampsList({
@@ -36,7 +37,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             <h1 className="text-lg font-bold">
               내가 찜한 캠핑장{" "}
               <span className="text-MAIN_GREEN font-thin pl-1">
-                {visibleCamps.length}
+                {data?.campsiteList.totalElements}
               </span>
             </h1>
           </div>
@@ -64,7 +65,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
     if (data?.campsiteList.content) {
       setVisibleCamps((prev) => [
         ...prev,
-        ...data.campsiteList.content.slice(prev.length, prev.length + 2),
+        ...data.campsiteList.content.slice(prev.length, prev.length + 3),
       ]);
     }
   };
@@ -72,7 +73,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
   // "줄이기" 버튼 클릭 핸들러
   const handleShowLessCamps = () => {
     setVisibleCamps((prev) =>
-      prev.slice(0, Math.max(initialCampsToShow, prev.length - 2))
+      prev.slice(0, Math.max(initialCampsToShow, prev.length - 3))
     );
   };
 
@@ -93,7 +94,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
         <h1 className="text-lg font-bold">
           내가 찜한 캠핑장{" "}
           <span className="text-MAIN_GREEN font-thin pl-1">
-            {visibleCamps.length}
+            {data?.campsiteList.totalElements}
           </span>
         </h1>
         {data.campsiteList.content.length > 0 && (
@@ -108,8 +109,8 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
 
       {/* 관심 캠핑장 카드 */}
       {!isLoading && !isError && data?.campsiteList?.content?.length > 0 && (
-        <div className="max-h-[550px] w-[90%] mx-auto overflow-y-auto">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="max-h-[550px] w-[98%] mx-auto overflow-y-auto">
+          <div className="grid grid-cols-3 gap-4">
             {visibleCamps.map((camp) => (
               <MyFavoriteCampItem
                 key={camp.campsiteId}
@@ -120,15 +121,19 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             ))}
           </div>
           {/* 더보기, 줄이기 버튼 */}
-          <div className="flex justify-center pt-2">
+          <div className="flex justify-center items-center my-4">
             <div>
               {visibleCamps.length < data.campsiteList.content.length && (
-                <button onClick={handleShowMoreCamps}>더보기</button>
+                <button onClick={handleShowMoreCamps} className="mx-12 py-2">
+                  <IoIosArrowDown />
+                </button>
               )}
             </div>
             <div>
               {visibleCamps.length > initialCampsToShow && (
-                <button onClick={handleShowLessCamps}>줄이기</button>
+                <button onClick={handleShowLessCamps} className="mx-12 py-2">
+                  <IoIosArrowUp />
+                </button>
               )}
             </div>
           </div>

@@ -12,6 +12,7 @@ import { useMy } from "@/hooks/my/useMy";
 import Toast from "@/components/@common/Toast/Toast";
 import { useNavigate } from "react-router-dom";
 import { RiArrowRightSLine, RiDeleteBin5Fill } from "react-icons/ri";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { formatSimpleReviewTime } from "@/utils/formatDateTime";
 
 const MyReview = (): JSX.Element => {
@@ -188,15 +189,15 @@ const MyReview = (): JSX.Element => {
             </div>
           ))}
           {/* 더보기, 줄이기 토글 버튼 */}
-          <div className="flex justify-center pt-3">
+          <div className="flex justify-center my-4">
             {viewCount < reviews.length && (
-              <button onClick={showMoreReviews} className="mx-2 py-2">
-                더보기
+              <button onClick={showMoreReviews} className="mx-12 py-2">
+                <IoIosArrowDown />
               </button>
             )}
             {viewCount > 2 && (
-              <button onClick={showLessReviews} className="mx-2 py-2">
-                줄이기
+              <button onClick={showLessReviews} className="mx-12 py-2">
+                <IoIosArrowUp />
               </button>
             )}
           </div>
