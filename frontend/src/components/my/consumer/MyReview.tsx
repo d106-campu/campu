@@ -191,12 +191,12 @@ const MyReview = (): JSX.Element => {
           {/* 더보기, 줄이기 토글 버튼 */}
           <div className="flex justify-center pt-3">
             {viewCount < reviews.length && (
-              <button onClick={showMoreReviews} className="mx-2 py-2">
+              <button onClick={showMoreReviews} className="mx-12 py-2">
                 <IoIosArrowDown />
               </button>
             )}
             {viewCount > 2 && (
-              <button onClick={showLessReviews} className="mx-2 py-2">
+              <button onClick={showLessReviews} className="mx-12 py-2">
                 <IoIosArrowUp />
               </button>
             )}

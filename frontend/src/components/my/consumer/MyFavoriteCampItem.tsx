@@ -56,12 +56,12 @@ const MyFavoriteCampItem = ({
       <div className="flex justify-center w-[98%] mx-auto">
         <div
           key={camp.campsiteId}
-          className="relative px-2 py-2 w-full shadow-lg rounded-xl"
+          className="relative  w-full shadow-lg rounded-xl"
         >
           <img
             src={camp.thumbnailImageUrl}
             alt={camp.campsiteName}
-            className="w-full h-[150px] rounded-md object-cover object-center"
+            className="w-full h-[130px] rounded-t-xl object-cover object-center"
           />
           <button
             onClick={handleToggleLike}
@@ -75,7 +75,7 @@ const MyFavoriteCampItem = ({
 
           <div
             onClick={() => navigate(`/camps/${camp.campsiteId}`)}
-            className="w-full pt-2 px-1 text-BLACK cursor-pointer"
+            className="w-full pt-2 text-BLACK cursor-pointer px-3 py-2"
           >
             {/* 캠핑장 이름 + 별점 */}
             <div className="w-full flex justify-between">
@@ -84,21 +84,22 @@ const MyFavoriteCampItem = ({
                 <RiArrowRightSLine />
               </button>
 
-              <div className="flex items-center">
+              <div className="flex items-center text-sm text-SUB_BLACK">
                 <FaStar className="text-MAIN_YELLOW mx-1" />
-                <p>{camp.score}</p>
+                <p>{camp.score.toFixed(1)}</p>
               </div>
             </div>
             {/* 소개+주소 /// 가격 */}
-            <div className="w-full flex justify-between">
-              <div className="w-[50%]">
-                <p className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {camp.lineIntro}
+            <div className="w-full flex justify-between items-end">
+              <div className="w-[70%] text-xs">
+                <p className="line-clamp-1 text-SUB_BLACK">
+                  {camp.lineIntro || "한줄 소개 입니다"}
                 </p>
-                <p className="text-sm text-gray-400">{camp.address}</p>
+                <p className="text-gray-400 line-clamp-1">{camp.address}</p>
               </div>
-              <div className="w-[50%] flex justify-end">
-                <p className="text-xl text-MAIN_RED font-extrabold">
+
+              <div className="">
+                <p className="text-MAIN_RED text-sm font-bold">
                   {camp.minPrice} ~
                 </p>
               </div>

@@ -37,7 +37,7 @@ const FreeAlertList = ({
                 {alert.room.campsite.campsiteName}
               </h3>
               <div className="flex items-center text-gray-400 gap-1 text-xs pb-1">
-                <FiMapPin className="text-gray-400 text-[12px]" />
+                <FiMapPin className="text-gray-400 flex-shrink-0" size={10} />
                 <p className="line-clamp-1">{alert.room.campsite.address}</p>
               </div>
               <img
@@ -49,6 +49,7 @@ const FreeAlertList = ({
               {/* 구분선 */}
               <div className="border-t-2 w-full p-2" />
 
+              {/* 날짜 */}
               <div className="px-2">
                 <h5 className="text-gray-400 text-xs">날짜</h5>
                 <p className="font-bold">{`${formatDate(
@@ -58,12 +59,14 @@ const FreeAlertList = ({
                   alert.endDate
                 )}박`}</p>
 
+                {/* 사이트 */}
                 <div className="flex justify-between pr-3">
                   <div>
                     <h5 className="text-gray-400 text-xs pt-2">사이트</h5>
                     <p className="font-bold">{alert.room.roomName}</p>
                   </div>
 
+                  {/* 입 퇴실 시간 */}
                   <div>
                     <h5 className="text-gray-400 text-xs pt-2">
                       입 · 퇴실 시간
@@ -111,12 +114,12 @@ const FreeAlertList = ({
       </div>
       <div className="flex justify-center items-center pt-3">
         {viewCount < totalMyAlerts && (
-          <button onClick={handleShowMoreAlerts} className="mx-2 py-2">
+          <button onClick={handleShowMoreAlerts} className="mx-12 py-2">
             <IoIosArrowDown />
           </button>
         )}
         {viewCount > 3 && (
-          <button onClick={handleShowLessAlerts} className="mx-2 py-2">
+          <button onClick={handleShowLessAlerts} className="mx-12 py-2">
             <IoIosArrowUp />
           </button>
         )}
