@@ -17,7 +17,7 @@ const AlertLink = ({ page }: { page?: string }) => {
   );
 
   // 전체 알림 리스트 조회
-  const { data: notifyList } = useGetNotifyList({
+  const { data: notifyList, refetch } = useGetNotifyList({
     pageable: { size: 100, page: 0 },
   });
 
@@ -26,6 +26,7 @@ const AlertLink = ({ page }: { page?: string }) => {
     dispatch(resetNewNotifyCnt());
     if (notifyList!.data.notificationList.content.length > 0) {
       setOpenAlert(!openAlert);
+      refetch();
     } else {
       Toast.info("알림함이 비었습니다.");
     }
