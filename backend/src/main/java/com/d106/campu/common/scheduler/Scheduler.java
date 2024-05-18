@@ -23,7 +23,7 @@ public class Scheduler {
     private final NotificationMapper notificationMapper;
 
     @Async
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     @Transactional(readOnly = true)
     public void sendNotificationForEmptyRoom() {
         log.info("Scheduler: sendNotificationForEmptyRoom()");

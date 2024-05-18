@@ -35,6 +35,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -104,7 +105,6 @@ public class PaymentService {
         reservation.setReference(user, room, reservationPayment);
 
         PrepareData prepareData = new PrepareData(merchantUid, BigDecimal.valueOf(totalPrice));
-        log.info("totalPrice: {}", totalPrice);
         IamportResponse<Prepare> iamportResponse = null;
         try {
             iamportResponse = iamportClient.postPrepare(prepareData);
@@ -135,7 +135,8 @@ public class PaymentService {
             reservation.setStatus(PaymentStatus.FAIL);
             throw new InvalidException(ReservationExceptionCode.RESERVATION_FAIL_EX);
         }
-        if (iamportResponse.getCode() != 0) {
+        if (iamportResponse.getCode() != 0 ||
+            !StringUtils.equals(iamportResponse.getResponse().getStatus(), ReservationConstant.STATUS_PAID)) {
             reservation.setStatus(PaymentStatus.FAIL);
             throw new InvalidException(ReservationExceptionCode.RESERVATION_FAIL_CODE);
         }
@@ -164,7 +165,8 @@ public class PaymentService {
             reservation.setStatus(PaymentStatus.FAIL);
             throw new InvalidException(ReservationExceptionCode.CANCEL_FAIL_EX);
         }
-        if (iamportResponse.getCode() != 0) {
+        if (iamportResponse.getCode() != 0 ||
+            !StringUtils.equals(iamportResponse.getResponse().getStatus(), ReservationConstant.STATUS_CANCELLED)) {
             reservation.setStatus(PaymentStatus.FAIL);
             throw new InvalidException(ReservationExceptionCode.CANCEL_FAIL_CODE);
         }
