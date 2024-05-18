@@ -72,7 +72,7 @@ const router = createBrowserRouter([
     element: <PaymentPage />,
   },
   {
-    path: '/*',
+    path: "/*",
     element: <ErrorPage />,
   },
 ]);
@@ -110,8 +110,10 @@ function App() {
       eventSource.addEventListener("campu", async function (event: any) {
         const data = JSON.parse(event.data);
         if (data.data.notification === "success") {
+          console.log(data.data);
           console.log("SSE 최초 연결 알림");
         } else {
+          console.log(data.data);
           Toast.info("🔔 새로운 알림이 있습니다!");
           dispatch(addNewNotifyCnt());
         }
