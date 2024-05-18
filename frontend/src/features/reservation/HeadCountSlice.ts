@@ -11,8 +11,11 @@ const HeadCountSlice = createSlice({
     setHeadCount: (state, action: PayloadAction<number>) => {
       state.headCount = action.payload;
     },
+    resetHeadCount: (state) => {
+      state.headCount = initialState.headCount;
+    },
   },
 });
 
-export const { setHeadCount } = HeadCountSlice.actions;
+export const { setHeadCount, resetHeadCount } = HeadCountSlice.actions;
 export const headCountReducer = HeadCountSlice.reducer;

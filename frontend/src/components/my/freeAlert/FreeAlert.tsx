@@ -135,7 +135,9 @@ const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
       )}
 
       <div className="max-h-[500px] overflow-y-auto relative">
-        {emptyNotificationList.length > 0 ? (
+        {!useMyAlertsQuery.isLoading &&
+        !useMyAlertsQuery.isError &&
+        emptyNotificationList.length > 0 ? (
           <>
             {/* 빈자리 알림 설정한 더미데이터 리스트 */}
             <FreeAlertList
@@ -150,21 +152,23 @@ const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
         ) : (
           <>
             {/* 빈자리 알림이 없을 때 처리 */}
-            <div className="flex flex-col justify-center items-center h-[450px]">
-              <div>
-                <Lottie options={tentOptions} height={300} width={500} />
+            {!useMyAlertsQuery.isLoading && !useMyAlertsQuery.isError && (
+              <div className="flex flex-col justify-center items-center h-[450px]">
+                <div>
+                  <Lottie options={tentOptions} height={300} width={500} />
+                </div>
+                <div className="text-center text-sm text-GRAY">
+                  <h3 className="text-base text-BLACK">
+                    빈자리 알림을 신청한{" "}
+                    <span className="text-MAIN_GREEN">캠핑장</span>이 없어요 😥
+                  </h3>
+                  <p className="pt-2">
+                    마음에 드는 캠핑장에 알림을 신청해보세요 !
+                  </p>
+                  <p>빈자리가 생기면 캠푸가 바로 알려드려요</p>
+                </div>
               </div>
-              <div className="text-center text-sm text-GRAY">
-                <h3 className="text-base text-BLACK">
-                  빈자리 알림을 신청한{" "}
-                  <span className="text-MAIN_GREEN">캠핑장</span>이 없어요 😥
-                </h3>
-                <p className="pt-2">
-                  마음에 드는 캠핑장에 알림을 신청해보세요 !
-                </p>
-                <p>빈자리가 생기면 캠푸가 바로 알려드려요</p>
-              </div>
-            </div>
+            )}
           </>
         )}
       </div>
