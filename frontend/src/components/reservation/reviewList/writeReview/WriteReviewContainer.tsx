@@ -28,11 +28,11 @@ const WriteReviewContainer = () => {
           {/* 내 캠핑일자 */}
           <p className="font-bold text-MAIN_GREEN pl-3">
             {`${formatDate(startDate)} ~ ${formatSimpleDate(
-              startDate
+              endDate
             )} · ${diffDays(startDate, endDate)}박 `}
           </p>
         </div>
-        <ReviewForm reservationId={reservationId} campsiteId={campsiteId}/>
+        <ReviewForm reservationId={reservationId} campsiteId={campsiteId} />
       </div>
     </>
   );
