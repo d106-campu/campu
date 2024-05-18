@@ -28,6 +28,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                 OR ((:startDate < r.startDate) AND (r.startDate < :endDate))
                 OR ((r.startDate < :startDate) AND (:startDate < r.endDate))
             )
+            AND r.status = 'SUCCESS'
         """)
     Optional<Reservation> existsReservationOnDateRangeInternal(
         @Param("room") Room room,
