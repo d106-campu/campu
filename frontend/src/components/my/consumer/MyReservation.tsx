@@ -143,7 +143,7 @@ const MyReservation = (): JSX.Element => {
         <div className="flex space-x-2 pb-10">
           <button
             onClick={() => handleDateTypeChange("TOTAL")}
-            className="w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg bg-MAIN_GREEN text-white"
+            className="w-[7.5%] px-4 py-2 text-sm font-medium rounded-md bg-MAIN_GREEN text-white"
           >
             전체
           </button>
@@ -158,7 +158,7 @@ const MyReservation = (): JSX.Element => {
                   filter as "MONTH" | "MONTH6" | "YEAR" | "TOTAL"
                 )
               }
-              className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md shadow-lg ${
+              className={`w-[7.5%] px-4 py-2 text-sm font-medium rounded-md ${
                 filter === selectedFilter
                   ? "bg-MAIN_GREEN text-white"
                   : "bg-gray-100 text-black"
@@ -204,9 +204,9 @@ const MyReservation = (): JSX.Element => {
       )}
 
       {/* 아코디언 */}
-      {data &&
+      {!isLoading &&
+      data &&
       data.reservationList &&
-      data.reservationList.content &&
       data.reservationList.content.length > 0 ? (
         <>
           <div className="max-h-[500px] overflow-y-auto">
@@ -253,26 +253,28 @@ const MyReservation = (): JSX.Element => {
       ) : (
         <>
           {/* 빈자리 알림이 없을 때 처리 */}
-          <div className="flex flex-col justify-center items-center h-[350px]">
-            <div className="m-5 overflow-hidden rounded-xl">
-              <Lottie
-                options={caravanOptions}
-                height={250}
-                width={700}
-                speed={0.3}
-              />
+          {!isLoading && !isError && (
+            <div className="flex flex-col justify-center items-center h-[350px]">
+              <div className="m-5 overflow-hidden rounded-xl">
+                <Lottie
+                  options={caravanOptions}
+                  height={250}
+                  width={700}
+                  speed={0.3}
+                />
+              </div>
+              <div className="text-center text-sm text-GRAY">
+                <h3 className="text-base text-BLACK">
+                  아직 <span className="text-MAIN_GREEN">캠핑 내역</span>이
+                  없어요 😥
+                </h3>
+                <p className="pt-2">
+                  캠푸에서 마음에 드는 캠핑장을 예약해보세요 !
+                </p>
+                <p>캠핑 스타일과 테마별 인기 캠핑장을 추천해드려요</p>
+              </div>
             </div>
-            <div className="text-center text-sm text-GRAY">
-              <h3 className="text-base text-BLACK">
-                아직 <span className="text-MAIN_GREEN">캠핑 내역</span>이 없어요
-                😥
-              </h3>
-              <p className="pt-2">
-                캠푸에서 마음에 드는 캠핑장을 예약해보세요 !
-              </p>
-              <p>캠핑 스타일과 테마별 인기 캠핑장을 추천해드려요</p>
-            </div>
-          </div>
+          )}
         </>
       )}
 

@@ -41,8 +41,8 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             </h1>
           </div>
 
-          {/* 빈자리 알림이 없을 때 처리 */}
-          <div className="flex flex-col justify-center items-center h-[530px]">
+          {/* 좋아요한 캠핑장이 없을 때 처리 */}
+          <div className="flex flex-col justify-start items-center h-[530px]">
             <div>
               <Lottie options={heartOptions} height={300} width={300} />
             </div>
@@ -106,6 +106,35 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
         )}
       </div>
 
+      {/* 관심 캠핑장 카드 */}
+      {!isLoading && !isError && data?.campsiteList?.content?.length > 0 && (
+        <div className="max-h-[550px] w-[90%] mx-auto overflow-y-auto">
+          <div className="grid grid-cols-2 gap-4">
+            {visibleCamps.map((camp) => (
+              <MyFavoriteCampItem
+                key={camp.campsiteId}
+                camp={camp}
+                onRemove={removeCamp} // 캠프 제거 함수 전달
+                refetchCamps={refetch}
+              />
+            ))}
+          </div>
+          {/* 더보기, 줄이기 버튼 */}
+          <div className="flex justify-center pt-2">
+            <div>
+              {visibleCamps.length < data.campsiteList.content.length && (
+                <button onClick={handleShowMoreCamps}>더보기</button>
+              )}
+            </div>
+            <div>
+              {visibleCamps.length > initialCampsToShow && (
+                <button onClick={handleShowLessCamps}>줄이기</button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 로딩중 처리 */}
       {isLoading && (
         <>
@@ -138,33 +167,6 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
           </div>
         </>
       )}
-
-      {/* 관심 캠핑장 카드 */}
-      <div className="max-h-[550px] w-[90%] mx-auto overflow-y-auto">
-        <div className="grid grid-cols-2 gap-4">
-          {visibleCamps.map((camp) => (
-            <MyFavoriteCampItem
-              key={camp.campsiteId}
-              camp={camp}
-              onRemove={removeCamp} // 캠프 제거 함수 전달
-              refetchCamps={refetch}
-            />
-          ))}
-        </div>
-        {/* 더보기, 줄이기 버튼 */}
-        <div className="flex justify-center pt-2">
-          <div>
-            {visibleCamps.length < data.campsiteList.content.length && (
-              <button onClick={handleShowMoreCamps}>더보기</button>
-            )}
-          </div>
-          <div>
-            {visibleCamps.length > initialCampsToShow && (
-              <button onClick={handleShowLessCamps}>줄이기</button>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

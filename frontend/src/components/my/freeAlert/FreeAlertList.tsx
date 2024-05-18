@@ -41,11 +41,11 @@ const FreeAlertList = ({
             <img
               src={alert.room.campsite.thumbnailImageUrl}
               alt={alert.room.campsite.campsiteName}
-              className="w-[95%] h-[130px] object-cover object-center rounded-lg mx-auto"
+              className="w-[95%] h-[150px] object-cover object-center rounded-lg mx-auto mt-2"
             />
           </div>
 
-          <div className="w-[50%] flex items-center text-sm pl-5">
+          <div className="w-[55%] flex items-center text-sm pl-5 p-3">
             <div className="w-full flex flex-col gap-4 text-gray-400">
               <div>
                 <h3>사이트</h3>
@@ -53,20 +53,21 @@ const FreeAlertList = ({
                   {alert.room.roomName}
                 </p>
               </div>
+
               <div>
-                <h3>일정</h3>
+                <h3>캠핑장 위치</h3>
                 <p className="pb-1 font-bold text-BLACK">
-                  {`
+                  {`${alert.room.campsite.address}`}
+                </p>
+              </div>
+              <div className="flex justify-between items-end gap-1">
+                <div>
+                  <h3>일정</h3>
+                  <p className="pb-1 font-bold text-BLACK">
+                    {`
                     ${formatDate(alert.startDate)} ~
                     ${formatSimpleDate(alert.endDate)} ·
                     ${diffDays(alert.startDate, alert.endDate)}박`}
-                </p>
-              </div>
-              <div className="flex justify-between items-end ">
-                <div>
-                  <h3>캠핑장 위치</h3>
-                  <p className="pb-1 font-bold text-BLACK">
-                    {`${alert.room.campsite.address}`}
                   </p>
                 </div>
                 {/* 버튼 */}
@@ -75,7 +76,7 @@ const FreeAlertList = ({
                     handleCancelAlert(alert.room.roomId);
                     event.stopPropagation();
                   }}
-                  width="w-44 mr-3"
+                  width="w-44"
                   text="빈자리 알림 취소"
                   icon={FaBell}
                   iconColor="#fdd872"
