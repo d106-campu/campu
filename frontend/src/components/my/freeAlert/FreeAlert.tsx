@@ -4,6 +4,10 @@ import FreeAlertList from "@/components/my/freeAlert/FreeAlertList";
 import Modal from "@/components/@common/Modal/Modal";
 import { useMy } from "@/hooks/my/useMy";
 import Toast from "@/components/@common/Toast/Toast";
+import Lottie from "react-lottie";
+import { bellOptions, loadingOptions, tentOptions, warningOptions } from "@/assets/lotties/lottieOptions";
+import Button from "@/components/@common/Button/Button";
+import { FaRegFaceSmileWink } from "react-icons/fa6";
 
 interface FreeAlertProps {
   nickname: string;
@@ -29,44 +33,6 @@ const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
   // "??" 기준으로 좌측 피연산자가 null(undefined)일 경우 우측의 빈 배열을 반환하도록 설정
   const emptyNotificationList =
     useMyAlertsQuery.data?.data.emptyNotificationList ?? [];
-
-  // 로딩 중일 때 처리
-  if (useMyAlertsQuery.isLoading) {
-    return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
-  }
-
-  // 데이터 에러 발생 시 처리
-  if (useMyAlertsQuery.isError) {
-    return <div>빈자리 알림을 가져오지 못했습니다. 😭</div>;
-  }
-
-  // 빈자리 알림이 아직 하나도 없을 때 처리
-  if (!emptyNotificationList || emptyNotificationList.length === 0) {
-    return (
-      <>
-        <div>
-          <div className="flex flex-col pb-10">
-            <h1 className="text-lg font-bold">
-              빈자리 알림
-              <span className="text-MAIN_GREEN font-thin pl-1">0</span>
-            </h1>
-            <h1 className="text-sm text-gray-400">
-              {nickname}님이 빈자리 알림은 설정한 캠핑장입니다.
-            </h1>
-          </div>
-          <div className="text-center">
-            <h1 className="">
-              빈자리 알림을 신청한{" "}
-              <span className="text-MAIN_GREEN">캠핑장</span>이 없어요 😃
-            </h1>
-            <h1 className="text-sm text-GRAY pt-2">
-              원하는 캠핑장 정보에 알림을 신청해보세요 !
-            </h1>
-          </div>
-        </div>
-      </>
-    );
-  }
 
   // 빈자리 알림 취소 모달 관리
   const handleCancelAlert = (roomId: number) => {
@@ -120,52 +86,118 @@ const FreeAlert = ({ nickname }: FreeAlertProps): JSX.Element => {
             {emptyNotificationList.length}
           </span>
         </h1>
-        <h1 className="text-sm text-gray-400">
-          {nickname}님이 빈자리 알림은 설정한 캠핑장입니다.
-        </h1>
+        {emptyNotificationList.length > 0 && (
+          <>
+            <h1 className="text-sm text-gray-400 flex items-center gap-1">
+              {nickname}님이 빈자리 알림을 설정한 캠핑장입니다
+              <FaRegFaceSmileWink />
+            </h1>
+          </>
+        )}
       </div>
 
+      {useMyAlertsQuery.isLoading && (
+        <>
+          {/* 로딩중 처리 */}
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div>
+              <Lottie options={loadingOptions} height={200} width={300} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-base font-bold text-[#A0A0A0]">로딩 중...</h3>
+              <p>잠시만 기다려주세요 😀</p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {useMyAlertsQuery.isError && (
+        <>
+          {/* 데이터 에러 발생 시 처리 */}
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div>
+              <Lottie options={warningOptions} height={180} width={250} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-lg text-BLACK font-bold">
+                다시 시도해주세요
+              </h3>
+              <p className="pt-2">빈자리 알림을 가져오지 못했습니다. 😭</p>
+              <p className="">불편을 드려 죄송합니다.</p>
+            </div>
+          </div>
+        </>
+      )}
+
+
       <div className="max-h-[500px] overflow-y-auto relative">
-        {/* 빈자리 알림 설정한 더미데이터 리스트 */}
-        <FreeAlertList
-          alerts={visibleAlerts}
-          handleCancelAlert={(roomId) => handleCancelAlert(roomId)}
-          viewCount={viewCount}
-          handleShowMoreAlerts={handleShowMoreAlerts}
-          handleShowLessAlerts={handleShowLessAlerts}
-          totalMyAlerts={emptyNotificationList.length}
-        />
+        {emptyNotificationList.length > 0 ? (
+          <>
+            {/* 빈자리 알림 설정한 더미데이터 리스트 */}
+            <FreeAlertList
+              alerts={visibleAlerts}
+              handleCancelAlert={(roomId) => handleCancelAlert(roomId)}
+              viewCount={viewCount}
+              handleShowMoreAlerts={handleShowMoreAlerts}
+              handleShowLessAlerts={handleShowLessAlerts}
+              totalMyAlerts={emptyNotificationList.length}
+            />
+          </>
+        ) : (
+          <>
+            {/* 빈자리 알림이 없을 때 처리 */}
+            <div className="flex flex-col justify-center items-center h-[450px]">
+              <div>
+                <Lottie options={tentOptions} height={300} width={500} />
+              </div>
+              <div className="text-center text-sm text-GRAY">
+                <h3 className="text-base text-BLACK">
+                  빈자리 알림을 신청한{" "}
+                  <span className="text-MAIN_GREEN">캠핑장</span>이 없어요 😥
+                </h3>
+                <p className="pt-2">
+                  마음에 드는 캠핑장에 알림을 신청해보세요 !
+                </p>
+                <p>빈자리가 생기면 캠푸가 바로 알려드려요</p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* 빈자리 취소 시 모달 호출 */}
       {showConfirmModal && (
         <Modal
-          width="w-1/3"
-          title="빈자리 알림 취소 확인"
+          width="w-[35%]"
           hasIcon={false}
           onClose={() => setShowConfirmModal(false)}
         >
-          <div className="text-center p-1">
-            <div className="pt-4">
-              <p>
-                이 캠핑장에 대한 빈자리 알림을{" "}
-                <span className="text-red-400">취소</span>하시겠어요?
-              </p>
+          <div className="flex flex-col items-center text-center text-BLACK">
+            <div className="bg-SUB_YELLOW w-[160px] h-[160px] flex items-center rounded-full">
+              <Lottie options={bellOptions} height={120} width={120} />
             </div>
-            <div className="mt-4 flex justify-around">
-              <button
-                className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
-                onClick={confirmCancelAlert}
-              >
-                <span>취소합니다</span>
-              </button>
-              <button
-                className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
-                onClick={() => setShowConfirmModal(false)}
-              >
-                <span>아니요</span>
-              </button>
+            <h3 className="text-xl font-bold pt-5">빈자리 알림 취소</h3>
+            <div className="text-sm pt-2">
+              <p>빈자리 알림 취소 시 알림 및 문자를 받을 수 없어요.</p>
+              <p>정말 빈자리 알림을 취소하시겠습니까?</p>
             </div>
+          </div>
+          <div className="flex justify-evenly pt-5">
+            <Button
+              text="아니요"
+              backgroundColor="bg-GRAY"
+              hoverBackgroundColor="hover:bg-[#acacac]"
+              onClick={(event) => {
+                event.stopPropagation(); // 이벤트 전파 중단
+                setShowConfirmModal(false);
+              }}
+            />
+            <Button
+              text="취소할게요"
+              backgroundColor="bg-MAIN_PINK"
+              hoverBackgroundColor="hover:bg-MAIN_RED"
+              onClick={confirmCancelAlert}
+            />
           </div>
         </Modal>
       )}

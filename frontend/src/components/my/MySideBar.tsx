@@ -26,7 +26,7 @@ const MySideBar = ({
       // const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
       const fullImageUrl = `${profileData.profileImageUrl}`;
       setProfileImage(fullImageUrl);
-      console.log("사이드바 이미지 :", fullImageUrl);
+      // console.log("사이드바 이미지 :", fullImageUrl);
     } else {
       setProfileImage(profileDefaultImage);
     }

@@ -1,7 +1,10 @@
 import { FaBell } from "react-icons/fa";
 import { IEmptyNotification } from "@/types/my";
-import { FaArrowRightToBracket } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
+import { RiArrowRightSLine } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
+import Button from "@/components/@common/Button/Button";
+import { formatDate, formatSimpleDate } from "@/utils/formatDateTime";
+import { diffDays } from "@/utils/diffDays";
 
 interface IFreeAlertListProps {
   alerts: IEmptyNotification[];
@@ -18,68 +21,76 @@ const FreeAlertList = ({
   viewCount,
   handleShowMoreAlerts,
   handleShowLessAlerts,
-  totalMyAlerts
+  totalMyAlerts,
 }: IFreeAlertListProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className='grid grid-cols-1 gap-4'>
+    <div className="grid grid-cols-1 gap-4">
       {alerts.map((alert, index) => (
-        <div key={index} className="w-full flex justify-center p-2 pb-3 shadow-lg rounded-xl bg-white transition-transform duration-500 transform hover:scale-105">
-          <div className="w-[45%] px-1">
-            <div className="flex flex-col">
-              <div className="flex">
-                <h2 className="text-lg">{alert.room.campsite.campsiteName}</h2>
-                <button
-                  className='pl-2'
-                  onClick={() =>
-                    navigate(`/camps/${alert.room.campsite.campsiteId}`)
-                  }
-                >
-                  <FaArrowRightToBracket />
-                </button>
-              </div>
-              <img
-                src={alert.room.campsite.thumbnailImageUrl}
-                alt={alert.room.campsite.campsiteName}
-                className="w-[300px] h-[150px] object-cover object-center rounded-lg mt-2 shadow-md"
-              />
-            </div>
+        <div
+          key={index}
+          onClick={() => navigate(`/camps/${alert.room.campsite.campsiteId}`)}
+          className="w-[90%] mx-auto flex justify-center p-4 shadow-lg rounded-xl bg-white cursor-pointer"
+        >
+          <div className="flex flex-col w-[50%] px-1">
+            <button className="flex items-center text-lg font-bold text-BLACK pl-2 ">
+              {alert.room.campsite.campsiteName}
+              <RiArrowRightSLine className="pl-1" />
+            </button>
+            <img
+              src={alert.room.campsite.thumbnailImageUrl}
+              alt={alert.room.campsite.campsiteName}
+              className="w-[95%] h-[130px] object-cover object-center rounded-lg mx-auto"
+            />
           </div>
 
-          <div className="w-[50%] text-sm pt-8">
-            <div className="py-1">
-              <h1 className="text-GRAY">캠핑장 위치</h1>
-              <p className="font-bold">{alert.room.campsite.address}</p>
-            </div>
-            <div className="flex justify-between items-center py-2">
+          <div className="w-[50%] flex items-center text-sm pl-5">
+            <div className="w-full flex flex-col gap-4 text-gray-400">
               <div>
-                <h1 className="text-GRAY">날짜</h1>
-                {/* 입실일 ~ 퇴실일 */}
-                <p>
-                  <span className="text-MAIN_GREEN">{alert.startDate}</span> ~ <span className="text-red-500">{alert.endDate}</span>
+                <h3>사이트</h3>
+                <p className="pb-1 font-bold text-BLACK">
+                  {alert.room.roomName}
                 </p>
               </div>
-            </div>
-            <div className="flex justify-between items-center py-1">
               <div>
-                <h1 className="text-GRAY">사이트</h1>
-                <p className="text-MAIN_GREEN font-bold">{alert.room.roomName}</p>
+                <h3>일정</h3>
+                <p className="pb-1 font-bold text-BLACK">
+                  {`
+                    ${formatDate(alert.startDate)} ~
+                    ${formatSimpleDate(alert.endDate)} ·
+                    ${diffDays(alert.startDate, alert.endDate)}박`}
+                </p>
               </div>
-              <div className="mt-5">
-                <button
-                  className="flex items-center bg-SUB_YELLOW hover:bg-yellow-200 rounded-lg px-2 py-1"
-                  onClick={() => handleCancelAlert(alert.room.roomId)}
-                >
-                  <FaBell className="text-yellow-400"/>
-                  <span className="text-gray-600 hover:text-MAIN_GREEN pl-2">빈자리 알림 취소</span>
-                </button>
+              <div className="flex justify-between items-end ">
+                <div>
+                  <h3>캠핑장 위치</h3>
+                  <p className="pb-1 font-bold text-BLACK">
+                    {`${alert.room.campsite.address}`}
+                  </p>
+                </div>
+                {/* 버튼 */}
+                <Button
+                  onClick={(event: React.MouseEvent) => {
+                    handleCancelAlert(alert.room.roomId);
+                    event.stopPropagation();
+                  }}
+                  width="w-44 mr-3"
+                  text="빈자리 알림 취소"
+                  icon={FaBell}
+                  iconColor="#fdd872"
+                  iconSize={20}
+                  backgroundColor="bg-SUB_YELLOW"
+                  hoverBackgroundColor="hover:bg-HOVER_YELLOW"
+                  textColor="text-BLACK"
+                  fontWeight="font"
+                />
               </div>
             </div>
           </div>
         </div>
       ))}
-      <div className='flex justify-center pt-3'>
+      <div className="flex justify-center pt-3">
         {viewCount < totalMyAlerts && (
           <button onClick={handleShowMoreAlerts} className="mx-2 py-2">
             더보기
@@ -93,6 +104,6 @@ const FreeAlertList = ({
       </div>
     </div>
   );
-}
+};
 
 export default FreeAlertList;

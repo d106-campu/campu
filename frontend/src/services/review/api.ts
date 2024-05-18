@@ -70,7 +70,7 @@ export const postReview = async ({
   //   console.log(`${pair[0]}: ${pair[1]}`);
   // }
 
-  console.log("formData :", formData, formData.values.length);
+  // console.log("formData :", formData, formData.values.length);
   const res = await axiosFileInstance.post(`/review`, formData);
   return res.data;
 };

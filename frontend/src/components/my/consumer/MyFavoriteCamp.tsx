@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import MyFavoriteCampItem from "@/components/my/consumer/MyFavoriteCampItem";
 import { useMy } from "@/hooks/my/useMy";
 import { IMyFavoritCampRes } from "@/types/my";
+import { FaRegFaceSmileWink } from "react-icons/fa6";
+import Lottie from "react-lottie";
+import {
+  heartOptions,
+  loadingOptions,
+  warningOptions,
+} from "@/assets/lotties/lottieOptions";
 
 interface MyFavoriteCampProps {
   nickname: string;
@@ -21,9 +28,6 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
     }
   }, [data]);
 
-  if (isLoading) return <div>로딩 중... 잠시만 기다려주세요 😀</div>;
-  if (isError)
-    return <div>내가 찜한 캠핑장 목록에 접근하지 못했습니다. 😭</div>;
   if (!data?.campsiteList?.content?.length) {
     return (
       <>
@@ -35,18 +39,20 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
                 {visibleCamps.length}
               </span>
             </h1>
-            <h1 className="text-sm text-gray-400">
-              {nickname}님이 좋아요한 캠핑장입니다.
-            </h1>
           </div>
-          <div className="text-center">
-            <h1 className="">
-              아직 찜한 <span className="text-MAIN_GREEN">캠핑장</span>이 없어요
-              😃
-            </h1>
-            <h1 className="text-sm text-GRAY pt-2">
-              원하는 캠핑장에 하트를 눌러보세요 !
-            </h1>
+
+          {/* 빈자리 알림이 없을 때 처리 */}
+          <div className="flex flex-col justify-center items-center h-[450px]">
+            <div>
+              <Lottie options={heartOptions} height={300} width={300} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-base text-BLACK">
+                아직 찜한 <span className="text-MAIN_GREEN">캠핑장</span>이
+                없어요 😥
+              </h3>
+              <p className="pt-2">마음에 드는 캠핑장에 하트를 눌러보세요 !</p>
+            </div>
           </div>
         </div>
       </>
@@ -90,13 +96,51 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             {visibleCamps.length}
           </span>
         </h1>
-        <h1 className="text-sm text-gray-400">
-          {nickname}님이 좋아요한 캠핑장입니다.
-        </h1>
+        {data.campsiteList.content.length > 0 && (
+          <>
+            <h1 className="text-sm text-gray-400 flex items-center gap-1">
+              {nickname}님이 찜한 캠핑장입니다
+              <FaRegFaceSmileWink />
+            </h1>
+          </>
+        )}
       </div>
 
+      {/* 로딩중 처리 */}
+      {isLoading && (
+        <>
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div>
+              <Lottie options={loadingOptions} height={200} width={300} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-base font-bold text-[#A0A0A0]">로딩 중...</h3>
+              <p>잠시만 기다려주세요 😀</p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* 데이터 에러 발생 시 처리 */}
+      {isError && (
+        <>
+          <div className="flex flex-col justify-center items-center h-[350px]">
+            <div>
+              <Lottie options={warningOptions} height={180} width={250} />
+            </div>
+            <div className="text-center text-sm text-GRAY">
+              <h3 className="text-lg text-BLACK font-bold">
+                다시 시도해주세요
+              </h3>
+              <p className="pt-2">찜한 캠핑장을 가져오지 못했습니다. 😭</p>
+              <p className="">불편을 드려 죄송합니다.</p>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* 관심 캠핑장 카드 */}
-      <div className="max-h-[550px] overflow-y-auto">
+      <div className="max-h-[550px] w-[90%] mx-auto overflow-y-auto">
         <div className="grid grid-cols-2 gap-4">
           {visibleCamps.map((camp) => (
             <MyFavoriteCampItem
@@ -107,7 +151,6 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             />
           ))}
         </div>
-
         {/* 더보기, 줄이기 버튼 */}
         <div className="flex justify-center pt-2">
           <div>

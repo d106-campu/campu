@@ -44,7 +44,7 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
       Toast.error("형식이 올바르지 않습니다.");
       return;
     }
-    console.log("뮤테이트 전 확인 :", bizrno);
+    // console.log("뮤테이트 전 확인 :", bizrno);
     mutate();
     setIsOpen(false); // 모달 닫기
   };
@@ -60,7 +60,7 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
     dispatch(setSelectCampsite(campground));
   };
 
-  console.log(bizrno, typeof bizrno);
+  // console.log(bizrno, typeof bizrno);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);

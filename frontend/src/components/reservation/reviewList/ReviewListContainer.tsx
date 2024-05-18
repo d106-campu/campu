@@ -11,7 +11,7 @@ const ReviewListContainer = () => {
   const navigate = useNavigate();
   const { useGetCampScore } = useReview();
   const { campId } = useParams<RouteParams>();
-  console.log("campId : ", campId);
+  // console.log("campId : ", campId);
   const campsiteId = campId ? parseInt(campId, 10) : 0;
 
   // 캠핑장 평점 조회

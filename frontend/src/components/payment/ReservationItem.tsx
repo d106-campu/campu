@@ -69,7 +69,7 @@ const ReservationItem = () => {
       startDate: startDate,
       endDate: endDate,
     };
-    console.log(data);
+    // console.log(data);
     preparePaymentMutation.mutate(data);
   };
 

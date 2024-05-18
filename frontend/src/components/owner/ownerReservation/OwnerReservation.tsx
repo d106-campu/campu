@@ -1,6 +1,6 @@
 import OwnerCalendar from "@/components/@common/Calendar/OwnerCalendar";
 import ReservationItem from "@/components/owner/ownerReservation/ReservationItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { dateToDateString } from "@/utils/formatDateTime";
 import { RootState } from "@/app/store";
 import { createSelector } from "@reduxjs/toolkit";
@@ -16,13 +16,7 @@ const OwnerReservation = () => {
   // 달력에서 선택된 날짜 (Date 객체)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const { campsiteId } = useSelector(selectCampsiteInfo);
-  // 확인용 - 아래 코드는 확인하시고 지워주세요
-  // 백으로 보낼 때는 YYYY-MM-DD 형식의 문자열로 보내야 함
-  const dateString = dateToDateString(selectedDate);
-  useEffect(() => {
-    console.log(selectedDate); // Fri May 10 2024 00:00:00 GMT+0900 (한국 표준시)
-    console.log(dateString); // 2024-05-10
-  }, [selectedDate]);
+  const dateString = dateToDateString(selectedDate); // 백으로 보낼 때는 YYYY-MM-DD 형식의 문자열로 보내야 함
 
   const { useGetReservationList } = useOwner();
   const { data: reservationList } = useGetReservationList({

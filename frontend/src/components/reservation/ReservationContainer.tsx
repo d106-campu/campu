@@ -65,7 +65,6 @@ const ReservationContainer = ({ campsiteId }: { campsiteId: number }) => {
                 ))
               )}
               {/* 최하단에 작은 div요소 만들어 ref에 setTarget적용 */}
-              {console.log("지금")}
               <div ref={setTarget} className="h-[1rem]" />
             </>
           )}
