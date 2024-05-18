@@ -72,7 +72,7 @@ const router = createBrowserRouter([
     element: <PaymentPage />,
   },
   {
-    path: '/*',
+    path: "/*",
     element: <ErrorPage />,
   },
 ]);

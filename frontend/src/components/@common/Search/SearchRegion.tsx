@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IRegion } from "@/components//@common/Search/RegionList";
 import { IoIosArrowDown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,11 +15,24 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
   const dispatch = useDispatch();
   const searchBarState = useSelector((state: RootState) => state.searchBar);
 
+  useEffect(() => {
+    // 전체 조회 방지를 위한 디폴트 지역/ 서브지역 (서울시 강동구) 저장
+    if (searchBarState.region && searchBarState.subRegion) {
+      const defaultRegion = list.find(
+        (region) => region.name === searchBarState.region
+      );
+      if (defaultRegion) {
+        setSelectRegion(defaultRegion);
+        setSelectSubRegion(searchBarState.subRegion);
+      }
+    }
+  }, [searchBarState.region, searchBarState.subRegion, list]);
+
   const handleRegionClick = (region: IRegion) => {
     if (selectRegion === region) {
       setIsRegionListOpen(!isRegionListOpen);
-      dispatch(setRegion(region.name)); // 리덕스 스토어에 저장
-      dispatch(setSubRegion(region.subArea[0])); // 기본 첫번째 서브지역 저장
+      dispatch(setRegion(region.name));
+      dispatch(setSubRegion(region.subArea[0]));
     } else {
       setSelectRegion(region);
       setSelectSubRegion(null);
@@ -28,7 +41,7 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
   };
 
   const handleSubRegionClick = (subRegion: string) => {
-    dispatch(setSubRegion(subRegion)); // 리덕스 스토어에 저장
+    dispatch(setSubRegion(subRegion));
     setSelectSubRegion(subRegion);
     setIsRegionListOpen(false);
     setIsSubRegionListOpen(false);
@@ -68,7 +81,7 @@ const SearchRegion = ({ list }: { list: IRegion[] }) => {
           </ul>
         )}
       </div>
-      {/* 시군구 선택 */}
+      {/* Subregion selection */}
       {searchBarState.region && selectRegion && (
         <div>
           <button

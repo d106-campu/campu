@@ -20,6 +20,7 @@ export interface IMyFavoritCampRes {
 // 내가 찜한 캠핑장 응답 content
 export interface IMyFavoritCampListRes {
   content: IMyFavoritCampRes[];
+  totalElements: number;
 }
 
 // 내가 찜한 캠핑장 전체 응답
@@ -54,6 +55,9 @@ export interface ICampsite {
   campsiteName: string;
   address: string;
   thumbnailImageUrl: string;
+  tel?: string;
+  checkin?: null | string;
+  checkout?: null | string;
 }
 
 // 캠핑장 정보 내에 방 정보 (방 이름)

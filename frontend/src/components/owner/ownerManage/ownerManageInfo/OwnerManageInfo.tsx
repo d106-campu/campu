@@ -74,8 +74,8 @@ const OwnerManageInfo = () => {
   const { mutate } = useUpdateDetail(createRequestDto);
 
   const handleSubmit = () => {
-    console.log("시설", selectedFacility);
-    console.log("소개", detailIntro);
+    // console.log("시설", selectedFacility);
+    // console.log("소개", detailIntro);
     if (campsiteId) {
       mutate();
     }

@@ -3,6 +3,8 @@ import Header from "@/components/@common/Header/Header";
 import HomeContainer from "@/components/home/HomeContainer";
 import { clearCampingData } from "@/features/search/campingMapSlice";
 import { clearSearchData } from "@/features/search/searchBarSlice";
+import { resetDate } from "@/features/reservation/campingDateSlice";
+import { resetHeadCount } from "@/features/reservation/HeadCountSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -13,6 +15,8 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(clearCampingData());
     dispatch(clearSearchData());
+    dispatch(resetDate());
+    dispatch(resetHeadCount());
   }, [dispatch]);
 
   return (

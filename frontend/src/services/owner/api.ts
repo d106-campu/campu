@@ -39,13 +39,13 @@ export const getOwnerCampsiteList = async ({
 export const postBizrno = async (
   bizrno: string
 ): Promise<APIResponse<IBizrnoRes>> => {
-  console.log(bizrno);
+  // console.log(bizrno);
   const data = await axiosAuthInstance.post(`/owner/bizrno`, null, {
     params: {
       bizrno,
     },
   });
-  console.log("사업자번호 등록 성공:", data.data);
+  // console.log("사업자번호 등록 성공:", data.data);
   return data.data;
 };
 
@@ -125,19 +125,20 @@ export const updateGeneralImages = async ({
   insertImageList.forEach((image) => {
     if (image instanceof File) {
       formData.append("insertImageList", image);
-    } else {
-      console.error("추가이미지 오브젝트 생성 실패함 :", image);
-    }
+    } 
+    // else {
+    //   console.error("추가이미지 오브젝트 생성 실패함 :", image);
+    // }
   });
 
-  console.log("삭제한 이미지 확인 :", deleteImageList)
-  console.log("추가한 이미지 확인 :", insertImageList)
-  console.log("캠프사이트 Id :", campsiteId)
+  // console.log("삭제한 이미지 확인 :", deleteImageList)
+  // console.log("추가한 이미지 확인 :", insertImageList)
+  // console.log("캠프사이트 Id :", campsiteId)
 
-  // FormData의 모든 키-값 쌍을 출력
-  for (const pair of formData.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-  }
+  // // FormData의 모든 키-값 쌍을 출력
+  // for (const pair of formData.entries()) {
+  //   console.log(`${pair[0]}: ${pair[1]}`);
+  // }
 
   const res = await axiosFileInstance.patch(
     `/image/campsite/${campsiteId}/general`,
@@ -176,8 +177,8 @@ export const postCampsiteRoom = async (
   });
   formData.append("createRequestDto", requestDtoBlob);
 
-  console.log("폼데이터 확인 :", formData);
-  console.log("폼데이터 길이 확인 :", formData.values.length);
+  // console.log("폼데이터 확인 :", formData);
+  // console.log("폼데이터 길이 확인 :", formData.values.length);
 
   const res = await axiosFileInstance.post(`/owner/campsite/room`, formData);
   return res.data;

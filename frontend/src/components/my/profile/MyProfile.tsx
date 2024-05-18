@@ -12,6 +12,7 @@ import {
 import { useUser } from "@/hooks/user/useUser";
 import { checkNicknameDuplicate } from "@/services/auth/api";
 import { setNickname } from "@/features/login/authSlice";
+import { FaRegFaceSmileWink } from "react-icons/fa6";
 
 interface IMyProfileProps {
   phoneVerified: boolean;
@@ -63,7 +64,7 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
   // 프로필 조회 API 요청 진행
   useEffect(() => {
     if (userProfileQuery.isSuccess && userProfileQuery.data) {
-      console.log("프로필 조회 성공");
+      // console.log("프로필 조회 성공");
       const {
         account = "",
         nickname = "",
@@ -77,16 +78,9 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
 
   // 프로필이미지 추출
   useEffect(() => {
-    console.log("프로필 사진 :", profileData?.profileImageUrl);
+    // console.log("프로필 사진 :", profileData?.profileImageUrl);
     if (profileData?.profileImageUrl) {
-      const imageBaseURL = import.meta.env.VITE_IMAGE_BASE_URL_PROD;
-      console.log(
-        "프로필페이지 환경변수 주소 :",
-        import.meta.env.VITE_IMAGE_BASE_URL_PROD
-      );
       const fullImageUrl = `${profileData.profileImageUrl}`;
-      // const fullImageUrl = profileData.profileImageUrl;
-      console.log(imageBaseURL);
       setProfileImageUrl(fullImageUrl);
     }
   }, [profileData]);
@@ -269,78 +263,135 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
       {/* 프로필 수정 헤더 */}
       <div className="flex flex-col pb-4">
         <h1 className="text-lg font-bold">프로필 설정</h1>
-        <h1 className="text-sm text-gray-400">
-          {values.nickname}님의 프로필을 변경할 수 있습니다.
+        <h1 className="text-sm text-gray-400 flex items-center gap-1">
+          {values.nickname}님, 프로필을 변경해보세요!
+          <FaRegFaceSmileWink />
         </h1>
       </div>
 
-      {/* 아이디 + 닉네임 */}
-      <div className="w-full flex justify-between">
-        <div className="w-[50%] flex flex-col">
-          <div className="pb-5">
-            <h1 className="pb-2">아이디</h1>
-            <input
-              type="text"
-              className="w-full h-[35px] pl-2 outline-none border-gray-300 rounded-md bg-gray-100 "
-              disabled // 수정 불가능하게 막기
-              value={values.account || ""}
-            />
-          </div>
-          <div className="pb-5">
-            <div className="flex justify-between">
-              <h1 className="pb-2">닉네임</h1>
-              {/* 수정 또는 저장 버튼 제공 */}
-              {isEditingNickname ? (
-                <button
-                  onClick={handleEditNicknameClick}
-                  className="hover:text-MAIN_GREEN text-sm"
-                  disabled={!isEditingNickname || !isSaveButtonEnabled}
-                >
-                  저 장
-                </button>
-              ) : (
-                <button
-                  onClick={handleEditNicknameClick}
-                  className="hover:text-MAIN_GREEN text-sm"
-                >
-                  수 정
-                </button>
-              )}
+      <div className="w-[98%] mx-auto">
+        {/* 아이디 + 닉네임 */}
+        <div className="w-full flex justify-between">
+          <div className="w-[50%] flex flex-col">
+            <div className="pb-5">
+              <h1 className="pb-2">아이디</h1>
+              <input
+                type="text"
+                className="w-full h-[35px] pl-2 outline-none border-gray-300 rounded-md bg-gray-100 "
+                disabled // 수정 불가능하게 막기
+                value={values.account || ""}
+              />
             </div>
-            <input
-              type="text"
-              className={`w-full h-[35px] pl-2 outline-none focus:outline-none focus:ring-0 focus:border-gray-300 border-gray-300 rounded-md ${
-                isEditingNickname ? "" : "pointer-events-none"
-              }`}
-              disabled={!isEditingNickname}
-              maxLength={MAX_NICKNAME_LENGTH}
-              value={values.nickname || ""}
-              onChange={handleChangeNickname}
+            <div className="pb-5">
+              <div className="flex justify-between">
+                <h1 className="pb-2">닉네임</h1>
+                {/* 수정 또는 저장 버튼 제공 */}
+                {isEditingNickname ? (
+                  <button
+                    onClick={handleEditNicknameClick}
+                    className="hover:text-MAIN_GREEN text-sm"
+                    disabled={!isEditingNickname || !isSaveButtonEnabled}
+                  >
+                    저 장
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleEditNicknameClick}
+                    className="hover:text-MAIN_GREEN text-sm"
+                  >
+                    수 정
+                  </button>
+                )}
+              </div>
+              <input
+                type="text"
+                className={`w-full h-[35px] pl-2 outline-none focus:outline-none focus:ring-0 focus:border-gray-300 border-gray-300 rounded-md ${
+                  isEditingNickname ? "" : "pointer-events-none"
+                }`}
+                disabled={!isEditingNickname}
+                maxLength={MAX_NICKNAME_LENGTH}
+                value={values.nickname || ""}
+                onChange={handleChangeNickname}
+              />
+              <p
+                className={`pl-2 pt-2 text-xs flex justify-end items-center ${
+                  // eslint-disable-next-line no-constant-condition
+                  nicknameMessage === "사용 가능한 닉네임입니다." ||
+                  "닉네임이 변경되었습니다 !"
+                    ? "text-MAIN_GREEN"
+                    : "text-red-500"
+                }`}
+              >
+                {errors.nickname}
+              </p>
+            </div>
+          </div>
+          {/* 프로필 이미지 */}
+          <div className="w-[50%] flex flex-col items-center justify-center pr-10 pt-1">
+            <img
+              src={profileImageUrl || profileDefaultImage}
+              alt="프로필 이미지"
+              className="w-[150px] h-[150px] object-cover object-center rounded-full"
             />
-            <p
-              className={`pl-2 pt-2 text-xs flex justify-end items-center ${
-                // eslint-disable-next-line no-constant-condition
-                nicknameMessage === "사용 가능한 닉네임입니다." ||
-                "닉네임이 변경되었습니다 !"
-                  ? "text-MAIN_GREEN"
-                  : "text-red-500"
-              }`}
-            >
-              {errors.nickname}
-            </p>
+            <div className="pt-2 flex justify-center">
+              <div className="px-2">
+                <Button
+                  text="사진 변경"
+                  width="w-full"
+                  backgroundColor="bg-SUB_GREEN_01"
+                  textColor="text-MAIN_GREEN"
+                  hoverTextColor="text-green-700"
+                  hoverBackgroundColor="hover:bg-SUB_GREEN_02"
+                  padding="p-2 mr-2"
+                  fontWeight="none"
+                  onClick={() => {
+                    document.getElementById("imageUpload")?.click();
+                  }}
+                />
+              </div>
+              {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
+              <div>
+                {profileData?.profileImageUrl !== profileDefaultImage && (
+                  <Button
+                    text="기본 사진"
+                    width="w-full"
+                    backgroundColor="bg-SUB_GREEN_01"
+                    textColor="text-MAIN_GREEN"
+                    hoverTextColor="text-green-700"
+                    hoverBackgroundColor="hover:bg-SUB_GREEN_02"
+                    padding="p-2 ml-2"
+                    fontWeight="none"
+                    onClick={() => {
+                      handleSetDefaultImage(); // 사용자가 이미지를 기본으로 변경했음을 추적
+                      // dispatch(setIsProfileImage(profileDefaultImage));
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+            {/* 이미지 업로드 */}
+            <input
+              type="file"
+              id="imageUpload"
+              className="hidden"
+              onChange={handleImageUpload} // 파일 선택 시 이미지 업로드 핸들러 호출
+            />
           </div>
         </div>
-        {/* 프로필 이미지 */}
-        <div className="w-[50%] flex flex-col items-center justify-center pr-10 pt-1">
-          <img
-            src={profileImageUrl || profileDefaultImage}
-            alt="프로필 이미지"
-            className="w-[150px] h-[150px] object-cover object-center rounded-full"
-          />
-          <div className="pt-2 flex justify-center">
-            <div className="px-2">
+
+        {/* 휴대폰 번호 */}
+        <div className="w-full flex flex-col pb-5">
+          <h1 className="pb-2">휴대폰 번호</h1>
+          <div className="flex items-center justify-start">
+            <input
+              type="text"
+              className="w-[25%] h-[35px] pl-2 outline-none rounded-md focus:outline-none focus:ring-0 focus:border-gray-300 border-gray-300"
+              disabled
+              value={values.tel || ""}
+            />
+            <div className="pl-5 flex items-center  justify-center">
               <Button
-                text="사진 변경"
+                text="전화번호 변경"
                 width="w-full"
                 backgroundColor="bg-SUB_GREEN_01"
                 textColor="text-MAIN_GREEN"
@@ -348,102 +399,48 @@ const MyProfile = ({ phoneVerified }: IMyProfileProps): JSX.Element => {
                 hoverBackgroundColor="hover:bg-SUB_GREEN_02"
                 padding="p-2"
                 fontWeight="none"
-                onClick={() => {
-                  document.getElementById("imageUpload")?.click();
-                }}
+                onClick={handlePhoneModalOpen}
               />
             </div>
-            {/* 만약 이미지를 한번이라도 바꿨다면 "기본 사진"으로 바꿀 수 있는 버튼 제공 */}
-            <div>
-              {profileData?.profileImageUrl !== profileDefaultImage && (
-                <Button
-                  text="기본 사진"
-                  width="w-full"
-                  backgroundColor="bg-SUB_GREEN_01"
-                  textColor="text-MAIN_GREEN"
-                  hoverTextColor="text-green-700"
-                  hoverBackgroundColor="hover:bg-SUB_GREEN_02"
-                  padding="p-2"
-                  fontWeight="none"
-                  onClick={() => {
-                    handleSetDefaultImage(); // 사용자가 이미지를 기본으로 변경했음을 추적
-                    // dispatch(setIsProfileImage(profileDefaultImage));
-                  }}
-                />
-              )}
-            </div>
-          </div>
-          {/* 이미지 업로드 */}
-          <input
-            type="file"
-            id="imageUpload"
-            className="hidden"
-            onChange={handleImageUpload} // 파일 선택 시 이미지 업로드 핸들러 호출
-          />
-        </div>
-      </div>
-
-      {/* 휴대폰 번호 */}
-      <div className="w-full flex flex-col pb-5">
-        <h1 className="pb-2">휴대폰 번호</h1>
-        <div className="flex items-center justify-start">
-          <input
-            type="text"
-            className="w-[25%] h-[35px] pl-2 outline-none rounded-md focus:outline-none focus:ring-0 focus:border-gray-300 border-gray-300"
-            disabled
-            value={values.tel || ""}
-          />
-          <div className="pl-5 flex items-center  justify-center">
-            <Button
-              text="전화번호 변경"
-              width="w-full"
-              backgroundColor="bg-SUB_GREEN_01"
-              textColor="text-MAIN_GREEN"
-              hoverTextColor="text-green-700"
-              hoverBackgroundColor="hover:bg-SUB_GREEN_02"
-              padding="p-2"
-              fontWeight="none"
-              onClick={handlePhoneModalOpen}
-            />
           </div>
         </div>
+
+        {/* 휴대폰 번호 변경 모달 호출 */}
+        {isPhoneModalOpen && (
+          <ChangePhoneModal
+            isOpen={isPhoneModalOpen}
+            onClose={handlePhoneModalClose}
+            phoneVerified={phoneVerified}
+            values={values}
+            errors={errors}
+            setValues={setValues}
+            setErrors={setErrors}
+          />
+        )}
+
+        {/* 비밀번호 */}
+        <div className="pb-10">
+          <h1 className="pb-2">비밀번호</h1>
+          <button
+            className="h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02"
+            onClick={handleOpenPasswordModal}
+          >
+            비밀번호 변경
+          </button>
+        </div>
+
+        {/* 비밀번호 변경 모달 */}
+        {isPasswordModalOpen && (
+          <ChangePasswordModal
+            isOpen={isPasswordModalOpen}
+            onClose={handleClosePasswordModal}
+            values={values}
+            errors={errors}
+            setValues={setValues}
+            setErrors={setErrors}
+          />
+        )}
       </div>
-
-      {/* 휴대폰 번호 변경 모달 호출 */}
-      {isPhoneModalOpen && (
-        <ChangePhoneModal
-          isOpen={isPhoneModalOpen}
-          onClose={handlePhoneModalClose}
-          phoneVerified={phoneVerified}
-          values={values}
-          errors={errors}
-          setValues={setValues}
-          setErrors={setErrors}
-        />
-      )}
-
-      {/* 비밀번호 */}
-      <div className="pb-10">
-        <h1 className="pb-2">비밀번호</h1>
-        <button
-          className="h-[35px] p-2 rounded-md text-sm text-MAIN_GREEN hover:text-green-700 bg-SUB_GREEN_01 hover:bg-SUB_GREEN_02"
-          onClick={handleOpenPasswordModal}
-        >
-          비밀번호 변경
-        </button>
-      </div>
-
-      {/* 비밀번호 변경 모달 */}
-      {isPasswordModalOpen && (
-        <ChangePasswordModal
-          isOpen={isPasswordModalOpen}
-          onClose={handleClosePasswordModal}
-          values={values}
-          errors={errors}
-          setValues={setValues}
-          setErrors={setErrors}
-        />
-      )}
     </div>
   );
 };

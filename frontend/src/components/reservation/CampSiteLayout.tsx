@@ -21,7 +21,7 @@ const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
         <img
           src={layout}
           alt={`${campsite_name} 배치도`}
-          className="rounded-xl cursor-pointer"
+          className="rounded-xl cursor-pointer w-full"
           onClick={() => openModal()}
         />
         {layout && (
@@ -44,11 +44,11 @@ const CampSiteLayout = ({ layout, campsite_name }: ICampSiteLayoutProps) => {
       {/* 모달 - 캠핑존 배치도 확대해서 보기 */}
       {isOpen && (
         <Modal width="w-[65%]" onClose={closeModal}>
-          <div className="pt-3 ">
+          <div className="pt-3">
             <img
               src={layout}
               alt={`${campsite_name} 배치도`}
-              className="rounded-lg object-scale-down"
+              className="rounded-lg object-fill w-[80%] mx-auto"
               onClick={() => openModal()}
             />
             <h3 className="text-center font-bold text-BLACK text-xl pt-3 ">

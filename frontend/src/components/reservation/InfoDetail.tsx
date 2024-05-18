@@ -9,6 +9,7 @@ import SimpleReviewItem from "@/components/reservation/SimpleReviewItem";
 import Loading from "@/components/@common/Loading/Loading";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
+import formatPhoneNumber from "@/utils/formatPhoneNumber";
 
 interface ICampsiteData {
   id: number;
@@ -213,7 +214,9 @@ const InfoDetail = ({
           </p>
           <p className="pb-1">
             연락처 :{" "}
-            <span className="text-[#393939] pl-1">{data.owner.tel}</span>
+            <span className="text-[#393939] pl-1">
+              {formatPhoneNumber(data.tel)}
+            </span>
           </p>
           <p className="pb-1">
             상호명 :<span className="text-[#393939] pl-1">{data.facltNm}</span>

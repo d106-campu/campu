@@ -7,7 +7,7 @@ const OwnerAddPage = () => {
     <>
       <Header page={"owner"} />
       <AddCamping />
-      <Footer />
+      <Footer state="onePage" />
     </>
   );
 };

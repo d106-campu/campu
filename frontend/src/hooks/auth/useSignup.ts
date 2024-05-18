@@ -36,10 +36,10 @@ export const useSignup = () => {
   const signupMutation = useMutation({
     mutationFn: (data: ISignUpReq) => postSignUp(data),
     onSuccess: res => {
-      console.log("회원가입 성공했음!! :", res)
+      console.log("회원가입 성공 :", res)
     },
     onError: (error) => {
-      console.error('회원가입 에러났어!! :', error);
+      console.error('회원가입 에러 :', error);
     }
   });
 

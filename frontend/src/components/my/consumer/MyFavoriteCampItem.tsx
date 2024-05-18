@@ -4,8 +4,11 @@ import { IMyFavoritCampRes } from "@/types/my";
 import Modal from "@/components/@common/Modal/Modal";
 import { useMy } from "@/hooks/my/useMy";
 import Toast from "@/components/@common/Toast/Toast";
-import { FaArrowRightToBracket } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import Lottie from "react-lottie";
+import { heartOptions } from "@/assets/lotties/lottieOptions";
+import Button from "@/components/@common/Button/Button";
+import { RiArrowRightSLine } from "react-icons/ri";
 
 interface MyFavoriteCampItemProps {
   camp: IMyFavoritCampRes;
@@ -49,90 +52,99 @@ const MyFavoriteCampItem = ({
   };
 
   return (
-    <div className="flex justify-center">
-      <div
-        key={camp.campsiteId}
-        className="relative px-2 py-2 w-full shadow-lg rounded-xl transition-transform duration-500 transform hover:scale-105"
-      >
-        <img
-          src={camp.thumbnailImageUrl}
-          alt={camp.campsiteName}
-          className="w-full h-[150px] rounded-md object-cover object-center"
-        />
-        <button
-          onClick={handleToggleLike}
-          className={`absolute top-5 right-5 ${
-            isLiked ? "text-red-500" : "text-gray-300"
-          }`}
-          aria-label="좋아요 토글"
+    <>
+      <div className="flex justify-center w-[98%] mx-auto">
+        <div
+          key={camp.campsiteId}
+          className="relative  w-full shadow-lg rounded-xl"
         >
-          <FaHeart size={20} />
-        </button>
-        {/* 좋아요 취소 시 모달 호출 */}
-        {showConfirmModal && (
-          <Modal
-            width="w-1/3"
-            title={camp.campsiteName}
-            hasIcon={false}
-            onClose={() => setShowConfirmModal(false)}
+          <img
+            src={camp.thumbnailImageUrl}
+            alt={camp.campsiteName}
+            className="w-full h-[135px] rounded-t-xl object-cover object-center"
+          />
+          <button
+            onClick={handleToggleLike}
+            className={`absolute top-5 right-5 ${
+              isLiked ? "text-[#FF777E]" : "text-[#e9e9e9]"
+            }`}
+            aria-label="좋아요 토글"
           >
-            <div className="text-center p-1">
-              <p>
-                이 캠핑장에 대한 관심을{" "}
-                <span className="text-red-400">취소</span>하시겠어요?
-              </p>
-              <div className="mt-4 flex justify-around">
-                <button
-                  className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
-                  onClick={confirmUnLike}
-                >
-                  <span>취소합니다</span>
-                </button>
-                <button
-                  className="bg-SUB_GREEN_02 hover:bg-SUB_GREEN_01 text-gray-700 hover:text-MAIN_GREEN px-4 py-2 rounded-lg outline-none"
-                  onClick={() => setShowConfirmModal(false)}
-                >
-                  <span>아니요</span>
-                </button>
+            <FaHeart size={20} />
+          </button>
+
+          <div
+            onClick={() => navigate(`/camps/${camp.campsiteId}`)}
+            className="w-full pt-2 text-BLACK cursor-pointer px-3 py-2"
+          >
+            {/* 캠핑장 이름 + 별점 */}
+            <div className="w-full flex justify-between">
+              <button className="flex items-center gap-1">
+                <h1 className="font-bold">{camp.campsiteName}</h1>
+                <RiArrowRightSLine />
+              </button>
+
+              <div className="flex items-center text-sm text-SUB_BLACK">
+                <FaStar className="text-MAIN_YELLOW mx-1" />
+                <p>{camp.score.toFixed(1)}</p>
               </div>
             </div>
-          </Modal>
-        )}
+            {/* 소개+주소 /// 가격 */}
+            <div className="w-full flex justify-between items-end">
+              <div className="w-[70%] text-xs">
+                <p className="line-clamp-1 text-SUB_BLACK">
+                  {camp.lineIntro || `${camp.campsiteName}입니다.`}
+                </p>
+                <p className="text-gray-400 line-clamp-1">{camp.address}</p>
+              </div>
 
-        <div className="w-full pt-2 px-1">
-          {/* 캠핑장 이름 + 별점 */}
-          <div className="w-full flex justify-between">
-            <div className="flex">
-              <h1 className="font-bold">{camp.campsiteName}</h1>
-              <button
-                className="pl-2"
-                onClick={() => navigate(`/camps/${camp.campsiteId}`)}
-              >
-                <FaArrowRightToBracket />
-              </button>
-            </div>
-            <div className="flex items-center">
-              <FaStar className="text-yellow-500 mx-1" />
-              <p>{camp.score}</p>
-            </div>
-          </div>
-          {/* 소개+주소 /// 가격 */}
-          <div className="w-full flex justify-between">
-            <div className="w-[50%]">
-              <p className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">
-                {camp.lineIntro}
-              </p>
-              <p className="text-sm text-gray-400">{camp.address}</p>
-            </div>
-            <div className="w-[50%] flex justify-end">
-              <p className="text-xl text-orange-700 font-extrabold">
-                {camp.minPrice} ~
-              </p>
+              <div className="">
+                <p className="text-MAIN_RED text-sm font-bold">
+                  {camp.minPrice} ~
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* 좋아요 취소 시 모달 호출 */}
+      {showConfirmModal && (
+        <Modal
+          width="w-[35%]"
+          hasIcon={false}
+          onClose={() => setShowConfirmModal(false)}
+        >
+          <div className="flex flex-col items-center text-center text-BLACK">
+            <div>
+              <Lottie options={heartOptions} height={125} width={150} />
+            </div>
+            <h3 className="text-xl font-bold pt-5">좋아요 취소</h3>
+            <div className="text-sm pt-2">
+              <p>좋아요 취소 시 찜한 캠핑장에서 삭제됩니다.</p>
+              <p>정말 좋아요를 취소하시겠습니까?</p>
+            </div>
+          </div>
+          <div className="flex justify-evenly pt-5">
+            <Button
+              text="아니요"
+              backgroundColor="bg-GRAY"
+              hoverBackgroundColor="hover:bg-[#acacac]"
+              onClick={(event) => {
+                event.stopPropagation(); // 이벤트 전파 중단
+                setShowConfirmModal(false);
+              }}
+            />
+            <Button
+              text="취소할게요"
+              backgroundColor="bg-MAIN_PINK"
+              hoverBackgroundColor="hover:bg-MAIN_RED"
+              onClick={confirmUnLike}
+            />
+          </div>
+        </Modal>
+      )}
+    </>
   );
 };
 

@@ -1,11 +1,24 @@
 import LikeButton from "@/components/@common/Like/LikeButton";
 import { ICampsiteSimpleRes } from "@/types/search";
+import { scrollToTop } from "@/utils/scrollToTop";
 import { FaStar } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const RecommendItem = ({ item }: { item: ICampsiteSimpleRes }) => {
+  const navigate = useNavigate();
+
+  const goToDetail = () => {
+    navigate(`/camps/${item.id}`);
+    scrollToTop();
+  };
+
   return (
     <>
-      <div key={item.id} className="px-2 py-4 w-[33%] relative">
+      <div
+        onClick={goToDetail}
+        key={item.id}
+        className="px-2 py-4 w-[33%] relative cursor-pointer"
+      >
         <img
           src={item.thumbnailImageUrl}
           alt={item.facltNm}
