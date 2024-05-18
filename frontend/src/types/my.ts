@@ -20,6 +20,7 @@ export interface IMyFavoritCampRes {
 // 내가 찜한 캠핑장 응답 content
 export interface IMyFavoritCampListRes {
   content: IMyFavoritCampRes[];
+  totalElements: number;
 }
 
 // 내가 찜한 캠핑장 전체 응답

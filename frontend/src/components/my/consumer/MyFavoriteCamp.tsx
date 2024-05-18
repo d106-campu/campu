@@ -37,7 +37,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             <h1 className="text-lg font-bold">
               내가 찜한 캠핑장{" "}
               <span className="text-MAIN_GREEN font-thin pl-1">
-                {visibleCamps.length}
+                {data?.campsiteList.totalElements}
               </span>
             </h1>
           </div>
@@ -94,7 +94,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
         <h1 className="text-lg font-bold">
           내가 찜한 캠핑장{" "}
           <span className="text-MAIN_GREEN font-thin pl-1">
-            {visibleCamps.length}
+            {data?.campsiteList.totalElements}
           </span>
         </h1>
         {data.campsiteList.content.length > 0 && (
@@ -121,7 +121,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
             ))}
           </div>
           {/* 더보기, 줄이기 버튼 */}
-          <div className="flex justify-center pt-2 items-center">
+          <div className="flex justify-center items-center my-4">
             <div>
               {visibleCamps.length < data.campsiteList.content.length && (
                 <button onClick={handleShowMoreCamps} className="mx-12 py-2">

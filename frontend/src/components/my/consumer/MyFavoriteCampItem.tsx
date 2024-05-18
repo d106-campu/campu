@@ -61,7 +61,7 @@ const MyFavoriteCampItem = ({
           <img
             src={camp.thumbnailImageUrl}
             alt={camp.campsiteName}
-            className="w-full h-[130px] rounded-t-xl object-cover object-center"
+            className="w-full h-[135px] rounded-t-xl object-cover object-center"
           />
           <button
             onClick={handleToggleLike}
@@ -93,7 +93,7 @@ const MyFavoriteCampItem = ({
             <div className="w-full flex justify-between items-end">
               <div className="w-[70%] text-xs">
                 <p className="line-clamp-1 text-SUB_BLACK">
-                  {camp.lineIntro || "한줄 소개 입니다"}
+                  {camp.lineIntro || `${camp.campsiteName}입니다.`}
                 </p>
                 <p className="text-gray-400 line-clamp-1">{camp.address}</p>
               </div>

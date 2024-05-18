@@ -112,7 +112,7 @@ const FreeAlertList = ({
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center pt-3">
+      <div className="flex justify-center items-center my-4">
         {viewCount < totalMyAlerts && (
           <button onClick={handleShowMoreAlerts} className="mx-12 py-2">
             <IoIosArrowDown />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Button from "@/components/@common/Button/Button";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import ReservationAccordion from "@/components/my/consumer/ReservationAccordion";
 import { IMyReservationAllRes } from "@/types/my";
 import { useMy } from "@/hooks/my/useMy";
@@ -19,8 +19,8 @@ const MyReservation = (): JSX.Element => {
   const [useType, setUseType] = useState<"BEFORE" | "AFTER">("BEFORE"); // 이용완료 or 이용완료 선택 상태 관리
   const [expanded, setExpanded] = useState<Record<number, boolean>>({}); // 아코디언 토글 상태 관리
   const [reservations, setReservations] = useState<IMyReservationAllRes[]>([]); // 예약내역 데이터 상태 관리
-  const [viewCount, setViewCount] = useState<number>(4); // 초기에 표시할 예약내역 수 관리
-  const initialViewCount = 4; // 렌더링 시 아코디언 첫 개수
+  const initialViewCount = 5; // 렌더링 시 아코디언 첫 개수
+  const [viewCount, setViewCount] = useState<number>(initialViewCount); // 초기에 표시할 예약내역 수 관리
   const filters = ["YEAR", "MONTH6", "MONTH", "TOTAL"] as const; // 날짜 관련 필터 목록
   const { data, isLoading, isError, refetch } = useMyReservations({
     pageable: { page: 0, size: 100 },
@@ -82,13 +82,13 @@ const MyReservation = (): JSX.Element => {
   // '더보기'를 통해 과거 예약 내역에 더 접근할 수 있도록 하기
   const showMoreReservations = () => {
     setViewCount((prev) =>
-      Math.min(prev + 4, data?.reservationList?.content?.length || 0)
+      Math.min(prev + 5, data?.reservationList?.content?.length || 0)
     );
   };
 
   // '줄이기' 버튼으로 다시 돌아가기
   const showLessReservations = () => {
-    setViewCount((prev) => Math.max(prev - 4, initialViewCount));
+    setViewCount((prev) => Math.max(prev - 5, initialViewCount));
   };
 
   // 지도 모달 열기
@@ -229,24 +229,14 @@ const MyReservation = (): JSX.Element => {
           {/* 내역 더보기 토글 버튼 */}
           <div className="flex justify-center my-4">
             {viewCount > initialViewCount && (
-              <Button
-                text="줄이기"
-                textColor="text-black"
-                backgroundColor="none"
-                hoverTextColor="text-MAIN_GREEN"
-                hoverBackgroundColor="none"
-                onClick={showLessReservations}
-              />
+              <button onClick={showLessReservations} className="mx-12 py-2">
+                <IoIosArrowUp />
+              </button>
             )}
             {viewCount < (data?.reservationList?.content.length || 0) && (
-              <Button
-                text="더보기"
-                textColor="text-black"
-                backgroundColor="none"
-                hoverTextColor="text-MAIN_GREEN"
-                hoverBackgroundColor="none"
-                onClick={showMoreReservations}
-              />
+              <button onClick={showMoreReservations} className="mx-12 py-2">
+                <IoIosArrowDown />
+              </button>
             )}
           </div>
         </>
