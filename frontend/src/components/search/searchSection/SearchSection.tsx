@@ -23,11 +23,13 @@ const SearchSection = () => {
   const startday = searchBarState.startDate || weekendDates.saturday;
   const endday = searchBarState.endDate || weekendDates.sunday;
   const headcnt = searchBarState.numberOfPeople || 2;
+  const doNm = searchBarState.region;
+  const sigunguNm = searchBarState.subRegion;
 
   //  캠핑장 리스트 조회
   const { data: campsiteOfSearch } = useCampsiteList({
-    doNm: searchBarState.region || null,
-    sigunguNm: searchBarState.subRegion || null,
+    doNm,
+    sigunguNm,
     startDate: startday,
     endDate: endday,
     headCnt: headcnt,
