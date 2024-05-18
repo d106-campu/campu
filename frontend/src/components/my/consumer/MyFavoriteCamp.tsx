@@ -31,7 +31,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
   if (!data?.campsiteList?.content?.length) {
     return (
       <>
-        <div>
+        <div className="min-h-[calc(100vh-10rem)]">
           <div className="flex flex-col pb-4">
             <h1 className="text-lg font-bold">
               내가 찜한 캠핑장{" "}
@@ -42,7 +42,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
           </div>
 
           {/* 빈자리 알림이 없을 때 처리 */}
-          <div className="flex flex-col justify-center items-center h-[450px]">
+          <div className="flex flex-col justify-center items-center h-[530px]">
             <div>
               <Lottie options={heartOptions} height={300} width={300} />
             </div>
