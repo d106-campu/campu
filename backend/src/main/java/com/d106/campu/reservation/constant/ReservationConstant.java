@@ -9,5 +9,7 @@ public class ReservationConstant {
     public static final String PREPARE_PAYMENT = "preparePayment";
     public static final String COMPLETE_PAYMENT = "completePayment";
     public static final String CANCEL_PAYMENT = "cancelPayment";
+    public static final String STATUS_PAID = "paid";
+    public static final String STATUS_CANCELLED = "cancelled";
 
 }
