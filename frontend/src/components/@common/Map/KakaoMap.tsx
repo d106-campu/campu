@@ -20,14 +20,14 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (locations) {
+    if (locations && locations.length > 0) {
       initMap();
     } else {
       const container = mapRef.current;
       if (!container) return;
       const options = {
         center: new window.kakao.maps.LatLng(37.413294, 127.269311),
-        level: 12,
+        level: 10,
       };
       new window.kakao.maps.Map(container, options);
     }
@@ -109,7 +109,7 @@ const KakaoMap = ({ locations, mapX, mapY }: KakaoMapProps) => {
       return marker;
     });
 
-    // 마커 클러스터러 초기화 및 설정
+    // 클러스터러 설정
     const clusterer = new window.kakao.maps.MarkerClusterer({
       map: map,
       averageCenter: true,
