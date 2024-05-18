@@ -25,8 +25,8 @@ const campingDateSlice = createSlice({
       state.endDate = action.payload;
     },
     resetDate: (state) => {
-      state.startDate = weekendDates.saturday;
-      state.endDate = weekendDates.sunday;
+      state.startDate = initialState.startDate;
+      state.endDate = initialState.endDate;
     },
   },
 });
