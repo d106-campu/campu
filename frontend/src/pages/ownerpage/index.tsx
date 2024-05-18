@@ -22,8 +22,14 @@ const OwnerPage = () => {
   return (
     <div>
       <Header page={"owner"} />
-      <SideTabbar campData={campsiteData!} />
-      <OwnerContainer />
+      <div className="w-full flex">
+        <div className="min-w-[5%]">
+          <SideTabbar campData={campsiteData!} />
+        </div>
+        <div className="w-full">
+          <OwnerContainer />
+        </div>
+      </div>
       <Footer />
     </div>
   );
