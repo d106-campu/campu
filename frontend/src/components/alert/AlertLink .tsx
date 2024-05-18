@@ -40,7 +40,7 @@ const AlertLink = ({ page }: { page?: string }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside); // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     };
-  }, [ref]);
+  }, [ref, notifyList]);
 
   return (
     <div ref={ref} onClick={toggleOpen} className="relative">
@@ -52,7 +52,7 @@ const AlertLink = ({ page }: { page?: string }) => {
         }`}
       >
         <div className="flex items-center justify-center text-sm">알림</div>
-        {isLogin && newNotifyCnt > 1 && (
+        {isLogin && newNotifyCnt > 0 && (
           <span className="absolute top-1 right-9 block h-2 w-2 rounded-full bg-MAIN_GREEN border-1 border-white"></span>
         )}
       </div>
