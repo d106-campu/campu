@@ -54,6 +54,9 @@ export interface ICampsite {
   campsiteName: string;
   address: string;
   thumbnailImageUrl: string;
+  tel?: string;
+  checkin?: null | string;
+  checkout?: null | string;
 }
 
 // 캠핑장 정보 내에 방 정보 (방 이름)

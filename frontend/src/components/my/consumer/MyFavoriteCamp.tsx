@@ -3,6 +3,7 @@ import MyFavoriteCampItem from "@/components/my/consumer/MyFavoriteCampItem";
 import { useMy } from "@/hooks/my/useMy";
 import { IMyFavoritCampRes } from "@/types/my";
 import { FaRegFaceSmileWink } from "react-icons/fa6";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Lottie from "react-lottie";
 import {
   heartOptions,
@@ -155,12 +156,16 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
         <div className="flex justify-center pt-2">
           <div>
             {visibleCamps.length < data.campsiteList.content.length && (
-              <button onClick={handleShowMoreCamps}>더보기</button>
+              <button onClick={handleShowMoreCamps}>
+                <IoIosArrowDown />
+              </button>
             )}
           </div>
           <div>
             {visibleCamps.length > initialCampsToShow && (
-              <button onClick={handleShowLessCamps}>줄이기</button>
+              <button onClick={handleShowLessCamps}>
+                <IoIosArrowUp />
+              </button>
             )}
           </div>
         </div>
