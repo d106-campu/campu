@@ -9,8 +9,8 @@ import Toast from "../@common/Toast/Toast";
 import { createSelector } from "@reduxjs/toolkit";
 
 interface ICampData {
-  id: number;
-  name: string;
+  campsiteId: number;
+  campsiteName: string;
 }
 
 interface ISideTabbarProps {
@@ -78,12 +78,12 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
               key={index}
               onClick={() => handleSelect(campground)}
               className={`${
-                campsiteId === campground.id
+                campsiteId === campground.campsiteId
                   ? "bg-MAIN_GREEN text-white border border-MAIN_GREEN"
                   : "text-gray-400 border border-gray-400"
               }  text-sm py-2 px-4 rounded-lg mb-2`}
             >
-              {campground.name}
+              {campground.campsiteName}
             </button>
           ))}
         </div>
