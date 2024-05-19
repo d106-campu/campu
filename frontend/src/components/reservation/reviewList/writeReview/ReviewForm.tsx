@@ -46,6 +46,10 @@ const ReviewForm = ({ reservationId, campsiteId }: IReviewFormProps) => {
     }
   };
 
+  const goToReviewList = () => {
+    navigate(`/camps/${campsiteId}/reviews`);
+  };
+
   const handleSubmitReview = () => {
     if (photos.length === 0) {
       Toast.error("이미지를 선택하지 않았습니다.");
@@ -55,10 +59,6 @@ const ReviewForm = ({ reservationId, campsiteId }: IReviewFormProps) => {
       Toast.error("내용은 10자 이상 작성해야 합니다.");
       return;
     }
-
-    const goToReviewList = () => {
-      navigate(`/camps/${campsiteId}/reviews`);
-    };
 
     // API 호출
     postReview(
