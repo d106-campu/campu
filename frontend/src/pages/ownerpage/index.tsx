@@ -14,8 +14,8 @@ const OwnerPage = () => {
 
   const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map(
     (item) => ({
-      id: item.id,
-      name: item.facltNm,
+      campsiteId: item.id,
+      campsiteName: item.facltNm,
     })
   );
 
