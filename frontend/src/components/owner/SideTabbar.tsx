@@ -72,7 +72,7 @@ const SideTabbar = ({ campData }: ISideTabbarProps) => {
   return (
     <>
       <div className="fixed left-12 top-1/3 transform -translate-y-1/3">
-        <div className="flex flex-col">
+        <div className="flex mt-16 max-w-[200px] h-auto max-h-[500px] overflow-y-auto overflow-x-auto flex-col">
           {campData?.map((campground, index) => (
             <button
               key={index}
