@@ -30,7 +30,7 @@ export const ChangePhoneModal = ({
 }: IChangePhoneModalProps) => {
   const [modalOpacity, setModalOpacity] = useState<string>("opacity-100"); // 모달 투명도 상태 관리
   const [successModalOpen, setSuccessModalOpen] = useState<boolean>(false); // 휴대폰 번호 변경 성공 모달 상태 관리
-  const [isPhoneAvailable, setIsPhoneAvailable] = useState<boolean>(true); // 중복 검사 통과 상태 관리
+  const [isPhoneAvailable, setIsPhoneAvailable] = useState<boolean>(false); // 중복 검사 통과 상태 관리
   const { updatePhoneMutation } = useUser();
   const { sendVerificationCode, checkPhone, verifyPhone } = useSignup();
 
@@ -105,7 +105,7 @@ export const ChangePhoneModal = ({
           } else {
             setErrors((prev) => ({
               ...prev,
-              tel: "이미 등록된 휴대폰 번호입니다.",
+              tel: "이미 등록된 휴대폰 번호입니다 !",
             }));
             setIsPhoneAvailable(false); // 중복 검사 통과 못함
           }
@@ -273,9 +273,6 @@ export const ChangePhoneModal = ({
             />
           ))}
           <div className="flex justify-center">
-            <div>
-              <Button text="재전송" backgroundColor="bg-GRAY" />
-            </div>
             <div className="pl-4">
               <Button
                 text="인 증"
