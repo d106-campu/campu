@@ -15,7 +15,7 @@ const campsiteSlice = createSlice({
   initialState,
   reducers: {
     setSelectCampsite: (state, action) => {
-      state.campsiteName = action.payload?.name;
+      state.campsiteName = action.payload?.name || null;
       state.campsiteId = action.payload?.id || null;
     },
   },
