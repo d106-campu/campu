@@ -27,7 +27,8 @@ const LikeButton = ({
     setIsLiked(like);
   }, [like]);
 
-  const handleToggleLike = () => {
+  const handleToggleLike = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // 이벤트 버블링 방지
     if (isLogin) {
       dispatch(toggleLikeRequest(campsiteId)); // 좋아요 버튼 클릭 시 액션 디스패치
       setIsLiked(!isLiked); // 로컬 상태 토글

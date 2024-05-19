@@ -23,6 +23,8 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
     pageable: { page: 0, size: 100 },
   });
 
+  const totalNum = data?.campsiteList?.totalElements || 0;
+
   useEffect(() => {
     if (data?.campsiteList?.content) {
       setVisibleCamps(data.campsiteList.content.slice(0, initialCampsToShow)); // 4개씩 잘라서 보여주기
@@ -36,9 +38,7 @@ const MyFavoriteCamp = ({ nickname }: MyFavoriteCampProps): JSX.Element => {
           <div className="flex flex-col pb-4">
             <h1 className="text-lg font-bold">
               내가 찜한 캠핑장{" "}
-              <span className="text-MAIN_GREEN font-thin pl-1">
-                {data?.campsiteList.totalElements}
-              </span>
+              <span className="text-MAIN_GREEN font-thin pl-1">{totalNum}</span>
             </h1>
           </div>
 

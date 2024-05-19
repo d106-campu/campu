@@ -28,14 +28,14 @@
 
 .Toastify__toast--success {
   background-color: #186d41 !important;
-  width: 280px;
+  width: 300px;
   color: white !important;
   font-weight: bold;
 }
 
 .Toastify__toast--error {
   background-color: rgb(255, 114, 114) !important;
-  width: 280px;
+  width: 300px;
   color: white !important;
   font-weight: bold;
 }
