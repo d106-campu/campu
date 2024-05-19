@@ -2,6 +2,7 @@ package com.d106.campu.reservation.repository.jpa;
 
 import com.d106.campu.campsite.domain.jpa.Campsite;
 import com.d106.campu.campsite.domain.jpa.QCampsite;
+import com.d106.campu.reservation.constant.PaymentStatus;
 import com.d106.campu.reservation.domain.jpa.QReservation;
 import com.d106.campu.reservation.dto.ReservationDto;
 import com.d106.campu.room.domain.jpa.QRoom;
@@ -41,7 +42,8 @@ public class QReservationRepository {
         BooleanBuilder predicates = new BooleanBuilder()
             .and(campsite.eq(targetCampsite))
             .and(campsite.user.eq(owner))
-            .and(reservation.startDate.loe(today).and(reservation.endDate.goe(today)));
+            .and(reservation.startDate.loe(today).and(reservation.endDate.goe(today)))
+            .and(reservation.status.eq(PaymentStatus.SUCCESS));
 
         List<Tuple> tuples = jpaQueryFactory
             .select(projection)
