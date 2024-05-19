@@ -1,4 +1,5 @@
 import { IReservationSimpleRes } from "@/types/owner";
+import formatPhoneNumber from "@/utils/formatPhoneNumber";
 
 const ReservationItem = ({
   reservation,
@@ -27,7 +28,7 @@ const ReservationItem = ({
             </div>
             <div className="flex">
               <p className="text-gray-500 mr-4">연락처 </p>
-              <p>{reservation.customer.tel}</p>
+              <p>{formatPhoneNumber(reservation.customer.tel)}</p>
             </div>
           </div>
 

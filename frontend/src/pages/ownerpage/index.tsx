@@ -14,16 +14,22 @@ const OwnerPage = () => {
 
   const campsiteData = OwnerCampsiteList?.data.campsiteList.content.map(
     (item) => ({
-      id: item.id,
-      name: item.facltNm,
+      campsiteId: item.id,
+      campsiteName: item.facltNm,
     })
   );
 
   return (
     <div>
       <Header page={"owner"} />
-      <SideTabbar campData={campsiteData!} />
-      <OwnerContainer />
+      <div className="w-full flex">
+        <div className="min-w-[5%]">
+          <SideTabbar campData={campsiteData!} />
+        </div>
+        <div className="w-full">
+          <OwnerContainer />
+        </div>
+      </div>
       <Footer />
     </div>
   );

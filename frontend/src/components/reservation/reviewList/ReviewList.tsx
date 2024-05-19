@@ -28,6 +28,7 @@ const ReviewList = ({ campsiteId }: IReviewListProps) => {
 
   const totalElements =
     reviewListData?.pages[0]?.data.reviewList.totalElements || 0;
+
   return (
     <>
       {/* 리뷰 목록 소제목 */}
