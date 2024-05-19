@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from '@/components/@common/Modal/Modal';
 import InputField from '@/components/@common/Input/InputField';
 import Button from '@/components/@common/Button/Button';
+import PasswordRecovery from '@/components/login/PasswordRecovery';
 
 interface PasswordRecoveryModalProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ const PasswordRecoveryModal = ({ onClose }: PasswordRecoveryModalProps) => {
   const [phone, setPhone] = useState<string>(''); // 휴대폰 번호 입력 상태 관리
   const [userIdError, setUserIdError] = useState<string>(''); // 잘못 친 아이디 오류메세지 관리
   const [phoneError, setPhoneError] = useState<string>(''); // 잘못 친 번호 오류메세지 관리
+  const [modalOpacity, setModalOpacity] = useState<string>("opacity-100"); // 모달 투명도 상태 관리
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false); // 정보 모달 상태 관리
 
   const handleUserIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
@@ -52,46 +55,62 @@ const PasswordRecoveryModal = ({ onClose }: PasswordRecoveryModalProps) => {
     if (validateFields()) {
       // @TODO : 여기서 백엔드 API 호출하여 ID와 휴대폰 번호 검증
       // @TODO : 비밀번호 정보를 반환 또는 재설정 절차 안내
-      console.log('올바른 아이디와 번호 입력함', userId, phone);
-      onClose();
+      // console.log('올바른 아이디와 번호 입력함', userId, phone);
+      setModalOpacity("opacity-0");
+      setTimeout(() => {
+        setIsInfoModalOpen(true);// 비밀번호 변경 성공 모달 호출하기
+      }, 10); // 0.01초정도로 부드럽게 처리 // 정보 모달 열기
     }
   };
 
+  const handleInfoModalClose = () => {
+    setIsInfoModalOpen(false); // 정보 모달 닫기
+    onClose(); // 부모 모달도 닫기
+  };
+
   return (
-    <Modal width="w-1/3" onClose={onClose} title='비밀번호 찾기'>
-      <div className="flex flex-col items-center p-8">
-        {/* <h2 className="text-lg font-semibold mb-4">비밀번호 찾기</h2> */}
-        <form onSubmit={handleSubmit} className="w-full space-y-2">
-          <InputField
-            label="아이디"
-            type="text"
-            name="userId"
-            value={userId}
-            onChange={handleUserIdChange}
-            placeholder="사용자 ID를 입력하세요"
-            error={userIdError}
-          />
-          <InputField
-            label="휴대폰 번호"
-            type="tel"
-            name="phone"
-            value={phone}
-            onChange={handlePhoneChange}
-            placeholder="휴대폰 번호를 입력하세요"
-            error={phoneError}
-            maxLength={11}
-          />
-          <div className="pt-5">
-            <Button
-              type="submit"
-              text="임시 비밀번호 발급"
-              textSize="text-md"
-              width="w-full"
-              borderRadius="rounded-md" />
-          </div>
-        </form>
-      </div>
-    </Modal>
+    <>
+      <Modal width="w-1/3" onClose={onClose} title='비밀번호 찾기' opacity={modalOpacity}>
+        <div className="flex flex-col items-center p-8">
+          {/* <h2 className="text-lg font-semibold mb-4">비밀번호 찾기</h2> */}
+          <form onSubmit={handleSubmit} className="w-full space-y-2">
+            <InputField
+              label="아이디"
+              type="text"
+              name="userId"
+              value={userId}
+              onChange={handleUserIdChange}
+              placeholder="사용자 ID를 입력하세요"
+              error={userIdError}
+            />
+            <InputField
+              label="휴대폰 번호"
+              type="tel"
+              name="phone"
+              value={phone}
+              onChange={handlePhoneChange}
+              placeholder="휴대폰 번호를 입력하세요"
+              error={phoneError}
+              maxLength={11}
+            />
+            <div className="pt-5">
+              <Button
+                type="submit"
+                text="임시 비밀번호 발급"
+                textSize="text-md"
+                width="w-full"
+                borderRadius="rounded-md"
+              />
+            </div>
+          </form>
+        </div>
+      </Modal>
+
+      {/* 비밀번호 찾기는 구현하지 않아서 준비 중으로 처리 */}
+      {isInfoModalOpen && (
+        <PasswordRecovery isOpen={isInfoModalOpen} onClose={handleInfoModalClose} />
+      )}
+    </>
   );
 }
 
