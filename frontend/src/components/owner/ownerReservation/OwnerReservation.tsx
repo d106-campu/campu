@@ -32,7 +32,7 @@ const OwnerReservation = () => {
     <>
       <div className="py-5">
         <p className="p-4 font-semibold">
-          <span className="text-MAIN_GREEN">{campsiteName}</span> 의 예약 내역
+          <span className="text-MAIN_GREEN">{campsiteName!}</span> 의 예약 내역
         </p>
         <div>
           {/* 달력 */}
