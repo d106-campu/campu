@@ -1,6 +1,9 @@
 package com.d106.campu.user.domain.jpa;
 
+import com.d106.campu.auth.constant.RoleName;
+import com.d106.campu.campsite.domain.jpa.CampsiteLike;
 import com.d106.campu.common.jpa.BaseTime;
+import com.d106.campu.notification.domain.jpa.Notification;
 import com.d106.campu.user.constant.GenderType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,16 +12,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 @Getter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,6 +32,10 @@ public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "role", length = 16, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoleName role;
 
     @Column(name = "account", length = 16, unique = true, nullable = false)
     private String account;
@@ -45,6 +53,7 @@ public class User extends BaseTime {
     @Column(name = "birth_year", length = 4)
     private String birthYear;
 
+    @Setter
     @Column(name = "profile_image_url", length = 1024)
     private String profileImageUrl;
 
@@ -53,5 +62,32 @@ public class User extends BaseTime {
 
     @Column(name = "delete_time")
     private LocalDateTime deleteTime;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Notification> notificationList;
+
+    @OneToMany(mappedBy = "user")
+    private List<CampsiteLike> campsiteLikeList;
+
+    public void changeRole(RoleName role) {
+        this.role = role;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeTel(String tel) {
+        this.tel = tel;
+    }
+
+    public void changeEtcInfo(GenderType gender, String birthYear) {
+        this.gender = gender;
+        this.birthYear = birthYear;
+    }
 
 }

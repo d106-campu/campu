@@ -3,14 +3,6 @@ CREATE DATABASE d106;
 USE d106;
 
 
--- d106.authority definition
-
-CREATE TABLE `authority` (
-  `authority_name` varchar(16) NOT NULL UNIQUE COMMENT '권한',
-  PRIMARY KEY (`authority_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='권한';
-
-
 -- d106.campsite_original definition
 
 CREATE TABLE `campsite_original` (
@@ -131,25 +123,44 @@ CREATE TABLE `theme` (
 
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `account` varchar(16) NOT NULL UNIQUE COMMENT '아이디',
+  `role` varchar(16) NOT NULL COMMENT '권한',
+  `account` varchar(16) NOT NULL COMMENT '아이디',
   `password` varchar(72) NOT NULL COMMENT '비밀번호',
-  `nickname` varchar(8) NOT NULL UNIQUE COMMENT '닉네임',
+  `nickname` varchar(8) NOT NULL COMMENT '닉네임',
   `gender` char(1) DEFAULT NULL COMMENT '성별',
   `birth_year` char(4) DEFAULT NULL COMMENT '출생년도',
   `profile_image_url` varchar(1024) DEFAULT NULL COMMENT '프로필 이미지 주소',
-  `tel` char(11) NOT NULL UNIQUE COMMENT '전화번호',
+  `tel` char(11) NOT NULL COMMENT '전화번호',
   `delete_time` datetime DEFAULT NULL COMMENT '회원탈퇴 시간',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '회원가입 시간',
   `update_time` datetime DEFAULT NULL COMMENT '정보수정 시간',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `account` (`account`),
+  UNIQUE KEY `nickname` (`nickname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원';
+
+
+-- d106.reservation_cancel definition
+
+CREATE TABLE `reservation_cancel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '취소 식별번호',
+  `reason` varchar(512) DEFAULT NULL COMMENT '취소 사유',
+  `amount` bigint(20) DEFAULT NULL COMMENT '취소 금액',
+  `refund_holder` varchar(16) DEFAULT NULL COMMENT '환불계좌 예금주',
+  `refund_bank` varchar(8) DEFAULT NULL COMMENT '환불계좌 은행 코드',
+  `refund_account` varchar(64) DEFAULT NULL COMMENT '환불계좌 번호',
+  `checksum` bigint(20) DEFAULT NULL COMMENT '취소 가능 잔액',
+  `tax_free` bigint(20) DEFAULT NULL COMMENT '취소요청 금액 중 면세금액',
+  `vat_amount` bigint(20) DEFAULT NULL COMMENT '취소요청 금액 중 부가세 금액',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='취소';
 
 
 -- d106.campsite definition
 
 CREATE TABLE `campsite` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+  `user_id` bigint(20) COMMENT '회원 식별번호',
   `faclt_nm` varchar(128) DEFAULT NULL COMMENT '야영장명',
   `faclt_div_nm` varchar(16) DEFAULT NULL COMMENT '사업주체 구분',
   `tel` char(11) DEFAULT NULL COMMENT '전화',
@@ -169,6 +180,8 @@ CREATE TABLE `campsite` (
   `sited_stnc` int(11) DEFAULT NULL COMMENT '사이트간 거리',
   `animal_cmg_cl` varchar(16) DEFAULT NULL COMMENT '애완동물출입',
   `hit` bigint(20) DEFAULT 0 COMMENT '조회수',
+  `checkin` char(5) DEFAULT NUll COMMENT '입실 시간. hh:mm 형식',
+  `checkout` char(5) DEFAULT NUll COMMENT '퇴실 시간. hh:mm 형식',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
   `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
   PRIMARY KEY (`id`),
@@ -203,6 +216,22 @@ CREATE TABLE `campsite_image` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 이미지';
 
 
+-- d106.campsite_like definition
+
+CREATE TABLE `campsite_like` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
+  `campsite_id` bigint(20) NOT NULL COMMENT '캠핑장 식별번호',
+  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
+  PRIMARY KEY (`id`),
+  KEY `campsite_like_campsite_FK` (`campsite_id`),
+  KEY `campsite_like_user_FK` (`user_id`),
+  CONSTRAINT `campsite_like_campsite_FK` FOREIGN KEY (`campsite_id`) REFERENCES `campsite` (`id`),
+  CONSTRAINT `campsite_like_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 좋아요';
+
+
 -- d106.campsite_location definition
 
 CREATE TABLE `campsite_location` (
@@ -228,6 +257,24 @@ CREATE TABLE `campsite_theme` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 테마';
 
 
+-- d106.notification definition
+
+CREATE TABLE `notification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
+  `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
+  `message` varchar(64) DEFAULT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `date` varchar(64) DEFAULT NULL,
+  `no` varchar(32) DEFAULT NULL,
+  `url` varchar(1024) DEFAULT NULL,
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
+  PRIMARY KEY (`id`),
+  KEY `notification_user_FK` (`user_id`),
+  CONSTRAINT `notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='알림';
+
+
 -- d106.room definition
 
 CREATE TABLE `room` (
@@ -237,9 +284,10 @@ CREATE TABLE `room` (
   `name` varchar(50) NOT NULL COMMENT '방 이름',
   `base_no` int(11) NOT NULL COMMENT '기본 인원',
   `max_no` int(11) NOT NULL COMMENT '최대 인원',
-  `price` int(11) NOT NULL COMMENT '가격',
-  `extra_price` int(11) DEFAULT NULL COMMENT '인당 추가가격',
+  `price` bigint(20) NOT NULL COMMENT '가격',
+  `extra_price` bigint(20) DEFAULT NULL COMMENT '인당 추가가격',
   `room_cnt` int(11) NOT NULL COMMENT '방 개수',
+  `image_url` varchar(1024) DEFAULT NULL COMMENT '이미지 주소',
   `toilet_cnt` int(11) NOT NULL DEFAULT 0 COMMENT '화장실 개수',
   `supply_list` varchar(512) DEFAULT NULL COMMENT '부대시설 목록',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
@@ -252,27 +300,22 @@ CREATE TABLE `room` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방';
 
 
--- d106.room_image definition
+-- d106.empty_notification definition
 
-CREATE TABLE `room_image` (
+CREATE TABLE `empty_notification` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '식별번호',
-  `room_id` bigint(20) NOT NULL COMMENT '방 식별번호',
-  `url` varchar(1024) NOT NULL COMMENT '이미지 주소',
-  PRIMARY KEY (`id`),
-  KEY `room_image_room_FK` (`room_id`),
-  CONSTRAINT `room_image_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 방 이미지';
-
-
--- d106.user_authority definition
-
-CREATE TABLE `user_authority` (
   `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
-  `authority_name` varchar(16) NOT NULL COMMENT '권한 이름',
-  PRIMARY KEY (`user_id`,`authority_name`),
-  CONSTRAINT `user_authority_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `user_authority_authority_FK` FOREIGN KEY (`authority_name`) REFERENCES `authority` (`authority_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원 권한';
+  `room_id` bigint(20) NOT NULL COMMENT '방 식별번호',
+  `start_date` date DEFAULT NULL COMMENT '숙박 시작날짜',
+  `end_date` date DEFAULT NULL COMMENT '숙박 종료날짜',
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
+  PRIMARY KEY (`id`),
+  KEY `empty_notification_user_FK` (`user_id`),
+  KEY `empty_notification_room_FK` (`room_id`),
+  CONSTRAINT `empty_notification_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`),
+  CONSTRAINT `empty_notification_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='빈자리 알림';
 
 
 -- d106.reservation definition
@@ -282,14 +325,18 @@ CREATE TABLE `reservation` (
   `user_id` bigint(20) NOT NULL COMMENT '회원 식별번호',
   `room_id` bigint(20) NOT NULL COMMENT '방 식별번호',
   `head_cnt` int(11) NOT NULL COMMENT '숙박 인원',
-  `price` int(11) NOT NULL COMMENT '결제 금액',
+  `status` varchar(8) DEFAULT NULL,
+  `price` bigint(20) NOT NULL COMMENT '결제 금액',
   `start_date` date DEFAULT NULL COMMENT '숙박 시작날짜',
   `end_date` date DEFAULT NULL COMMENT '숙박 종료날짜',
   `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
   `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
+  `reservation_cancel_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `reservation_room_FK` (`room_id`),
   KEY `reservation_user_FK` (`user_id`),
+  KEY `reservation_reservation_cancel_FK` (`reservation_cancel_id`),
+  CONSTRAINT `reservation_reservation_cancel_FK` FOREIGN KEY (`reservation_cancel_id`) REFERENCES `reservation_cancel` (`id`),
   CONSTRAINT `reservation_room_FK` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`),
   CONSTRAINT `reservation_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 예약';
@@ -303,6 +350,8 @@ CREATE TABLE `review` (
   `reservation_id` bigint(20) NOT NULL COMMENT '예약 식별번호',
   `score` int(11) NOT NULL COMMENT '리뷰 점수',
   `content` varchar(200) NOT NULL COMMENT '리뷰 내용',
+  `create_time` datetime DEFAULT current_timestamp() COMMENT '생성 시간',
+  `update_time` datetime DEFAULT NULL COMMENT '수정 시간',
   PRIMARY KEY (`id`),
   KEY `review_campsite_FK` (`campsite_id`),
   KEY `review_reservation_FK` (`reservation_id`),
@@ -321,3 +370,23 @@ CREATE TABLE `review_image` (
   KEY `review_image_review_FK` (`review_id`),
   CONSTRAINT `review_image_review_FK` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='캠핑장 리뷰 이미지';
+
+
+-- d106.reservation_payment definition
+
+CREATE TABLE `reservation_payment` (
+  `reservation_id` bigint(20) NOT NULL COMMENT '예약 식별번호',
+  `imp_uid` varchar(256) DEFAULT NULL COMMENT '결제 고유번호',
+  `pg` varchar(64) DEFAULT NULL COMMENT 'PG사 코드 및 상점 ID',
+  `pay_method` varchar(32) DEFAULT NULL COMMENT '결제 방법',
+  `merchant_uid` varchar(256) DEFAULT NULL COMMENT '주문 고유번호',
+  `name` varchar(256) DEFAULT NULL COMMENT '상품명',
+  `amount` bigint(20) DEFAULT NULL COMMENT '가격',
+  `buyer_email` varchar(128) DEFAULT NULL COMMENT '구매자 이메일',
+  `buyer_name` varchar(32) DEFAULT NULL,
+  `buyer_tel` varchar(16) DEFAULT NULL COMMENT '구매자 전화번호',
+  `buyer_addr` varchar(256) DEFAULT NULL COMMENT '구매자 주소',
+  `buyer_postcode` varchar(16) DEFAULT NULL COMMENT '구매자 우편번호',
+  KEY `payment_reservation_FK` (`reservation_id`),
+  CONSTRAINT `payment_reservation_FK` FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='결제';
