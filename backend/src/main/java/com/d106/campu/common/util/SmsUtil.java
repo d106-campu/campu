@@ -13,6 +13,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.MultipleMessageSentResponse;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,9 @@ public class SmsUtil {
 
     @Value("${coolsms.api.from}")
     private String from;
+
+    @Value("${client.base-url}")
+    private String baseUrl;
 
     private DefaultMessageService messageService;
 
@@ -59,7 +63,7 @@ public class SmsUtil {
                 message.setSubject(NotificationConstant.CAMPU_SMS + " " + saveResponseDto.getMessage());
                 message.setText(
                     "▶ " + saveResponseDto.getName() + "\n" + "▶ " + saveResponseDto.getDate() + "\n" + "▶ "
-                        + saveResponseDto.getNo() + "\n" + saveResponseDto.getUrl());
+                        + saveResponseDto.getNo() + "\n" + StringUtils.join(baseUrl, saveResponseDto.getUrl()));
                 return message;
             })
             .toList();
