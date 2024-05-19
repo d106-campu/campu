@@ -26,8 +26,6 @@ const OwnerReservation = () => {
     date: dateString!,
   });
 
-  console.log(campsiteName);
-
   return (
     <>
       <div className="py-5">
