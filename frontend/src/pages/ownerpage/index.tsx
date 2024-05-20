@@ -19,6 +19,7 @@ const OwnerPage = () => {
     })
   );
 
+  console.log(campsiteData);
   return (
     <div>
       <Header page={"owner"} />
