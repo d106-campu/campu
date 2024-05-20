@@ -6,7 +6,6 @@ const ReservationItem = ({
 }: {
   reservation: IReservationSimpleRes;
 }) => {
-  // @TODO: 이미지 추가하기
   return (
     <>
       <div className=" flex flex-col border-b border-gray-300 p-4">
@@ -24,7 +23,7 @@ const ReservationItem = ({
           <div>
             <div className="flex py-2">
               <p className="text-gray-500 mr-4">예약자 </p>
-              <p>{reservation.customer.nickname}</p>
+              <p>{reservation.customer.nickName}</p>
             </div>
             <div className="flex">
               <p className="text-gray-500 mr-4">연락처 </p>
