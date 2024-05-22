@@ -127,7 +127,7 @@ const InfoDetail = ({
       </div>
 
       {/* 방문자 리뷰 */}
-      {reviewList && reviewList.content.length > 0 && (
+      {reviewList && (
         <div ref={reviewRef} className="pt-10">
           <h3 className="text-xl font-bold">방문자 리뷰</h3>
           <div className="flex justify-between pt-1">

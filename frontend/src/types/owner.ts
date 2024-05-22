@@ -11,7 +11,7 @@ export interface IBizrnoReq {
 }
 
 export interface IBizrnoRes {
-  result: string
+  result: string;
 }
 
 // 예약내역 Request
@@ -27,7 +27,7 @@ export interface IRoomInfo {
 }
 
 export interface IcustomerInfo {
-  nickname: string;
+  nickName: string;
   tel: string;
 }
 export interface IReservationSimpleRes {

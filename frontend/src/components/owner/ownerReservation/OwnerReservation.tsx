@@ -8,16 +8,18 @@ import { useSelector } from "react-redux";
 import { useOwner } from "@/hooks/owner/useOwner";
 
 const selectCampsiteInfo = createSelector(
-  (state: RootState) => state.ownerSide.campsiteId,
-  (campsiteId) => ({ campsiteId })
+  (state: RootState) => state.ownerSide,
+  (ownerSide) => ({
+    campsiteName: ownerSide.campsiteName,
+    campsiteId: ownerSide.campsiteId,
+  })
 );
 
 const OwnerReservation = () => {
   // 달력에서 선택된 날짜 (Date 객체)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const { campsiteId } = useSelector(selectCampsiteInfo);
+  const { campsiteId, campsiteName } = useSelector(selectCampsiteInfo);
   const dateString = dateToDateString(selectedDate); // 백으로 보낼 때는 YYYY-MM-DD 형식의 문자열로 보내야 함
-
   const { useGetReservationList } = useOwner();
   const { data: reservationList } = useGetReservationList({
     campsiteId: campsiteId!,
@@ -28,7 +30,7 @@ const OwnerReservation = () => {
     <>
       <div className="py-5">
         <p className="p-4 font-semibold">
-          <span className="text-MAIN_GREEN">{campsiteId}</span> 의 예약 내역
+          <span className="text-MAIN_GREEN">{campsiteName!}</span> 의 예약 내역
         </p>
         <div>
           {/* 달력 */}
