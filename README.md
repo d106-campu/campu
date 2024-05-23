@@ -113,6 +113,8 @@
 
 <img src="./exec/img/login.gif" alt="로그인" width="800px" />
 
+<br/>
+
 ### 캠핑장 검색
 
 - 지역, 날짜, 인원수, 키워드 기반으로 캠핑장 검색 가능
@@ -159,7 +161,7 @@
 
 <img src="./exec/img/my.gif" alt="마이페이지" width="800px" />
 
-<div id="6"></div>
+<br/>
 
 ### 캠핑장 등록 및 관리
 
@@ -168,6 +170,10 @@
 - 예약 현황 조회 가능
 
 <img src="./exec/img/manage.gif" alt="관리" width="800px" />
+
+<br />
+
+<div id="6"></div>
 
 ## 👨🏻‍💻 개발 팀 소개
 
