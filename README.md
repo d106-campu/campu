@@ -69,7 +69,6 @@
 
 <img src="./exec/img/tool.jpg" alt="tool" width="650px"/>
 <br/>
-<br/>
 
 <div id="3"></div>
 
