@@ -2,7 +2,9 @@
   <img src="./exec/img/logo.png" alt="preview"height="80px" />
   <br />
   <h2>캠핑장 예약 및 관리 서비스, CampU</h2>
-
+  <div>SSAFY 자율 D106 Ho!팀</div>
+  <b>🏆 삼성 청년 SW 아카데미(SSAFY) 자율 프로젝트 우수상 수상 🏆</b>
+  
 <br/>
 <br/>
 
